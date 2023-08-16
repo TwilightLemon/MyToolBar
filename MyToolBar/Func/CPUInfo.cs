@@ -14,14 +14,22 @@ namespace MyToolBar.Func
     {
         public static double GetCPUTemperature()
         {
-            string str = "";
-            ManagementObjectSearcher vManagementObjectSearcher = new(@"root\WMI", @"select * from MSAcpi_ThermalZoneTemperature");
-            foreach (ManagementObject managementObject in vManagementObjectSearcher.Get().Cast<ManagementObject>())
+            Double temperature = 0;     
+            // Query the MSAcpi_ThermalZoneTemperature API
+            // Note: run your app or Visual Studio (while programming) or you will get "Access Denied"
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher(@"root\WMI", "SELECT * FROM MSAcpi_ThermalZoneTemperature");
+
+            foreach (ManagementObject obj in searcher.Get())
             {
-                str += managementObject.Properties["CurrentTemperature"].Value.ToString();
-                if (str.Length > 3) break;
+                temperature = Convert.ToDouble(obj["CurrentTemperature"].ToString());
+                // Convert the value to celsius degrees
+                temperature = (temperature - 2732) / 10.0;
             }
-            return Math.Round((float.Parse(str) ) / 100);
+
+            // Print the values e.g:
+
+            // 29.8
+            return temperature;
         }
         static PerformanceCounter counters;
         public static void Load() {

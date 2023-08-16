@@ -54,6 +54,7 @@ namespace MyToolBar
             ms.Start();
             ms.MsgReceived += (str) => {
                 Dispatcher.Invoke(() => {
+
                     OutterFuncText.Text = str;
                 });
             };
@@ -81,6 +82,11 @@ namespace MyToolBar
         private void CloseButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
             App.Current.Shutdown();
+        }
+
+        private void OutterFuncText_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            OutterFuncText.Opacity = OutterFuncText.Opacity == 1 ? 0 : 1;
         }
     }
 }
