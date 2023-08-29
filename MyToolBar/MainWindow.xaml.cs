@@ -21,6 +21,9 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.IO.Pipes;
 using System.IO;
+using Accessibility;
+using Newtonsoft.Json.Linq;
+using System.Windows.Media.Animation;
 
 namespace MyToolBar
 {
@@ -52,10 +55,24 @@ namespace MyToolBar
             #endregion
 
             ms.Start();
-            ms.MsgReceived += (str) => {
-                Dispatcher.Invoke(() => {
-
-                    OutterFuncText.Text = str;
+            ms.MsgReceived += async (str) => {
+                Dispatcher.Invoke(async () => {
+                    if(str.Contains("LemonAppLyricData")){
+                        string data =JObject.Parse(str)["Data"].ToString();
+                        OutterFuncText.Text = data;
+                    }else if(str.Contains("LemonAppOrd")){
+                        string data =JObject.Parse(str)["Data"].ToString();
+                        OutterFuncText.BeginAnimation(OpacityProperty,new DoubleAnimation(0.5,1,TimeSpan.FromSeconds(0.3)));
+                        OutterFuncText.Text= data switch{
+                            "Exit"=>"LemonApp Exited.",
+                            "Start"=>"LemonApp Connected."
+                        };
+                        await Task.Delay(1000);
+                        OutterFuncText.BeginAnimation(OpacityProperty,new DoubleAnimation(0.2,TimeSpan.FromSeconds(0.3)));
+                        await Task.Delay(400);
+                        OutterFuncText.Text="";
+                        OutterFuncText.BeginAnimation(OpacityProperty,new DoubleAnimation(1,TimeSpan.FromSeconds(0)));
+                    }
                 });
             };
 
