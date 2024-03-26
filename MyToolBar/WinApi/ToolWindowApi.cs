@@ -9,7 +9,7 @@ using System.Windows.Interop;
 
 namespace MyToolBar.WinApi
 {
-    internal class ToolWindowApi
+    internal static class ToolWindowApi
     {
         public static void SetToolWindow(Window win)
         {
@@ -36,6 +36,12 @@ namespace MyToolBar.WinApi
 
         [DllImport("user32.dll")]
         public static extern IntPtr GetWindowLong(IntPtr hWnd, int nIndex);
+        [DllImport("user32.dll")]
+        private static extern bool IsZoomed(IntPtr hWnd);
+
+        public static bool IsZoomedWindow(this IntPtr intPtr) { 
+            return IsZoomed(intPtr);
+        }
 
         public static IntPtr SetWindowLong(IntPtr hWnd, int nIndex, IntPtr dwNewLong)
         {
@@ -79,5 +85,7 @@ namespace MyToolBar.WinApi
 
         [DllImport("kernel32.dll", EntryPoint = "SetLastError")]
         public static extern void SetLastError(int dwErrorCode);
+
+
     }
 }

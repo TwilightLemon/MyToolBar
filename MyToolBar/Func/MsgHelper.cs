@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,6 +11,7 @@ namespace MyToolBar.Func
 {
     internal class MsgHelper
     {
+        #region SocketMsg
         static Socket socket;
         public delegate void msg(string data);
         public event msg MsgReceived;
@@ -20,7 +22,6 @@ namespace MyToolBar.Func
             //接收客户端的 Socket请求
             socket.BeginAccept(OnAccept, socket);
         }
-
         private void OnAccept(IAsyncResult async)
         {
             var serverSocket = async.AsyncState as Socket;
@@ -47,5 +48,39 @@ namespace MyToolBar.Func
             //接收客户端的 Socket请求
             socket.BeginAccept(OnAccept, socket);
         }
+        #endregion
+        #region WinMsg
+        public const int WM_COPYDATA = 0x004A;
+        public const string SEND_LAST = "SEND_LAST",
+            SEND_PAUSE="SEND_PAUSE",
+            SEND_NEXT="SEND_NEXT";
+        public static int ConnectedWindowHandle = 0;
+
+        public struct COPYDATASTRUCT
+        {
+            public IntPtr dwData;
+            public int cData;
+            [MarshalAs(UnmanagedType.LPStr)]
+            public string lpData;
+        }
+
+        [DllImport("User32.dll", EntryPoint = "FindWindow")]
+        public extern static IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+        [DllImport("User32.dll")]
+        public static extern int SendMessage(int hwnd, int msg, int wParam, ref COPYDATASTRUCT IParam);
+
+        public static async void SendMsg(String strSent, int WindowHandle)
+        {
+            if(WindowHandle == 0) return;
+            byte[] arr = Encoding.Default.GetBytes(strSent);
+            int len = arr.Length;
+            COPYDATASTRUCT cdata;
+            cdata.dwData = (IntPtr)100;
+            cdata.lpData = strSent;
+            cdata.cData = len + 1;
+            SendMessage(WindowHandle, WM_COPYDATA, 0, ref cdata);
+        }
+        #endregion
     }
 }
