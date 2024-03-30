@@ -70,7 +70,7 @@ namespace MyToolBar.Func
         [DllImport("User32.dll")]
         public static extern int SendMessage(int hwnd, int msg, int wParam, ref COPYDATASTRUCT IParam);
 
-        public static async void SendMsg(String strSent, int WindowHandle)
+        public static void SendMsg(String strSent, int WindowHandle)
         {
             if(WindowHandle == 0) return;
             byte[] arr = Encoding.Default.GetBytes(strSent);

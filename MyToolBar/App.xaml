@@ -15,6 +15,7 @@
                     <Setter Property="TextBlock.TextTrimming" Value="CharacterEllipsis"/>
                 </Style.Setters>
             </Style>
+            <SolidColorBrush x:Key="ForeColor" Color="#FFEEEEEE"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

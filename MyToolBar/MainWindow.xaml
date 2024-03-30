@@ -4,8 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MyToolBar"
+        xmlns:cap="clr-namespace:MyToolBar.Capsules"
         mc:Ignorable="d" Topmost="True"
-        Title="MyToolBar" Height="30" Width="1480" Background="{x:Null}" ResizeMode="NoResize" WindowStyle="None" Loaded="Window_Loaded" Closing="Window_Closing" Foreground="#FFEEEEEE" ShowInTaskbar="False">
+        Title="MyToolBar" Height="30" Width="1480" Background="{x:Null}" ResizeMode="NoResize" WindowStyle="None" Loaded="Window_Loaded" Closing="Window_Closing" Foreground="{DynamicResource ForeColor}" ShowInTaskbar="False">
     <Grid Background="#22000000">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1.2*"/>
@@ -30,25 +31,9 @@
             <Border x:Name="Func_Center" Background="Transparent" Grid.Column="1" TouchEnter="Func_Center_TouchDown"/>
             <Border x:Name="Func_Right" Background="Transparent" Grid.Column="2" TouchEnter="Func_Right_TouchDown"/>
         </Grid>
-        <WrapPanel x:Name="FuncPanel" HorizontalAlignment="Right"   Margin="14,4,10,0" Grid.Column="2">
-            <Grid x:Name="MemoryViewer" Width="50" Height="25">
-                <Path Width="13" Height="13" HorizontalAlignment="Left" Data="{StaticResource Icon_memory}" Fill="White" Stretch="Uniform" SnapsToDevicePixels="True"/>
-                <TextBlock x:Name="Meo_text" Margin="20,0,0,0" TextWrapping="Wrap" Text="99%" VerticalAlignment="Center"/>
-            </Grid>
-            <Grid x:Name="CPUViewer" Width="85" Height="25" Margin="10,0,0,0">
-                <TextBlock x:Name="Cpu_text" Margin="20,0,29,0" TextWrapping="Wrap" Text="99%" VerticalAlignment="Center"/>
-                <TextBlock x:Name="Cpu_temp" Margin="47,0,-2,0" TextWrapping="Wrap" Text="36℃" VerticalAlignment="Center"/>
-                <Path Width="13" Height="13" Data="{StaticResource Icon_CPU}" HorizontalAlignment="Left" Fill="White" Stretch="Uniform" SnapsToDevicePixels="True" Margin="0,5,0,5"/>
-            </Grid>
-            <Grid x:Name="NetworkViewer" Width="80" Height="25" Margin="10,0,0,0">
-                <TextBlock x:Name="Network_text" Margin="20,0,0,0" VerticalAlignment="Center" FontSize="10" LineHeight="1" Height="30"><Run Text="↑90kb/s"/><LineBreak/><Run Language="zh-cn" Text="↓1mb/s"/></TextBlock>
-                <Path Width="13" Height="13" Data="{StaticResource Icon_web}" HorizontalAlignment="Left" Fill="White" Stretch="Uniform" SnapsToDevicePixels="True" Margin="0,5,0,5"/>
-            </Grid>
-            <Grid Margin="10,0,0,0" Width="107" Height="25">
-                <Border HorizontalAlignment="Right" Width="20" Height="20" Margin="0,0,5,0" CornerRadius="20,20,20,20">
-                </Border>
-                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="27℃  Sunny" VerticalAlignment="Center"/>
-            </Grid>
+        <WrapPanel x:Name="FuncPanel" HorizontalAlignment="Right"   Margin="14,0,10,0" Grid.Column="2">
+            <cap:HardwareMonitorCap x:Name="Cap_hdm"/>
+            <cap:WeatherCap x:Name="Cap_weather" Margin="0,0,0,0"/>
         </WrapPanel>
 
     </Grid>

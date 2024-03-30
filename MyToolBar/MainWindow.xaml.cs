@@ -4,12 +4,13 @@ using System.Windows;
 using MyToolBar.WinApi;
 using System.Windows.Input;
 using System.Windows.Media;
-using static MyToolBar.WinApi.WindowBlur;
 using MyToolBar.Func;
-using Newtonsoft.Json.Linq;
 using System.Windows.Media.Animation;
+using static MyToolBar.GlobalService;
 using System.Runtime.InteropServices;
 using System.Timers;
+using System.Text.Json.Nodes;
+using System.Windows.Media.Imaging;
 
 namespace MyToolBar
 {
@@ -22,15 +23,15 @@ namespace MyToolBar
         {
             InitializeComponent();
         }
-        bool DarkMode = true;
+
         private WindowAccentCompositor wac;
-        private Timer timer = new Timer();
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private MsgHelper ms = new MsgHelper();
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            #region 窗口样式
+            #region Window Style
             ToolWindowApi.SetToolWindow(this);
             AppBarFunctions.SetAppBar(this, ABEdge.Top);
-            wac = new(this, (c) =>
+            wac = new(this,true, (c) =>
             {
                 c.A = 255;
                 Background = new SolidColorBrush(c);
@@ -45,16 +46,22 @@ namespace MyToolBar
             ms.MsgReceived += Ms_MsgReceived;
             #endregion
 
-            CPUInfo.Load();
-            timer.Interval = 1200;
-            timer.Elapsed += (s, e) => Dispatcher.Invoke(Tick);
-            timer.Start();
+            #region Load Capsules
+            GlobalTimer = new Timer();
+            GlobalTimer.Interval = 1200;
+            GlobalTimer.Elapsed += (o, e) => Dispatcher.Invoke(Tick);
+            GlobalTimer.Start();
+
+            Cap_weather.LoadData();
+            Cap_hdm.Start();
+            #endregion
         }
 
+        #region OutterControl
         private void Ms_MsgReceived(string str)
         {
-            Dispatcher.Invoke(async () => {
-                var obj = JObject.Parse(str);
+            Dispatcher.Invoke(() => {
+                var obj = JsonNode.Parse(str);
                 if (str.Contains("LemonAppLyricData"))
                 {
                     if (str.Contains("Handle"))
@@ -79,56 +86,27 @@ namespace MyToolBar
                 }
             });
         }
-
-        MsgHelper ms=new MsgHelper();
-        NetworkInfo ni = new NetworkInfo();
         private IntPtr MaxedWindow = IntPtr.Zero;
-        private void Tick() {
-            TitleView.Text=ActiveWindow.GetActiveWindowTitle();
-            Meo_text.Text = (int)MemoryInfo.GetUsedPercent() + "%";
-            Cpu_text.Text = CPUInfo.GetCPUUsedPercent();
-            Cpu_temp.Text = CPUInfo.GetCPUTemperature()+"℃";
-            var data = ni.GetNetworkspeed();
-            Network_text.Text = $"↑ {data[1]}/s\r\n↓ {data[0]}/s";
-
-            Width=SystemParameters.WorkArea.Width;
-            var fore= ActiveWindow.GetForegroundWindow();
-            if (MaxedWindow == IntPtr.Zero&&fore.IsZoomedWindow())
-            {
-                //全屏样式  整体变暗
-                MaxedWindow = fore;
-                UpdateWindowBlurMode(240);
-                OutterFuncStatus.Background=new SolidColorBrush(Color.FromArgb(20,255,255,255));
-                OutterFuncText.Foreground=new SolidColorBrush(Color.FromArgb(240,252,252,252));
-                OutterFuncText.FontWeight = FontWeights.Normal;
-            }
-            if(!MaxedWindow.IsZoomedWindow()&&MaxedWindow!=IntPtr.Zero)
-            {
-                //退出全屏 高亮
-                MaxedWindow = IntPtr.Zero;
-                UpdateWindowBlurMode();
-                OutterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(120, 255, 255, 255));
-                OutterFuncText.Foreground = new SolidColorBrush(Color.FromArgb(250, 3, 3, 3));
-                OutterFuncText.FontWeight = FontWeights.Bold;
-            }
-        }
-
+        /// <summary>
+        /// OutterFuncStatus是否开启
+        /// </summary>
         static bool isOutterShow = true;
-        private void ShowOutter(bool show=true)
+        private void ShowOutter(bool show = true)
         {
             Storyboard sb = new();
-            if(OutterFunc.ActualWidth==0)
+            if (OutterFunc.ActualWidth == 0)
                 OutterFunc.Visibility = Visibility.Visible;
             double width = OutterFunc.ActualWidth;
-            DoubleAnimation da,de;
+            DoubleAnimation da, de;
             if (show && !isOutterShow)
             {
-                de =new DoubleAnimation(0, width, TimeSpan.FromSeconds(0.5));
+                de = new DoubleAnimation(0, width, TimeSpan.FromSeconds(0.5));
                 da = new DoubleAnimation(0, 1, TimeSpan.FromSeconds(0.5));
                 isOutterShow = true;
-            }else if(!show && isOutterShow)
+            }
+            else if (!show && isOutterShow)
             {
-                de = new DoubleAnimation(width,0, TimeSpan.FromSeconds(0.5));
+                de = new DoubleAnimation(width, 0, TimeSpan.FromSeconds(0.5));
                 da = new DoubleAnimation(1, 0, TimeSpan.FromSeconds(0.4));
                 isOutterShow = false;
             }
@@ -143,12 +121,40 @@ namespace MyToolBar
             sb.Completed += Sb_Completed;
             sb.Begin();
         }
-
         private void Sb_Completed(object? sender, EventArgs e)
         {
             OutterFunc.Visibility = isOutterShow ? Visibility.Visible : Visibility.Collapsed;
         }
+        #endregion
 
+
+        /// <summary>
+        /// 更新ForeWindow->Tittle & 自身窗口样式
+        /// </summary>
+        private void Tick()
+        {
+            TitleView.Text = ActiveWindow.GetActiveWindowTitle();
+            Width = SystemParameters.WorkArea.Width;
+            var fore = ActiveWindow.GetForegroundWindow();
+            if (MaxedWindow == IntPtr.Zero && fore.IsZoomedWindow())
+            {
+                //全屏样式  整体变暗
+                MaxedWindow = fore;
+                UpdateWindowBlurMode(240);
+                OutterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(20, 255, 255, 255));
+                OutterFuncText.Foreground = new SolidColorBrush(Color.FromArgb(240, 252, 252, 252));
+                OutterFuncText.FontWeight = FontWeights.Normal;
+            }
+            if (!MaxedWindow.IsZoomedWindow() && MaxedWindow != IntPtr.Zero)
+            {
+                //退出全屏 高亮
+                MaxedWindow = IntPtr.Zero;
+                UpdateWindowBlurMode();
+                OutterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(120, 255, 255, 255));
+                OutterFuncText.Foreground = new SolidColorBrush(Color.FromArgb(250, 3, 3, 3));
+                OutterFuncText.FontWeight = FontWeights.Bold;
+            }
+        }
         private void UpdateWindowBlurMode(byte opacity = 150)
         {
             wac.Color = DarkMode ?
@@ -157,6 +163,8 @@ namespace MyToolBar
             wac.DarkMode = DarkMode;
             wac.IsEnabled = true;
         }
+
+
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             AppBarFunctions.SetAppBar(this, ABEdge.None);
