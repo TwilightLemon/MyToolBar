@@ -57,7 +57,7 @@ namespace MyToolBar.PopWindow
             Humidity.Text = wdata.humidity+"%";
             vis.Text = wdata.vis+" km";
             FeelsLike.Text = wdata.feel+"℃";
-            UpdateTime.Text=WeatherDataCache.UpdateTime.ToString("HH:mm");
+            UpdateTime.Text="Updated at "+WeatherDataCache.UpdateTime.ToString("HH:mm");
 
             Days.Children.Clear();
             int averageTemp = 0;
