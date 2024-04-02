@@ -15,10 +15,11 @@ namespace MyToolBar.Func
         static Socket socket;
         public delegate void msg(string data);
         public event msg MsgReceived;
-        public void Start() {
+        public void Start()
+        {
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             socket.Bind(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 3230));
-            socket.Listen(100);
+            socket.Listen(10);
             //接收客户端的 Socket请求
             socket.BeginAccept(OnAccept, socket);
         }
@@ -30,6 +31,15 @@ namespace MyToolBar.Func
             try
             {
                 clientSocket = serverSocket.EndAccept(async);
+                var bytes = new byte[10000];
+                //获取socket的内容
+                var len = clientSocket.Receive(bytes);
+                //将 bytes[] 转换 string
+                var request = Encoding.UTF8.GetString(bytes, 0, len);
+                MsgReceived(request);
+                socket.Listen(100);
+                //接收客户端的 Socket请求
+                socket.BeginAccept(OnAccept, socket);
             }
             catch
             {
@@ -38,22 +48,13 @@ namespace MyToolBar.Func
                 Start();
                 return;
             }
-            var bytes = new byte[10000];
-            //获取socket的内容
-            var len = clientSocket.Receive(bytes);
-            //将 bytes[] 转换 string
-            var request = Encoding.UTF8.GetString(bytes, 0, len);
-            MsgReceived(request);
-            socket.Listen(100);
-            //接收客户端的 Socket请求
-            socket.BeginAccept(OnAccept, socket);
         }
         #endregion
         #region WinMsg
         public const int WM_COPYDATA = 0x004A;
         public const string SEND_LAST = "SEND_LAST",
-            SEND_PAUSE="SEND_PAUSE",
-            SEND_NEXT="SEND_NEXT";
+            SEND_PAUSE = "SEND_PAUSE",
+            SEND_NEXT = "SEND_NEXT";
         public static int ConnectedWindowHandle = 0;
 
         public struct COPYDATASTRUCT
@@ -72,7 +73,7 @@ namespace MyToolBar.Func
 
         public static void SendMsg(String strSent, int WindowHandle)
         {
-            if(WindowHandle == 0) return;
+            if (WindowHandle == 0) return;
             byte[] arr = Encoding.Default.GetBytes(strSent);
             int len = arr.Length;
             COPYDATASTRUCT cdata;

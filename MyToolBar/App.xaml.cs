@@ -14,6 +14,21 @@ namespace MyToolBar
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
+            {
+                //坐以待毙吧
+            };
+            Current.DispatcherUnhandledException += (sender, e) =>
+            {
+                e.Handled = true;
+            };
+            TaskScheduler.UnobservedTaskException += (sender, e) =>
+            {
+                e.SetObserved();
+            };
+        }
         public MemoryFlush cracker = new();
         protected override void OnStartup(StartupEventArgs e)
         {

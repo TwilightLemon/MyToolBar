@@ -43,8 +43,8 @@ namespace MyToolBar.Capsules
 
         private void GlobalTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
-            //update weather data every 30 minutes
-            if (DateTime.Now - WeatherDataCache.UpdateTime >= TimeSpan.FromMinutes(30))
+            //update weather data every t minutes
+            if (DateTime.Now - WeatherDataCache.UpdateTime >= TimeSpan.FromMinutes(10))
             {
                 Dispatcher.Invoke(async () => await LoadWeatherData());
             }
@@ -60,9 +60,11 @@ namespace MyToolBar.Capsules
             ViewerMask.BeginAnimation(OpacityProperty, new DoubleAnimation(1,0, TimeSpan.FromMilliseconds(300)));
         }
         private bool BoxShowed = false;
-        private void ShowWeatherBox()
+        private async void ShowWeatherBox()
         {
             if(BoxShowed) return;
+            if (WeatherDataCache.CurrentWeather == null)
+                await LoadWeatherData();
             var wb = new WeatherBox();
             wb.Closed += delegate { BoxShowed = false; };
             wb.LoadData(WeatherDataCache.CurrentWeather);

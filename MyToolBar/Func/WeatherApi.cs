@@ -67,7 +67,13 @@ namespace MyToolBar.Func
         }
         public static async Task<bool> SearchCityAsync(this City city)
         {
-            string url = $"https://geoapi.qweather.com/v2/city/lookup?location={HttpUtility.UrlEncode(city.area)}&adm={HttpUtility.UrlEncode(city.city)}&key={key}&lang={lang}";
+            string c1 = city.city, c2 = city.area;
+            if (string.IsNullOrEmpty(city.area))
+            {
+                c1 = city.province; c2 = city.city;
+            }
+
+            string url = $"https://geoapi.qweather.com/v2/city/lookup?location={HttpUtility.UrlEncode(c2)}&adm={HttpUtility.UrlEncode(c1)}&key={key}&lang={lang}";
             string data=await HttpHelper.Get(url);
             var obj= JsonNode.Parse(data);
             if (obj != null && obj["code"].ToString() == "200")

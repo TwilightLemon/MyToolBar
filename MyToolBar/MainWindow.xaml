@@ -13,7 +13,7 @@
             <ColumnDefinition Width="2*" MaxWidth="600"/>
             <ColumnDefinition Width="1.2*"/>
         </Grid.ColumnDefinitions>
-        <Grid x:Name="TittleViewer" TouchEnter="TitleView_TouchDown" Background="Transparent">
+        <Grid x:Name="TittleViewer" TouchLeave="TitleView_TouchDown" Background="Transparent">
             <Border x:Name="CloseButton" HorizontalAlignment="Left" Height="25" Width="25" Background="#00000000" MouseDown="CloseButton_MouseDown" BorderBrush="#00000000" Margin="10,0,0,0">
                 <Border BorderBrush="#FFEEEEEE" BorderThickness="2" CornerRadius="25,25,25,25" Width="15" Height="15"/>
             </Border>
@@ -27,9 +27,9 @@
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
             <TextBlock x:Name="OutterFuncText" FontWeight="Bold" Foreground="#0A0A0A" TextWrapping="NoWrap" VerticalAlignment="Center" TextAlignment="Center"  Grid.ColumnSpan="3" FontSize="14"/>
-            <Border x:Name="Func_Left" Background="Transparent" Grid.Column="0" TouchEnter="Func_Left_TouchDown"/>
-            <Border x:Name="Func_Center" Background="Transparent" Grid.Column="1" TouchEnter="Func_Center_TouchDown"/>
-            <Border x:Name="Func_Right" Background="Transparent" Grid.Column="2" TouchEnter="Func_Right_TouchDown"/>
+            <Border x:Name="Func_Left" Background="Transparent" Grid.Column="0" TouchLeave="Func_Left_TouchDown"/>
+            <Border x:Name="Func_Center" Background="Transparent" Grid.Column="1" TouchLeave="Func_Center_TouchDown"/>
+            <Border x:Name="Func_Right" Background="Transparent" Grid.Column="2" TouchLeave="Func_Right_TouchDown"/>
         </Grid>
         <WrapPanel x:Name="FuncPanel" HorizontalAlignment="Right"   Margin="14,0,10,0" Grid.Column="2">
             <cap:HardwareMonitorCap x:Name="Cap_hdm"/>
