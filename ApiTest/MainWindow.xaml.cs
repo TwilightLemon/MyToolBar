@@ -16,7 +16,7 @@ namespace ApiTest
 
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            var city=await (await WeatherApi.GetPositionByIpAsync()).SearchCityAsync();
+            var city=await (await WeatherApi.GetPositionByIpAsync()).VerifyCityIdAsync();
         }
     }
 }

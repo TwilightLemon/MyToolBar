@@ -6,6 +6,7 @@ using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using System.Web;
 using System.Windows.Media;
+using static MyToolBar.Func.WeatherApi;
 
 /*
  Weather Api
@@ -14,26 +15,26 @@ using System.Windows.Media;
 
 namespace MyToolBar.Func
 {
-    public static class WeatherDataCache
+    public  class WeatherData
     {
-        public static DateTime UpdateTime { get;set; }
-        public static WeatherApi.WeatherNow CurrentWeather{ get; set; }
-        public static WeatherApi.City CurrentCity { get; set; }
-        public static List<WeatherApi.WeatherDay> DailyForecast { get; set; }
-        public static List<WeatherApi.AirData> DailyAirForecast { get; set; }
+        public DateTime UpdateTime { get;set; }
+        public WeatherApi.City City { get; set; }
+        public WeatherApi.AirData CurrentAir { get; set; }
+        public WeatherApi.WeatherNow CurrentWeather{ get; set; }
+        public List<WeatherApi.WeatherDay> DailyForecast { get; set; }
+        public List<WeatherApi.AirData> DailyAirForecast { get; set; }
     }
     public static class WeatherApi
     {
         public class City
         {
-            public string province, city, area,id;
+            public string? province, city, area,id=null;
         }
         public class WeatherNow
         {
             public string status,link,feel;
             public string windDir, windScale, humidity, vis;
             public int code,temp;
-            public City city;
             //...more
         }
         public class WeatherDay
@@ -45,7 +46,7 @@ namespace MyToolBar.Func
         public class AirData
         {
             public int aqi, level;
-            public string desc;
+            public string desc,sug;
         }
         private static string key =ApiKeys.Weather.key,
             lang="en",
@@ -65,7 +66,7 @@ namespace MyToolBar.Func
             }
             return null;
         }
-        public static async Task<bool> SearchCityAsync(this City city)
+        public static async Task<bool> VerifyCityIdAsync(this City city)
         {
             string c1 = city.city, c2 = city.area;
             if (string.IsNullOrEmpty(city.area))
@@ -84,11 +85,34 @@ namespace MyToolBar.Func
                     var ci = cities[0];
                     city.area = ci["name"].ToString();
                     city.city = ci["adm2"].ToString();
+                    city.province = ci["adm1"].ToString();
                     city.id = ci["id"].ToString();
                     return true;
                 }
             }
             return false;
+        }
+        public static async Task<List<City>> SearchCitiesAsync(string keyword)
+        {
+            string url = $"https://geoapi.qweather.com/v2/city/lookup?location={HttpUtility.UrlEncode(keyword)}&key={key}&lang={lang}";
+            string data = await HttpHelper.Get(url);
+            var obj = JsonNode.Parse(data);
+            var list=new List<City>();
+            if (obj != null && obj["code"].ToString() == "200")
+            {
+                JsonArray cities = obj["location"].AsArray();
+                foreach (var ci in cities)
+                {
+                    list.Add(new City()
+                    {
+                        area = ci["name"].ToString(),
+                        city = ci["adm2"].ToString(),
+                        province = ci["adm1"].ToString(),
+                        id = ci["id"].ToString()
+                    });
+                }
+            }
+            return list;
         }
 
         public static async Task<WeatherNow> GetCurrentWeather(this City city)
@@ -104,7 +128,6 @@ namespace MyToolBar.Func
                     temp = int.Parse(now["temp"].ToString()),
                     code = int.Parse(now["icon"].ToString()),
                     status = now["text"].ToString(),
-                    city = city,
                     link = obj["fxLink"].ToString(),
                     feel = now["feelsLike"].ToString(),
                     humidity = now["humidity"].ToString(),
@@ -115,11 +138,29 @@ namespace MyToolBar.Func
             }
             return null;
         }
+        public static async Task<AirData> GetCurrentAQIAsync(this City city)
+        {
+            string url = $"https://{host}/airquality/v1/now/{city.id}?key={key}&lang={lang}";
+            string data = await HttpHelper.Get(url);
+            var obj = JsonNode.Parse(data);
+            if (obj != null & obj["code"].ToString() == "200")
+            {
+                var aqi = obj["aqi"][0];
+                return new AirData()
+                {
+                    aqi = int.Parse(aqi["value"].ToString()),
+                    level = int.Parse(aqi["level"].ToString()),
+                    desc = aqi["category"].ToString(),
+                    sug = aqi["health"]["effect"].ToString()
+                };
+            }
+            return null;
+        }
         public static string GetIcon(int code)
         {
             return $"https://a.hecdn.net/img/common/icon/202106d/{code}.png";
         }
-        public static async Task<List<AirData>> GetAirAsync(this City city)
+        public static async Task<List<AirData>> GetAirForecastAsync(this City city)
         {
             string url = $"https://{host}/v7/air/5d?location={city.id}&key={key}&lang={lang}";
             string data = await HttpHelper.Get(url);

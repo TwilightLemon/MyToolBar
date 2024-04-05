@@ -6,7 +6,9 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/IconData.xaml"/>
+                <ResourceDictionary Source="/Style/IconData.xaml"/>
+                <ResourceDictionary Source="/Style/ThemeColor.xaml"/>
+                <ResourceDictionary Source="/Style/UITemplate.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <!--全局TextBlock文本样式-->
             <Style TargetType="{x:Type TextBlock}">
@@ -15,7 +17,6 @@
                     <Setter Property="TextBlock.TextTrimming" Value="CharacterEllipsis"/>
                 </Style.Setters>
             </Style>
-            <SolidColorBrush x:Key="ForeColor" Color="#FFEEEEEE"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
