@@ -18,6 +18,7 @@ namespace MyToolBar
     public partial class App : Application
     {
         private static Mutex mutex;
+        public static App? CurrentApp => Current as App;
         public App()
         {
             mutex=new Mutex(false, "MyToolBar",out bool firstInstant);
@@ -58,5 +59,25 @@ namespace MyToolBar
             cracker.Cracker();
             base.OnStartup(e);
         }
+
+
+        #region Theme Dark/Light Mode
+        public void SetThemeMode(bool isDark)
+        {
+            GlobalService.DarkMode = isDark;
+            string uri = isDark ? "Style/ThemeColor.xaml" : "Style/ThemeColor_Light.xaml";
+            // 移除当前主题资源字典（如果存在）
+            var oldDict = Resources.MergedDictionaries.FirstOrDefault(d => d.Source != null && (d.Source.OriginalString.Contains("ThemeColor.xaml") || d.Source.OriginalString.Contains("ThemeColor_Light.xaml")));
+            if (oldDict != null)
+            {
+                Resources.MergedDictionaries.Remove(oldDict);
+            }
+            // 添加新的主题资源字典
+            Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = new Uri(uri, UriKind.Relative) });
+
+            MainWindow main = Current.MainWindow as MainWindow;
+            main.UpdateWindowBlurMode();
+        }
+        #endregion
     }
 }

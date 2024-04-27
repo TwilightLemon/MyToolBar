@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Windows;
 using MyToolBar.WinApi;
 using System.Windows.Input;
@@ -7,10 +6,9 @@ using System.Windows.Media;
 using MyToolBar.Func;
 using System.Windows.Media.Animation;
 using static MyToolBar.GlobalService;
-using System.Runtime.InteropServices;
 using System.Timers;
 using System.Text.Json.Nodes;
-using System.Windows.Media.Imaging;
+using Microsoft.Win32;
 
 namespace MyToolBar
 {
@@ -38,6 +36,8 @@ namespace MyToolBar
             });
             UpdateWindowBlurMode();
             Width = SystemParameters.WorkArea.Width;
+            SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
+
             ShowOutter(false);
             #endregion
 
@@ -55,6 +55,17 @@ namespace MyToolBar
             Cap_weather.LoadData();
             Cap_hdm.Start();
             #endregion
+        }
+
+        private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
+        {
+            if (e.Category == UserPreferenceCategory.General)
+            {
+                App.CurrentApp?.SetThemeMode(!ToolWindowApi.GetIsLightTheme());
+                if (CurrentWindStyle == 0)
+                    NormalWindStyle();
+                else MaxWindStyle();
+            }
         }
 
         #region OutterControl
@@ -127,6 +138,46 @@ namespace MyToolBar
         }
         #endregion
 
+        #region OutterFuncStatus & WindowStyle
+        /// <summary>
+        /// 当前OutterFunc样式 0:Normal 1:Max
+        /// </summary>
+        private int CurrentWindStyle = 0;
+
+        private void MaxWindStyle()
+        {
+            //全屏样式  整体变暗
+            CurrentWindStyle = 1;
+            UpdateWindowBlurMode(240);
+            if (DarkMode)
+            {
+                OutterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(20, 255, 255, 255));
+                OutterFuncText.Foreground = new SolidColorBrush(Color.FromArgb(240, 252, 252, 252));
+            }
+            else
+            {
+                OutterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(20, 0, 0, 0));
+                OutterFuncText.Foreground = new SolidColorBrush(Color.FromArgb(240, 3, 3, 3));
+            }
+            OutterFuncText.FontWeight = FontWeights.Normal;
+        }
+
+        private void NormalWindStyle()
+        {
+            CurrentWindStyle = 0;
+            UpdateWindowBlurMode();
+            if (DarkMode)
+            {
+                OutterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(120, 255, 255, 255));
+                OutterFuncText.Foreground = new SolidColorBrush(Color.FromArgb(250, 3, 3, 3));
+            }
+            else
+            {
+                OutterFuncStatus.SetResourceReference(BackgroundProperty, "MaskColor");
+                OutterFuncText.SetResourceReference(ForegroundProperty, "ForeColor");
+            }
+            OutterFuncText.FontWeight = FontWeights.Bold;
+        }
 
         /// <summary>
         /// 更新ForeWindow->Tittle & 自身窗口样式
@@ -138,24 +189,17 @@ namespace MyToolBar
             var fore = ActiveWindow.GetForegroundWindow();
             if (MaxedWindow == IntPtr.Zero && fore.IsZoomedWindow())
             {
-                //全屏样式  整体变暗
                 MaxedWindow = fore;
-                UpdateWindowBlurMode(240);
-                OutterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(20, 255, 255, 255));
-                OutterFuncText.Foreground = new SolidColorBrush(Color.FromArgb(240, 252, 252, 252));
-                OutterFuncText.FontWeight = FontWeights.Normal;
+                MaxWindStyle();
             }
             if (!MaxedWindow.IsZoomedWindow() && MaxedWindow != IntPtr.Zero)
             {
                 //退出全屏 高亮
                 MaxedWindow = IntPtr.Zero;
-                UpdateWindowBlurMode();
-                OutterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(120, 255, 255, 255));
-                OutterFuncText.Foreground = new SolidColorBrush(Color.FromArgb(250, 3, 3, 3));
-                OutterFuncText.FontWeight = FontWeights.Bold;
+                NormalWindStyle();
             }
         }
-        private void UpdateWindowBlurMode(byte opacity = 150)
+        public void UpdateWindowBlurMode(byte opacity = 180)
         {
             wac.Color = DarkMode ?
             Color.FromArgb(opacity, 0, 0, 0) :
@@ -163,8 +207,9 @@ namespace MyToolBar
             wac.DarkMode = DarkMode;
             wac.IsEnabled = true;
         }
+        #endregion
 
-
+        #region Click & Touch Control
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             AppBarFunctions.SetAppBar(this, ABEdge.None);
@@ -194,5 +239,6 @@ namespace MyToolBar
         {
             SendHotKey.ShowTaskView();
         }
+        #endregion
     }
 }

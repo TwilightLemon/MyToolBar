@@ -17,35 +17,11 @@ namespace MyToolBar.PopWindow
     /// <summary>
     /// WeatherBox.xaml 的交互逻辑
     /// </summary>
-    public partial class WeatherBox : Window
+    public partial class WeatherBox : PopWindowBase
     {
         public WeatherBox()
         {
             InitializeComponent();
-            this.Activate();
-            this.Top = -1 * this.Height;
-            this.Deactivated += WeatherBox_Deactivated;
-            this.Loaded += WeatherBox_Loaded;
-        }
-
-        private void WeatherBox_Loaded(object sender, RoutedEventArgs e)
-        {
-            var da = new DoubleAnimation(-1 * this.Height, 30, TimeSpan.FromMilliseconds(300));
-            da.EasingFunction = new CubicEase();
-            BeginAnimation(TopProperty, da);
-        }
-
-        private void WeatherBox_Deactivated(object? sender, EventArgs e)
-        {
-            var da = new DoubleAnimation(this.Top,-1*this.Height,TimeSpan.FromMilliseconds(300));
-            da.EasingFunction = new CubicEase();
-            da.Completed += Da_Completed;
-            BeginAnimation(TopProperty, da);
-        }
-
-        private void Da_Completed(object? sender, EventArgs e)
-        {
-            Close();
         }
 
         private WeatherCache cache = null;
@@ -86,8 +62,8 @@ namespace MyToolBar.PopWindow
                 Days.Children.Add(new WeatherDayItem(data[i], airData[i]));
             }
             averageTemp /= 5;
-            double offset_max = 50.0 / (max-averageTemp+1),
-                offset_min=50.0/(averageTemp-min+1);
+            double offset_max = 25.0 / (max-averageTemp+1),
+                offset_min=25.0/(averageTemp-min+1);
             DateTime date= DateTime.Now;
             foreach(WeatherDayItem item in Days.Children)
             {
@@ -167,22 +143,6 @@ namespace MyToolBar.PopWindow
             LoadData(e,cache);
             (Resources["PageBack"] as Storyboard).Begin();
             await cache.SaveCache();
-        }
-      
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            ToolWindowApi.SetToolWindow(this);
-            WindowAccentCompositor wac = new(this,false, (c) =>
-            {
-                c.A = 255;
-                Background = new SolidColorBrush(c);
-            });
-            wac.Color = DarkMode ?
-            Color.FromArgb(180, 0, 0, 0) :
-            Color.FromArgb(180, 255, 255, 255);
-            wac.DarkMode = DarkMode;
-            wac.IsEnabled = true;
         }
 
         private void Now_Location_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)

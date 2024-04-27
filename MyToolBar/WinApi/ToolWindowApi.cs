@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -11,6 +12,22 @@ namespace MyToolBar.WinApi
 {
     internal static class ToolWindowApi
     {
+        public static bool GetIsLightTheme()
+        {
+            using (var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize"))
+            {
+                if (key != null)
+                {
+                    var value = key.GetValue("AppsUseLightTheme");
+                    if (value != null && value is int)
+                    {
+                        return (int)value > 0;
+                    }
+                }
+            }
+            return true; // 默认为浅色模式
+        }
+
         public static void SetToolWindow(Window win)
         {
             WindowInteropHelper wndHelper = new(win);

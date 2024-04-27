@@ -1,5 +1,10 @@
 ﻿using MyToolBar.Func;
+using MyToolBar.PopWindow;
+using System;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media.Animation;
 using static MyToolBar.GlobalService;
 
 namespace MyToolBar.Capsules
@@ -27,6 +32,35 @@ namespace MyToolBar.Capsules
             Cpu_temp.Text = CPUInfo.GetCPUTemperature() + "℃";
             var data = ni.GetNetworkspeed();
             Network_text.Text = $"↑ {data[1]}/s\r\n↓ {data[0]}/s";
+        }
+        private bool BoxShowed = false;
+        private void OpenBox()
+        {
+            if (BoxShowed) return;
+            var w = new ResourceMonitor();
+            w.Left = TransformToAncestor(Application.Current.MainWindow).Transform(new Point(0, 0)).X-ActualWidth/4;
+            w.Closing += delegate { BoxShowed = false; };
+            w.Show();
+            BoxShowed = true;
+        }
+        private void uc_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            OpenBox();
+        }
+
+        private void UserControl_MouseEnter(object sender, MouseEventArgs e)
+        {
+            ViewerMask.BeginAnimation(OpacityProperty, new DoubleAnimation(0.2, 1, TimeSpan.FromMilliseconds(300)));
+        }
+
+        private void UserControl_MouseLeave(object sender, MouseEventArgs e)
+        {
+            ViewerMask.BeginAnimation(OpacityProperty, new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(300)));
+        }
+
+        private void uc_TouchLeave(object sender, TouchEventArgs e)
+        {
+            OpenBox();
         }
     }
 }

@@ -3,21 +3,26 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:MyToolBar.Capsules"
-             mc:Ignorable="d" Height="30">
-    <WrapPanel>
-        <Grid x:Name="MemoryViewer" Width="50" Height="30">
-            <Path Width="13" Height="13" HorizontalAlignment="Left" Data="{StaticResource Icon_memory}" Stretch="Uniform" SnapsToDevicePixels="True" Fill="{Binding Foreground, ElementName=uc}"/>
-            <TextBlock x:Name="Meo_text" Margin="20,0,0,0" TextWrapping="Wrap" Text="99%" VerticalAlignment="Center"/>
-        </Grid>
-        <Grid x:Name="CPUViewer" Width="85" Height="30" Margin="10,0,0,0">
-            <TextBlock x:Name="Cpu_text" Margin="20,0,29,0" TextWrapping="Wrap" Text="99%" VerticalAlignment="Center"/>
-            <TextBlock x:Name="Cpu_temp" Margin="47,0,0,0" TextWrapping="Wrap" Text="36℃" VerticalAlignment="Center"/>
-            <Path Width="13" Height="13" Data="{StaticResource Icon_CPU}" HorizontalAlignment="Left" Fill="{Binding Foreground, ElementName=uc}" Stretch="Uniform" SnapsToDevicePixels="True" Margin="0,5,0,5"/>
-        </Grid>
-        <Grid x:Name="NetworkViewer" Width="80" Height="30" Margin="10,0,0,0">
-            <TextBlock x:Name="Network_text" Margin="20,0,0,0" VerticalAlignment="Center" FontSize="10" LineHeight="1"><Run Text="↑90kb/s"/><LineBreak/><Run Language="zh-cn" Text="↓1mb/s"/></TextBlock>
-            <Path Width="13" Height="13" Data="{StaticResource Icon_web}" HorizontalAlignment="Left" Fill="{Binding Foreground, ElementName=uc}" Stretch="Uniform" SnapsToDevicePixels="True" Margin="0,5,0,5"/>
-        </Grid>
-    </WrapPanel>
+             xmlns:local="clr-namespace:MyToolBar.Capsules" Background="#01000000"
+             MouseEnter="UserControl_MouseEnter" MouseLeave="UserControl_MouseLeave"
+             TouchLeave="uc_TouchLeave"
+             mc:Ignorable="d" Height="30" MouseLeftButtonUp="uc_MouseLeftButtonUp" Cursor="Hand">
+    <Grid>
+        <Border x:Name="ViewerMask" Opacity="0" Background="{DynamicResource MaskColor}" CornerRadius="12"/>
+        <WrapPanel Margin="5,0,0,5">
+            <Grid x:Name="MemoryViewer" Width="50" Height="30">
+                <Path Width="13" Height="13" HorizontalAlignment="Left" Data="{StaticResource Icon_memory}" Stretch="Uniform" SnapsToDevicePixels="True" Fill="{Binding Foreground, ElementName=uc}"/>
+                <TextBlock x:Name="Meo_text" Margin="20,0,0,0" TextWrapping="Wrap" Text="99%" VerticalAlignment="Center"/>
+            </Grid>
+            <Grid x:Name="CPUViewer" Width="85" Height="30" Margin="10,0,0,0">
+                <TextBlock x:Name="Cpu_text" Margin="20,0,29,0" TextWrapping="Wrap" Text="99%" VerticalAlignment="Center"/>
+                <TextBlock x:Name="Cpu_temp" Margin="47,0,0,0" TextWrapping="Wrap" Text="36℃" VerticalAlignment="Center"/>
+                <Path Width="13" Height="13" Data="{StaticResource Icon_CPU}" HorizontalAlignment="Left" Fill="{Binding Foreground, ElementName=uc}" Stretch="Uniform" SnapsToDevicePixels="True" Margin="0,5,0,5"/>
+            </Grid>
+            <Grid x:Name="NetworkViewer" Width="80" Height="30" Margin="10,0,0,0">
+                <TextBlock x:Name="Network_text" Margin="20,0,0,0" VerticalAlignment="Center" FontSize="10" LineHeight="1"><Run Text="↑90kb/s"/><LineBreak/><Run Language="zh-cn" Text="↓1mb/s"/></TextBlock>
+                <Path Width="13" Height="13" Data="{StaticResource Icon_web}" HorizontalAlignment="Left" Fill="{Binding Foreground, ElementName=uc}" Stretch="Uniform" SnapsToDevicePixels="True" Margin="0,5,0,5"/>
+            </Grid>
+        </WrapPanel>
+    </Grid>
 </UserControl>

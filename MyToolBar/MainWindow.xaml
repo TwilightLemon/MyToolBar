@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:MyToolBar"
         xmlns:cap="clr-namespace:MyToolBar.Capsules"
         mc:Ignorable="d" Topmost="True"
-        Title="MyToolBar" Height="30" Width="1480" Background="{x:Null}" ResizeMode="NoResize" WindowStyle="None" Loaded="Window_Loaded" Closing="Window_Closing" Foreground="{DynamicResource ForeColor}" ShowInTaskbar="False">
-    <Grid Background="#22000000">
+        Title="MyToolBar" Height="30" Width="1480" Background="{x:Null}" ResizeMode="NoResize" WindowStyle="None" Loaded="Window_Loaded" Closing="Window_Closing" Foreground="{DynamicResource ForeColor}" ShowInTaskbar="False" AllowsTransparency="True">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1.2*"/>
             <ColumnDefinition Width="2*" MaxWidth="600"/>
@@ -19,7 +19,7 @@
             </Border>
             <TextBlock x:Name="TitleView"  Margin="40,0,10,0" TextWrapping="Wrap" Text="Microsoft Visual Studio 2022" VerticalAlignment="Center" Foreground="{DynamicResource ForeColor}"/>
         </Grid>
-        <Border x:Name="OutterFuncStatus" Grid.Column="1"  Background="#9FFFFFFF" CornerRadius="15"/>
+        <Border x:Name="OutterFuncStatus" Grid.Column="1"  Background="{DynamicResource HighlightColor}" CornerRadius="15"/>
         <Grid x:Name="OutterFunc" Grid.Column="1" Background="Transparent">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
@@ -32,8 +32,8 @@
             <Border x:Name="Func_Right" Background="Transparent" Grid.Column="2" TouchLeave="Func_Right_TouchDown"/>
         </Grid>
         <WrapPanel x:Name="FuncPanel" HorizontalAlignment="Right"   Margin="14,0,10,0" Grid.Column="2">
-            <cap:HardwareMonitorCap x:Name="Cap_hdm" Foreground="{DynamicResource ForeColor}"/>
-            <cap:WeatherCap x:Name="Cap_weather" Margin="0,0,0,0" Foreground="{DynamicResource ForeColor}"/>
+            <cap:HardwareMonitorCap x:Name="Cap_hdm"/>
+            <cap:WeatherCap x:Name="Cap_weather"/>
         </WrapPanel>
 
     </Grid>
