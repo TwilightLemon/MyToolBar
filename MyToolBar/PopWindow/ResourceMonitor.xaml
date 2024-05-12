@@ -6,17 +6,104 @@
         xmlns:local="clr-namespace:MyToolBar.PopWindow"
         mc:Ignorable="d"
         Title="ResourceMonitor" Height="520" Width="350" Background="{DynamicResource MaskColor}" Foreground="{DynamicResource ForeColor}">
-    <local:MyScrollViewer VerticalScrollBarVisibility="Hidden">
-        <WrapPanel x:Name="wp" ItemWidth="350">
-            <Grid Margin="0,20,0,0" Width="330" Height="30" >
-                <Border x:Name="OpenTaskMonitorBtn" Cursor="Hand" Background="Transparent" Width="20" Height="20" HorizontalAlignment="Left" Margin="10,0,0,0" MouseLeftButtonUp="OpenTaskMonitorBtn_MouseLeftButtonUp">
-                    <Path Data="{DynamicResource Icon_monitor}" Fill="{DynamicResource ForeColor}" Stretch="Uniform" Width="14" Height="14"/>
-                </Border>
-                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Margin="40,0,0,0" Text="Processes" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
-                <Border x:Name="EndProcessBtn" CornerRadius="14,14,14,14" HorizontalAlignment="Right" Width="80" Background="{DynamicResource MaskColor}" Height="28">
-                    <TextBlock x:Name="EndProcessText" Text="End Task" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource ForeColor}"/>
-                </Border>
-            </Grid>
-        </WrapPanel>
-    </local:MyScrollViewer>
+    <local:PopWindowBase.Resources>
+        <Storyboard x:Key="OpenDetalPage">
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ProcessInfoPage" Storyboard.TargetProperty="(UIElement.Visibility)">
+                <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="ProcessInfoPage" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                <EasingThicknessKeyFrame KeyTime="00:00:00" Value="10,200,10,260">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <CircleEase EasingMode="EaseOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+                <EasingThicknessKeyFrame KeyTime="00:00:00.2000000" Value="10,60,10,10">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <CircleEase EasingMode="EaseOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+            </ThicknessAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ProcListPage" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ProcListPage" Storyboard.TargetProperty="(UIElement.Visibility)">
+                <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+                <DiscreteObjectKeyFrame KeyTime="00:00:00.2000000" Value="{x:Static Visibility.Collapsed}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ProcessInfoPage" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="CloseDetalPage">
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ProcListPage" Storyboard.TargetProperty="(UIElement.Visibility)">
+                <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ProcListPage" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="ProcessInfoPage" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                <EasingThicknessKeyFrame KeyTime="00:00:00" Value="10,60,10,10">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <CircleEase EasingMode="EaseIn"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+                <EasingThicknessKeyFrame KeyTime="00:00:00.2000000" Value="10,200,10,260">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <CircleEase EasingMode="EaseIn"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+            </ThicknessAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ProcessInfoPage" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ProcessInfoPage" Storyboard.TargetProperty="(UIElement.Visibility)">
+                <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+                <DiscreteObjectKeyFrame KeyTime="00:00:00.2000000" Value="{x:Static Visibility.Collapsed}"/>
+            </ObjectAnimationUsingKeyFrames>
+        </Storyboard>
+    </local:PopWindowBase.Resources>
+    <Grid x:Name="MainPage" Width="350">
+        <Grid Margin="10,20,10,0" Height="30" VerticalAlignment="Top" >
+            <Border  Background="Transparent" Width="20" Height="20" HorizontalAlignment="Left" Margin="10,0,0,0">
+                <Path Data="{DynamicResource Icon_monitor}" Fill="{DynamicResource ForeColor}" Stretch="Uniform" Width="14" Height="14"/>
+            </Border>
+            <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Margin="40,0,0,0" Text="Processes" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+            <Border x:Name="OpenTaskMonitorBtn" Cursor="Hand"  MouseLeftButtonUp="OpenTaskMonitorBtn_MouseLeftButtonUp" CornerRadius="14,14,14,14" HorizontalAlignment="Right" Width="80" Background="{DynamicResource MaskColor}" Height="28">
+                <TextBlock Text="TaskMgr" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+        </Grid>
+        <Border x:Name="ProcListPage"  Margin="10 60 10 10"  Background="{DynamicResource MaskColor}" CornerRadius="15">
+            <local:MyScrollViewer VerticalScrollBarVisibility="Hidden">
+                <WrapPanel x:Name="ProcessList" ItemWidth="330"/>
+            </local:MyScrollViewer>
+        </Border>
+        <Grid x:Name="ProcessInfoPage" Margin="10 60 10 10" Visibility="Collapsed">
+            <Border Background="{DynamicResource MaskColor}" CornerRadius="15"/>
+            <Border HorizontalAlignment="Center" Background="{DynamicResource MaskColor}" CornerRadius="15" Height="90" Margin="0 40 0 0" VerticalAlignment="Top" Width="90">
+                <Image x:Name="PInfo_Icon" Stretch="Uniform" Margin="20" />
+            </Border>
+            <TextBlock x:Name="PInfo_Detal" FontSize="14"  VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="20 150 20 0" TextAlignment="Center">
+                    <Run x:Name="PInfo_Name" FontSize="16" d:Text="Visual Studio" FontWeight="Bold" />
+                    <LineBreak/>
+                    <Run x:Name="PInfo_file" d:Text="dev.exe" /><LineBreak/>
+                <LineBreak/>
+                    <Run x:Name="PInfo_PID" d:Text="PID: 1234" /><LineBreak/>
+                    <Run x:Name="PInfo_CPU" d:Text="CPU: 12%" /><LineBreak/>
+                    <Run x:Name="PInfo_MEM" d:Text="MEM: 123MB" />
+            </TextBlock>
+            <Border x:Name="PInfo_BackBtn" Cursor="Hand" Background="{DynamicResource MaskColor}" CornerRadius="50" Width="50" Height="50" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="30,0,0,100" MouseLeftButtonUp="PInfo_BackBtn_MouseLeftButtonUp">
+                <Path Data="{StaticResource Icon_back}" Stretch="Uniform" Width="14" Height="14" Fill="{DynamicResource ForeColor}"/>
+            </Border>
+            <Border x:Name="PInfo_EndBtn" Cursor="Hand" CornerRadius="50" Width="50" Height="50" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,100" Background="#7FF72121" MouseLeftButtonUp="PInfo_EndBtn_MouseLeftButtonUp">
+                <Path Data="{StaticResource Icon_end}" Stretch="Uniform" Width="14" Height="14" Fill="{DynamicResource ForeColor}"/>
+            </Border>
+            <Border x:Name="PInfo_OpenBtn" Cursor="Hand" Background="{DynamicResource MaskColor}" CornerRadius="50" Width="50" Height="50" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,30,100" MouseLeftButtonUp="PInfo_OpenBtn_MouseLeftButtonUp">
+                <Path Data="{StaticResource Icon_file}" Stretch="Uniform" Width="15" Height="15" Fill="{DynamicResource ForeColor}"/>
+            </Border>
+        </Grid>
+    </Grid>
 </local:PopWindowBase>

@@ -78,7 +78,7 @@ namespace MyToolBar.PopWindow
             //加载Favorite
             LoadFavorList();
         }
-        private async void LoadFavorList()
+        private void LoadFavorList()
         {
             DefaultPosition.Children.Clear();
             var cur = new WeatherCityItem()

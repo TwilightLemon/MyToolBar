@@ -9,7 +9,7 @@
              mc:Ignorable="d" Height="30" MouseLeftButtonUp="uc_MouseLeftButtonUp" Cursor="Hand">
     <Grid>
         <Border x:Name="ViewerMask" Opacity="0" Background="{DynamicResource MaskColor}" CornerRadius="12"/>
-        <WrapPanel Margin="5,0,0,5">
+        <WrapPanel Margin="5,0,5,0">
             <Grid x:Name="MemoryViewer" Width="50" Height="30">
                 <Path Width="13" Height="13" HorizontalAlignment="Left" Data="{StaticResource Icon_memory}" Stretch="Uniform" SnapsToDevicePixels="True" Fill="{Binding Foreground, ElementName=uc}"/>
                 <TextBlock x:Name="Meo_text" Margin="20,0,0,0" TextWrapping="Wrap" Text="99%" VerticalAlignment="Center"/>

@@ -24,7 +24,7 @@ namespace MyToolBar
 
         private WindowAccentCompositor wac;
         private MsgHelper ms = new MsgHelper();
-        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             #region Window Style
             ToolWindowApi.SetToolWindow(this);
@@ -37,7 +37,7 @@ namespace MyToolBar
             UpdateWindowBlurMode();
             Width = SystemParameters.WorkArea.Width;
             SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
-
+            UpdateColorMode();
             ShowOutter(false);
             #endregion
 
@@ -56,18 +56,6 @@ namespace MyToolBar
             Cap_hdm.Start();
             #endregion
         }
-
-        private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
-        {
-            if (e.Category == UserPreferenceCategory.General)
-            {
-                App.CurrentApp?.SetThemeMode(!ToolWindowApi.GetIsLightTheme());
-                if (CurrentWindStyle == 0)
-                    NormalWindStyle();
-                else MaxWindStyle();
-            }
-        }
-
         #region OutterControl
         private void Ms_MsgReceived(string str)
         {
@@ -207,6 +195,23 @@ namespace MyToolBar
             wac.DarkMode = DarkMode;
             wac.IsEnabled = true;
         }
+
+        private void UpdateColorMode()
+        {
+            App.CurrentApp?.SetThemeMode(!ToolWindowApi.GetIsLightTheme());
+            if (CurrentWindStyle == 0)
+                NormalWindStyle();
+            else MaxWindStyle();
+        }
+
+        private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
+        {
+            if (e.Category == UserPreferenceCategory.General)
+            {
+                UpdateColorMode();
+            }
+        }
+
         #endregion
 
         #region Click & Touch Control

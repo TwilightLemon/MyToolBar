@@ -118,7 +118,7 @@ internal class NetworkInfo
         return new string[] { FormatSize(recv), FormatSize(sent) };
 
     }
-    private static string FormatSize(double size)
+    public static string FormatSize(double size)
     {
         double d = (double)size;
         int i = 0;

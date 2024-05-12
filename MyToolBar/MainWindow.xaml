@@ -6,15 +6,15 @@
         xmlns:local="clr-namespace:MyToolBar"
         xmlns:cap="clr-namespace:MyToolBar.Capsules"
         mc:Ignorable="d" Topmost="True"
-        Title="MyToolBar" Height="30" Width="1480" Background="{x:Null}" ResizeMode="NoResize" WindowStyle="None" Loaded="Window_Loaded" Closing="Window_Closing" Foreground="{DynamicResource ForeColor}" ShowInTaskbar="False" AllowsTransparency="True">
+        Title="MyToolBar" Height="30" Width="1480" Background="Transparent" ResizeMode="NoResize" WindowStyle="None" Loaded="Window_Loaded" Closing="Window_Closing" Foreground="{DynamicResource ForeColor}" ShowInTaskbar="False" AllowsTransparency="True">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1.2*"/>
             <ColumnDefinition Width="2*" MaxWidth="600"/>
             <ColumnDefinition Width="1.2*"/>
         </Grid.ColumnDefinitions>
-        <Grid x:Name="TittleViewer" TouchLeave="TitleView_TouchDown" Background="Transparent">
-            <Border x:Name="CloseButton" Cursor="Hand" HorizontalAlignment="Left" Height="25" Width="25" Background="#00000000" MouseDown="CloseButton_MouseDown" BorderBrush="#00000000" Margin="10,0,0,0">
+        <Grid x:Name="TittleViewer" TouchLeave="TitleView_TouchDown" Background="#01000000">
+            <Border x:Name="CloseButton" Cursor="Hand" HorizontalAlignment="Left" Height="25" Width="25" Background="#01000000" MouseDown="CloseButton_MouseDown"  Margin="10,0,0,0">
                 <Border BorderBrush="{DynamicResource ForeColor}" BorderThickness="2" CornerRadius="25,25,25,25" Width="15" Height="15"/>
             </Border>
             <TextBlock x:Name="TitleView"  Margin="40,0,10,0" TextWrapping="Wrap" Text="Microsoft Visual Studio 2022" VerticalAlignment="Center" Foreground="{DynamicResource ForeColor}"/>
