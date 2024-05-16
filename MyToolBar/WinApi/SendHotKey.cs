@@ -15,6 +15,7 @@ namespace MyToolBar.WinApi
 
         public const byte VK_LWIN = 0x5B;
         public const byte VK_TAB = 0x09;
+        public const byte VK_SNAPSHOT = 0x2C;
 
         public static void ShowTaskView()
         {

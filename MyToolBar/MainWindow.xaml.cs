@@ -9,6 +9,7 @@ using static MyToolBar.GlobalService;
 using System.Timers;
 using System.Text.Json.Nodes;
 using Microsoft.Win32;
+using MyToolBar.PenPackages;
 
 namespace MyToolBar
 {
@@ -24,6 +25,7 @@ namespace MyToolBar
 
         private WindowAccentCompositor wac;
         private MsgHelper ms = new MsgHelper();
+        private PenControlWindow pcw;
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             #region Window Style
@@ -55,6 +57,9 @@ namespace MyToolBar
             Cap_weather.LoadData();
             Cap_hdm.Start();
             #endregion
+
+            pcw = new PenControlWindow();
+            pcw.Show();
         }
         #region OutterControl
         private void Ms_MsgReceived(string str)

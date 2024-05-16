@@ -4,4 +4,5 @@
     <SolidColorBrush x:Key="ForeColor" Color="#0E0E0E"/>
     <SolidColorBrush x:Key="MaskColor" Color="#0C000000"/>
     <SolidColorBrush x:Key="HighlightColor" Color="#0C000000"/>
+    <SolidColorBrush x:Key="BackgroundColor" Color="#FFF"/>
 </ResourceDictionary>

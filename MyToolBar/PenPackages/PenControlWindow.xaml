@@ -1,0 +1,24 @@
+﻿<Window x:Class="MyToolBar.PenPackages.PenControlWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MyToolBar"
+        mc:Ignorable="d" Topmost="True" ShowInTaskbar="False"
+        Title="PenControlWindow" Height="40" Width="40" d:Width="200" d:Height="200" WindowStyle="None" ResizeMode="NoResize" Background="Transparent" PreviewStylusDown="Window_PreviewStylusDown" >
+    <WindowChrome.WindowChrome>
+        <WindowChrome GlassFrameThickness="-1" />
+    </WindowChrome.WindowChrome>
+    <Grid x:Name="FunctionPanel" Visibility="Collapsed" d:Visibility="Visible">
+        <Border x:Name="statusBtn" HorizontalAlignment="Right" Width="80" Height="80" VerticalAlignment="Top" Background="{DynamicResource BackgroundColor}" Margin="0,-40,-40,0" CornerRadius="40,40,40,40" StylusButtonUp="statusBtn_StylusButtonUp">
+            <Path Data="{StaticResource Icon_end}" Stretch="Uniform" Width="10" Height="10" Fill="{DynamicResource ForeColor}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="20,20,20,20"/>
+        </Border>
+        <Border x:Name="PrtScrBtn" HorizontalAlignment="Left" Width="60" Height="60" VerticalAlignment="Top" Background="{DynamicResource BackgroundColor}" Margin="25,25,0,0" CornerRadius="30,30,30,30" StylusButtonUp="PrtScrBtn_StylusButtonUp">
+            <Path Data="{StaticResource Icon_prtScr}" Stretch="Uniform" Width="20" Height="20" Fill="{DynamicResource ForeColor}"/>
+        </Border>
+        <Border x:Name="DrawBtn" HorizontalAlignment="Left" Width="60" Height="60" VerticalAlignment="Top" Background="{DynamicResource BackgroundColor}" Margin="115,115,0,0" CornerRadius="30,30,30,30" StylusButtonUp="DrawBtn_StylusButtonUp">
+            <Path Data="{StaticResource Icon_draw}" Stretch="Uniform" Width="20" Height="20" Fill="{DynamicResource ForeColor}"/>
+        </Border>
+
+    </Grid>
+</Window>
