@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 
 namespace MyToolBar.PenPackages
 {
@@ -16,8 +17,35 @@ namespace MyToolBar.PenPackages
             InitializeComponent();
             this.SizeChanged += PenControlWindow_SizeChanged;
             this.Loaded += PenControlWindow_Loaded;
+            this.StylusSystemGesture += PenControlWindow_StylusSystemGesture;
+            _openAni = Resources["OpenAni"] as Storyboard;
+            _openAni.Completed += delegate {
+                this.IsEnabled = true;
+            };
+            _closeAni = Resources["CloseAni"] as Storyboard;
+            _closeAni.Completed += delegate {
+                Width = 40;
+                Height = 40;
+                this.IsEnabled = true;
+                _isOpen = false;
+            };
         }
 
+        private void PenControlWindow_StylusSystemGesture(object sender, StylusSystemGestureEventArgs e)
+        {
+            if (e.SystemGesture == SystemGesture.Drag)
+            {
+                Point endPosition = e.GetPosition(this);
+                if (endPosition.X < _startPosition.X && endPosition.Y > _startPosition.Y)
+                {
+                    //向左下滑动
+                    OpenPanel();
+                }
+            }
+        }
+
+        private Storyboard _openAni,_closeAni;
+        private bool _isOpen = false;
         private void PenControlWindow_Loaded(object sender, RoutedEventArgs e)
         {
             ResetWindowLocation();
@@ -31,15 +59,22 @@ namespace MyToolBar.PenPackages
 
         private void OpenPanel()
         {
-            this.Width = 200;
-            this.Height = 200;
-            FunctionPanel.Visibility = Visibility.Visible;
+            if (!_isOpen)
+            {
+                _isOpen = true;
+                this.IsEnabled=false;//防止执行动画时误触按钮
+                this.Width = 200;
+                this.Height = 200;
+                _openAni.Begin();
+            }
         }
         private void ClosePanel()
         {
-            Width = 40;
-            Height = 40;
-            FunctionPanel.Visibility = Visibility.Collapsed;
+            if (_isOpen)
+            {
+                this.IsEnabled = false;//防止执行动画时误触按钮
+                _closeAni.Begin();
+            }
         }
         private void ResetWindowLocation()
         {
@@ -53,14 +88,19 @@ namespace MyToolBar.PenPackages
             ClosePanel();
         }
 
+        private Point _startPosition;
         private void Window_PreviewStylusDown(object sender, StylusDownEventArgs e)
         {
-            OpenPanel();
+            if (e.StylusDevice.TabletDevice.Type == TabletDeviceType.Stylus)
+            {
+                _startPosition = e.GetPosition(this);
+            }
         }
 
         private void PrtScrBtn_StylusButtonUp(object sender, StylusButtonEventArgs e)
         {
             ClosePanel();
+            //TODO: add sth
         }
 
         private void DrawBtn_StylusButtonUp(object sender, StylusButtonEventArgs e)

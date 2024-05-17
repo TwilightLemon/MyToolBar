@@ -22,6 +22,7 @@ namespace MyToolBar
         public App()
         {
             mutex=new Mutex(false, "MyToolBar",out bool firstInstant);
+#if !DEBUG
             if(!firstInstant)
             {
                 Environment.Exit(0);
@@ -45,6 +46,7 @@ namespace MyToolBar
                 e.SetObserved();
                 WriteLog(e.Exception);
             };
+#endif
             Settings.LoadPath();
         }
         private void WriteLog(Exception e)

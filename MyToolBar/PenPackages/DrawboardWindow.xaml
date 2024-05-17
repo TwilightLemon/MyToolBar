@@ -3,15 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MyToolBar.PenPackages"
+        xmlns:local="clr-namespace:MyToolBar.PenPackages" AllowsTransparency="True"
         mc:Ignorable="d" ShowInTaskbar="False" WindowStyle="None" ResizeMode="NoResize" WindowState="Maximized"
         Title="DrawboardWindow" Height="450" Width="800" Background="Transparent">
-    <WindowChrome.WindowChrome>
-        <WindowChrome GlassFrameThickness="-1" />
-    </WindowChrome.WindowChrome>
     <Grid>
         <InkCanvas x:Name="ink" Background="Transparent"/>
-        <Grid  HorizontalAlignment="Center" Margin="0,50,0,0" VerticalAlignment="Top" Height="50">
+        <Grid  HorizontalAlignment="Center" Margin="100,50,0,0" VerticalAlignment="Top" Height="50">
             <Border Background="{DynamicResource BackgroundColor}" CornerRadius="15,15,15,15" Opacity="0.5"/>
             <WrapPanel x:Name="PenColors" ItemHeight="25"  Height="25" Margin="20,0,55,0" >
                 <Border Background="Black" CornerRadius="25,25,25,25" Width="25" />

@@ -6,8 +6,60 @@
         xmlns:local="clr-namespace:MyToolBar"
         mc:Ignorable="d" Topmost="True" ShowInTaskbar="False"
         Title="PenControlWindow" Height="40" Width="40" d:Width="200" d:Height="200" WindowStyle="None" ResizeMode="NoResize" Background="Transparent" PreviewStylusDown="Window_PreviewStylusDown" >
+    <Window.Resources>
+        <Storyboard x:Key="OpenAni">
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FunctionPanel" Storyboard.TargetProperty="(UIElement.Visibility)">
+                <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="FunctionPanel" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="PrtScrBtn" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                <EasingThicknessKeyFrame KeyTime="00:00:00" Value="180,-30,0,0"/>
+                <EasingThicknessKeyFrame KeyTime="00:00:00.2000000" Value="25,25,0,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+            </ThicknessAnimationUsingKeyFrames>
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="DrawBtn" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                <EasingThicknessKeyFrame KeyTime="00:00:00" Value="180,-25,0,0"/>
+                <EasingThicknessKeyFrame KeyTime="00:00:00.2000000" Value="115,115,0,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+            </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="CloseAni">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="FunctionPanel" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:00.2000000" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="PrtScrBtn" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                <EasingThicknessKeyFrame KeyTime="00:00:00" Value="25,25,0,0"/>
+                <EasingThicknessKeyFrame KeyTime="00:00:00.2000000" Value="180,-30,0,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+            </ThicknessAnimationUsingKeyFrames>
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="DrawBtn" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                <EasingThicknessKeyFrame KeyTime="00:00:00" Value="115,115,0,0"/>
+                <EasingThicknessKeyFrame KeyTime="00:00:00.2000000" Value="180,-25,0,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+            </ThicknessAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FunctionPanel" Storyboard.TargetProperty="(UIElement.Visibility)">
+                <DiscreteObjectKeyFrame KeyTime="00:00:00.2000000" Value="{x:Static Visibility.Collapsed}"/>
+            </ObjectAnimationUsingKeyFrames>
+        </Storyboard>
+    </Window.Resources>
     <WindowChrome.WindowChrome>
-        <WindowChrome GlassFrameThickness="-1" />
+        <WindowChrome GlassFrameThickness="-1"  CaptionHeight="0" />
     </WindowChrome.WindowChrome>
     <Grid x:Name="FunctionPanel" Visibility="Collapsed" d:Visibility="Visible">
         <Border x:Name="statusBtn" HorizontalAlignment="Right" Width="80" Height="80" VerticalAlignment="Top" Background="{DynamicResource BackgroundColor}" Margin="0,-40,-40,0" CornerRadius="40,40,40,40" StylusButtonUp="statusBtn_StylusButtonUp">
