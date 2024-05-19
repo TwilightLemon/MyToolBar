@@ -17,7 +17,8 @@ namespace MyToolBar.PenPackages
             InitializeComponent();
             this.SizeChanged += PenControlWindow_SizeChanged;
             this.Loaded += PenControlWindow_Loaded;
-            this.StylusSystemGesture += PenControlWindow_StylusSystemGesture;
+            this.StylusLeave += PenControlWindow_StylusLeave;
+            this.Deactivated += PenControlWindow_Deactivated;
             _openAni = Resources["OpenAni"] as Storyboard;
             _openAni.Completed += delegate {
                 this.IsEnabled = true;
@@ -31,9 +32,14 @@ namespace MyToolBar.PenPackages
             };
         }
 
-        private void PenControlWindow_StylusSystemGesture(object sender, StylusSystemGestureEventArgs e)
+        private void PenControlWindow_Deactivated(object? sender, System.EventArgs e)
         {
-            if (e.SystemGesture == SystemGesture.Drag)
+            ClosePanel();
+        }
+
+        private void PenControlWindow_StylusLeave(object sender, StylusEventArgs e)
+        {
+            if (!e.StylusDevice.InAir)
             {
                 Point endPosition = e.GetPosition(this);
                 if (endPosition.X < _startPosition.X && endPosition.Y > _startPosition.Y)

@@ -1,5 +1,6 @@
 ﻿using MyToolBar.WinApi;
 using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -19,11 +20,71 @@ namespace MyToolBar.PenPackages
             this.Loaded += DrawboardWindow_Loaded;
             this.PreviewStylusInRange += DrawboardWindow_PreviewStylusInRange;
             this.PreviewStylusOutOfRange += DrawboardWindow_PreviewStylusOutOfRange;
+            this.PreviewStylusButtonDown += DrawboardWindow_PreviewStylusButtonDown;
             this.PreviewMouseDoubleClick += DrawboardWindow_PreviewMouseDoubleClick;
+            this.StylusSystemGesture += DrawboardWindow_StylusSystemGesture;
         }
+
+        private void DrawboardWindow_StylusSystemGesture(object sender, StylusSystemGestureEventArgs e)
+        {
+            //双指点击清空选中项 若没有选中则视为插入
+            if (e.SystemGesture == SystemGesture.TwoFingerTap)
+            {
+                Drawboard_ClearSeleted(() => AddBtn_MouseUp(null, null));
+            }
+        }
+
+        /// <summary>
+        /// 删除已选中的元素和笔画
+        /// </summary>
+        /// <param name="None">没有选中项时发生</param>
+        private void Drawboard_ClearSeleted(Action? None=null)
+        {
+            bool clearAny = false;
+            var es = ink.GetSelectedElements();
+            var ss = ink.GetSelectedStrokes();
+            if (es.Count != 0)
+            {
+                clearAny = true;
+                for (int i = es.Count - 1; i >= 0; i--)
+                    ink.Children.Remove(es[i]);
+            }
+            if (ss.Count != 0)
+            {
+                clearAny = true;
+                for (int i = ss.Count - 1; i >= 0; i--)
+                    ink.Strokes.Remove(ss[i]);
+            }
+            if (!clearAny)
+                None?.Invoke();
+        }
+
+        /// <summary>
+        /// 侧键实例 用于判断选择模式
+        /// </summary>
+        private StylusButton _SideBtn = null;
+        private void DrawboardWindow_PreviewStylusButtonDown(object sender, StylusButtonEventArgs e)
+        {
+           //判断是否为侧键
+           if (e.StylusButton.Guid == StylusPointProperties.BarrelButton.Id)
+            {
+                _SideBtn = e.StylusButton;
+                ink.EditingMode = InkCanvasEditingMode.Select;
+            }
+            else if(_SideBtn?.StylusButtonState == StylusButtonState.Up)
+            {
+                if(!(ink.GetSelectedElements().Any()||ink.GetSelectedStrokes().Any()))
+                    ink.EditingMode = InkCanvasEditingMode.Ink;
+            }
+        }
+
+        /// <summary>
+        /// 绘画模式 or 穿透模式
+        /// </summary>
         private bool _isDrawingMode = false;
         private void DrawboardWindow_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+            //双击切换模式：绘画->穿透
             ink.IsEnabled =_isDrawingMode= false;
             SolidColorBrush bg = new SolidColorBrush();
             Background = bg;
@@ -42,14 +103,16 @@ namespace MyToolBar.PenPackages
 
         private void DrawboardWindow_PreviewStylusOutOfRange(object sender, StylusEventArgs e)
         {
+            //离开绘画区域时禁用绘画 主要是防止鼠标和触摸绘制
             ink.IsEnabled = false;
         }
 
         private void DrawboardWindow_PreviewStylusInRange(object sender, StylusEventArgs e)
         {
+            //进入绘画区域时启用笔绘画
             if (e.StylusDevice.TabletDevice.Type == TabletDeviceType.Stylus)
             {
-                ink.IsEnabled=_isDrawingMode = true;
+                ink.IsEnabled= true;
             }
         }
 
@@ -62,14 +125,26 @@ namespace MyToolBar.PenPackages
             this.Left = 0;
             this.Top = 0;
 
-            SolidColorBrush seletedColor = new SolidColorBrush(GlobalService.DarkMode ? Colors.White : Colors.Black);
+            //响应粘贴
+            CommandBindings.Add(new CommandBinding(ApplicationCommands.Paste, (s, e) =>
+            {
+                AddBtn_MouseUp(null, null);
+            }));
+            //响应删除
+            CommandBindings.Add(new CommandBinding(ApplicationCommands.Delete, (s, e) => {
+                Drawboard_ClearSeleted();
+            }));
+
+            //启动时根据主题选择默认笔刷颜色
             foreach (Border item in PenColors.Children)
             {
                 item.MouseUp += PenColor_MouseUp;
-                item.BorderBrush = seletedColor;
             }
             PenColor_MouseUp(PenColors.Children[GlobalService.DarkMode ? 1 : 0], null);
         }
+        /// <summary>
+        /// 当前选择的笔刷颜色
+        /// </summary>
         private Border _CurrentPen = null;
         private void PenColor_MouseUp(object sender, MouseButtonEventArgs e)
         {
@@ -77,26 +152,66 @@ namespace MyToolBar.PenPackages
             if (_CurrentPen != null)
             {
                 _CurrentPen.BorderThickness = new Thickness(0);
+                _CurrentPen.Child = null;
             }
             b.BorderThickness = new Thickness(2);
 
             _CurrentPen = b;
+            var penColor = ((SolidColorBrush)_CurrentPen.Background).Color;
+            b.BorderBrush=new SolidColorBrush(
+                GlobalService.DarkMode ? (penColor==Colors.White?Colors.SkyBlue:Colors.White):(penColor==Colors.Black?Colors.SkyBlue:Colors.Black)
+                );
             if (!_isDrawingMode)
             {
                 SolidColorBrush bg = new SolidColorBrush();
                 Background = bg;
                 bg.BeginAnimation(SolidColorBrush.ColorProperty, new ColorAnimation(Color.FromArgb(0, 0, 0, 0), Color.FromArgb(20, 0, 0, 0), TimeSpan.FromMilliseconds(400)));
             }
-            else {
-                Background = new SolidColorBrush(Color.FromArgb(20,0,0,0));
-            }
             ink.IsEnabled = _isDrawingMode = true;
-            ink.DefaultDrawingAttributes.Color = ((SolidColorBrush)_CurrentPen.Background).Color;
+            ink.DefaultDrawingAttributes.Color = penColor;
         }
 
-        private void Border_MouseUp(object sender, MouseButtonEventArgs e)
+        private void CloseBtn_MouseUp(object sender, MouseButtonEventArgs e)
         {
             Close();
+        }
+
+        private void AddBtn_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            //从剪切板中读取图像
+            if (Clipboard.ContainsImage())
+            {
+                Border img = new();
+                int offset = ink.Children.Count * 20+100;
+                InkCanvas.SetTop(img, offset);
+                InkCanvas.SetLeft(img, offset);
+                img.IsHitTestVisible = true;
+                var image = Clipboard.GetImage();
+                img.Background =new ImageBrush(Clipboard.GetImage());
+                //img高宽减半：
+                img.Width =image.Width / 2;
+                img.Height = image.Height / 2;
+                ink.Children.Add(img);
+            }
+            else if(Clipboard.ContainsText())
+            {
+                Border txt = new();
+                int offset = ink.Children.Count * 20 + 100;
+                InkCanvas.SetTop(txt, offset);
+                InkCanvas.SetLeft(txt, offset);
+                txt.IsHitTestVisible = true;
+                txt.SetResourceReference(BackgroundProperty, "BackgroundColor");
+                var t= new TextBlock()
+                {
+                    Text = Clipboard.GetText(),
+                    TextWrapping = TextWrapping.Wrap,
+                    FontSize = 16,
+                    Padding = new Thickness(10)
+                };
+                t.SetResourceReference(ForegroundProperty, "ForeColor");
+                txt.Child = t;
+                ink.Children.Add(txt);
+            }
         }
     }
 }

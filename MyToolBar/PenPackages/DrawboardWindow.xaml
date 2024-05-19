@@ -10,15 +10,22 @@
         <InkCanvas x:Name="ink" Background="Transparent"/>
         <Grid  HorizontalAlignment="Center" Margin="100,50,0,0" VerticalAlignment="Top" Height="50">
             <Border Background="{DynamicResource BackgroundColor}" CornerRadius="15,15,15,15" Opacity="0.5"/>
-            <WrapPanel x:Name="PenColors" ItemHeight="25"  Height="25" Margin="20,0,55,0" >
-                <Border Background="Black" CornerRadius="25,25,25,25" Width="25" />
-                <Border Background="White" CornerRadius="25,25,25,25" Margin="15,0,0,0" Width="25" />
-                <Border Background="#FF297BF2" CornerRadius="25,25,25,25" Margin="15,0,0,0" Width="25" />
-                <Border Background="#FFED4646" CornerRadius="25,25,25,25" Margin="15,0,0,0" Width="25" />
+            <WrapPanel ItemHeight="25"  Height="25" Margin="15 0 15 0">
+                <WrapPanel x:Name="ToolPanels" ItemHeight="25" Margin="0 0 15 0" >
+                    <Border x:Name="AddBtn" Background="{DynamicResource BackgroundColor}" CornerRadius="25,25,25,25" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" Opacity="0.5" MouseUp="AddBtn_MouseUp">
+                        <Path Data="{StaticResource Icon_add}" Stretch="Uniform" Width="10" Fill="{DynamicResource ForeColor}"/>
+                    </Border>
+                </WrapPanel>
+                <WrapPanel x:Name="PenColors" ItemHeight="25" >
+                    <Border Background="Black" CornerRadius="25,25,25,25" Width="25" />
+                    <Border Background="White" CornerRadius="25,25,25,25" Margin="15,0,0,0" Width="25" />
+                    <Border Background="#FF297BF2" CornerRadius="25,25,25,25" Margin="15,0,0,0" Width="25" />
+                    <Border Background="#FFED4646" CornerRadius="25,25,25,25" Margin="15,0,0,0" Width="25" />
+                </WrapPanel>
+                <Border x:Name="CloseBtn" Background="{DynamicResource BackgroundColor}" CornerRadius="25,25,25,25" Margin="15 0 0 0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="25" Height="25" Opacity="0.5" MouseUp="CloseBtn_MouseUp" >
+                    <Path Data="{StaticResource Icon_end}" Stretch="Uniform" Width="8" Fill="{DynamicResource ForeColor}"/>
+                </Border>
             </WrapPanel>
-            <Border Background="{DynamicResource BackgroundColor}" CornerRadius="25,25,25,25" Margin="0,0,15,0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="25" Height="25" Opacity="0.5" MouseUp="Border_MouseUp" >
-                <Path Data="{StaticResource Icon_end}" Stretch="Uniform" Width="8" Fill="{DynamicResource ForeColor}"/>
-            </Border>
         </Grid>
     </Grid>
 </Window>
