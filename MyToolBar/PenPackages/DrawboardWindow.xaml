@@ -12,8 +12,14 @@
             <Border Background="{DynamicResource BackgroundColor}" CornerRadius="15,15,15,15" Opacity="0.5"/>
             <WrapPanel ItemHeight="25"  Height="25" Margin="15 0 15 0">
                 <WrapPanel x:Name="ToolPanels" ItemHeight="25" Margin="0 0 15 0" >
-                    <Border x:Name="AddBtn" Background="{DynamicResource BackgroundColor}" CornerRadius="25,25,25,25" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" Opacity="0.5" MouseUp="AddBtn_MouseUp">
+                    <Border x:Name="SwitchBtn" Background="{DynamicResource BackgroundColor}" CornerRadius="25,25,25,25" HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" Opacity="0.5" MouseUp="SwitchBtn_MouseUp">
+                        <Path Data="{StaticResource Icon_into}" Stretch="Uniform" Width="12" Fill="{DynamicResource ForeColor}"/>
+                    </Border>
+                    <Border x:Name="AddBtn" Background="{DynamicResource BackgroundColor}" CornerRadius="25,25,25,25" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10 0 0 0" Width="25" Height="25" Opacity="0.5" MouseUp="AddBtn_MouseUp">
                         <Path Data="{StaticResource Icon_add}" Stretch="Uniform" Width="10" Fill="{DynamicResource ForeColor}"/>
+                    </Border>
+                    <Border x:Name="ClearBtn" Background="{DynamicResource BackgroundColor}" CornerRadius="25,25,25,25" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10 0 0 0" Width="25" Height="25" Opacity="0.5" MouseUp="ClearBtn_MouseUp">
+                        <Path Data="{StaticResource Icon_clear}" Stretch="Uniform" Width="10" Fill="{DynamicResource ForeColor}"/>
                     </Border>
                 </WrapPanel>
                 <WrapPanel x:Name="PenColors" ItemHeight="25" >
