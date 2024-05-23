@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Nodes;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using System.Windows;
 using System.Windows.Media;
 using static MyToolBar.Func.WeatherApi;
 
@@ -28,50 +31,66 @@ namespace MyToolBar.Func
     {
         public class City
         {
-            public string? province, city, area,id=null;
+            public string? Province { get; set; }
+            public string? CityName { get; set; }
+            public string? Area { get; set; }
+            public string? Id { get; set; }
         }
         public class WeatherNow
         {
-            public string status,link,feel;
-            public string windDir, windScale, humidity, vis;
-            public int code,temp;
+            public string status { get; set; }
+            public string link{ get; set; }
+            public string feel{ get; set; }
+            public string windDir { get; set; }
+            public string windScale{ get; set; }
+            public string humidity { get; set; }
+            public string vis { get; set; }
+            public int code { get; set; }
+            public int temp{ get; set; }
             //...more
         }
         public class WeatherDay
         {
-            public string status_day, status_night;
-            public int code_day, code_night;
-            public int temp_max, temp_min;
+            public string status_day { get; set; }
+            public string status_night { get; set; }
+            public int code_day { get; set; }
+            public int code_night { get; set; }
+            public int temp_max { get; set; }
+            public int temp_min{ get; set; }
         }
         public class AirData
         {
-            public int aqi, level;
-            public string desc,sug;
+            public int aqi { get; set; }
+            public int level { get; set; }
+            public string desc { get; set; }
+            public string sug { get; set; }
         }
         private static string key =ApiKeys.Weather.key,
             lang="en",
             host= ApiKeys.Weather.host;
-        public static async Task<City> GetPositionByIpAsync()
+        public static async Task<City?> GetPositionByIpAsync()
         {
-            string data = await HttpHelper.Get("https://ip.useragentinfo.com/json",false);
-            JsonNode obj= JsonNode.Parse(data);
-            if (obj!=null& obj["code"].ToString() == "200")
+            string data = await HttpHelper.Get("https://www.useragentinfo.com", false);
+            string str= HttpHelper.FindByAB(data, "位置信息</th>", "</td>")+ "</td>";
+            Match m = Regex.Match(str, "<td class=\"col-auto fw-light\">(.*?) (.*?) (.*?) (.*?)</td>");
+            if (m.Success)
             {
+                Debug.WriteLine(m.Groups[0].Value);
                 return new City()
                 {
-                    province = obj["province"].ToString(),
-                    city= obj["city"].ToString(),
-                    area= obj["area"].ToString()
+                    Province = m.Groups[2].Value,
+                    CityName = m.Groups[3].Value,
+                    Area = m.Groups[4].Value
                 };
             }
             return null;
         }
         public static async Task<bool> VerifyCityIdAsync(this City city)
         {
-            string c1 = city.city, c2 = city.area;
-            if (string.IsNullOrEmpty(city.area))
+            string c1 = city.CityName, c2 = city.Area;
+            if (string.IsNullOrEmpty(city.Area))
             {
-                c1 = city.province; c2 = city.city;
+                c1 = city.Province; c2 = city.CityName;
             }
 
             string url = $"https://geoapi.qweather.com/v2/city/lookup?location={HttpUtility.UrlEncode(c2)}&adm={HttpUtility.UrlEncode(c1)}&key={key}&lang={lang}";
@@ -83,10 +102,10 @@ namespace MyToolBar.Func
                 if (cities.Count() > 0)
                 {
                     var ci = cities[0];
-                    city.area = ci["name"].ToString();
-                    city.city = ci["adm2"].ToString();
-                    city.province = ci["adm1"].ToString();
-                    city.id = ci["id"].ToString();
+                    city.Area = ci["name"].ToString();
+                    city.CityName = ci["adm2"].ToString();
+                    city.Province = ci["adm1"].ToString();
+                    city.Id = ci["id"].ToString();
                     return true;
                 }
             }
@@ -105,10 +124,10 @@ namespace MyToolBar.Func
                 {
                     list.Add(new City()
                     {
-                        area = ci["name"].ToString(),
-                        city = ci["adm2"].ToString(),
-                        province = ci["adm1"].ToString(),
-                        id = ci["id"].ToString()
+                        Area = ci["name"].ToString(),
+                        CityName = ci["adm2"].ToString(),
+                        Province = ci["adm1"].ToString(),
+                        Id = ci["id"].ToString()
                     });
                 }
             }
@@ -117,7 +136,7 @@ namespace MyToolBar.Func
 
         public static async Task<WeatherNow> GetCurrentWeather(this City city)
         {
-            string url = $"https://{host}/v7/weather/now?location={city.id}&key={key}&lang={lang}";
+            string url = $"https://{host}/v7/weather/now?location={city.Id}&key={key}&lang={lang}";
             string data= await HttpHelper.Get(url);
             var obj= JsonNode.Parse(data);
             if (obj != null & obj["code"].ToString() == "200")
@@ -140,7 +159,7 @@ namespace MyToolBar.Func
         }
         public static async Task<AirData> GetCurrentAQIAsync(this City city)
         {
-            string url = $"https://{host}/airquality/v1/now/{city.id}?key={key}&lang={lang}";
+            string url = $"https://{host}/airquality/v1/now/{city.Id}?key={key}&lang={lang}";
             string data = await HttpHelper.Get(url);
             var obj = JsonNode.Parse(data);
             if (obj != null & obj["code"].ToString() == "200")
@@ -162,7 +181,7 @@ namespace MyToolBar.Func
         }
         public static async Task<List<AirData>> GetAirForecastAsync(this City city)
         {
-            string url = $"https://{host}/v7/air/5d?location={city.id}&key={key}&lang={lang}";
+            string url = $"https://{host}/v7/air/5d?location={city.Id}&key={key}&lang={lang}";
             string data = await HttpHelper.Get(url);
             var obj = JsonNode.Parse(data);
             if (obj != null & obj["code"].ToString() == "200")
@@ -193,7 +212,7 @@ namespace MyToolBar.Func
         };
         public static async Task<List<WeatherDay>> GetForecastAsync(this City city)
         {
-            string url = $"https://{host}/v7/weather/7d?location={city.id}&key={key}&lang={lang}";
+            string url = $"https://{host}/v7/weather/7d?location={city.Id}&key={key}&lang={lang}";
             string data = await HttpHelper.Get(url);
             var obj = JsonNode.Parse(data);
             if (obj != null & obj["code"].ToString() == "200")

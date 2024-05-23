@@ -6,6 +6,7 @@ using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace MyToolBar.Func
 {
@@ -21,35 +22,22 @@ namespace MyToolBar.Func
             if (!Directory.Exists(CachePath))
                 Directory.CreateDirectory(CachePath);
         }
-        public static async Task Save(object Data,string Sign)
+        public static async Task Save<T>(T Data,string Sign)where T:class
         {
-            await File.WriteAllTextAsync(Path.Combine(CachePath, Sign+".json"), ObjectToJson(Data));
+            string path = Path.Combine(CachePath, Sign + ".json");
+            var fs=File.Create(path);
+            await JsonSerializer.SerializeAsync<T>(fs, Data, new JsonSerializerOptions { WriteIndented = true });
+            fs.Close();
         }
-        public static async Task<T> Load<T>(string Sign)
+        public static async Task<T?> Load<T>(string Sign)where T:class
         {
             string path = Path.Combine(CachePath, Sign + ".json");
             if (!File.Exists(path))
                 return default;
-            string json = await File.ReadAllTextAsync(path);
-            return (T)JsonToObject(json, typeof(T));
+            var fs = File.OpenRead(path);
+            var data = await JsonSerializer.DeserializeAsync<T>(fs);
+            fs.Close();
+            return data;
         }
-
-        public static string ObjectToJson(object obj)
-          {
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(obj.GetType());
-            MemoryStream stream = new MemoryStream();
-            serializer.WriteObject(stream, obj);
-            byte[] dataBytes = new byte[stream.Length];
-            stream.Position = 0;
-            stream.Read(dataBytes, 0, (int) stream.Length);
-            return Encoding.UTF8.GetString(dataBytes);
-         }
-         public static object JsonToObject(string jsonString, Type obj)
-         {
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(obj);
-            MemoryStream mStream = new MemoryStream(Encoding.UTF8.GetBytes(jsonString));
-            return serializer.ReadObject(mStream);
-         }
-
     }
 }

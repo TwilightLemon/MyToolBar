@@ -11,25 +11,27 @@ using System.Windows.Media;
 using static MyToolBar.GlobalService;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using System.Text.Json.Serialization;
 
 namespace MyToolBar.Capsules
 {
     public class WeatherCache
     {
-        public Dictionary<string, WeatherData> DataCache = new();
-        public WeatherApi.City DefaultCity = new();
-        public List<WeatherApi.City> FavorCities = new();
-        public bool UsingIpAsDefault = true;
+        public Dictionary<string, WeatherData> DataCache { get; set; } = new();
+        public WeatherApi.City DefaultCity { get; set; } = new();
+        public List<WeatherApi.City> FavorCities { get; set; } = new();
+        public bool UsingIpAsDefault { get; set; } = true;
         private static string SettingSign="WeatherCache";
+        [JsonIgnore]
         public bool isEmpty => DataCache.Count == 0;
         public async Task<WeatherData> RequstCache(WeatherApi.City city)
         {
-            if (DataCache.ContainsKey(city.id))
+            if (DataCache.ContainsKey(city.Id))
             {
-                if (DateTime.Now - DataCache[city.id].UpdateTime <= TimeSpan.FromMinutes(10))
+                if (DateTime.Now - DataCache[city.Id].UpdateTime <= TimeSpan.FromMinutes(10))
                 {
                     //cache is valid
-                    return DataCache[city.id];
+                    return DataCache[city.Id];
                 }
             }
             var data = new WeatherData();
@@ -39,13 +41,13 @@ namespace MyToolBar.Capsules
             data.CurrentAir = await city.GetCurrentAQIAsync();
             data.DailyForecast = await city.GetForecastAsync();
             data.UpdateTime = DateTime.Now;
-            DataCache[city.id] = data;
-            await SaveCache();
+            DataCache[city.Id] = data;
+            SaveCache();
             return data;
         }
-        public Task SaveCache()
+        public async void SaveCache()
         {
-            return Settings.Save(this, SettingSign);
+            await Settings.Save(this, SettingSign);
         }
         public static async Task<WeatherCache> LoadCache()
         {
@@ -71,7 +73,7 @@ namespace MyToolBar.Capsules
             if (cache.isEmpty|| cache.UsingIpAsDefault)
                 cache.DefaultCity = await WeatherApi.GetPositionByIpAsync();
             
-            if (cache.DefaultCity.id!=null||await cache.DefaultCity.VerifyCityIdAsync())
+            if (cache.DefaultCity.Id!=null||await cache.DefaultCity.VerifyCityIdAsync())
             {
                 var data=await cache.RequstCache(cache.DefaultCity);
                 var wdata = data.CurrentWeather;
@@ -91,7 +93,7 @@ namespace MyToolBar.Capsules
         private void GlobalTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
             //update weather data every t minutes
-            if (DateTime.Now - cache.DataCache[cache.DefaultCity.id].UpdateTime >= TimeSpan.FromMinutes(10))
+            if (DateTime.Now - cache.DataCache[cache.DefaultCity.Id].UpdateTime >= TimeSpan.FromMinutes(10))
             {
                 Dispatcher.Invoke(async () => await LoadWeatherData());
             }
@@ -110,8 +112,12 @@ namespace MyToolBar.Capsules
         private async void ShowWeatherBox()
         {
             if(BoxShowed) return;
-            if (cache.DataCache[cache.DefaultCity.id].CurrentWeather == null)
-                await LoadWeatherData();
+            try
+            {
+                if (cache.DataCache[cache.DefaultCity.Id].CurrentWeather == null)
+                    await LoadWeatherData();
+            }
+            catch { }
             var wb = new WeatherBox();
             wb.Closed += delegate { BoxShowed = false; };
             wb.LoadData(cache.DefaultCity,cache);
@@ -124,8 +130,8 @@ namespace MyToolBar.Capsules
         private async void Wb_DefaultCityChanged(object? sender, WeatherApi.City e)
         {
             cache.DefaultCity = e;
-            cache.UsingIpAsDefault = false;
-            await cache.SaveCache();
+            cache.UsingIpAsDefault = cache.DefaultCity.Id == e.Id;
+            cache.SaveCache();
             await LoadWeatherData();
         }
 

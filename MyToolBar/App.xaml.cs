@@ -22,7 +22,7 @@ namespace MyToolBar
         public App()
         {
             mutex=new Mutex(false, "MyToolBar",out bool firstInstant);
-#if !DEBUG
+#if DEBUG
             if(!firstInstant)
             {
                 Environment.Exit(0);

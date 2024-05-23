@@ -97,16 +97,15 @@ namespace MyToolBar.PenPackages
         private Point _startPosition;
         private void Window_PreviewStylusDown(object sender, StylusDownEventArgs e)
         {
-            if (e.StylusDevice.TabletDevice.Type == TabletDeviceType.Stylus)
-            {
+            if(e.StylusDevice!=null)//防止mouse触发
                 _startPosition = e.GetPosition(this);
-            }
         }
 
         private void PrtScrBtn_StylusButtonUp(object sender, StylusButtonEventArgs e)
         {
             ClosePanel();
             //TODO: add sth
+            SendHotKey.ScreenShot();
         }
 
         private void DrawBtn_StylusButtonUp(object sender, StylusButtonEventArgs e)

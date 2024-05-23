@@ -31,7 +31,7 @@ namespace MyToolBar.PopWindow
             cache ??= dat;
             var wdata = await dat.RequstCache(city);
             Now_Location.Tag = wdata.CurrentWeather.link;
-            Now_Location.Text = wdata.City.area+" "+wdata.City.city;
+            Now_Location.Text = wdata.City.Area+" "+wdata.City.CityName;
             Now_Temp.Text = wdata.CurrentWeather.temp+"℃";
             Now_desc.Text = wdata.CurrentWeather.status;
             Now_icon.Background= new ImageBrush(new BitmapImage(new Uri(WeatherApi.GetIcon(wdata.CurrentWeather.code))));
@@ -84,7 +84,7 @@ namespace MyToolBar.PopWindow
             var cur = new WeatherCityItem()
             {
                 city = cache.DefaultCity,
-                IsFavor = cache.FavorCities.Exists((c) => c.id == cache.DefaultCity.id)
+                IsFavor = cache.FavorCities.Exists((c) => c.Id == cache.DefaultCity.Id)
             };
             cur.CitySelected += CityItem_CitySelected;
             cur.AddFavorCity += CityItem_AddFavorCity;
@@ -112,7 +112,7 @@ namespace MyToolBar.PopWindow
             var cur = new WeatherCityItem()
             {
                 city = e,
-                IsFavor = cache.FavorCities.Exists((c) => c.id == e.id)
+                IsFavor = cache.FavorCities.Exists((c) => c.Id == e.Id)
             };
             cur.CitySelected += CityItem_CitySelected;
             cur.AddFavorCity += CityItem_AddFavorCity;
@@ -135,14 +135,14 @@ namespace MyToolBar.PopWindow
                 cache.FavorCities.Add(e);
             }
             LoadFavorList();
-            await cache.SaveCache();
+            cache.SaveCache();
         }
 
         private async void CityItem_CitySelected(object? sender, WeatherApi.City e)
         {
             LoadData(e,cache);
             (Resources["PageBack"] as Storyboard).Begin();
-            await cache.SaveCache();
+            cache.SaveCache();
         }
 
         private void Now_Location_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -162,7 +162,7 @@ namespace MyToolBar.PopWindow
                     var item = new WeatherCityItem()
                     {
                         city = city,
-                        IsFavor= cache.FavorCities.Exists((c) => c.id == city.id),
+                        IsFavor= cache.FavorCities.Exists((c) => c.Id == city.Id),
                         Margin = t
                     };
                     item.CitySelected += CityItem_CitySelected;
@@ -182,7 +182,7 @@ namespace MyToolBar.PopWindow
                 var item = new WeatherCityItem()
                 {
                     city = city,
-                    IsFavor = cache.FavorCities.Exists((c) => c.id == city.id),
+                    IsFavor = cache.FavorCities.Exists((c) => c.Id == city.Id),
                     Margin = new Thickness(0, 10, 0, 0)
             };
                 item.CitySelected += CityItem_CitySelected;

@@ -29,7 +29,7 @@ namespace MyToolBar.PopWindow
             set
             {
                 _city = value;
-                CityName.Text = _city.area + " " + _city.city + " " + _city.province;
+                CityName.Text = _city.Area + " " + _city.CityName + " " + _city.Province;
             }
         }
         private bool _IsFavor = false;
