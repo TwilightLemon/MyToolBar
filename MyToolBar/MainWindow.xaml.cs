@@ -10,6 +10,7 @@ using System.Timers;
 using System.Text.Json.Nodes;
 using Microsoft.Win32;
 using MyToolBar.PenPackages;
+using MyToolBar.OutterControls;
 
 namespace MyToolBar
 {
@@ -24,7 +25,7 @@ namespace MyToolBar
         }
 
         private WindowAccentCompositor wac;
-        private MsgHelper ms = new MsgHelper();
+        private OutterControlBase oc;
         private PenControlWindow pcw;
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -43,11 +44,6 @@ namespace MyToolBar
             ShowOutter(false);
             #endregion
 
-            #region OutterControl
-            ms.Start();
-            ms.MsgReceived += Ms_MsgReceived;
-            #endregion
-
             #region Load Capsules
             GlobalTimer = new Timer();
             GlobalTimer.Interval = 1200;
@@ -58,43 +54,28 @@ namespace MyToolBar
             Cap_hdm.Start();
             #endregion
 
+            #region Load OutterControls
+            oc = new LemonAppMusic();//new DemoClock();
+            oc.IsShownChanged += (o, b) => ShowOutter(b);
+            OutterFunc.Children.Add(oc);
+            #endregion
+
             pcw = new PenControlWindow();
             pcw.Show();
         }
         #region OutterControl
-        private void Ms_MsgReceived(string str)
-        {
-            Dispatcher.Invoke(() => {
-                var obj = JsonNode.Parse(str);
-                if (str.Contains("LemonAppLyricData"))
-                {
-                    if (str.Contains("Handle"))
-                        MsgHelper.ConnectedWindowHandle = int.Parse(obj["Handle"].ToString());
-                    string data = obj["Data"].ToString()+" 🎵";
-                    OutterFuncText.Text = data;
-                    ShowOutter();
-                }
-                else if (str.Contains("LemonAppOrd"))
-                {
-                    string data = obj["Data"].ToString();
-                    if (data == "Start")
-                    {
-                        ShowOutter();
-                        if (str.Contains("Handle"))
-                            MsgHelper.ConnectedWindowHandle = int.Parse(obj["Handle"].ToString());
-                    }else if(data=="Exit")
-                    {
-                        MsgHelper.ConnectedWindowHandle = 0;
-                        ShowOutter(false);
-                    }
-                }
-            });
-        }
+        /// <summary>
+        /// 最后一个最大化窗口 用于判断是否全屏 以改变OutterFunc样式
+        /// </summary>
         private IntPtr MaxedWindow = IntPtr.Zero;
         /// <summary>
         /// OutterFuncStatus是否开启
         /// </summary>
         static bool isOutterShow = true;
+        /// <summary>
+        /// 打开或关闭OutterFunc (Animation)
+        /// </summary>
+        /// <param name="show">open or close</param>
         private void ShowOutter(bool show = true)
         {
             Storyboard sb = new();
@@ -122,10 +103,10 @@ namespace MyToolBar
             Storyboard.SetTarget(de, OutterFuncStatus);
             Storyboard.SetTargetProperty(da, new PropertyPath(OpacityProperty));
             Storyboard.SetTargetProperty(de, new PropertyPath(WidthProperty));
-            sb.Completed += Sb_Completed;
+            sb.Completed += OutterControlClosingAni;
             sb.Begin();
         }
-        private void Sb_Completed(object? sender, EventArgs e)
+        private void OutterControlClosingAni(object? sender, EventArgs e)
         {
             OutterFunc.Visibility = isOutterShow ? Visibility.Visible : Visibility.Collapsed;
         }
@@ -142,34 +123,33 @@ namespace MyToolBar
             //全屏样式  整体变暗
             CurrentWindStyle = 1;
             UpdateWindowBlurMode(240);
+            SolidColorBrush fore;
             if (DarkMode)
             {
                 OutterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(20, 255, 255, 255));
-                OutterFuncText.Foreground = new SolidColorBrush(Color.FromArgb(240, 252, 252, 252));
+                fore= new SolidColorBrush(Color.FromArgb(240, 252, 252, 252));
             }
             else
             {
                 OutterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(20, 0, 0, 0));
-                OutterFuncText.Foreground = new SolidColorBrush(Color.FromArgb(240, 3, 3, 3));
+                fore= new SolidColorBrush(Color.FromArgb(240, 3, 3, 3));
             }
-            OutterFuncText.FontWeight = FontWeights.Normal;
+            oc?.MaxStyleAct?.Invoke(true,fore);
         }
 
         private void NormalWindStyle()
         {
             CurrentWindStyle = 0;
             UpdateWindowBlurMode();
+            Brush fore = null;
             if (DarkMode)
             {
                 OutterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(120, 255, 255, 255));
-                OutterFuncText.Foreground = new SolidColorBrush(Color.FromArgb(250, 3, 3, 3));
+                fore = OutterControlNormalDarkModeForeColor;
             }
             else
-            {
                 OutterFuncStatus.SetResourceReference(BackgroundProperty, "MaskColor");
-                OutterFuncText.SetResourceReference(ForegroundProperty, "ForeColor");
-            }
-            OutterFuncText.FontWeight = FontWeights.Bold;
+            oc?.MaxStyleAct?.Invoke(false,fore);
         }
 
         /// <summary>
@@ -179,6 +159,8 @@ namespace MyToolBar
         {
             TitleView.Text = ActiveWindow.GetActiveWindowTitle();
             Width = SystemParameters.WorkArea.Width;
+
+
             var fore = ActiveWindow.GetForegroundWindow();
             if (MaxedWindow == IntPtr.Zero && fore.IsZoomedWindow())
             {
@@ -228,21 +210,6 @@ namespace MyToolBar
         private void CloseButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
             App.Current.Shutdown();
-        }
-
-        private void Func_Left_TouchDown(object sender, TouchEventArgs e)
-        {
-            MsgHelper.SendMsg(MsgHelper.SEND_LAST, MsgHelper.ConnectedWindowHandle);
-        }
-
-        private void Func_Center_TouchDown(object sender, TouchEventArgs e)
-        {
-            MsgHelper.SendMsg(MsgHelper.SEND_PAUSE, MsgHelper.ConnectedWindowHandle);
-        }
-
-        private void Func_Right_TouchDown(object sender, TouchEventArgs e)
-        {
-            MsgHelper.SendMsg(MsgHelper.SEND_NEXT, MsgHelper.ConnectedWindowHandle);
         }
 
         private void TitleView_TouchDown(object sender, TouchEventArgs e)

@@ -21,15 +21,7 @@
         </Grid>
         <Border x:Name="OutterFuncStatus" Grid.Column="1"  Background="{DynamicResource HighlightColor}" CornerRadius="15"/>
         <Grid x:Name="OutterFunc" Grid.Column="1" Background="Transparent">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock x:Name="OutterFuncText" FontWeight="Bold" Foreground="#0A0A0A" TextWrapping="NoWrap" VerticalAlignment="Center" TextAlignment="Center"  Grid.ColumnSpan="3" FontSize="14"/>
-            <Border x:Name="Func_Left" Background="Transparent" Grid.Column="0" TouchLeave="Func_Left_TouchDown"/>
-            <Border x:Name="Func_Center" Background="Transparent" Grid.Column="1" TouchLeave="Func_Center_TouchDown"/>
-            <Border x:Name="Func_Right" Background="Transparent" Grid.Column="2" TouchLeave="Func_Right_TouchDown"/>
+           
         </Grid>
         <WrapPanel x:Name="FuncPanel" HorizontalAlignment="Right"   Margin="14,0,10,0" Grid.Column="2">
             <cap:HardwareMonitorCap x:Name="Cap_hdm"/>
