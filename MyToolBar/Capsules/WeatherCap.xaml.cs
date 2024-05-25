@@ -120,7 +120,7 @@ namespace MyToolBar.Capsules
             catch { }
             var wb = new WeatherBox();
             wb.Closed += delegate { BoxShowed = false; };
-            wb.LoadData(cache.DefaultCity,cache);
+            await wb.LoadData(cache.DefaultCity,cache);
             wb.DefaultCityChanged += Wb_DefaultCityChanged;
             wb.Left = SystemParameters.WorkArea.Width - wb.Width;
             wb.Show();

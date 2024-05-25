@@ -20,6 +20,7 @@ namespace MyToolBar.PopWindow
         {
             InitializeComponent();
             GlobalService.GlobalTimer.Elapsed += MonitorProcesses;
+            MonitorProcesses(null, null);
             this.Closed += delegate
             {
                 GlobalService.GlobalTimer.Elapsed -= MonitorProcesses;

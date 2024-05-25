@@ -1,4 +1,5 @@
-﻿using System.Timers;
+﻿using Microsoft.Win32;
+using System.Timers;
 using System.Windows.Media;
 
 namespace MyToolBar

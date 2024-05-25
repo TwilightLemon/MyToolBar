@@ -11,6 +11,7 @@ using System.Text.Json.Nodes;
 using Microsoft.Win32;
 using MyToolBar.PenPackages;
 using MyToolBar.OutterControls;
+using MyToolBar.PopWindow;
 
 namespace MyToolBar
 {
@@ -209,7 +210,9 @@ namespace MyToolBar
 
         private void CloseButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            App.Current.Shutdown();
+            var t = new MainTitleMeum();
+            t.Left = 0;
+            t.Show();
         }
 
         private void TitleView_TouchDown(object sender, TouchEventArgs e)

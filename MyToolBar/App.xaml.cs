@@ -80,6 +80,11 @@ namespace MyToolBar
             MainWindow main = Current.MainWindow as MainWindow;
             main.UpdateWindowBlurMode();
         }
+
+        public T? GetResource<T>(string resourceName)where T:class
+        {
+            return Resources[resourceName] as T;
+        }
         #endregion
     }
 }

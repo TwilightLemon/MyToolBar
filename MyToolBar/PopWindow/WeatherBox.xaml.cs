@@ -1,16 +1,13 @@
 ﻿using MyToolBar.Func;
-using MyToolBar.WinApi;
 using System;
+using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Windows;
-using static MyToolBar.GlobalService;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Input;
-using System.Windows.Documents;
 using MyToolBar.Capsules;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MyToolBar.PopWindow
 {
@@ -22,10 +19,34 @@ namespace MyToolBar.PopWindow
         public WeatherBox()
         {
             InitializeComponent();
+            this.StylusDown += WeatherBox_StylusDown;
+            this.StylusSystemGesture += WeatherBox_StylusSystemGesture;
+        }
+        private Point _touchStart;
+        private bool _AtSearchPage = false;
+        private void WeatherBox_StylusDown(object sender, StylusDownEventArgs e)
+        {
+            _touchStart = e.GetPosition(this);
+        }
+        private void WeatherBox_StylusSystemGesture(object sender, StylusSystemGestureEventArgs e)
+        {
+            Point end=e.GetPosition(this);
+            //向右滑动->打开SearchPage
+            if (Math.Abs(end.Y - _touchStart.Y) > 5) return;
+            if (end.X - _touchStart.X > 5&&!_AtSearchPage)
+            {
+                _AtSearchPage = true;
+                (Resources["PageToSearch"] as Storyboard).Begin();
+            }else if(_touchStart.X-end.X>5&&_AtSearchPage)
+            {
+                _AtSearchPage = false;
+                (Resources["PageBack"] as Storyboard).Begin();
+            }
         }
 
+
         private WeatherCache cache = null;
-        public async void LoadData(WeatherApi.City city,WeatherCache dat=null)
+        public async Task LoadData(WeatherApi.City city,WeatherCache dat=null)
         {
             //Now Weather:
             cache ??= dat;
@@ -140,9 +161,12 @@ namespace MyToolBar.PopWindow
 
         private async void CityItem_CitySelected(object? sender, WeatherApi.City e)
         {
-            LoadData(e,cache);
+            SetLoadingStatus(true);
+            await LoadData(e,cache);
+            _AtSearchPage= false;
             (Resources["PageBack"] as Storyboard).Begin();
             cache.SaveCache();
+            SetLoadingStatus(false);
         }
 
         private void Now_Location_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -156,14 +180,12 @@ namespace MyToolBar.PopWindow
             {
                 var result = await WeatherApi.SearchCitiesAsync(SearchCityBox.Text);
                 SearchCity_Result.Children.Clear();
-                var t = new Thickness(0, 10, 0, 0);
                 foreach (var city in result)
                 {
                     var item = new WeatherCityItem()
                     {
                         city = city,
-                        IsFavor= cache.FavorCities.Exists((c) => c.Id == city.Id),
-                        Margin = t
+                        IsFavor= cache.FavorCities.Exists((c) => c.Id == city.Id)
                     };
                     item.CitySelected += CityItem_CitySelected;
                     item.AddFavorCity += CityItem_AddFavorCity;
@@ -175,21 +197,40 @@ namespace MyToolBar.PopWindow
 
         private async void LocateBtn_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            SearchCity_Result.Children.Clear();
-            var city = await WeatherApi.GetPositionByIpAsync();
-            if(await city.VerifyCityIdAsync())
+            SetLoadingStatus(true);
+            try
             {
-                var item = new WeatherCityItem()
+                SearchCity_Result.Children.Clear();
+                var city = await WeatherApi.GetPositionByIpAsync();
+                if (await city.VerifyCityIdAsync())
                 {
-                    city = city,
-                    IsFavor = cache.FavorCities.Exists((c) => c.Id == city.Id),
-                    Margin = new Thickness(0, 10, 0, 0)
-            };
-                item.CitySelected += CityItem_CitySelected;
-                item.AddFavorCity += CityItem_AddFavorCity;
-                item.SetAsDefaultCity += CityItem_SetAsDefaultCity;
-                SearchCity_Result.Children.Add(item);
+                    var item = new WeatherCityItem()
+                    {
+                        city = city,
+                        IsFavor = cache.FavorCities.Exists((c) => c.Id == city.Id)
+                    };
+                    item.CitySelected += CityItem_CitySelected;
+                    item.AddFavorCity += CityItem_AddFavorCity;
+                    item.SetAsDefaultCity += CityItem_SetAsDefaultCity;
+                    SearchCity_Result.Children.Add(item);
+                }
             }
+            finally
+            {
+                SetLoadingStatus(false);
+            }
+        }
+
+        private void FavorBtn_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            _AtSearchPage = true;
+            (Resources["PageToSearch"] as Storyboard).Begin();
+        }
+
+        private void BackBtn_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            _AtSearchPage = false;
+            (Resources["PageBack"] as Storyboard).Begin();
         }
     }
 }

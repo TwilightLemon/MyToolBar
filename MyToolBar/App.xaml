@@ -9,6 +9,7 @@
                 <ResourceDictionary Source="/Style/IconData.xaml"/>
                 <ResourceDictionary Source="/Style/ThemeColor.xaml"/>
                 <ResourceDictionary Source="/Style/UITemplate.xaml"/>
+                <ResourceDictionary Source="/LanguageRes/LangEn_US.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <!--全局TextBlock文本样式-->
             <Style TargetType="{x:Type TextBlock}">

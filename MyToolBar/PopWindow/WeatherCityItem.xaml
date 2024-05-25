@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:MyToolBar.PopWindow"
              mc:Ignorable="d"  Width="330" Height="40">
     <Grid>
-        <Border x:Name="ViewMask" Background="{DynamicResource MaskColor}" CornerRadius="15,15,15,15" Opacity="0.5"/>
+        <Border x:Name="ViewMask" Background="{DynamicResource MaskColor}" CornerRadius="15,15,15,15" Opacity="0"/>
         <Border x:Name="AddFavorBtn" HorizontalAlignment="Right" Height="24" VerticalAlignment="Center" Width="25" Background="{DynamicResource MaskColor}" Margin="0,0,20,0" CornerRadius="10,10,10,10">
             <Path x:Name="Favor_icon" Data="{StaticResource Icon_favor}" Stretch="Uniform" Width="15" ClipToBounds="True" Stroke="{DynamicResource ForeColor}" StrokeThickness="2"/>
         </Border>

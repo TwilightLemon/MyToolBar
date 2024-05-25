@@ -48,11 +48,11 @@ namespace MyToolBar.PopWindow
         {
             InitializeComponent();
             MouseEnter += delegate {
-                ViewMask.BeginAnimation(OpacityProperty, new DoubleAnimation(0.5, 1, TimeSpan.FromMilliseconds(300)));
+                ViewMask.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 0.5, TimeSpan.FromMilliseconds(300)));
             };
             MouseLeave += delegate
             {
-                ViewMask.BeginAnimation(OpacityProperty, new DoubleAnimation(1, 0.5, TimeSpan.FromMilliseconds(300)));
+                ViewMask.BeginAnimation(OpacityProperty, new DoubleAnimation(0.5, 0, TimeSpan.FromMilliseconds(300)));
             };
             CityName.MouseLeftButtonUp += delegate
             {

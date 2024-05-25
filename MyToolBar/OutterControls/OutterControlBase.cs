@@ -30,7 +30,7 @@ namespace MyToolBar.OutterControls
 
         public event EventHandler<bool> IsShownChanged;
         /// <summary>
-        /// 响应最大化样式
+        /// 响应最大化样式 Brush为推荐的前景色
         /// </summary>
         public Action<bool,Brush>? MaxStyleAct;
         private bool isShown;

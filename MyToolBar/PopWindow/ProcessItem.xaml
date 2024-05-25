@@ -10,7 +10,7 @@
             <ColumnDefinition Width="19*"/>
             <ColumnDefinition Width="10*"/>
         </Grid.ColumnDefinitions>
-        <Border x:Name="ViewMask" Background="{DynamicResource MaskColor}" CornerRadius="15" Opacity="0.5" Grid.ColumnSpan="2" Visibility="Collapsed"/>
+        <Border x:Name="ViewMask" Background="{DynamicResource MaskColor}" CornerRadius="15" Opacity="0" Grid.ColumnSpan="2"/>
         <TextBlock x:Name="ProName" d:Text="Lemon App" VerticalAlignment="Center" Margin="20,0,5,0" FontSize="14"/>
         <TextBlock x:Name="InfoTb" d:Text="MEM  300MB" VerticalAlignment="Center" Margin="0,0,15,0" FontSize="14" FontWeight="Bold" Grid.Column="1" TextAlignment="Right"/>
     </Grid>

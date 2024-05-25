@@ -1,7 +1,5 @@
-﻿using MyToolBar.Func;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,27 +17,29 @@ using System.Windows.Shapes;
 namespace MyToolBar.PopWindow
 {
     /// <summary>
-    /// ProcessItem.xaml 的交互逻辑
+    /// MeumItem.xaml 的交互逻辑
     /// </summary>
-    public partial class ProcessItem : UserControl
+    public partial class MeumItem : UserControl
     {
-        public ProcessItem()
+        public MeumItem()
         {
             InitializeComponent();
-        }
-        public Process _pro;
-        public ProcessItem(Process p)
-        {
-            InitializeComponent();
-            _pro = p;
-            ProName.Text = p.ProcessName;
-            InfoTb.Text = NetworkInfo.FormatSize(p.WorkingSet64);
             MouseEnter += delegate {
                 ViewMask.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 0.5, TimeSpan.FromMilliseconds(300)));
             };
-            MouseLeave += delegate {
+            MouseLeave += delegate
+            {
                 ViewMask.BeginAnimation(OpacityProperty, new DoubleAnimation(0.5, 0, TimeSpan.FromMilliseconds(300)));
             };
+        }
+        public string MeumContent {
+            get => ContentTb.Text; set=>ContentTb.Text = value;
+        }
+    
+        public Geometry Icon
+        {
+            get => IconPt.Data;
+            set => IconPt.Data = value;
         }
     }
 }

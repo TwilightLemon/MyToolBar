@@ -13,11 +13,11 @@
             <ColumnDefinition Width="2*" MaxWidth="600"/>
             <ColumnDefinition Width="1.2*"/>
         </Grid.ColumnDefinitions>
-        <Grid x:Name="TittleViewer" TouchLeave="TitleView_TouchDown" Background="#01000000">
-            <Border x:Name="CloseButton" Cursor="Hand" HorizontalAlignment="Left" Height="25" Width="25" Background="#01000000" MouseDown="CloseButton_MouseDown"  Margin="10,0,0,0">
-                <Border BorderBrush="{DynamicResource ForeColor}" BorderThickness="2" CornerRadius="25,25,25,25" Width="15" Height="15"/>
-            </Border>
-            <TextBlock x:Name="TitleView"  Margin="40,0,10,0" TextWrapping="Wrap" Text="Microsoft Visual Studio 2022" VerticalAlignment="Center" Foreground="{DynamicResource ForeColor}"/>
+        <Border x:Name="CloseButton" Cursor="Hand" HorizontalAlignment="Left" Height="25" Width="25" Background="#01000000" MouseDown="CloseButton_MouseDown"  Margin="10,0,0,0">
+            <Border BorderBrush="{DynamicResource ForeColor}" BorderThickness="2" CornerRadius="25,25,25,25" Width="15" Height="15"/>
+        </Border>
+        <Grid x:Name="TittleViewer" TouchLeave="TitleView_TouchDown" Margin="40 0 0 0" Background="#01000000">
+            <TextBlock x:Name="TitleView" TextWrapping="Wrap" Text="Microsoft Visual Studio 2022" VerticalAlignment="Center" Foreground="{DynamicResource ForeColor}"/>
         </Grid>
         <Border x:Name="OutterFuncStatus" Grid.Column="1"  Background="{DynamicResource HighlightColor}" CornerRadius="15"/>
         <Grid x:Name="OutterFunc" Grid.Column="1" Background="Transparent">
