@@ -15,12 +15,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MyToolBar.PopWindow
+namespace MyToolBar.PopWindow.Items
 {
     /// <summary>
     /// WeatherCityItem.xaml 的交互逻辑
     /// </summary>
-    public partial class WeatherCityItem : UserControl
+    public partial class WeatherCityItem : ItemBase
     {
         private WeatherApi.City _city;
         public WeatherApi.City city
@@ -47,18 +47,11 @@ namespace MyToolBar.PopWindow
         public WeatherCityItem()
         {
             InitializeComponent();
-            MouseEnter += delegate {
-                ViewMask.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 0.5, TimeSpan.FromMilliseconds(300)));
-            };
-            MouseLeave += delegate
-            {
-                ViewMask.BeginAnimation(OpacityProperty, new DoubleAnimation(0.5, 0, TimeSpan.FromMilliseconds(300)));
-            };
             CityName.MouseLeftButtonUp += delegate
             {
                 CitySelected?.Invoke(this, city);
             };
-            ViewMask.MouseLeftButtonUp += delegate
+            _ViewMask.MouseLeftButtonUp += delegate
             {
                 CitySelected?.Invoke(this, city);
             };

@@ -15,6 +15,9 @@ using System.Text.Json.Serialization;
 
 namespace MyToolBar.Capsules
 {
+    /// <summary>
+    /// 为天气数据提供缓存、请求和保存
+    /// </summary>
     public class WeatherCache
     {
         public Dictionary<string, WeatherData> DataCache { get; set; } = new();
@@ -58,18 +61,18 @@ namespace MyToolBar.Capsules
     /// <summary>
     /// WeatherCap.xaml 的交互逻辑
     /// </summary>
-    public partial class WeatherCap : UserControl
+    public partial class WeatherCap : CapsuleBase
     {
         public WeatherCap()
         {
             InitializeComponent();
         }
         private WeatherCache cache = null;
-
         private async Task LoadWeatherData()
         {
                 cache ??=await WeatherCache.LoadCache();
 
+            //初次使用或默认定位城市
             if (cache.isEmpty|| cache.UsingIpAsDefault)
                 cache.DefaultCity = await WeatherApi.GetPositionByIpAsync();
             
@@ -86,8 +89,24 @@ namespace MyToolBar.Capsules
         }
         public async void LoadData()
         {
-            await LoadWeatherData();
-            GlobalTimer.Elapsed += GlobalTimer_Elapsed;
+            if (WeatherApiKey == null)
+            {
+                WeatherApiKey = await WeatherApi.KeyMgr.GetKey();
+                WeatherApiKey.KeyChanged += delegate
+                {
+                    LoadData();
+                };
+            }
+            if (WeatherApiKey == null || string.IsNullOrEmpty(WeatherApiKey.key))
+            {
+                Weather_info.Text = "No Key";
+            }
+            else
+            {
+                WeatherApi.SetProperty(WeatherApiKey.key, WeatherApiKey.lang, WeatherApiKey.host);
+                await LoadWeatherData();
+                GlobalTimer.Elapsed += GlobalTimer_Elapsed;
+            }
         }
 
         private void GlobalTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
@@ -97,16 +116,6 @@ namespace MyToolBar.Capsules
             {
                 Dispatcher.Invoke(async () => await LoadWeatherData());
             }
-        }
-
-        private void UserControl_MouseEnter(object sender, MouseEventArgs e)
-        {
-            ViewerMask.BeginAnimation(OpacityProperty, new DoubleAnimation(0.2, 1, TimeSpan.FromMilliseconds(300)));
-        }
-
-        private void UserControl_MouseLeave(object sender, MouseEventArgs e)
-        {
-            ViewerMask.BeginAnimation(OpacityProperty, new DoubleAnimation(1,0, TimeSpan.FromMilliseconds(300)));
         }
         private bool BoxShowed = false;
         private async void ShowWeatherBox()

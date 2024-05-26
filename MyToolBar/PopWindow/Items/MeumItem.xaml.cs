@@ -14,23 +14,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MyToolBar.PopWindow
+namespace MyToolBar.PopWindow.Items
 {
     /// <summary>
     /// MeumItem.xaml 的交互逻辑
     /// </summary>
-    public partial class MeumItem : UserControl
+    public partial class MeumItem : ItemBase
     {
         public MeumItem()
         {
             InitializeComponent();
-            MouseEnter += delegate {
-                ViewMask.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 0.5, TimeSpan.FromMilliseconds(300)));
-            };
-            MouseLeave += delegate
-            {
-                ViewMask.BeginAnimation(OpacityProperty, new DoubleAnimation(0.5, 0, TimeSpan.FromMilliseconds(300)));
-            };
         }
         public string MeumContent {
             get => ContentTb.Text; set=>ContentTb.Text = value;

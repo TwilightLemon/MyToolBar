@@ -1,5 +1,10 @@
 # MyToolBar (Beta)
-[![LICENSE](https://img.shields.io/badge/license-GPL%20v3.0-blue.svg?style=flat-square)](https://github.com/TwilightLemon/MyToolBar/blob/master/LICENSE)
+[![LICENSE](https://img.shields.io/badge/license-GPL%20v3.0-blue.svg?style=flat-square)](https://github.com/TwilightLemon/MyToolBar/blob/master/LICENSE)  
+### Platform
+Run on Windows 10~11  
+Powered by .NET 8 on WPF  
+
+目前此App处于测试阶段，功能可能不稳定，作者正在努力提高可定制性。
 ## 简介
   这是一个为提升Surface等Windows平板设备体验的全局顶部栏工具，目标是：  
 -  实时了解和控制设备运行状态
@@ -15,7 +20,7 @@
 ## 功能
 ### 通过AppBar固定的顶部栏
 - 左侧:   
-    点击"〇"关闭app;  
+    点击"〇"打开主菜单;  
     显示前台窗口Title (搭配无标题栏的应用如edge vscode等使用很香);  
     从顶部下滑(TouchEvent)可快速启动Task Viewer(相当于按下Win+Tab键)  
 
@@ -27,7 +32,6 @@
    硬件监视: Memory CPU Temperature NetworkSpeed 下滑启动 内存占用TOP20的进程 点击进入详细页: back - KILL - filePath  
    天气: (我移除了windows小部件 但很需要一个地方来显示天气) 通过ip定位城市，有搜索、收藏功能，长按(鼠标右键点击)可设置为默认显示城市
 
-##### 你以为就完了？
 ### 适用于手写笔的手势快捷菜单
 看了别人家的安卓平板，发现有很多好用的笔手势功能像是右上角划过可以快速进入屏幕绘制，于是我也写了一个。不过目前还处于不完善阶段，见./MyToolBar/PenPackages/目录。  
 现有功能：

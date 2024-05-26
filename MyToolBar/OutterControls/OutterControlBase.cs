@@ -8,6 +8,9 @@ using System.Windows.Media;
 
 namespace MyToolBar.OutterControls
 {
+    /// <summary>
+    /// 为OutterControl提供基类，基本的显示操作和UI样式
+    /// </summary>
     public class OutterControlBase:UserControl
     {
         public OutterControlBase()
@@ -20,14 +23,18 @@ namespace MyToolBar.OutterControls
             //初始化前景色
             if (GlobalService.DarkMode)
             {
-                Foreground=GlobalService.OutterControlNormalDarkModeForeColor;
+                // DarkMode下 OutterControl区域高亮显示
+                Foreground = GlobalService.OutterControlNormalDarkModeForeColor;
             }
             else
             {
+                //LightMode下 OutterControl区域跟随全局前景色
                 SetResourceReference(ForegroundProperty, "ForeColor");
             }
         }
-
+        /// <summary>
+        /// 通知MainWindow需要显示或隐藏OutterControl
+        /// </summary>
         public event EventHandler<bool> IsShownChanged;
         /// <summary>
         /// 响应最大化样式 Brush为推荐的前景色
@@ -37,7 +44,7 @@ namespace MyToolBar.OutterControls
         /// <summary>
         /// 指示是否需要显示OutterControl
         /// </summary>
-        public bool IsShown
+        protected bool IsShown
         {
             get=>isShown;
             set=>IsShownChanged?.Invoke(this, isShown = value);

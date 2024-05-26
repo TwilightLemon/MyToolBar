@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 namespace MyToolBar.PopWindow
 {
     /// <summary>
-    /// LoadingIcon.xaml 的交互逻辑
+    /// 一个简单的加载动画
     /// </summary>
     public partial class LoadingIcon : UserControl
     {

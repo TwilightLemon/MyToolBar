@@ -1,14 +1,12 @@
-﻿<UserControl x:Name="uc" x:Class="MyToolBar.Capsules.HardwareMonitorCap"
+﻿<local:CapsuleBase x:Name="uc" x:Class="MyToolBar.Capsules.HardwareMonitorCap"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:MyToolBar.Capsules" Background="#01000000"
-             MouseEnter="UserControl_MouseEnter" MouseLeave="UserControl_MouseLeave"
+             xmlns:local="clr-namespace:MyToolBar.Capsules"
              TouchLeave="uc_TouchLeave"
              mc:Ignorable="d" Height="30" MouseLeftButtonUp="uc_MouseLeftButtonUp" Cursor="Hand">
     <Grid>
-        <Border x:Name="ViewerMask" Opacity="0" Background="{DynamicResource MaskColor}" CornerRadius="12"/>
         <WrapPanel Margin="5,0,5,0">
             <Grid x:Name="MemoryViewer" Width="50" Height="30">
                 <Path Width="13" Height="13" HorizontalAlignment="Left" Data="{StaticResource Icon_memory}" Stretch="Uniform" SnapsToDevicePixels="True" Fill="{Binding Foreground, ElementName=uc}"/>
@@ -25,4 +23,4 @@
             </Grid>
         </WrapPanel>
     </Grid>
-</UserControl>
+</local:CapsuleBase>

@@ -1,4 +1,5 @@
 ﻿using MyToolBar.Func;
+using MyToolBar.PopWindow.Items;
 using MyToolBar.WinApi;
 using System.Diagnostics;
 using System.IO;

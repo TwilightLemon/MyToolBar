@@ -16,12 +16,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MyToolBar.PopWindow
+namespace MyToolBar.PopWindow.Items
 {
     /// <summary>
     /// ProcessItem.xaml 的交互逻辑
     /// </summary>
-    public partial class ProcessItem : UserControl
+    public partial class ProcessItem : ItemBase
     {
         public ProcessItem()
         {
@@ -34,12 +34,7 @@ namespace MyToolBar.PopWindow
             _pro = p;
             ProName.Text = p.ProcessName;
             InfoTb.Text = NetworkInfo.FormatSize(p.WorkingSet64);
-            MouseEnter += delegate {
-                ViewMask.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 0.5, TimeSpan.FromMilliseconds(300)));
-            };
-            MouseLeave += delegate {
-                ViewMask.BeginAnimation(OpacityProperty, new DoubleAnimation(0.5, 0, TimeSpan.FromMilliseconds(300)));
-            };
+            Grid.SetColumnSpan(_ViewMask, 2);
         }
     }
 }

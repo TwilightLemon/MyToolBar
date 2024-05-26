@@ -21,14 +21,38 @@ namespace MyToolBar.Func
     public  class WeatherData
     {
         public DateTime UpdateTime { get;set; }
-        public WeatherApi.City City { get; set; }
-        public WeatherApi.AirData CurrentAir { get; set; }
-        public WeatherApi.WeatherNow CurrentWeather{ get; set; }
-        public List<WeatherApi.WeatherDay> DailyForecast { get; set; }
-        public List<WeatherApi.AirData> DailyAirForecast { get; set; }
+        public City City { get; set; }
+        public AirData CurrentAir { get; set; }
+        public WeatherNow CurrentWeather{ get; set; }
+        public List<WeatherDay> DailyForecast { get; set; }
+        public List<AirData> DailyAirForecast { get; set; }
     }
     public static class WeatherApi
     {
+        public class KeyMgr
+        {
+            public string key { get; set; } = "";
+            public string lang { get; set; } = "en";
+            public string host { get; set; } = "devapi.qweather.com";
+            private static string SettingSign = "WeatherApiKeys";
+            public event EventHandler KeyChanged;
+            public static async Task<KeyMgr> GetKey()
+            {
+
+                var keys = await Settings.Load<KeyMgr>(SettingSign);
+                if (keys != null)
+                {
+                    return keys;
+                }
+                return new KeyMgr();
+            }
+            public async void SaveKey()
+            {
+                KeyChanged?.Invoke(this, EventArgs.Empty);
+                await Settings.Save(this, SettingSign);
+            }
+        }
+
         public class City
         {
             public string? Province { get; set; }
@@ -65,9 +89,16 @@ namespace MyToolBar.Func
             public string desc { get; set; }
             public string sug { get; set; }
         }
-        private static string key =ApiKeys.Weather.key,
-            lang="en",
-            host= ApiKeys.Weather.host;
+
+        public static void SetProperty(string key, string lang = "en", string host = "devapi.qweather.com")
+        {
+            WeatherApi.key = key;
+            WeatherApi.lang = lang;
+            WeatherApi.host = host;
+        }
+        private static string key,
+            lang = "en",
+            host;
         public static async Task<City?> GetPositionByIpAsync()
         {
             string data = await HttpHelper.Get("https://www.useragentinfo.com", false);

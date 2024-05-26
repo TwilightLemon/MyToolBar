@@ -20,6 +20,8 @@ namespace MyToolBar.OutterControls
     /// </summary>
     public partial class DemoClock : OutterControlBase
     {
+        private readonly string FormatStr = "MM-dd tt h:mm dddd",
+                                            Sign="  ❤  Have a nice day.";
         public DemoClock()
         {
             InitializeComponent();
@@ -42,7 +44,7 @@ namespace MyToolBar.OutterControls
         {
             Dispatcher.Invoke(() =>
             {
-                TimeTb.Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")+" ❤";
+                TimeTb.Text = DateTime.Now.ToString(FormatStr) +Sign;
             });
         }
     }

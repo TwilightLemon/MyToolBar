@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyToolBar.PopWindow.Items;
+using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -6,7 +7,7 @@ using System.Windows.Media;
 namespace MyToolBar.PopWindow
 {
     /// <summary>
-    /// MainTitleMeum.xaml 的交互逻辑
+    /// 主菜单
     /// </summary>
     public partial class MainTitleMeum : PopWindowBase 
     {
@@ -35,7 +36,7 @@ namespace MyToolBar.PopWindow
 
         private void MeumItem_Settings(object sender, MouseButtonEventArgs e)
         {
-             
+             new SettingsWindow().Show();
         }
         private void MeumItem_Exit(object sender, MouseButtonEventArgs e)
         {

@@ -12,7 +12,7 @@ namespace MyToolBar.Capsules
     /// <summary>
     /// HardwareMonitorCap.xaml 的交互逻辑
     /// </summary>
-    public partial class HardwareMonitorCap : UserControl
+    public partial class HardwareMonitorCap : CapsuleBase
     {
         public HardwareMonitorCap()
         {
@@ -46,16 +46,6 @@ namespace MyToolBar.Capsules
         private void uc_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             OpenBox();
-        }
-
-        private void UserControl_MouseEnter(object sender, MouseEventArgs e)
-        {
-            ViewerMask.BeginAnimation(OpacityProperty, new DoubleAnimation(0.2, 1, TimeSpan.FromMilliseconds(300)));
-        }
-
-        private void UserControl_MouseLeave(object sender, MouseEventArgs e)
-        {
-            ViewerMask.BeginAnimation(OpacityProperty, new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(300)));
         }
 
         private void uc_TouchLeave(object sender, TouchEventArgs e)

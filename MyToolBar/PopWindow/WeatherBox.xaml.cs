@@ -8,6 +8,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Input;
 using MyToolBar.Capsules;
+using MyToolBar.PopWindow.Items;
 
 namespace MyToolBar.PopWindow
 {
