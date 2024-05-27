@@ -23,7 +23,7 @@ namespace MyToolBar
     /// </summary>
     public partial class App : Application
     {
-        private static Mutex mutex;
+        static Mutex? _appMutex;
 
         public static IHost Host { get; } = new HostBuilder()
             .ConfigureServices(services =>
@@ -42,48 +42,33 @@ namespace MyToolBar
                 services.AddSingleton<OuterControlSettingsPage>();
                 services.AddSingleton<ComponentsSettingsPage>();
                 services.AddSingleton<AboutPage>();
+
+                // function services
+                services.AddSingleton<AppSettingsService>();
+                services.AddSingleton<ThemeResourceService>();
             })
             .Build();
 
-        public static App? CurrentApp => Current as App;
-        public App()
+        /// <summary>
+        /// Application entry point
+        /// </summary>
+        /// <param name="args"></param>
+        static void Main(string[] args)
         {
-            mutex = new Mutex(false, Assembly.GetExecutingAssembly().GetName().Name, out bool firstInstant);
-#if DEBUG
-            if (!firstInstant)
+            if (!IsApplicationAlreadyStarted())
             {
-                Environment.Exit(0);
+                return;
             }
-            AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
-            {
-                try
-                {
-                    //坐以待毙吧
-                    WriteLog((Exception)e.ExceptionObject);
-                }
-                catch { }
-            };
 
-            Current.DispatcherUnhandledException += (sender, e) =>
-            {
-                e.Handled = true;
-                WriteLog(e.Exception);
-            };
-            TaskScheduler.UnobservedTaskException += (sender, e) =>
-            {
-                e.SetObserved();
-                WriteLog(e.Exception);
-            };
-#endif
-            Settings.LoadPath();
+            var app = new App();
+            app.Run();
         }
 
-        private void WriteLog(Exception e)
+        static bool IsApplicationAlreadyStarted()
         {
-            if (e == null)
-                return;
-            string log= $"[{DateTime.Now}]\n{e.Source}\n {e.Message}\n{e.StackTrace}\n{e.Source}";
-            File.AppendAllText(Path.Combine(Settings.MainPath, "Error.log"), log);
+            _appMutex = new Mutex(false, Assembly.GetExecutingAssembly().GetName().Name, out bool firstInstant);
+
+            return !firstInstant;
         }
     }
 }

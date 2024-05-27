@@ -8,5 +8,9 @@ namespace MyToolBar.Services
 {
     public class AppSettingsService
     {
+        public AppSettingsService()
+        {
+
+        }
     }
 }

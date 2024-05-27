@@ -22,7 +22,6 @@ namespace MyToolBar.PopupWindows
             void SetItem(string contResName, string iconResName, Action<object, MouseButtonEventArgs> Event)
             {
                 var item = new MeumItem();
-                var app = App.CurrentApp;
                 item.MeumContent = (string)FindResource($"MeumItem_{contResName}");
 
                 if (iconResName == null)
