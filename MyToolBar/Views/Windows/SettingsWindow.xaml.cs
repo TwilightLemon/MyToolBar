@@ -140,7 +140,6 @@ namespace MyToolBar
         {
             WindowFrame.Navigate(ViewModel.CurrentPageContent);
 
-
             // Clear history
             if (WindowFrame.CanGoBack || WindowFrame.CanGoForward)
             {

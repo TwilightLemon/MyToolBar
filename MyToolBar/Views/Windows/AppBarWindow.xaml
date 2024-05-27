@@ -22,7 +22,7 @@
         AllowsTransparency="True">
 
     <i:Interaction.Behaviors>
-        <mb:MicaWindowBehavior/>
+        <mb:MicaWindowBehavior x:Name="MicaWindowBehavior"/>
     </i:Interaction.Behaviors>
     
     <Grid>

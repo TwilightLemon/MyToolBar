@@ -4,7 +4,10 @@ using MyToolBar.Func;
 using MyToolBar.Services;
 using MyToolBar.ViewModels;
 using MyToolBar.Views.Pages;
+using MyToolBar.Views.Pages.Settings;
 using MyToolBar.WinApi;
+using NLog.Extensions.Hosting;
+using NLog.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -23,8 +26,6 @@ namespace MyToolBar
     /// </summary>
     public partial class App : Application
     {
-        static Mutex? _appMutex;
-
         public static IHost Host { get; } = new HostBuilder()
             .ConfigureServices(services =>
             {
@@ -46,29 +47,32 @@ namespace MyToolBar
                 // function services
                 services.AddSingleton<AppSettingsService>();
                 services.AddSingleton<ThemeResourceService>();
+
+                // logging
+                services.AddLogging(builder =>
+                {
+                    builder.AddNLog();
+                });
             })
             .Build();
 
-        /// <summary>
-        /// Application entry point
-        /// </summary>
-        /// <param name="args"></param>
-        static void Main(string[] args)
+        public App()
         {
-            if (!IsApplicationAlreadyStarted())
-            {
-                return;
-            }
-
-            var app = new App();
-            app.Run();
+            InitializeComponent();
         }
 
-        static bool IsApplicationAlreadyStarted()
+        protected override void OnStartup(StartupEventArgs e)
         {
-            _appMutex = new Mutex(false, Assembly.GetExecutingAssembly().GetName().Name, out bool firstInstant);
+            base.OnStartup(e);
 
-            return !firstInstant;
+            Host.Start();
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            base.OnExit(e);
+
+            _ = Host.StopAsync();
         }
     }
 }

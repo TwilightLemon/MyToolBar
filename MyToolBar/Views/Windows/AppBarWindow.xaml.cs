@@ -74,6 +74,7 @@ namespace MyToolBar
         /// OutterFuncStatus是否开启
         /// </summary>
         static bool isOutterShow = true;
+
         /// <summary>
         /// 打开或关闭OutterFunc (Animation)
         /// </summary>
@@ -97,7 +98,8 @@ namespace MyToolBar
                 da = new DoubleAnimation(1, 0, TimeSpan.FromSeconds(0.4));
                 isOutterShow = false;
             }
-            else return;
+            else
+                return;
             de.EasingFunction = da.EasingFunction = new QuarticEase();
             sb.Children.Add(da);
             sb.Children.Add(de);
@@ -125,14 +127,14 @@ namespace MyToolBar
             if (IsDarkMode)
             {
                 OutterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(20, 255, 255, 255));
-                fore= new SolidColorBrush(Color.FromArgb(240, 252, 252, 252));
+                fore = new SolidColorBrush(Color.FromArgb(240, 252, 252, 252));
             }
             else
             {
                 OutterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(20, 0, 0, 0));
-                fore= new SolidColorBrush(Color.FromArgb(240, 3, 3, 3));
+                fore = new SolidColorBrush(Color.FromArgb(240, 3, 3, 3));
             }
-            oc?.MaxStyleAct?.Invoke(true,fore);
+            oc?.MaxStyleAct?.Invoke(true, fore);
         }
 
         private void NormalWindStyle()
@@ -150,7 +152,7 @@ namespace MyToolBar
                 OutterFuncStatus.SetResourceReference(BackgroundProperty, "MaskColor");
             }
 
-            oc?.MaxStyleAct?.Invoke(false,foreground);
+            oc?.MaxStyleAct?.Invoke(false, foreground);
         }
 
         /// <summary>
@@ -183,7 +185,7 @@ namespace MyToolBar
 
             if (CurrentWindowStyle == 0)
                 NormalWindStyle();
-            else 
+            else
                 MaxWindStyle();
         }
 

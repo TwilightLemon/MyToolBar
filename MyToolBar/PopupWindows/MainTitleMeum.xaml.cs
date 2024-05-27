@@ -33,7 +33,7 @@ namespace MyToolBar.PopupWindows
                 ItemPanel.Children.Add(item);
             }
 
-            SetItem("Settings", "settings", MeumItem_Settings);
+            SetItem("Settings", "Settings", MeumItem_Settings);
             SetItem("Exit", null, MeumItem_Exit);
 
             this.Height = ItemPanel.Children.Count * 40;

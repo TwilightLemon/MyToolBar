@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MyToolBar.Views.Pages
+namespace MyToolBar.Views.Pages.Settings
 {
     /// <summary>
-    /// AboutPage.xaml 的交互逻辑
+    /// CapsulesSettingsPage.xaml 的交互逻辑
     /// </summary>
-    public partial class AboutPage : Page
+    public partial class CapsulesSettingsPage : Page
     {
-        public AboutPage()
+        public CapsulesSettingsPage()
         {
             InitializeComponent();
         }

@@ -8,6 +8,7 @@ using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using MyToolBar.Views.Pages;
+using MyToolBar.Views.Pages.Settings;
 
 namespace MyToolBar.ViewModels
 {

@@ -17,7 +17,7 @@ namespace MyToolBar.Services
 
         public ApplicationService(
             IServiceProvider serviceProvider,
-            ILogger logger)
+            ILogger<ApplicationService> logger)
         {
             _serviceProvider = serviceProvider;
             _logger = logger;

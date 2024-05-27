@@ -21,6 +21,8 @@ namespace MyToolBar.Behaviors
             SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
         }
 
+        private WindowAccentCompositor? _windowAccentCompositor;
+
         private static void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
         {
             var isDarkMode = !ToolWindowApi.GetIsLightTheme();
@@ -43,13 +45,24 @@ namespace MyToolBar.Behaviors
         {
             base.OnAttached();
 
-            AssociatedObject.Loaded += AssociatedObject_Loaded;
+            if (AssociatedObject.IsLoaded)
+            {
+                InitializeBehavior();
+            }
+            else
+            {
+                AssociatedObject.Loaded += AssociatedObject_Loaded;
+            }
         }
 
         protected override void OnDetaching()
         {
             base.OnDetaching();
 
+            // unregister event
+            AssociatedObject.Loaded -= AssociatedObject_Loaded;
+
+            // remove and disable wac
             if (s_allWindowsAccentCompositors.TryGetValue(AssociatedObject, out var acc))
             {
                 s_allWindowsAccentCompositors.Remove(AssociatedObject);
@@ -58,11 +71,15 @@ namespace MyToolBar.Behaviors
             }
         }
 
-        private void AssociatedObject_Loaded(object sender, RoutedEventArgs e)
+        private void InitializeBehavior()
         {
-            if (sender is not Window window)
-                return;
+            s_allWindowsAccentCompositors[AssociatedObject] 
+                = _windowAccentCompositor 
+                = CreateWindowAccentCompositor();
+        }
 
+        private WindowAccentCompositor CreateWindowAccentCompositor()
+        {
             WindowAccentCompositor wac = new(AssociatedObject, false, (c) =>
             {
                 c.A = 255;
@@ -76,7 +93,14 @@ namespace MyToolBar.Behaviors
             wac.DarkMode = GlobalService.IsDarkMode;
             wac.IsEnabled = true;
 
-            s_allWindowsAccentCompositors[window] = wac;
+            return wac;
         }
+
+        private void AssociatedObject_Loaded(object sender, RoutedEventArgs e)
+        {
+            InitializeBehavior();
+        }
+
+        public WindowAccentCompositor WindowAccentCompositor => _windowAccentCompositor ?? throw new InvalidOperationException("Window is not loaded");
     }
 }
