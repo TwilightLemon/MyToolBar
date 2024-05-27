@@ -29,30 +29,12 @@ namespace MyToolBar.Func
     }
     public static class WeatherApi
     {
-        public class KeyMgr
+        public class Property
         {
-            public string key { get; set; } = "";
-            public string lang { get; set; } = "en";
-            public string host { get; set; } = "devapi.qweather.com";
-            private static string SettingSign = "WeatherApiKeys";
-            public event EventHandler KeyChanged;
-            public static async Task<KeyMgr> GetKey()
-            {
-
-                var keys = await Settings.Load<KeyMgr>(SettingSign);
-                if (keys != null)
-                {
-                    return keys;
-                }
-                return new KeyMgr();
-            }
-            public async void SaveKey()
-            {
-                KeyChanged?.Invoke(this, EventArgs.Empty);
-                await Settings.Save(this, SettingSign);
-            }
+            public string? key { get; set; }
+            public string? lang { get; set; } = "en";
+            public string? host { get; set; } = "devapi.qweather.com";
         }
-
         public class City
         {
             public string? Province { get; set; }
@@ -90,11 +72,11 @@ namespace MyToolBar.Func
             public string sug { get; set; }
         }
 
-        public static void SetProperty(string key, string lang = "en", string host = "devapi.qweather.com")
+        public static void SetProperty(Property p)
         {
-            WeatherApi.key = key;
-            WeatherApi.lang = lang;
-            WeatherApi.host = host;
+            key = p.key;
+            lang = p.lang;
+            host = p.host;
         }
         private static string key,
             lang = "en",

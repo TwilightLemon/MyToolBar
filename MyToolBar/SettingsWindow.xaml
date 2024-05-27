@@ -16,6 +16,7 @@
             <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 20 0 0" Text="{StaticResource SettingsWindow_Title}" FontSize="20" FontWeight="Bold"/>
             <StackPanel x:Name="SettingsItemList" Margin="0,60,0,0">
                 <Items:MeumItem Icon="{StaticResource Icon_capsule}" MeumContent="{StaticResource  SettingsWindow_Tab_Capsules}" Tag="Capsule"/>
+                <Items:MeumItem Icon="{StaticResource Icon_OutterControl}" MeumContent="{StaticResource  SettingsWindow_Tab_OutterControl}" Tag="OutterControl"/>
                 <Items:MeumItem Icon="{StaticResource Icon_component}" MeumContent="{StaticResource SettingsWindow_Tab_Components}" Tag="Compo"/>
                 <Items:MeumItem Icon="{StaticResource Icon_about}" MeumContent="{StaticResource SettingsWindow_Tab_About}" Tag="About"/>
             </StackPanel>
@@ -23,7 +24,7 @@
         <Grid Grid.Column="1">
             <Grid x:Name="CapsulePage" >
                 <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" Margin="20,20,0,0" Text="{DynamicResource SettingsWindow_Tab_Capsules}" FontSize="20" FontWeight="Bold"/>
-                <StackPanel Margin="0 60 0 0">
+                <StackPanel x:Name="CapsuleList" Margin="0 60 0 0">
                     <Border  Height="180" Background="{DynamicResource MaskColor}" CornerRadius="15,15,15,15" Margin="20,20,20,20">
                         <Grid >
                             <TextBox x:Name="WeatherCap_Key" TextWrapping="Wrap" Style="{DynamicResource SimpleTextBoxStyle}" Height="30" Background="{DynamicResource MaskColor}" Foreground="{DynamicResource ForeColor}" Margin="100,55,20,0" VerticalAlignment="Top"/>
@@ -41,6 +42,7 @@
             <Grid  x:Name="AboutPage" Visibility="Collapsed">
                 <TextBlock Margin="50"><Run Text="TODO:Write something here..."/></TextBlock>
             </Grid>
+            <Grid x:Name="OutterControlPage" Visibility="Collapsed"/>
         </Grid>
     </Grid>
 </Window>

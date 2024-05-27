@@ -87,23 +87,25 @@ namespace MyToolBar.Capsules
                 data.UpdateTime = DateTime.Now;
             }
         }
+        private SettingsMgr<WeatherApi.Property> KeyMgr;
         public async void LoadData()
         {
-            if (WeatherApiKey == null)
+            if (KeyMgr == null)
             {
-                WeatherApiKey = await WeatherApi.KeyMgr.GetKey();
-                WeatherApiKey.KeyChanged += delegate
-                {
-                    LoadData();
+                KeyMgr  =new("WeatherAPIKey", "WeatherCap");
+                await KeyMgr.Load();
+                KeyMgr.OnDataChanged += async delegate { 
+                    await KeyMgr.Load();
+                    Dispatcher.Invoke(() => LoadData());
                 };
             }
-            if (WeatherApiKey == null || string.IsNullOrEmpty(WeatherApiKey.key))
+            if (string.IsNullOrEmpty(KeyMgr.Data.key))
             {
                 Weather_info.Text = "No Key";
             }
             else
             {
-                WeatherApi.SetProperty(WeatherApiKey.key, WeatherApiKey.lang, WeatherApiKey.host);
+                WeatherApi.SetProperty(KeyMgr.Data);
                 await LoadWeatherData();
                 GlobalTimer.Elapsed += GlobalTimer_Elapsed;
             }
