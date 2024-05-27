@@ -1,11 +1,12 @@
 ﻿<local:PopWindowBase x:Class="MyToolBar.PopupWindows.WeatherBox"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MyToolBar.PopupWindows"
-        mc:Ignorable="d"
-        Title="WeatherBox" Height="520" Width="350">
+                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                     xmlns:local="clr-namespace:MyToolBar.PopupWindows"
+                     xmlns:ws="https://github.com/OrgEleCho/EleCho.WpfSuite"
+                     mc:Ignorable="d"
+                     Title="WeatherBox" Height="520" Width="350">
     <Window.Resources>
         <Storyboard x:Key="PageBack">
             <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="AddFavor" Storyboard.TargetProperty="(FrameworkElement.Margin)">
@@ -115,7 +116,7 @@
                 <Run Text="Air quality source: CNEMC"/>
             </TextBlock>
         </WrapPanel>
-        <local:MyScrollViewer x:Name="AddFavor" VerticalScrollBarVisibility="Hidden" Visibility="Collapsed">
+        <ws:ScrollViewer x:Name="AddFavor" VerticalScrollBarVisibility="Hidden" Visibility="Collapsed">
             <WrapPanel   ItemWidth="330" Orientation="Vertical" Margin="0,0,0,0" >
                 <Grid Margin="0 20 0 20" Height="25">
                     <TextBox Style="{DynamicResource SimpleTextBoxStyle}" x:Name="SearchCityBox" PreviewKeyDown="SearchCityBox_PreviewKeyDown" TextWrapping="Wrap" Text="Search City" Margin="40,0,40,0" Foreground="{DynamicResource ForeColor}" Background="{DynamicResource MaskColor}"/>
@@ -139,6 +140,6 @@
                 </Border>
                 <TextBlock Text="Tips: Long press or right-click to set as default." TextAlignment="Center" FontSize="10" Opacity="0.5"/>
             </WrapPanel>
-        </local:MyScrollViewer>
+        </ws:ScrollViewer>
     </Grid>
 </local:PopWindowBase>

@@ -1,11 +1,12 @@
 ﻿<local:PopWindowBase x:Class="MyToolBar.PopupWindows.ResourceMonitor"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MyToolBar.PopupWindows"
-        mc:Ignorable="d"
-        Title="ResourceMonitor" Height="520" Width="350" Background="{DynamicResource MaskColor}" Foreground="{DynamicResource ForeColor}">
+                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                     xmlns:local="clr-namespace:MyToolBar.PopupWindows"
+                     xmlns:ws="https://github.com/OrgEleCho/EleCho.WpfSuite"
+                     mc:Ignorable="d"
+                     Title="ResourceMonitor" Height="520" Width="350" Background="{DynamicResource MaskColor}" Foreground="{DynamicResource ForeColor}">
     <local:PopWindowBase.Resources>
         <Storyboard x:Key="OpenDetalPage">
             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ProcessInfoPage" Storyboard.TargetProperty="(UIElement.Visibility)">
@@ -77,9 +78,9 @@
             </Border>
         </Grid>
         <Border x:Name="ProcListPage"  Margin="10 60 10 10"  Background="{DynamicResource MaskColor}" CornerRadius="15">
-            <local:MyScrollViewer VerticalScrollBarVisibility="Hidden">
+            <ws:ScrollViewer VerticalScrollBarVisibility="Hidden">
                 <WrapPanel x:Name="ProcessList" ItemWidth="330"/>
-            </local:MyScrollViewer>
+            </ws:ScrollViewer>
         </Border>
         <Grid x:Name="ProcessInfoPage" Margin="10 60 10 10" Visibility="Collapsed">
             <Border Background="{DynamicResource MaskColor}" CornerRadius="15"/>
@@ -87,13 +88,13 @@
                 <Image x:Name="PInfo_Icon" Stretch="Uniform" Margin="20" />
             </Border>
             <TextBlock x:Name="PInfo_Detal" FontSize="14"  VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="20 150 20 0" TextAlignment="Center">
-                    <Run x:Name="PInfo_Name" FontSize="16" d:Text="Visual Studio" FontWeight="Bold" />
-                    <LineBreak/>
-                    <Run x:Name="PInfo_file" d:Text="dev.exe" /><LineBreak/>
+                <Run x:Name="PInfo_Name" FontSize="16" d:Text="Visual Studio" FontWeight="Bold" />
                 <LineBreak/>
-                    <Run x:Name="PInfo_PID" d:Text="PID: 1234" /><LineBreak/>
-                    <Run x:Name="PInfo_CPU" d:Text="CPU: 12%" /><LineBreak/>
-                    <Run x:Name="PInfo_MEM" d:Text="MEM: 123MB" />
+                <Run x:Name="PInfo_file" d:Text="dev.exe" /><LineBreak/>
+                <LineBreak/>
+                <Run x:Name="PInfo_PID" d:Text="PID: 1234" /><LineBreak/>
+                <Run x:Name="PInfo_CPU" d:Text="CPU: 12%" /><LineBreak/>
+                <Run x:Name="PInfo_MEM" d:Text="MEM: 123MB" />
             </TextBlock>
             <Border x:Name="PInfo_BackBtn" Cursor="Hand" Background="{DynamicResource MaskColor}" CornerRadius="50" Width="50" Height="50" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="30,0,0,100" MouseLeftButtonUp="PInfo_BackBtn_MouseLeftButtonUp">
                 <Path Data="{StaticResource Icon_back}" Stretch="Uniform" Width="14" Height="14" Fill="{DynamicResource ForeColor}"/>
