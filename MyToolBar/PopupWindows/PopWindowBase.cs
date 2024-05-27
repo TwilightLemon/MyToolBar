@@ -7,6 +7,8 @@ using System.Windows.Media.Animation;
 using System.Windows.Shell;
 using System.Windows.Interop;
 using System.Windows.Controls;
+using Microsoft.Xaml.Behaviors;
+using MyToolBar.Behaviors;
 
 namespace MyToolBar.PopupWindows
 {
@@ -46,16 +48,8 @@ namespace MyToolBar.PopupWindows
         private void PopWindowBase_Loaded(object sender, RoutedEventArgs e)
         {
             ToolWindowApi.SetToolWindow(this);
-            WindowAccentCompositor wac = new(this, false, (c) =>
-            {
-                c.A = 255;
-                Background = new SolidColorBrush(c);
-            });
-            wac.Color = IsDarkMode ?
-            Color.FromArgb(180, 0, 0, 0) :
-            Color.FromArgb(180, 255, 255, 255);
-            wac.DarkMode = IsDarkMode;
-            wac.IsEnabled = true;
+            BehaviorCollection behaviors = Interaction.GetBehaviors(this);
+            behaviors.Add(new BlurWindowBehavior());
         }
 
         private void PopWindowBase_Deactivated(object? sender, EventArgs e)

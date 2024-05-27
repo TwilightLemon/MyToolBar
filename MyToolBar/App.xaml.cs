@@ -37,14 +37,14 @@ namespace MyToolBar
                 // windows
                 services.AddSingleton<AppBarWindow>();
                 services.AddSingleton<AppBarViewModel>();
-                services.AddSingleton<SettingsWindow>();
-                services.AddSingleton<SettingsViewModel>();
+                services.AddTransient<SettingsWindow>();
+                services.AddTransient<SettingsViewModel>();
 
                 // settings pages
-                services.AddSingleton<CapsulesSettingsPage>();
-                services.AddSingleton<OuterControlSettingsPage>();
-                services.AddSingleton<ComponentsSettingsPage>();
-                services.AddSingleton<AboutPage>();
+                services.AddTransient<CapsulesSettingsPage>();
+                services.AddTransient<OuterControlSettingsPage>();
+                services.AddTransient<ComponentsSettingsPage>();
+                services.AddTransient<AboutPage>();
 
                 // function services
                 services.AddSingleton<AppSettingsService>();

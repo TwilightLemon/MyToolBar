@@ -27,7 +27,7 @@
     </Window.Resources>
 
     <i:Interaction.Behaviors>
-        <mb:MicaWindowBehavior Opacity="{Binding Source={StaticResource DataContext},Mode=TwoWay,Path=Data.ViewModel.WindowAccentCompositorOpacity}"/>
+        <mb:BlurWindowBehavior IsToolBar="True" Opacity="{Binding Source={StaticResource DataContext},Mode=TwoWay,Path=Data.ViewModel.WindowAccentCompositorOpacity}"/>
     </i:Interaction.Behaviors>
     
     <Grid>

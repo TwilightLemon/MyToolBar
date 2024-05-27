@@ -12,11 +12,12 @@ using MyToolBar.WinApi;
 namespace MyToolBar.Behaviors
 {
 
-    public class MicaWindowBehavior : Behavior<Window>
+    public class BlurWindowBehavior : Behavior<Window>
     {
         static readonly Dictionary<Window, WindowAccentCompositor> s_allWindowsAccentCompositors = new();
+        public bool IsToolBar { get; set; } = false;
 
-        static MicaWindowBehavior()
+        static BlurWindowBehavior()
         {
             SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
         }
@@ -39,6 +40,7 @@ namespace MyToolBar.Behaviors
             wac.Color = isDarkMode ?
                 Color.FromScRgb(opacity, 0, 0, 0) :
                 Color.FromScRgb(opacity, 1, 1, 1);
+            wac.IsEnabled = true;
         }
 
         protected override void OnAttached()
@@ -82,7 +84,7 @@ namespace MyToolBar.Behaviors
         {
             var isDarkMode = !ToolWindowApi.GetIsLightTheme();
             var wac = new WindowAccentCompositor(
-                AssociatedObject, false, (c) =>
+                AssociatedObject, IsToolBar, (c) =>
                 {
                     c.A = 255;
                     AssociatedObject.Background = new SolidColorBrush(c);
@@ -102,7 +104,7 @@ namespace MyToolBar.Behaviors
 
         private static void OpacityChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is not MicaWindowBehavior behavior ||
+            if (d is not BlurWindowBehavior behavior ||
                 e.NewValue is not float opacity)
                 return;
 
@@ -125,7 +127,7 @@ namespace MyToolBar.Behaviors
 
         // Using a DependencyProperty as the backing store for Opacity.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty OpacityProperty =
-            DependencyProperty.Register(nameof(Opacity), typeof(float), typeof(MicaWindowBehavior), new PropertyMetadata(0.6f, OpacityChangedCallback));
+            DependencyProperty.Register(nameof(Opacity), typeof(float), typeof(BlurWindowBehavior), new PropertyMetadata(0.6f, OpacityChangedCallback));
 
         public WindowAccentCompositor WindowAccentCompositor => _windowAccentCompositor ?? throw new InvalidOperationException("Window is not loaded");
     }

@@ -123,6 +123,10 @@ namespace MyToolBar.Capsules
         private bool BoxShowed = false;
         private async void ShowWeatherBox()
         {
+            if(string.IsNullOrEmpty(KeyMgr.Data.key))
+            {
+                return;
+            }
             if(BoxShowed) return;
             try
             {
