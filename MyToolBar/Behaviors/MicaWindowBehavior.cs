@@ -125,7 +125,7 @@ namespace MyToolBar.Behaviors
 
         // Using a DependencyProperty as the backing store for Opacity.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty OpacityProperty =
-            DependencyProperty.Register(nameof(Opacity), typeof(float), typeof(MicaWindowBehavior), new PropertyMetadata(1.0f, OpacityChangedCallback));
+            DependencyProperty.Register(nameof(Opacity), typeof(float), typeof(MicaWindowBehavior), new PropertyMetadata(0.6f, OpacityChangedCallback));
 
         public WindowAccentCompositor WindowAccentCompositor => _windowAccentCompositor ?? throw new InvalidOperationException("Window is not loaded");
     }
