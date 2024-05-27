@@ -4,9 +4,26 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MyToolBar"
+        xmlns:ws="https://github.com/OrgEleCho/EleCho.WpfSuite"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:cap="clr-namespace:MyToolBar.Capsules"
+        xmlns:mb="clr-namespace:MyToolBar.Behaviors"
         mc:Ignorable="d" Topmost="True"
-        Title="MyToolBar" Height="30" Width="1480" Background="Transparent" ResizeMode="NoResize" WindowStyle="None" Loaded="Window_Loaded" Closing="Window_Closing" Foreground="{DynamicResource ForeColor}" ShowInTaskbar="False" AllowsTransparency="True">
+        Title="MyToolBar" 
+        Height="30" 
+        Width="1480" 
+        Background="Transparent" 
+        ResizeMode="NoResize" 
+        WindowStyle="None" 
+        Loaded="Window_Loaded"
+        Closing="Window_Closing" 
+        Foreground="{DynamicResource ForeColor}" 
+        ShowInTaskbar="False" 
+        AllowsTransparency="True">
+
+    <i:Interaction.Behaviors>
+        <mb:MicaWindowBehavior/>
+    </i:Interaction.Behaviors>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1.2*"/>
@@ -23,7 +40,10 @@
         <Grid x:Name="OutterFunc" Grid.Column="1" Background="Transparent">
            
         </Grid>
-        <WrapPanel x:Name="FuncPanel" HorizontalAlignment="Right"   Margin="14,0,10,0" Grid.Column="2">
+        <WrapPanel x:Name="FuncPanel" 
+                   HorizontalAlignment="Right" 
+                   Margin="14,0,10,0" 
+                   Grid.Column="2">
             <cap:HardwareMonitorCap x:Name="Cap_hdm"/>
             <cap:WeatherCap x:Name="Cap_weather"/>
         </WrapPanel>

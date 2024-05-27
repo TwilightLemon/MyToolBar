@@ -20,7 +20,6 @@ namespace MyToolBar
     /// </summary>
     public partial class MainWindow : Window
     {
-        private WindowAccentCompositor wac;
         private OuterControlBase oc;
         private PenControlWindow pcw;
 
@@ -34,12 +33,6 @@ namespace MyToolBar
             #region Window Style
             ToolWindowApi.SetToolWindow(this);
             AppBarFunctions.SetAppBar(this, ABEdge.Top);
-            wac = new(this,true, (c) =>
-            {
-                c.A = 255;
-                Background = new SolidColorBrush(c);
-            });
-            UpdateWindowBlurMode();
             Width = SystemParameters.WorkArea.Width;
             SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
             UpdateColorMode();
@@ -125,7 +118,7 @@ namespace MyToolBar
         {
             //全屏样式  整体变暗
             CurrentWindStyle = 1;
-            UpdateWindowBlurMode(240);
+            //UpdateWindowBlurMode(240);
             SolidColorBrush fore;
             if (IsDarkMode)
             {
@@ -143,7 +136,7 @@ namespace MyToolBar
         private void NormalWindStyle()
         {
             CurrentWindStyle = 0;
-            UpdateWindowBlurMode();
+            //UpdateWindowBlurMode();
             Brush fore = null;
             if (IsDarkMode)
             {
@@ -177,21 +170,15 @@ namespace MyToolBar
                 NormalWindStyle();
             }
         }
-        public void UpdateWindowBlurMode(byte opacity = 180)
-        {
-            wac.Color = IsDarkMode ?
-            Color.FromArgb(opacity, 0, 0, 0) :
-            Color.FromArgb(opacity, 255, 255, 255);
-            wac.DarkMode = IsDarkMode;
-            wac.IsEnabled = true;
-        }
+
 
         private void UpdateColorMode()
         {
             App.CurrentApp?.SetThemeMode(!ToolWindowApi.GetIsLightTheme());
             if (CurrentWindStyle == 0)
                 NormalWindStyle();
-            else MaxWindStyle();
+            else 
+                MaxWindStyle();
         }
 
         private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)

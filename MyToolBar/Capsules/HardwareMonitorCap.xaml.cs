@@ -18,6 +18,7 @@ namespace MyToolBar.Capsules
         {
             InitializeComponent();
         }
+
         public void Start()
         {
             CPUInfo.Load();
@@ -32,6 +33,7 @@ namespace MyToolBar.Capsules
             Cpu_temp.Text = CPUInfo.GetCPUTemperature() + "℃";
             var data = ni.GetNetworkSpeed();
             Network_text.Text = $"↑ {data[1]}/s\r\n↓ {data[0]}/s";
+
         }
         private bool BoxShowed = false;
         private void OpenBox()

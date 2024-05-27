@@ -1,4 +1,5 @@
-﻿using MyToolBar.PopupWindows.Items;
+﻿using Microsoft.Extensions.DependencyInjection;
+using MyToolBar.PopupWindows.Items;
 using System;
 using System.Windows;
 using System.Windows.Input;
@@ -36,7 +37,9 @@ namespace MyToolBar.PopupWindows
 
         private void MeumItem_Settings(object sender, MouseButtonEventArgs e)
         {
-             new SettingsWindow().Show();
+            App.ServiceProvider
+                .GetRequiredService<SettingsWindow>()
+                .Show();
         }
         private void MeumItem_Exit(object sender, MouseButtonEventArgs e)
         {

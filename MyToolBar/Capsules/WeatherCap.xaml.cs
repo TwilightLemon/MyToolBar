@@ -67,6 +67,7 @@ namespace MyToolBar.Capsules
         {
             InitializeComponent();
         }
+
         private WeatherCache cache = null;
         private async Task LoadWeatherData()
         {

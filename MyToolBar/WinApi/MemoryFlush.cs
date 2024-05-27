@@ -46,9 +46,10 @@ namespace MyToolBar.WinApi
             }
             currentUser.Dispose();
         }
+
         public void Cracker(int sleepSpan = 50)
         {
-            _ = Task.Factory.StartNew(delegate
+            _ = Task.Factory.StartNew(async () =>
             {
                 while (true)
                 {
@@ -56,7 +57,7 @@ namespace MyToolBar.WinApi
                     {
                         SetDate();
                         FlushMemory();
-                        Thread.Sleep(TimeSpan.FromSeconds((double)sleepSpan));
+                        await Task.Delay(TimeSpan.FromSeconds((double)sleepSpan));
                     }
                     catch { }
                 }

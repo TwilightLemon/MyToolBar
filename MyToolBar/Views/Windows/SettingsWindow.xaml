@@ -1,48 +1,108 @@
-﻿<Window
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MyToolBar"
-        xmlns:Items="clr-namespace:MyToolBar.PopupWindows.Items" x:Class="MyToolBar.SettingsWindow"
+        xmlns:mb="clr-namespace:MyToolBar.Behaviors"
+        xmlns:ws="https://github.com/OrgEleCho/EleCho.WpfSuite"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:Items="clr-namespace:MyToolBar.PopupWindows.Items"
+        x:Class="MyToolBar.SettingsWindow"
         mc:Ignorable="d" ResizeMode="CanMinimize"
-        Title="SettingsWindow" Height="550" Width="800" Foreground="{DynamicResource ForeColor}" Background="{DynamicResource MaskColor}">
+        Title="SettingsWindow" Height="550" Width="800"
+        Foreground="{DynamicResource ForeColor}"
+        Background="{DynamicResource MaskColor}"
+        d:Background="White"
+        d:DataContext="{d:DesignInstance Type=local:SettingsWindow}">
+    <i:Interaction.Behaviors>
+        <mb:MicaWindowBehavior/>
+        <mb:WindowDragMoveBehavior/>
+    </i:Interaction.Behaviors>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="3*"/>
-        </Grid.ColumnDefinitions>
-        <Grid Background="#19000000" >
-            <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 20 0 0" Text="{StaticResource SettingsWindow_Title}" FontSize="20" FontWeight="Bold"/>
-            <StackPanel x:Name="SettingsItemList" Margin="0,60,0,0">
-                <Items:MeumItem Icon="{StaticResource Icon_capsule}" MeumContent="{StaticResource  SettingsWindow_Tab_Capsules}" Tag="Capsule"/>
-                <Items:MeumItem Icon="{StaticResource Icon_OutterControl}" MeumContent="{StaticResource  SettingsWindow_Tab_OutterControl}" Tag="OutterControl"/>
-                <Items:MeumItem Icon="{StaticResource Icon_component}" MeumContent="{StaticResource SettingsWindow_Tab_Components}" Tag="Compo"/>
-                <Items:MeumItem Icon="{StaticResource Icon_about}" MeumContent="{StaticResource SettingsWindow_Tab_About}" Tag="About"/>
-            </StackPanel>
-        </Grid>
-        <Grid Grid.Column="1">
-            <Grid x:Name="CapsulePage" >
-                <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" Margin="20,20,0,0" Text="{DynamicResource SettingsWindow_Tab_Capsules}" FontSize="20" FontWeight="Bold"/>
-                <StackPanel x:Name="CapsuleList" Margin="0 60 0 0">
-                    <Border  Height="180" Background="{DynamicResource MaskColor}" CornerRadius="15,15,15,15" Margin="20,20,20,20">
-                        <Grid >
-                            <TextBox x:Name="WeatherCap_Key" TextWrapping="Wrap" Style="{DynamicResource SimpleTextBoxStyle}" Height="30" Background="{DynamicResource MaskColor}" Foreground="{DynamicResource ForeColor}" Margin="100,55,20,0" VerticalAlignment="Top"/>
-                            <TextBlock HorizontalAlignment="Left" Margin="20,62,0,0" TextWrapping="Wrap" Text="ApiKey:" VerticalAlignment="Top" Width="65" Height="16"/>
-                            <TextBox x:Name="WeatherCap_host" TextWrapping="Wrap" Style="{DynamicResource SimpleTextBoxStyle}" Height="30" Background="{DynamicResource MaskColor}" Foreground="{DynamicResource ForeColor}" Margin="100,92,20,0" VerticalAlignment="Top"/>
-                            <TextBlock HorizontalAlignment="Left" Margin="20,99,0,0" TextWrapping="Wrap" Text="Host:" VerticalAlignment="Top" Width="65" Height="16"/>
-                            <TextBox x:Name="WeatherCap_Lang" TextWrapping="Wrap" Style="{DynamicResource SimpleTextBoxStyle}" Height="30" Background="{DynamicResource MaskColor}" Foreground="{DynamicResource ForeColor}" Margin="100,132,20,0" VerticalAlignment="Top"/>
-                            <TextBlock HorizontalAlignment="Left" Margin="20,139,0,0" TextWrapping="Wrap" Text="lang:" VerticalAlignment="Top" Width="65" Height="16"/>
-                            <TextBlock HorizontalAlignment="Left" Margin="20,20,0,0" TextWrapping="Wrap" Text="WeatherCap" VerticalAlignment="Top" FontSize="16"/>
-                        </Grid>
-                    </Border>
+        <DockPanel>
+            <DockPanel DockPanel.Dock="Left"
+                       Background="#19000000"
+                       Width="200">
+                <StackPanel DockPanel.Dock="Top">
+                    <TextBlock Text="Settings"
+                               Foreground="{DynamicResource ForeColor}"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               d:Foreground="Black"
+                               FontWeight="Bold"
+                               FontSize="22"
+                               Margin="0 10"/>
                 </StackPanel>
-            </Grid>
-            <Grid x:Name="ComponentPage" Visibility="Collapsed"/>
-            <Grid  x:Name="AboutPage" Visibility="Collapsed">
-                <TextBlock Margin="50"><Run Text="TODO:Write something here..."/></TextBlock>
-            </Grid>
-            <Grid x:Name="OutterControlPage" Visibility="Collapsed"/>
+                <ws:ListBox ItemsSource="{Binding ViewModel.SettingsPages}"
+                            SelectedItem="{Binding ViewModel.SelectedPage}"
+                            d:ItemsSource="{d:SampleData ItemCount=5}"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            SelectionChanged="ListBox_SelectionChanged">
+                    <ws:ListBox.ItemContainerStyle>
+                        <Style TargetType="ws:ListBoxItem">
+                            <Setter Property="Margin" Value="5 0"/>
+                            <Setter Property="CornerRadius" Value="10"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="HoverBackground" Value="{DynamicResource MaskColor}"/>
+                            <Setter Property="SelectedBackground" Value="{DynamicResource MaskColor}"/>
+                            <Setter Property="SelectedActiveBackground" Value="{DynamicResource MaskColor}"/>
+                        </Style>
+                    </ws:ListBox.ItemContainerStyle>
+                    <ws:ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <ws:Border Height="40"
+                                       Padding="10 0"
+                                       Background="Transparent">
+                                <ws:StackPanel Orientation="Horizontal"
+                                               VerticalAlignment="Center"
+                                               Spacing="8">
+                                    <Path VerticalAlignment="Center"
+                                          Fill="{DynamicResource ForeColor}"
+                                          Data="{Binding Icon}"
+                                          Stretch="Uniform"
+                                          Width="25"
+                                          Height="25"/>
+                                    <TextBlock Text="{Binding Name}"
+                                               VerticalAlignment="Center"/>
+                                </ws:StackPanel>
+                            </ws:Border>
+                        </DataTemplate>
+                    </ws:ListBox.ItemTemplate>
+                </ws:ListBox>
+            </DockPanel>
+            <ws:Frame Name="WindowFrame"
+                      NavigationUIVisibility="Hidden">
+                <ws:Frame.Transition>
+                    <ws:SlideFadeTransition Orientation="Vertical"
+                                            Duration="0:0:0.200"
+                                            Distance="50"/>
+                </ws:Frame.Transition>
+            </ws:Frame>
+        </DockPanel>
+        <!--<Grid>
+        <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="1*"/>
+        <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+        --><!--<Grid Background="#19000000" >
+        <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 20 0 0" Text="{StaticResource SettingsWindow_Title}" FontSize="20" FontWeight="Bold"/>
+        <StackPanel x:Name="SettingsItemList" Margin="0,60,0,0">
+        <Items:MeumItem Icon="{StaticResource Icon_Capsule}" MeumContent="{StaticResource  SettingsWindow_Tab_Capsules}" Tag="Capsule"/>
+        <Items:MeumItem Icon="{StaticResource Icon_OuterControl}" MeumContent="{StaticResource  SettingsWindow_Tab_OutterControl}" Tag="OutterControl"/>
+        <Items:MeumItem Icon="{StaticResource Icon_Component}" MeumContent="{StaticResource SettingsWindow_Tab_Components}" Tag="Compo"/>
+        <Items:MeumItem Icon="{StaticResource Icon_About}" MeumContent="{StaticResource SettingsWindow_Tab_About}" Tag="About"/>
+        </StackPanel>
+        </Grid>--><!--
+        <Grid Grid.Column="1">
+        <Grid x:Name="CapsulePage" >
         </Grid>
+        <Grid x:Name="ComponentPage" Visibility="Collapsed"/>
+        <Grid  x:Name="AboutPage" Visibility="Collapsed">
+        <TextBlock Margin="50"><Run Text="TODO:Write something here..."/></TextBlock>
+        </Grid>
+        <Grid x:Name="OutterControlPage" Visibility="Collapsed"/>
+        </Grid>
+        </Grid>-->
     </Grid>
 </Window>

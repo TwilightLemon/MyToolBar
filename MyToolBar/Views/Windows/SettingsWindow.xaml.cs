@@ -19,6 +19,8 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using MyToolBar.ViewModels;
+using System.Windows.Navigation;
 
 namespace MyToolBar
 {
@@ -27,12 +29,16 @@ namespace MyToolBar
     /// </summary>
     public partial class SettingsWindow : Window
     {
-        public SettingsWindow()
+        public SettingsWindow(
+            SettingsViewModel viewModel)
         {
+            ViewModel = viewModel;
+            DataContext = this;
+
             InitializeComponent();
+
             Loaded += SettingsWindow_Loaded;
             Closing += SettingsWindow_Closing;
-            MouseLeftButtonDown += SettingsWindow_MouseLeftButtonDown;
         }
 
         private async void SettingsWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
@@ -40,35 +46,16 @@ namespace MyToolBar
             await SaveSettings();
         }
 
-        private void SettingsWindow_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
-                this.DragMove();
-        }
-
         private async void SettingsWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            WindowAccentCompositor wac = new(this, false, (c) =>
-            {
-                c.A = 255;
-                Background = new SolidColorBrush(c);
-            });
-            wac.Color = GlobalService.IsDarkMode ?
-            Color.FromArgb(180, 0, 0, 0) :
-            Color.FromArgb(180, 255, 255, 255);
-            wac.DarkMode = GlobalService.IsDarkMode;
-            wac.IsEnabled = true;
+            ViewModel.SelectedPage = ViewModel.SettingsPages.FirstOrDefault();
 
-            foreach(MeumItem i in SettingsItemList.Children)
-            {
-                i.MouseDown += MeumItem_MouseLeftButtonUp;
-            }
             await LoadSettings();
         }
         private List<JsonNode> settRef=new();
         private async Task LoadSettings()
         {
-            CapsuleList.Children.Clear();
+            //CapsuleList.Children.Clear();
             foreach (string sign in GlobalService.ManagedSettingsKey)
             {
                 string filePath = Settings.GetPathBySign(sign);
@@ -78,7 +65,8 @@ namespace MyToolBar
                 string PackageName= node["PackageName"].ToString();
                 var items = node["Data"].AsObject();
                 //生成边框
-                Border b = new(){
+                Border b = new()
+                {
                     Height=200,
                     CornerRadius = new CornerRadius(15),
                     Margin=new Thickness(20)
@@ -135,48 +123,34 @@ namespace MyToolBar
                     Grid.SetColumn(valueTb, 1);
                     i++;
                 }
-                CapsuleList.Children.Add(b);
+
+                // TODO: 将 Capsules 页面逻辑分离
+                //CapsuleList.Children.Add(b);
             }
         }
+
         private async Task SaveSettings()
         {
-            
+
         }
 
-        private Grid _NowPage = null;
-        private void NSPage(Grid page)
-        {
-            _NowPage ??= CapsulePage;
-            _NowPage.Visibility=Visibility.Collapsed;
-            page.Visibility = Visibility.Visible;
-            var da = new ThicknessAnimation(new Thickness(0,50,0,-50),new Thickness(0),TimeSpan.FromMilliseconds(300));
-            da.EasingFunction = new CubicEase() {EasingMode=EasingMode.EaseOut};
-            page.BeginAnimation(MarginProperty, da);
-            _NowPage = page;
-        }
+        public SettingsViewModel ViewModel { get; }
 
-        private void MeumItem_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var item = sender as MeumItem;
-            if (item != null)
+            WindowFrame.Navigate(ViewModel.CurrentPageContent);
+
+
+            // Clear history
+            if (WindowFrame.CanGoBack || WindowFrame.CanGoForward)
             {
-                switch (item.Tag.ToString())
+                JournalEntry? history;
+
+                do
                 {
-                    case "Compo":
-                        NSPage(ComponentPage);
-                        break;
-                    case "Capsule":
-                        NSPage(CapsulePage);
-                        break;
-                    case "OutterControl":
-                        NSPage(OutterControlPage);
-                        break;
-                    case "About":
-                        NSPage(AboutPage);
-                        break;
-                    default:
-                        break;
+                    history = WindowFrame.RemoveBackEntry();
                 }
+                while (history is not null);
             }
         }
     }
