@@ -52,7 +52,6 @@ namespace MyToolBar
             {
                 Environment.Exit(0);
             }
-
             AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
             {
                 try
