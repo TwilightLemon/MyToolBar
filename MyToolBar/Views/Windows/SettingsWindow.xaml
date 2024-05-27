@@ -80,29 +80,5 @@
                 </ws:Frame.Transition>
             </ws:Frame>
         </DockPanel>
-        <!--<Grid>
-        <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="1*"/>
-        <ColumnDefinition Width="3*"/>
-        </Grid.ColumnDefinitions>
-        --><!--<Grid Background="#19000000" >
-        <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 20 0 0" Text="{StaticResource SettingsWindow_Title}" FontSize="20" FontWeight="Bold"/>
-        <StackPanel x:Name="SettingsItemList" Margin="0,60,0,0">
-        <Items:MeumItem Icon="{StaticResource Icon_Capsule}" MeumContent="{StaticResource  SettingsWindow_Tab_Capsules}" Tag="Capsule"/>
-        <Items:MeumItem Icon="{StaticResource Icon_OuterControl}" MeumContent="{StaticResource  SettingsWindow_Tab_OutterControl}" Tag="OutterControl"/>
-        <Items:MeumItem Icon="{StaticResource Icon_Component}" MeumContent="{StaticResource SettingsWindow_Tab_Components}" Tag="Compo"/>
-        <Items:MeumItem Icon="{StaticResource Icon_About}" MeumContent="{StaticResource SettingsWindow_Tab_About}" Tag="About"/>
-        </StackPanel>
-        </Grid>--><!--
-        <Grid Grid.Column="1">
-        <Grid x:Name="CapsulePage" >
-        </Grid>
-        <Grid x:Name="ComponentPage" Visibility="Collapsed"/>
-        <Grid  x:Name="AboutPage" Visibility="Collapsed">
-        <TextBlock Margin="50"><Run Text="TODO:Write something here..."/></TextBlock>
-        </Grid>
-        <Grid x:Name="OutterControlPage" Visibility="Collapsed"/>
-        </Grid>
-        </Grid>-->
     </Grid>
 </Window>

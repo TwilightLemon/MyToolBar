@@ -12,19 +12,25 @@ using Microsoft.Win32;
 using MyToolBar.PenPackages;
 using MyToolBar.OuterControls;
 using MyToolBar.PopupWindows;
+using MyToolBar.Services;
 
 namespace MyToolBar
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class AppBarWindow : Window
     {
         private OuterControlBase oc;
         private PenControlWindow pcw;
 
-        public MainWindow()
+        private int CurrentWindowStyle = 0;
+        private readonly ThemeResourceService _themeResourceService;
+
+        public AppBarWindow(ThemeResourceService themeResourceService)
         {
+            _themeResourceService = themeResourceService;
+
             InitializeComponent();
         }
 
@@ -109,15 +115,11 @@ namespace MyToolBar
         #endregion
 
         #region OutterFuncStatus & WindowStyle
-        /// <summary>
-        /// 当前OutterFunc样式 0:Normal 1:Max
-        /// </summary>
-        private int CurrentWindStyle = 0;
 
         private void MaxWindStyle()
         {
             //全屏样式  整体变暗
-            CurrentWindStyle = 1;
+            CurrentWindowStyle = 1;
             //UpdateWindowBlurMode(240);
             SolidColorBrush fore;
             if (IsDarkMode)
@@ -135,17 +137,20 @@ namespace MyToolBar
 
         private void NormalWindStyle()
         {
-            CurrentWindStyle = 0;
+            CurrentWindowStyle = 0;
             //UpdateWindowBlurMode();
-            Brush fore = null;
+            Brush? foreground = null;
             if (IsDarkMode)
             {
                 OutterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(120, 255, 255, 255));
-                fore = OuterControlNormalDarkModeForeColor;
+                foreground = OuterControlNormalDarkModeForeColor;
             }
             else
+            {
                 OutterFuncStatus.SetResourceReference(BackgroundProperty, "MaskColor");
-            oc?.MaxStyleAct?.Invoke(false,fore);
+            }
+
+            oc?.MaxStyleAct?.Invoke(false,foreground);
         }
 
         /// <summary>
@@ -155,7 +160,6 @@ namespace MyToolBar
         {
             TitleView.Text = ActiveWindow.GetActiveWindowTitle();
             Width = SystemParameters.WorkArea.Width;
-
 
             var fore = ActiveWindow.GetForegroundWindow();
             if (MaxedWindow == IntPtr.Zero && fore.IsZoomedWindow())
@@ -174,8 +178,10 @@ namespace MyToolBar
 
         private void UpdateColorMode()
         {
-            App.CurrentApp?.SetThemeMode(!ToolWindowApi.GetIsLightTheme());
-            if (CurrentWindStyle == 0)
+            var isDarkMode = !ToolWindowApi.GetIsLightTheme();
+            _themeResourceService.SetThemeMode(isDarkMode);
+
+            if (CurrentWindowStyle == 0)
                 NormalWindStyle();
             else 
                 MaxWindStyle();

@@ -31,7 +31,7 @@ namespace MyToolBar.ViewModels
 
         partial void OnSelectedPageChanged(SettingsPage value)
         {
-            var scope = App.ServiceProvider.CreateScope();
+            var scope = App.Host.Services.CreateScope();
             var pageContent = scope.ServiceProvider.GetRequiredService(value.PageType);
 
             CurrentPageContent = pageContent;

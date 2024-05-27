@@ -29,7 +29,7 @@ namespace MyToolBar.PopupWindows.Items
             get => ContentTb.Text; set=>ContentTb.Text = value;
         }
     
-        public Geometry Icon
+        public Geometry? Icon
         {
             get => IconPt.Data;
             set => IconPt.Data = value;

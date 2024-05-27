@@ -1,5 +1,4 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -7,11 +6,17 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Win32;
 
-namespace MyToolBar.WinApi
+namespace MyToolBar.Services
 {
-    public class MemoryFlush
+    public class MemoryOptimizeService : IHostedService
     {
+
+        [DllImport("kernel32.dll")]
+        private static extern bool SetProcessWorkingSetSize(IntPtr proc, int min, int max);
+
         private void SetDate()
         {
             CreateKey();
@@ -22,9 +27,6 @@ namespace MyToolBar.WinApi
             expr_17.SetValue("LastAboutShowedTime", value);
             expr_0B.Dispose();
         }
-
-        [DllImport("kernel32.dll")]
-        private static extern bool SetProcessWorkingSetSize(IntPtr proc, int min, int max);
 
         private void FlushMemory()
         {
@@ -47,21 +49,35 @@ namespace MyToolBar.WinApi
             currentUser.Dispose();
         }
 
-        public void Cracker(int sleepSpan = 50)
+        private async Task MemoryOptimizeLoop()
         {
-            _ = Task.Factory.StartNew(async () =>
+            while (true)
             {
-                while (true)
+                try
                 {
-                    try
-                    {
-                        SetDate();
-                        FlushMemory();
-                        await Task.Delay(TimeSpan.FromSeconds((double)sleepSpan));
-                    }
-                    catch { }
+                    SetDate();
+                    FlushMemory();
+                    await Task.Delay(TimeSpan.FromSeconds(SecondsToSleep));
                 }
-            });
+                catch
+                {
+                    // ignore exception
+                }
+            }
+        }
+
+        public double SecondsToSleep { get; set; } = 50;
+
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            _ = Task.Run(MemoryOptimizeLoop);
+
+            return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using MyToolBar.Func;
+using MyToolBar.Services;
 using MyToolBar.ViewModels;
 using MyToolBar.Views.Pages;
 using MyToolBar.WinApi;
@@ -22,26 +24,26 @@ namespace MyToolBar
     public partial class App : Application
     {
         private static Mutex mutex;
-        private static IServiceProvider _serviceProvider = BuildServiceProvider();
 
-        static IServiceProvider BuildServiceProvider()
-        {
-            var services = new ServiceCollection();
+        public static IHost Host { get; } = new HostBuilder()
+            .ConfigureServices(services =>
+            {
+                // host
+                services.AddHostedService<ApplicationService>();
+                services.AddHostedService<MemoryOptimizeService>();
 
-            services.AddSingleton<MainWindow>();
-            services.AddSingleton<SettingsWindow>();
-            services.AddSingleton<SettingsViewModel>();
+                // windows
+                services.AddSingleton<AppBarWindow>();
+                services.AddSingleton<SettingsWindow>();
+                services.AddSingleton<SettingsViewModel>();
 
-            // settings pages
-            services.AddSingleton<CapsulesSettingsPage>();
-            services.AddSingleton<OuterControlSettingsPage>();
-            services.AddSingleton<ComponentsSettingsPage>();
-            services.AddSingleton<AboutPage>();
-
-            return services.BuildServiceProvider();
-        }
-
-        public static IServiceProvider ServiceProvider => _serviceProvider;
+                // settings pages
+                services.AddSingleton<CapsulesSettingsPage>();
+                services.AddSingleton<OuterControlSettingsPage>();
+                services.AddSingleton<ComponentsSettingsPage>();
+                services.AddSingleton<AboutPage>();
+            })
+            .Build();
 
         public static App? CurrentApp => Current as App;
         public App()
@@ -83,38 +85,5 @@ namespace MyToolBar
             string log= $"[{DateTime.Now}]\n{e.Source}\n {e.Message}\n{e.StackTrace}\n{e.Source}";
             File.AppendAllText(Path.Combine(Settings.MainPath, "Error.log"), log);
         }
-
-        public MemoryFlush cracker = new();
-
-        protected override void OnStartup(StartupEventArgs e)
-        {
-            cracker.Cracker();
-            base.OnStartup(e);
-
-            var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
-            mainWindow.Show();
-        }
-
-
-        #region Theme Dark/Light Mode
-        public void SetThemeMode(bool isDark)
-        {
-            GlobalService.IsDarkMode = isDark;
-            string uri = isDark ? "Styles/ThemeColor.xaml" : "Styles/ThemeColor_Light.xaml";
-            // 移除当前主题资源字典（如果存在）
-            var oldDict = Resources.MergedDictionaries.FirstOrDefault(d => d.Source != null && (d.Source.OriginalString.Contains("ThemeColor.xaml") || d.Source.OriginalString.Contains("ThemeColor_Light.xaml")));
-            if (oldDict != null)
-            {
-                Resources.MergedDictionaries.Remove(oldDict);
-            }
-            // 添加新的主题资源字典
-            Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = new Uri(uri, UriKind.Relative) });
-        }
-
-        public T? GetResource<T>(string resourceName) where T : class
-        {
-            return Resources[resourceName] as T;
-        }
-        #endregion
     }
 }

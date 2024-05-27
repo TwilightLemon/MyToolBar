@@ -51,7 +51,7 @@ namespace MyToolBar.PopupWindows
         {
             ProcessItem item = (ProcessItem)sender;
 
-            SelectedProcess= item._pro;
+            SelectedProcess = item._pro;
             //获取process对应图标
             try
             {
@@ -73,12 +73,12 @@ namespace MyToolBar.PopupWindows
             {
                 PInfo_file.Text = "Access Denied !";
             }
-            PInfo_PID.Text ="PID: "+ item._pro.Id.ToString();
-           // PInfo_CPU.Text = item._pro.TotalProcessorTime.ToString();
-            PInfo_MEM.Text ="Memory: "+ NetworkInfo.FormatSize(item._pro.WorkingSet64);
+            PInfo_PID.Text = "PID: " + item._pro.Id.ToString();
+            // PInfo_CPU.Text = item._pro.TotalProcessorTime.ToString();
+            PInfo_MEM.Text = "Memory: " + NetworkInfo.FormatSize(item._pro.WorkingSet64);
             Storyboard sb = (Storyboard)Resources["OpenDetalPage"];
             var trans = item.TranslatePoint(new Point(0, 0), this);
-            SeletedItemPos=(sb.Children[1] as ThicknessAnimationUsingKeyFrames).KeyFrames[0].Value=new Thickness(10,trans.Y,10,this.ActualHeight-trans.Y-item.ActualHeight);
+            SeletedItemPos = (sb.Children[1] as ThicknessAnimationUsingKeyFrames).KeyFrames[0].Value = new Thickness(10, trans.Y, 10, this.ActualHeight - trans.Y - item.ActualHeight);
             sb.Begin();
         }
 
