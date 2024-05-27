@@ -20,14 +20,15 @@ namespace MyToolBar
     /// </summary>
     public partial class MainWindow : Window
     {
+        private WindowAccentCompositor wac;
+        private OuterControlBase oc;
+        private PenControlWindow pcw;
+
         public MainWindow()
         {
             InitializeComponent();
         }
 
-        private WindowAccentCompositor wac;
-        private OuterControlBase oc;
-        private PenControlWindow pcw;
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             #region Window Style
@@ -64,6 +65,7 @@ namespace MyToolBar
             pcw = new PenControlWindow();
             pcw.Show();
         }
+
         #region OutterControl
         /// <summary>
         /// 最后一个最大化窗口 用于判断是否全屏 以改变OutterFunc样式
