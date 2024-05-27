@@ -1,9 +1,9 @@
-﻿<Window x:Class="MyToolBar.AppBarWindow"
+﻿<Window x:Class="MyToolBar.Views.Windows.AppBarWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MyToolBar"
+        xmlns:local="clr-namespace:MyToolBar.Views.Windows"
         xmlns:ws="https://github.com/OrgEleCho/EleCho.WpfSuite"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:cap="clr-namespace:MyToolBar.Capsules"
@@ -19,10 +19,15 @@
         Closing="Window_Closing" 
         Foreground="{DynamicResource ForeColor}" 
         ShowInTaskbar="False" 
-        AllowsTransparency="True">
+        AllowsTransparency="True"
+        d:DataContext="{d:DesignInstance Type=local:AppBarWindow}">
+
+    <Window.Resources>
+        <ws:BindingProxy x:Key="DataContext" Data="{Binding}"/>
+    </Window.Resources>
 
     <i:Interaction.Behaviors>
-        <mb:MicaWindowBehavior x:Name="MicaWindowBehavior"/>
+        <mb:MicaWindowBehavior Opacity="{Binding Source={StaticResource DataContext},Mode=TwoWay,Path=Data.ViewModel.WindowAccentCompositorOpacity}"/>
     </i:Interaction.Behaviors>
     
     <Grid>

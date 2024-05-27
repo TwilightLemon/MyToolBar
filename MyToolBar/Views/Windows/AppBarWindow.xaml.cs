@@ -13,8 +13,9 @@ using MyToolBar.PenPackages;
 using MyToolBar.OuterControls;
 using MyToolBar.PopupWindows;
 using MyToolBar.Services;
+using MyToolBar.ViewModels;
 
-namespace MyToolBar
+namespace MyToolBar.Views.Windows
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -27,9 +28,14 @@ namespace MyToolBar
         private int CurrentWindowStyle = 0;
         private readonly ThemeResourceService _themeResourceService;
 
-        public AppBarWindow(ThemeResourceService themeResourceService)
+        public AppBarWindow(
+            ThemeResourceService themeResourceService,
+            AppBarViewModel viewModel)
         {
             _themeResourceService = themeResourceService;
+
+            ViewModel = viewModel;
+            DataContext = this;
 
             InitializeComponent();
         }
@@ -74,6 +80,8 @@ namespace MyToolBar
         /// OutterFuncStatus是否开启
         /// </summary>
         static bool isOutterShow = true;
+
+        public AppBarViewModel ViewModel { get; }
 
         /// <summary>
         /// 打开或关闭OutterFunc (Animation)
@@ -122,7 +130,10 @@ namespace MyToolBar
         {
             //全屏样式  整体变暗
             CurrentWindowStyle = 1;
-            //UpdateWindowBlurMode(240);
+            ViewModel.WindowAccentCompositorOpacity = 0.95f;
+
+
+
             SolidColorBrush fore;
             if (IsDarkMode)
             {
@@ -140,7 +151,7 @@ namespace MyToolBar
         private void NormalWindStyle()
         {
             CurrentWindowStyle = 0;
-            //UpdateWindowBlurMode();
+            ViewModel.WindowAccentCompositorOpacity = 0.6f;
             Brush? foreground = null;
             if (IsDarkMode)
             {

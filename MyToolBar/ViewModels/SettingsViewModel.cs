@@ -12,6 +12,7 @@ using MyToolBar.Views.Pages.Settings;
 
 namespace MyToolBar.ViewModels
 {
+
     public partial class SettingsViewModel : ObservableObject
     {
         public record struct SettingsPage(string Name, Geometry Icon, Type PageType);

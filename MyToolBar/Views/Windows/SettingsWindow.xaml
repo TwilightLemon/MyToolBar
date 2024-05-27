@@ -7,7 +7,7 @@
         xmlns:ws="https://github.com/OrgEleCho/EleCho.WpfSuite"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:Items="clr-namespace:MyToolBar.PopupWindows.Items"
-        x:Class="MyToolBar.SettingsWindow"
+        x:Class="MyToolBar.Views.Windows.SettingsWindow"
         mc:Ignorable="d" ResizeMode="CanMinimize"
         Title="SettingsWindow" Height="550" Width="800"
         Foreground="{DynamicResource ForeColor}"

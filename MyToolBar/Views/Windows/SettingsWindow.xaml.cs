@@ -22,7 +22,7 @@ using System.Windows.Shapes;
 using MyToolBar.ViewModels;
 using System.Windows.Navigation;
 
-namespace MyToolBar
+namespace MyToolBar.Views.Windows
 {
     /// <summary>
     /// SettingsWindow.xaml 的交互逻辑

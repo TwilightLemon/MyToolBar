@@ -33,12 +33,12 @@ namespace MyToolBar.Behaviors
             }
         }
 
-        private static void UpdateWindowBlurMode(WindowAccentCompositor wac, bool isDarkMode, byte opacity = 180)
+        private static void UpdateWindowBlurMode(WindowAccentCompositor wac, bool isDarkMode, float opacity = .7f)
         {
-            wac.Color = isDarkMode ?
-                Color.FromArgb(opacity, 0, 0, 0) :
-                Color.FromArgb(opacity, 255, 255, 255);
             wac.DarkMode = isDarkMode;
+            wac.Color = isDarkMode ?
+                Color.FromScRgb(opacity, 0, 0, 0) :
+                Color.FromScRgb(opacity, 1, 1, 1);
         }
 
         protected override void OnAttached()
@@ -73,24 +73,22 @@ namespace MyToolBar.Behaviors
 
         private void InitializeBehavior()
         {
-            s_allWindowsAccentCompositors[AssociatedObject] 
-                = _windowAccentCompositor 
+            s_allWindowsAccentCompositors[AssociatedObject]
+                = _windowAccentCompositor
                 = CreateWindowAccentCompositor();
         }
 
         private WindowAccentCompositor CreateWindowAccentCompositor()
         {
-            WindowAccentCompositor wac = new(AssociatedObject, false, (c) =>
-            {
-                c.A = 255;
-                AssociatedObject.Background = new SolidColorBrush(c);
-            });
+            var isDarkMode = !ToolWindowApi.GetIsLightTheme();
+            var wac = new WindowAccentCompositor(
+                AssociatedObject, false, (c) =>
+                {
+                    c.A = 255;
+                    AssociatedObject.Background = new SolidColorBrush(c);
+                });
 
-            wac.Color = GlobalService.IsDarkMode ?
-                Color.FromArgb(180, 0, 0, 0) :
-                Color.FromArgb(180, 255, 255, 255);
-
-            wac.DarkMode = GlobalService.IsDarkMode;
+            UpdateWindowBlurMode(wac, isDarkMode, Opacity);
             wac.IsEnabled = true;
 
             return wac;
@@ -100,6 +98,34 @@ namespace MyToolBar.Behaviors
         {
             InitializeBehavior();
         }
+
+
+        private static void OpacityChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is not MicaWindowBehavior behavior ||
+                e.NewValue is not float opacity)
+                return;
+
+            if (behavior._windowAccentCompositor is null)
+                return;
+
+            var color = behavior.WindowAccentCompositor.Color;
+            color.ScA = opacity;
+
+            behavior.WindowAccentCompositor.Color = color;
+            behavior.WindowAccentCompositor.IsEnabled = true;
+        }
+
+
+        public float Opacity
+        {
+            get { return (float)GetValue(OpacityProperty); }
+            set { SetValue(OpacityProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Opacity.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty OpacityProperty =
+            DependencyProperty.Register(nameof(Opacity), typeof(float), typeof(MicaWindowBehavior), new PropertyMetadata(1.0f, OpacityChangedCallback));
 
         public WindowAccentCompositor WindowAccentCompositor => _windowAccentCompositor ?? throw new InvalidOperationException("Window is not loaded");
     }

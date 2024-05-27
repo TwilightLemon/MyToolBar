@@ -5,6 +5,7 @@ using MyToolBar.Services;
 using MyToolBar.ViewModels;
 using MyToolBar.Views.Pages;
 using MyToolBar.Views.Pages.Settings;
+using MyToolBar.Views.Windows;
 using MyToolBar.WinApi;
 using NLog.Extensions.Hosting;
 using NLog.Extensions.Logging;
@@ -35,6 +36,7 @@ namespace MyToolBar
 
                 // windows
                 services.AddSingleton<AppBarWindow>();
+                services.AddSingleton<AppBarViewModel>();
                 services.AddSingleton<SettingsWindow>();
                 services.AddSingleton<SettingsViewModel>();
 
