@@ -143,7 +143,7 @@ namespace MyToolBar.PopWindow
             DefaultCityChanged?.Invoke(this, e);
         }
 
-        private async void CityItem_AddFavorCity(object? sender, WeatherApi.City e)
+        private void CityItem_AddFavorCity(object? sender, WeatherApi.City e)
         {
             var item = sender as WeatherCityItem;
             if (item.IsFavor)
