@@ -1,5 +1,5 @@
 ﻿using MyToolBar.Func;
-using MyToolBar.PopWindow;
+using MyToolBar.PopupWindows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,6 +67,7 @@ namespace MyToolBar.Capsules
         {
             InitializeComponent();
         }
+
         private WeatherCache cache = null;
         private async Task LoadWeatherData()
         {

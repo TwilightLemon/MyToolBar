@@ -1,11 +1,21 @@
-﻿using MyToolBar.Func;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using MyToolBar.Func;
+using MyToolBar.Services;
+using MyToolBar.ViewModels;
+using MyToolBar.Views.Pages;
+using MyToolBar.Views.Pages.Settings;
+using MyToolBar.Views.Windows;
 using MyToolBar.WinApi;
+using NLog.Extensions.Hosting;
+using NLog.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -17,74 +27,54 @@ namespace MyToolBar
     /// </summary>
     public partial class App : Application
     {
-        private static Mutex mutex;
-        public static App? CurrentApp => Current as App;
+        public static IHost Host { get; } = new HostBuilder()
+            .ConfigureServices(services =>
+            {
+                // host
+                services.AddHostedService<ApplicationService>();
+                services.AddHostedService<MemoryOptimizeService>();
+
+                // windows
+                services.AddSingleton<AppBarWindow>();
+                services.AddSingleton<AppBarViewModel>();
+                services.AddSingleton<SettingsWindow>();
+                services.AddSingleton<SettingsViewModel>();
+
+                // settings pages
+                services.AddSingleton<CapsulesSettingsPage>();
+                services.AddSingleton<OuterControlSettingsPage>();
+                services.AddSingleton<ComponentsSettingsPage>();
+                services.AddSingleton<AboutPage>();
+
+                // function services
+                services.AddSingleton<AppSettingsService>();
+                services.AddSingleton<ThemeResourceService>();
+
+                // logging
+                services.AddLogging(builder =>
+                {
+                    builder.AddNLog();
+                });
+            })
+            .Build();
+
         public App()
         {
-            mutex=new Mutex(false, "MyToolBar",out bool firstInstant);
-            if(!firstInstant)
-            {
-                Environment.Exit(0);
-            }
-#if !DEBUG
-            AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
-            {
-                try
-                {
-                    //坐以待毙吧
-                    WriteLog((Exception)e.ExceptionObject);
-                }
-                catch { }
-            };
-            Current.DispatcherUnhandledException += (sender, e) =>
-            {
-                e.Handled = true;
-                WriteLog(e.Exception);
-            };
-            TaskScheduler.UnobservedTaskException += (sender, e) =>
-            {
-                e.SetObserved();
-                WriteLog(e.Exception);
-            };
-#endif
-            Settings.LoadPath();
+            InitializeComponent();
         }
-        private void WriteLog(Exception e)
-        {
-            if (e == null) return;
-            string log= $"[{DateTime.Now}]\n{e.Source}\n {e.Message}\n{e.StackTrace}\n{e.Source}";
-            File.AppendAllText(Path.Combine(Settings.MainPath, "Error.log"), log);
-        }
-        public MemoryFlush cracker = new();
+
         protected override void OnStartup(StartupEventArgs e)
         {
-            cracker.Cracker();
             base.OnStartup(e);
+
+            Host.Start();
         }
 
-
-        #region Theme Dark/Light Mode
-        public void SetThemeMode(bool isDark)
+        protected override void OnExit(ExitEventArgs e)
         {
-            GlobalService.DarkMode = isDark;
-            string uri = isDark ? "Style/ThemeColor.xaml" : "Style/ThemeColor_Light.xaml";
-            // 移除当前主题资源字典（如果存在）
-            var oldDict = Resources.MergedDictionaries.FirstOrDefault(d => d.Source != null && (d.Source.OriginalString.Contains("ThemeColor.xaml") || d.Source.OriginalString.Contains("ThemeColor_Light.xaml")));
-            if (oldDict != null)
-            {
-                Resources.MergedDictionaries.Remove(oldDict);
-            }
-            // 添加新的主题资源字典
-            Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = new Uri(uri, UriKind.Relative) });
+            base.OnExit(e);
 
-            MainWindow main = Current.MainWindow as MainWindow;
-            main.UpdateWindowBlurMode();
+            _ = Host.StopAsync();
         }
-
-        public T? GetResource<T>(string resourceName)where T:class
-        {
-            return Resources[resourceName] as T;
-        }
-        #endregion
     }
 }

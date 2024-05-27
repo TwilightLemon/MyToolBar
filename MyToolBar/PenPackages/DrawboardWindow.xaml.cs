@@ -154,7 +154,7 @@ namespace MyToolBar.PenPackages
             {
                 item.MouseUp += PenColor_MouseUp;
             }
-            PenColor_MouseUp(PenColors.Children[GlobalService.DarkMode ? 1 : 0], null);
+            PenColor_MouseUp(PenColors.Children[GlobalService.IsDarkMode ? 1 : 0], null);
         }
         /// <summary>
         /// 当前选择的笔刷颜色
@@ -173,7 +173,7 @@ namespace MyToolBar.PenPackages
             _CurrentPen = b;
             var penColor = ((SolidColorBrush)_CurrentPen.Background).Color;
             b.BorderBrush=new SolidColorBrush(
-                GlobalService.DarkMode ? (penColor==Colors.White?Colors.SkyBlue:Colors.White):(penColor==Colors.Black?Colors.SkyBlue:Colors.Black)
+                GlobalService.IsDarkMode ? (penColor==Colors.White?Colors.SkyBlue:Colors.White):(penColor==Colors.Black?Colors.SkyBlue:Colors.Black)
                 );
             if (!_isDrawingMode)
             {

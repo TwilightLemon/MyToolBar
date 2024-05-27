@@ -7,38 +7,36 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 
-namespace MyToolBar.Capsules
+namespace MyToolBar.PopupWindows.Items
 {
     /// <summary>
-    /// 为Capsule提供基类
+    /// 为可交互Item提供基类 ViewMask 基本视觉样式
     /// </summary>
-    public class CapsuleBase : UserControl
+    public class ItemBase:UserControl
     {
-        public CapsuleBase()
+        public ItemBase()
         {
-            Initialized += CapsuleBase_Initialized;
+            Initialized += ItemBase_Initialized;
         }
         protected Grid? _Container;
         protected Border? _ViewMask;
-        private void CapsuleBase_Initialized(object? sender, EventArgs e)
+        private void ItemBase_Initialized(object? sender, EventArgs e)
         {
-            Background = GlobalService.CapsuleBackground;
-            if (Content is Grid g)
+            if(Content is Grid g)
             {
                 _Container = g;
                 _ViewMask = new Border()
                 {
-                    CornerRadius = new CornerRadius(12),
-                    Opacity = 0
+                    CornerRadius=new CornerRadius(15),
+                    Opacity=0
                 };
                 _ViewMask.SetResourceReference(BackgroundProperty, "MaskColor");
-                MouseEnter += delegate
-                {
-                    _ViewMask.BeginAnimation(OpacityProperty, new DoubleAnimation(0.2, 1, TimeSpan.FromMilliseconds(300)));
+                MouseEnter += delegate {
+                    _ViewMask.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 0.5, TimeSpan.FromMilliseconds(300)));
                 };
                 MouseLeave += delegate
                 {
-                    _ViewMask.BeginAnimation(OpacityProperty, new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(300)));
+                    _ViewMask.BeginAnimation(OpacityProperty, new DoubleAnimation(0.5, 0, TimeSpan.FromMilliseconds(300)));
                 };
                 //插入到最底层
                 _Container.Children.Insert(0, _ViewMask);

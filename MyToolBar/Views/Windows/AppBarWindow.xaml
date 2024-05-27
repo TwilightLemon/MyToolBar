@@ -1,0 +1,58 @@
+﻿<Window x:Class="MyToolBar.Views.Windows.AppBarWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MyToolBar.Views.Windows"
+        xmlns:ws="https://github.com/OrgEleCho/EleCho.WpfSuite"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:cap="clr-namespace:MyToolBar.Capsules"
+        xmlns:mb="clr-namespace:MyToolBar.Behaviors"
+        mc:Ignorable="d" Topmost="True"
+        Title="MyToolBar" 
+        Height="30" 
+        Width="1480" 
+        Background="Transparent" 
+        ResizeMode="NoResize" 
+        WindowStyle="None" 
+        Loaded="Window_Loaded"
+        Closing="Window_Closing" 
+        Foreground="{DynamicResource ForeColor}" 
+        ShowInTaskbar="False" 
+        AllowsTransparency="True"
+        d:DataContext="{d:DesignInstance Type=local:AppBarWindow}">
+
+    <Window.Resources>
+        <ws:BindingProxy x:Key="DataContext" Data="{Binding}"/>
+    </Window.Resources>
+
+    <i:Interaction.Behaviors>
+        <mb:MicaWindowBehavior Opacity="{Binding Source={StaticResource DataContext},Mode=TwoWay,Path=Data.ViewModel.WindowAccentCompositorOpacity}"/>
+    </i:Interaction.Behaviors>
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.2*"/>
+            <ColumnDefinition Width="2*" MaxWidth="600"/>
+            <ColumnDefinition Width="1.2*"/>
+        </Grid.ColumnDefinitions>
+        <Border x:Name="CloseButton" Cursor="Hand" HorizontalAlignment="Left" Height="25" Width="25" Background="#01000000" MouseDown="CloseButton_MouseDown"  Margin="10,0,0,0">
+            <Border BorderBrush="{DynamicResource ForeColor}" BorderThickness="2" CornerRadius="25,25,25,25" Width="15" Height="15"/>
+        </Border>
+        <Grid x:Name="TittleViewer" TouchLeave="TitleView_TouchDown" Margin="40 0 0 0" Background="#01000000">
+            <TextBlock x:Name="TitleView" TextWrapping="Wrap" Text="Microsoft Visual Studio 2022" VerticalAlignment="Center" Foreground="{DynamicResource ForeColor}"/>
+        </Grid>
+        <Border x:Name="OutterFuncStatus" Grid.Column="1"  Background="{DynamicResource HighlightColor}" CornerRadius="15"/>
+        <Grid x:Name="OutterFunc" Grid.Column="1" Background="Transparent">
+           
+        </Grid>
+        <WrapPanel x:Name="FuncPanel" 
+                   HorizontalAlignment="Right" 
+                   Margin="14,0,10,0" 
+                   Grid.Column="2">
+            <cap:HardwareMonitorCap x:Name="Cap_hdm"/>
+            <cap:WeatherCap x:Name="Cap_weather"/>
+        </WrapPanel>
+
+    </Grid>
+</Window>

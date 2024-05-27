@@ -1,0 +1,14 @@
+﻿<item:ItemBase x:Class="MyToolBar.PopupWindows.Items.WeatherCityItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:item="clr-namespace:MyToolBar.PopupWindows.Items"
+             mc:Ignorable="d"  Width="330" Height="40">
+    <Grid>
+        <Border x:Name="AddFavorBtn" HorizontalAlignment="Right" Height="24" VerticalAlignment="Center" Width="25" Background="{DynamicResource MaskColor}" Margin="0,0,20,0" CornerRadius="10,10,10,10">
+            <Path x:Name="Favor_icon" Data="{StaticResource Icon_favor}" Stretch="Uniform" Width="15" ClipToBounds="True" Stroke="{DynamicResource ForeColor}" StrokeThickness="2"/>
+        </Border>
+        <TextBlock x:Name="CityName" d:Text="ShangHai Pudong Dictrict" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" FontSize="14" FontWeight="Bold"/>
+    </Grid>
+</item:ItemBase>

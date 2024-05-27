@@ -1,14 +1,13 @@
 ﻿<Application x:Class="MyToolBar.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:MyToolBar"
-             StartupUri="MainWindow.xaml">
+             xmlns:local="clr-namespace:MyToolBar">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Style/IconData.xaml"/>
-                <ResourceDictionary Source="/Style/ThemeColor.xaml"/>
-                <ResourceDictionary Source="/Style/UITemplate.xaml"/>
+                <ResourceDictionary Source="/Styles/IconData.xaml"/>
+                <ResourceDictionary Source="/Styles/ThemeColor.xaml"/>
+                <ResourceDictionary Source="/Styles/UITemplate.xaml"/>
                 <ResourceDictionary Source="/LanguageRes/LangEn_US.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <!--全局TextBlock文本样式-->

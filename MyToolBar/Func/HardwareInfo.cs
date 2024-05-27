@@ -12,6 +12,7 @@ using System.Threading.Tasks;
  */
 
 namespace MyToolBar.Func;
+
 internal class CPUInfo
 {
     public static double GetCPUTemperature()
@@ -74,8 +75,11 @@ internal class MemoryInfo
     }
     #endregion
 }
+
 internal class NetworkInfo
 {
+    private List<PerformanceCounter>[] _performanceCounters;
+
     public static async Task<NetworkInfo> Create()
     {
         var ni = new NetworkInfo();
@@ -84,7 +88,7 @@ internal class NetworkInfo
         await Task.Run(() => { 
         List<PerformanceCounter> pcs = new();
         List<PerformanceCounter> pcs2 = new();
-        string[] names =ni.getAdapter();
+        string[] names = GetAdapter();
         foreach (string name in names)
         {
             try
@@ -101,43 +105,48 @@ internal class NetworkInfo
             }
 
         }
-        ni.pcss = new List<PerformanceCounter>[2];
-        ni.pcss[0] = pcs;
-        ni.pcss[1] = pcs2;
+        ni._performanceCounters = new List<PerformanceCounter>[2];
+        ni._performanceCounters[0] = pcs;
+        ni._performanceCounters[1] = pcs2;
         });
         return ni;
     }
-    List<PerformanceCounter>[] pcss;
-    public string[] GetNetworkspeed()
+
+    public string[] GetNetworkSpeed()
     {
-        List<PerformanceCounter> pcs = pcss[0];
-        List<PerformanceCounter> pcs2 = pcss[1];
-        long recv = 0;
+        List<PerformanceCounter> receivedPerformanceCounter = _performanceCounters[0];
+        List<PerformanceCounter> pcs2 = _performanceCounters[1];
+        long received = 0;
         long sent = 0;
-        foreach (PerformanceCounter pc in pcs)
+
+        foreach (PerformanceCounter pc in receivedPerformanceCounter)
         {
-            recv += Convert.ToInt32(pc.NextValue());
+            received += Convert.ToInt32(pc.NextValue());
         }
         foreach (PerformanceCounter pc in pcs2)
         {
             sent += Convert.ToInt32(pc.NextValue());
         }
-        return new string[] { FormatSize(recv), FormatSize(sent) };
 
+        return new string[] { FormatSize(received), FormatSize(sent) };
     }
+
     public static string FormatSize(double size)
     {
-        double d = (double)size;
-        int i = 0;
-        while ((d > 1024) && (i < 5))
+        double finalSize = (double)size;
+
+        int unitIndex = 0;
+        while ((finalSize > 1024) && (unitIndex < 5))
         {
-            d /= 1024;
-            i++;
+            finalSize /= 1024;
+            unitIndex++;
         }
         string[] unit = { "B", "KB", "MB", "GB", "TB" };
-        return (string.Format("{0} {1}", Math.Round(d, 2), unit[i]));
+
+        return $"{Math.Round(finalSize, 2)} {unit[unitIndex]}";
     }
-    public string[] getAdapter()
+
+    public static string[] GetAdapter()
     {
         NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
         List<string> names = new List<string>();
