@@ -1,10 +1,10 @@
-﻿using MyToolBar.PopWindow.Items;
+﻿using MyToolBar.PopupWindows.Items;
 using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace MyToolBar.PopWindow
+namespace MyToolBar.PopupWindows
 {
     /// <summary>
     /// 主菜单

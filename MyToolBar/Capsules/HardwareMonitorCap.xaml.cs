@@ -1,5 +1,5 @@
 ﻿using MyToolBar.Func;
-using MyToolBar.PopWindow;
+using MyToolBar.PopupWindows;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -30,7 +30,7 @@ namespace MyToolBar.Capsules
             Meo_text.Text = (int)MemoryInfo.GetUsedPercent() + "%";
             Cpu_text.Text = CPUInfo.GetCPUUsedPercent();
             Cpu_temp.Text = CPUInfo.GetCPUTemperature() + "℃";
-            var data = ni.GetNetworkspeed();
+            var data = ni.GetNetworkSpeed();
             Network_text.Text = $"↑ {data[1]}/s\r\n↓ {data[0]}/s";
         }
         private bool BoxShowed = false;

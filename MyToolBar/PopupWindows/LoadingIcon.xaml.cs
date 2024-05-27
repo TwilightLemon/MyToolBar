@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MyToolBar.PopWindow
+namespace MyToolBar.PopupWindows
 {
     /// <summary>
     /// 一个简单的加载动画

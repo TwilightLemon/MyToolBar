@@ -8,7 +8,7 @@ using System.Windows.Shell;
 using System.Windows.Interop;
 using System.Windows.Controls;
 
-namespace MyToolBar.PopWindow
+namespace MyToolBar.PopupWindows
 {
     public class PopWindowBase:Window
     {
@@ -16,7 +16,8 @@ namespace MyToolBar.PopWindow
         {
             Top = 0;
             this.IsEnabled = false;
-            //Set basic style for popwindow
+
+            //Set basic style for popup window
             SetResourceReference(BackgroundProperty,"MaskColor");
             SetResourceReference(ForegroundProperty, "ForeColor");
             WindowStyle = WindowStyle.None;
@@ -50,10 +51,10 @@ namespace MyToolBar.PopWindow
                 c.A = 255;
                 Background = new SolidColorBrush(c);
             });
-            wac.Color = DarkMode ?
+            wac.Color = IsDarkMode ?
             Color.FromArgb(180, 0, 0, 0) :
             Color.FromArgb(180, 255, 255, 255);
-            wac.DarkMode = DarkMode;
+            wac.DarkMode = IsDarkMode;
             wac.IsEnabled = true;
         }
 

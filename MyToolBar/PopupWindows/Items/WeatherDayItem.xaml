@@ -1,9 +1,9 @@
-﻿<UserControl x:Class="MyToolBar.PopWindow.Items.WeatherDayItem"
+﻿<UserControl x:Class="MyToolBar.PopupWindows.Items.WeatherDayItem"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:MyToolBar.PopWindow"
+             xmlns:local="clr-namespace:MyToolBar.PopupWindows"
              mc:Ignorable="d"  Height="35" Width="330">
     <Grid>
         <TextBlock x:Name="Day" HorizontalAlignment="Left" Margin="20,0,0,0" TextWrapping="Wrap" Text="Today" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>

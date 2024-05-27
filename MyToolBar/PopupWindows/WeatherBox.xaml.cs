@@ -8,9 +8,9 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Input;
 using MyToolBar.Capsules;
-using MyToolBar.PopWindow.Items;
+using MyToolBar.PopupWindows.Items;
 
-namespace MyToolBar.PopWindow
+namespace MyToolBar.PopupWindows
 {
     /// <summary>
     /// WeatherBox.xaml 的交互逻辑

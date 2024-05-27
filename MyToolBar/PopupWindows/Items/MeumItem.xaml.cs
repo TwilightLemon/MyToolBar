@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MyToolBar.PopWindow.Items
+namespace MyToolBar.PopupWindows.Items
 {
     /// <summary>
     /// MeumItem.xaml 的交互逻辑

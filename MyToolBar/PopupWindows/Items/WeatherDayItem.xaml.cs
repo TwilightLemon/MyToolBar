@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace MyToolBar.PopWindow.Items
+namespace MyToolBar.PopupWindows.Items
 {
     /// <summary>
     /// WeatherDayItem.xaml 的交互逻辑

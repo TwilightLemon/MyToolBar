@@ -1,5 +1,5 @@
 ﻿using MyToolBar.Func;
-using MyToolBar.PopWindow.Items;
+using MyToolBar.PopupWindows.Items;
 using MyToolBar.WinApi;
 using System.Diagnostics;
 using System.IO;
@@ -10,7 +10,7 @@ using System.Windows.Interop;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 
-namespace MyToolBar.PopWindow
+namespace MyToolBar.PopupWindows
 {
     /// <summary>
     /// ResourceMonitor.xaml 的交互逻辑

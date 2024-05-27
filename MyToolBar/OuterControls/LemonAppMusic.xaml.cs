@@ -5,12 +5,12 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace MyToolBar.OutterControls
+namespace MyToolBar.OuterControls
 {
     /// <summary>
     /// LemonAppMusic.xaml 的交互逻辑
     /// </summary>
-    public partial class LemonAppMusic : OutterControlBase
+    public partial class LemonAppMusic : OuterControlBase
     {
         public LemonAppMusic()
         {

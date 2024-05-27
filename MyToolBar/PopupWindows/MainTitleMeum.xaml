@@ -1,9 +1,9 @@
-﻿<local:PopWindowBase  x:Class="MyToolBar.PopWindow.MainTitleMeum"
+﻿<local:PopWindowBase  x:Class="MyToolBar.PopupWindows.MainTitleMeum"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MyToolBar.PopWindow"
+        xmlns:local="clr-namespace:MyToolBar.PopupWindows"
         mc:Ignorable="d"
         Title="MainTitleMeum" Height="Auto" Width="200">
     <WrapPanel x:Name="ItemPanel" ItemHeight="40" ItemWidth="200">

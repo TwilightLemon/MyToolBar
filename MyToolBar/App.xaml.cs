@@ -66,8 +66,8 @@ namespace MyToolBar
         #region Theme Dark/Light Mode
         public void SetThemeMode(bool isDark)
         {
-            GlobalService.DarkMode = isDark;
-            string uri = isDark ? "Style/ThemeColor.xaml" : "Style/ThemeColor_Light.xaml";
+            GlobalService.IsDarkMode = isDark;
+            string uri = isDark ? "Styles/ThemeColor.xaml" : "Styles/ThemeColor_Light.xaml";
             // 移除当前主题资源字典（如果存在）
             var oldDict = Resources.MergedDictionaries.FirstOrDefault(d => d.Source != null && (d.Source.OriginalString.Contains("ThemeColor.xaml") || d.Source.OriginalString.Contains("ThemeColor_Light.xaml")));
             if (oldDict != null)

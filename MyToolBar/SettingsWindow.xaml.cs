@@ -1,4 +1,4 @@
-﻿using MyToolBar.PopWindow.Items;
+﻿using MyToolBar.PopupWindows.Items;
 using MyToolBar.WinApi;
 using System;
 using System.Collections.Generic;
@@ -49,10 +49,10 @@ namespace MyToolBar
                 c.A = 255;
                 Background = new SolidColorBrush(c);
             });
-            wac.Color = GlobalService.DarkMode ?
+            wac.Color = GlobalService.IsDarkMode ?
             Color.FromArgb(180, 0, 0, 0) :
             Color.FromArgb(180, 255, 255, 255);
-            wac.DarkMode = GlobalService.DarkMode;
+            wac.DarkMode = GlobalService.IsDarkMode;
             wac.IsEnabled = true;
 
             foreach(MeumItem i in SettingsItemList.Children)

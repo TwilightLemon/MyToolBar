@@ -13,12 +13,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MyToolBar.OutterControls
+namespace MyToolBar.OuterControls
 {
     /// <summary>
     /// DemoClock.xaml 的交互逻辑
     /// </summary>
-    public partial class DemoClock : OutterControlBase
+    public partial class DemoClock : OuterControlBase
     {
         private readonly string FormatStr = "MM-dd tt h:mm dddd",
                                             Sign="  ❤  Have a nice day.";

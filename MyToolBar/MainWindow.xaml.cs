@@ -10,8 +10,8 @@ using System.Timers;
 using System.Text.Json.Nodes;
 using Microsoft.Win32;
 using MyToolBar.PenPackages;
-using MyToolBar.OutterControls;
-using MyToolBar.PopWindow;
+using MyToolBar.OuterControls;
+using MyToolBar.PopupWindows;
 
 namespace MyToolBar
 {
@@ -26,7 +26,7 @@ namespace MyToolBar
         }
 
         private WindowAccentCompositor wac;
-        private OutterControlBase oc;
+        private OuterControlBase oc;
         private PenControlWindow pcw;
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -125,7 +125,7 @@ namespace MyToolBar
             CurrentWindStyle = 1;
             UpdateWindowBlurMode(240);
             SolidColorBrush fore;
-            if (DarkMode)
+            if (IsDarkMode)
             {
                 OutterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(20, 255, 255, 255));
                 fore= new SolidColorBrush(Color.FromArgb(240, 252, 252, 252));
@@ -143,10 +143,10 @@ namespace MyToolBar
             CurrentWindStyle = 0;
             UpdateWindowBlurMode();
             Brush fore = null;
-            if (DarkMode)
+            if (IsDarkMode)
             {
                 OutterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(120, 255, 255, 255));
-                fore = OutterControlNormalDarkModeForeColor;
+                fore = OuterControlNormalDarkModeForeColor;
             }
             else
                 OutterFuncStatus.SetResourceReference(BackgroundProperty, "MaskColor");
@@ -177,10 +177,10 @@ namespace MyToolBar
         }
         public void UpdateWindowBlurMode(byte opacity = 180)
         {
-            wac.Color = DarkMode ?
+            wac.Color = IsDarkMode ?
             Color.FromArgb(opacity, 0, 0, 0) :
             Color.FromArgb(opacity, 255, 255, 255);
-            wac.DarkMode = DarkMode;
+            wac.DarkMode = IsDarkMode;
             wac.IsEnabled = true;
         }
 

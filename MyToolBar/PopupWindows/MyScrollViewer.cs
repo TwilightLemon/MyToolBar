@@ -8,7 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 
-namespace MyToolBar.PopWindow
+namespace MyToolBar.PopupWindows
 {
     public static class ScrollViewerBehavior
     {
@@ -17,6 +17,7 @@ namespace MyToolBar.PopWindow
         public static double GetVerticalOffset(FrameworkElement target) => (double)target.GetValue(VerticalOffsetProperty);
         private static void OnVerticalOffsetChanged(DependencyObject target, DependencyPropertyChangedEventArgs e) => (target as ScrollViewer)?.ScrollToVerticalOffset((double)e.NewValue);
     }
+
     public class MyScrollViewer : ScrollViewer
     {
         public MyScrollViewer()

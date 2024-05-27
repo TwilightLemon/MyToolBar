@@ -12,7 +12,7 @@ namespace MyToolBar.Capsules
     /// <summary>
     /// 为Capsule提供基类
     /// </summary>
-    public class CapsuleBase:UserControl
+    public class CapsuleBase : UserControl
     {
         public CapsuleBase()
         {
@@ -22,7 +22,7 @@ namespace MyToolBar.Capsules
         protected Border? _ViewMask;
         private void CapsuleBase_Initialized(object? sender, EventArgs e)
         {
-            Background=GlobalService.CapsuleBackground;
+            Background = GlobalService.CapsuleBackground;
             if (Content is Grid g)
             {
                 _Container = g;
@@ -32,7 +32,8 @@ namespace MyToolBar.Capsules
                     Opacity = 0
                 };
                 _ViewMask.SetResourceReference(BackgroundProperty, "MaskColor");
-                MouseEnter += delegate {
+                MouseEnter += delegate
+                {
                     _ViewMask.BeginAnimation(OpacityProperty, new DoubleAnimation(0.2, 1, TimeSpan.FromMilliseconds(300)));
                 };
                 MouseLeave += delegate

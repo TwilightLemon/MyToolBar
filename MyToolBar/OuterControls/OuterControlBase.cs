@@ -6,25 +6,27 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace MyToolBar.OutterControls
+namespace MyToolBar.OuterControls
 {
     /// <summary>
     /// 为OutterControl提供基类，基本的显示操作和UI样式
     /// </summary>
-    public class OutterControlBase:UserControl
+    public class OuterControlBase : UserControl
     {
-        public OutterControlBase()
+        private bool _isShown;
+
+        public OuterControlBase()
         {
-            Loaded += OutterControlBase_Loaded;
+            Loaded += OuterControlBase_Loaded;
         }
 
-        private void OutterControlBase_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        private void OuterControlBase_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
             //初始化前景色
-            if (GlobalService.DarkMode)
+            if (GlobalService.IsDarkMode)
             {
                 // DarkMode下 OutterControl区域高亮显示
-                Foreground = GlobalService.OutterControlNormalDarkModeForeColor;
+                Foreground = GlobalService.OuterControlNormalDarkModeForeColor;
             }
             else
             {
@@ -32,22 +34,24 @@ namespace MyToolBar.OutterControls
                 SetResourceReference(ForegroundProperty, "ForeColor");
             }
         }
+
         /// <summary>
         /// 通知MainWindow需要显示或隐藏OutterControl
         /// </summary>
-        public event EventHandler<bool> IsShownChanged;
+        public event EventHandler<bool>? IsShownChanged;
+
         /// <summary>
         /// 响应最大化样式 Brush为推荐的前景色
         /// </summary>
         public Action<bool,Brush>? MaxStyleAct;
-        private bool isShown;
+
         /// <summary>
         /// 指示是否需要显示OutterControl
         /// </summary>
         protected bool IsShown
         {
-            get=>isShown;
-            set=>IsShownChanged?.Invoke(this, isShown = value);
+            get => _isShown;
+            set => IsShownChanged?.Invoke(this, _isShown = value);
         }
     }
 }

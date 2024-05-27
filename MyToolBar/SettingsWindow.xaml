@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MyToolBar"
-        xmlns:Items="clr-namespace:MyToolBar.PopWindow.Items" x:Class="MyToolBar.SettingsWindow"
+        xmlns:Items="clr-namespace:MyToolBar.PopupWindows.Items" x:Class="MyToolBar.SettingsWindow"
         mc:Ignorable="d" ResizeMode="CanMinimize"
         Title="SettingsWindow" Height="550" Width="800" Foreground="{DynamicResource ForeColor}" Background="{DynamicResource MaskColor}">
     <Grid>

@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 
-namespace MyToolBar.PopWindow.Items
+namespace MyToolBar.PopupWindows.Items
 {
     /// <summary>
     /// 为可交互Item提供基类 ViewMask 基本视觉样式

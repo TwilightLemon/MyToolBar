@@ -1,11 +1,11 @@
-﻿<local:OutterControlBase x:Class="MyToolBar.OutterControls.DemoClock"
+﻿<local:OuterControlBase x:Class="MyToolBar.OuterControls.DemoClock"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:MyToolBar.OutterControls"
+             xmlns:local="clr-namespace:MyToolBar.OuterControls"
              mc:Ignorable="d"  Height="30" d:Width="400">
     <Grid>
         <TextBlock x:Name="TimeTb" VerticalAlignment="Center" TextAlignment="Center"/>
     </Grid>
-</local:OutterControlBase>
+</local:OuterControlBase>
