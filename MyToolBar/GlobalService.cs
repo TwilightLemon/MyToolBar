@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using MyToolBar.Func;
+using System.Collections.Generic;
 using System.Timers;
 using System.Windows.Media;
 
@@ -17,6 +18,6 @@ namespace MyToolBar
 
         public static Brush OuterControlNormalDarkModeForeColor= new SolidColorBrush(Color.FromArgb(250, 3, 3, 3));
 
-        public static WeatherApi.KeyMgr WeatherApiKey = null;
+        internal static List<string> ManagedSettingsKey = new List<string>();
     }
 }

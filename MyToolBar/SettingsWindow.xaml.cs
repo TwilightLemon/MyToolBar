@@ -1,10 +1,14 @@
 ﻿using MyToolBar.PopupWindows.Items;
+using MyToolBar.Func;
+using MyToolBar.OuterControls;
 using MyToolBar.WinApi;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Printing;
 using System.Text;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -31,9 +35,9 @@ namespace MyToolBar
             MouseLeftButtonDown += SettingsWindow_MouseLeftButtonDown;
         }
 
-        private void SettingsWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
+        private async void SettingsWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
         {
-            SaveSettings();
+            await SaveSettings();
         }
 
         private void SettingsWindow_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -42,7 +46,7 @@ namespace MyToolBar
                 this.DragMove();
         }
 
-        private void SettingsWindow_Loaded(object sender, RoutedEventArgs e)
+        private async void SettingsWindow_Loaded(object sender, RoutedEventArgs e)
         {
             WindowAccentCompositor wac = new(this, false, (c) =>
             {
@@ -59,21 +63,84 @@ namespace MyToolBar
             {
                 i.MouseDown += MeumItem_MouseLeftButtonUp;
             }
-            LoadSettings();
+            await LoadSettings();
         }
+        private List<JsonNode> settRef=new();
+        private async Task LoadSettings()
+        {
+            CapsuleList.Children.Clear();
+            foreach (string sign in GlobalService.ManagedSettingsKey)
+            {
+                string filePath = Settings.GetPathBySign(sign);
+                string data = await System.IO.File.ReadAllTextAsync(filePath);
+                JsonNode node = JsonNode.Parse(data);
+                settRef.Add(node);
+                string PackageName= node["PackageName"].ToString();
+                var items = node["Data"].AsObject();
+                //生成边框
+                Border b = new(){
+                    Height=200,
+                    CornerRadius = new CornerRadius(15),
+                    Margin=new Thickness(20)
+                };
+                b.SetResourceReference(BackgroundProperty, "MaskColor");
+                //生成容器
+                Grid g = new Grid();
+                b.Child = g;
+                //生成标题
+                TextBlock tb = new TextBlock()
+                {
+                    Text = PackageName,
+                    FontSize = 20,
+                    Margin = new Thickness(10),
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment=VerticalAlignment.Top
+                };
+                g.Children.Add(tb);
+                g.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Auto) });
+                g.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
+                g.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(4, GridUnitType.Star) });
+                Grid.SetColumnSpan(tb, 2);
 
-        private void LoadSettings()
-        {
-            WeatherCap_Key.Text = GlobalService.WeatherApiKey.key;
-            WeatherCap_host.Text = GlobalService.WeatherApiKey.host;
-            WeatherCap_Lang.Text = GlobalService.WeatherApiKey.lang;
+                //根据items生成控件：KeyName[TextBlock]: Value[TextBox]
+                int i = 1;
+                foreach (var item in items)
+                {
+                    var key = item.Key;
+                    var value = item.Value;
+                    TextBlock keyTb = new TextBlock()
+                    {
+                        Text = key,
+                        FontSize = 15,
+                        Margin = new Thickness(20,10,10,10),
+                        VerticalAlignment = VerticalAlignment.Center
+                    };
+                    TextBox valueTb = new TextBox()
+                    {
+                        Text =value==null?"":value.ToString(),
+                        FontSize = 15,
+                        Height=30,
+                        Margin = new Thickness(10),
+                        Style=FindResource("SimpleTextBoxStyle") as Style,
+                        VerticalAlignment = VerticalAlignment.Center
+                    };
+                    valueTb.SetResourceReference(BackgroundProperty, "MaskColor");
+                    valueTb.SetResourceReference(ForegroundProperty, "ForeColor");
+                    g.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Auto) });
+                    g.Children.Add(keyTb);
+                    g.Children.Add(valueTb);
+                    Grid.SetRow(keyTb, i);
+                    Grid.SetColumn(keyTb, 0);
+                    Grid.SetRow(valueTb, i);
+                    Grid.SetColumn(valueTb, 1);
+                    i++;
+                }
+                CapsuleList.Children.Add(b);
+            }
         }
-        private void SaveSettings()
+        private async Task SaveSettings()
         {
-            GlobalService.WeatherApiKey.key = WeatherCap_Key.Text;
-            GlobalService.WeatherApiKey.host = WeatherCap_host.Text;
-            GlobalService.WeatherApiKey.lang = WeatherCap_Lang.Text;
-            GlobalService.WeatherApiKey.SaveKey();
+            
         }
 
         private Grid _NowPage = null;
@@ -100,6 +167,9 @@ namespace MyToolBar
                         break;
                     case "Capsule":
                         NSPage(CapsulePage);
+                        break;
+                    case "OutterControl":
+                        NSPage(OutterControlPage);
                         break;
                     case "About":
                         NSPage(AboutPage);
