@@ -58,7 +58,7 @@ namespace MyToolBar.Func
             _watcher.EnableRaisingEvents = true;
         }
         private DateTime _lastUpdateTime = DateTime.MinValue;
-        private async void _watcher_Changed(object sender, FileSystemEventArgs e)
+        private void _watcher_Changed(object sender, FileSystemEventArgs e)
         {
             if (DateTime.Now - _lastUpdateTime > TimeSpan.FromSeconds(1))
             {

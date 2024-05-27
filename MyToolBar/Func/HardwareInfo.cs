@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Management;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 /*
  * Get hardware information
@@ -75,11 +76,15 @@ internal class MemoryInfo
 }
 internal class NetworkInfo
 {
-    public NetworkInfo()
+    public static async Task<NetworkInfo> Create()
     {
+        var ni = new NetworkInfo();
+        //无法直接判断事例是否有效，用try catch 但是严重影响性能
+        //所以丢到线程里去初始化，不要影响UI加载
+        await Task.Run(() => { 
         List<PerformanceCounter> pcs = new();
         List<PerformanceCounter> pcs2 = new();
-        string[] names = getAdapter();
+        string[] names =ni.getAdapter();
         foreach (string name in names)
         {
             try
@@ -96,9 +101,11 @@ internal class NetworkInfo
             }
 
         }
-        pcss = new List<PerformanceCounter>[2];
-        pcss[0] = pcs;
-        pcss[1] = pcs2;
+        ni.pcss = new List<PerformanceCounter>[2];
+        ni.pcss[0] = pcs;
+        ni.pcss[1] = pcs2;
+        });
+        return ni;
     }
     List<PerformanceCounter>[] pcss;
     public string[] GetNetworkspeed()
@@ -133,14 +140,16 @@ internal class NetworkInfo
     public string[] getAdapter()
     {
         NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
-        string[] name = new string[adapters.Length];
-        int index = 0;
+        List<string> names = new List<string>();
         foreach (NetworkInterface ni in adapters)
         {
-            name[index] = ni.Description;
-            index++;
+            // 检查网络接口的状态
+            if (ni.OperationalStatus == OperationalStatus.Up)
+            {
+                names.Add(ni.Description);
+            }
         }
-        return name;
+        return names.ToArray();
     }
 }
 

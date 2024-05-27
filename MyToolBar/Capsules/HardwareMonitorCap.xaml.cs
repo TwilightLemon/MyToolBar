@@ -1,6 +1,7 @@
 ﻿using MyToolBar.Func;
 using MyToolBar.PopWindow;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -18,12 +19,13 @@ namespace MyToolBar.Capsules
         {
             InitializeComponent();
         }
-        public void Start()
+        public async void Start()
         {
+            ni =await NetworkInfo.Create();
             CPUInfo.Load();
             GlobalTimer.Elapsed += (s, e) => Dispatcher.Invoke(Tick);
         }
-        NetworkInfo ni = new NetworkInfo();
+        NetworkInfo ni;
 
         private void Tick()
         {

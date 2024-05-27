@@ -22,11 +22,11 @@ namespace MyToolBar
         public App()
         {
             mutex=new Mutex(false, "MyToolBar",out bool firstInstant);
-#if DEBUG
             if(!firstInstant)
             {
                 Environment.Exit(0);
             }
+#if !DEBUG
             AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
             {
                 try
