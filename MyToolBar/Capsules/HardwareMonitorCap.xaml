@@ -1,9 +1,9 @@
-﻿<local:CapsuleBase x:Name="uc" x:Class="MyToolBar.Capsules.HardwareMonitorCap"
+﻿<base:CapsuleBase x:Name="uc" x:Class="MyToolBar.Capsules.HardwareMonitorCap"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:MyToolBar.Capsules"
+             xmlns:base="clr-namespace:MyToolBar.Common.UIBases;assembly=MyToolBar.Common"
              TouchLeave="uc_TouchLeave"
              mc:Ignorable="d" Height="30" MouseLeftButtonUp="uc_MouseLeftButtonUp" Cursor="Hand">
     <Grid>
@@ -17,10 +17,10 @@
                 <TextBlock x:Name="Cpu_temp" Margin="47,0,0,0" TextWrapping="Wrap" Text="36℃" VerticalAlignment="Center"/>
                 <Path Width="13" Height="13" Data="{StaticResource Icon_CPU}" HorizontalAlignment="Left" Fill="{Binding Foreground, ElementName=uc}" Stretch="Uniform" SnapsToDevicePixels="True" Margin="0,5,0,5"/>
             </Grid>
-            <Grid x:Name="NetworkViewer" Width="80" Height="30" Margin="10,0,0,0">
+            <Grid x:Name="NetworkViewer" Width="90" Height="30" Margin="10,0,0,0">
                 <TextBlock x:Name="Network_text" Margin="20,0,0,0" VerticalAlignment="Center" FontSize="10" LineHeight="1"><Run Text="↑90kb/s"/><LineBreak/><Run Language="zh-cn" Text="↓1mb/s"/></TextBlock>
                 <Path Width="13" Height="13" Data="{StaticResource Icon_web}" HorizontalAlignment="Left" Fill="{Binding Foreground, ElementName=uc}" Stretch="Uniform" SnapsToDevicePixels="True" Margin="0,5,0,5"/>
             </Grid>
         </WrapPanel>
     </Grid>
-</local:CapsuleBase>
+</base:CapsuleBase>

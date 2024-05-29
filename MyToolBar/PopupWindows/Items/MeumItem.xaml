@@ -1,12 +1,12 @@
-﻿<item:ItemBase x:Class="MyToolBar.PopupWindows.Items.MeumItem"
+﻿<base:ItemBase x:Class="MyToolBar.PopupWindows.Items.MeumItem"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:item="clr-namespace:MyToolBar.PopupWindows.Items"
+             xmlns:base="clr-namespace:MyToolBar.Common.UIBases;assembly=MyToolBar.Common"
              mc:Ignorable="d"  Height="40" d:Width="200">
     <Grid>
         <Path x:Name="IconPt" Width="14" Height="14"  Fill="{DynamicResource ForeColor}"  Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20 0 0 0"/>
         <TextBlock x:Name="ContentTb" Height="auto" d:Text="Settings" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="50 0 10 0"/>
     </Grid>
-</item:ItemBase>
+</base:ItemBase>

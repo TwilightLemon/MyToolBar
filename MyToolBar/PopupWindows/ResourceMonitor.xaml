@@ -1,13 +1,13 @@
-﻿<local:PopWindowBase x:Class="MyToolBar.PopupWindows.ResourceMonitor"
+﻿<base:PopWindowBase x:Class="MyToolBar.PopupWindows.ResourceMonitor"
                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                     xmlns:local="clr-namespace:MyToolBar.PopupWindows"
+                     xmlns:base="clr-namespace:MyToolBar.Common.UIBases;assembly=MyToolBar.Common"
                      xmlns:ws="https://github.com/OrgEleCho/EleCho.WpfSuite"
                      mc:Ignorable="d"
                      Title="ResourceMonitor" Height="520" Width="350" Background="{DynamicResource MaskColor}" Foreground="{DynamicResource ForeColor}">
-    <local:PopWindowBase.Resources>
+    <base:PopWindowBase.Resources>
         <Storyboard x:Key="OpenDetalPage">
             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ProcessInfoPage" Storyboard.TargetProperty="(UIElement.Visibility)">
                 <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
@@ -66,7 +66,7 @@
                 <DiscreteObjectKeyFrame KeyTime="00:00:00.2000000" Value="{x:Static Visibility.Collapsed}"/>
             </ObjectAnimationUsingKeyFrames>
         </Storyboard>
-    </local:PopWindowBase.Resources>
+    </base:PopWindowBase.Resources>
     <Grid x:Name="MainPage" Width="350">
         <Grid Margin="10,20,10,0" Height="30" VerticalAlignment="Top" >
             <Border  Background="Transparent" Width="20" Height="20" HorizontalAlignment="Left" Margin="10,0,0,0">
@@ -107,4 +107,4 @@
             </Border>
         </Grid>
     </Grid>
-</local:PopWindowBase>
+</base:PopWindowBase>

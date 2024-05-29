@@ -3,7 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MyToolBar"
-        xmlns:mb="clr-namespace:MyToolBar.Behaviors"
+        xmlns:mb="clr-namespace:MyToolBar.Common.Behaviors;assembly=MyToolBar.Common"
         xmlns:ws="https://github.com/OrgEleCho/EleCho.WpfSuite"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:Items="clr-namespace:MyToolBar.PopupWindows.Items"

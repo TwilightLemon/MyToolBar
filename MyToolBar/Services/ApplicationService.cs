@@ -1,16 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using MyToolBar.Common;
 using MyToolBar.Views.Windows;
 
 namespace MyToolBar.Services
 {
+    /// <summary>
+    /// [主线任务] 全局异常捕获写日志、加载应用缓存目录、加载主窗口
+    /// </summary>
     internal class ApplicationService : IHostedService
     {
         private readonly IServiceProvider _serviceProvider;
@@ -30,6 +31,8 @@ namespace MyToolBar.Services
             App.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
+            Settings.LoadPath();
+             _serviceProvider.GetRequiredService<PluginService>().Load();
             var mainWindow = _serviceProvider.GetRequiredService<AppBarWindow>();
             mainWindow.Show();
 

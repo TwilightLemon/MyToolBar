@@ -1,23 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MyToolBar.Func;
 using MyToolBar.Services;
 using MyToolBar.ViewModels;
-using MyToolBar.Views.Pages;
 using MyToolBar.Views.Pages.Settings;
 using MyToolBar.Views.Windows;
-using MyToolBar.WinApi;
-using NLog.Extensions.Hosting;
 using NLog.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace MyToolBar
@@ -47,7 +34,7 @@ namespace MyToolBar
                 services.AddTransient<AboutPage>();
 
                 // function services
-                services.AddSingleton<AppSettingsService>();
+                services.AddSingleton<PluginService>();
                 services.AddSingleton<ThemeResourceService>();
 
                 // logging

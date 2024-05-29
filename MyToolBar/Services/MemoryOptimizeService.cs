@@ -11,7 +11,10 @@ using Microsoft.Win32;
 
 namespace MyToolBar.Services
 {
-    public class MemoryOptimizeService : IHostedService
+    /// <summary>
+    /// [周期任务] 压缩内存到虚拟内存，减少占用
+    /// </summary>
+    internal class MemoryOptimizeService : IHostedService
     {
 
         [DllImport("kernel32.dll")]

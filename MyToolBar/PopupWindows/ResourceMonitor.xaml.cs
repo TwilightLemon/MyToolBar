@@ -1,6 +1,5 @@
 ﻿using MyToolBar.Func;
 using MyToolBar.PopupWindows.Items;
-using MyToolBar.WinApi;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -9,6 +8,9 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using MyToolBar.Common.UIBases;
+using MyToolBar.Common.WinApi;
+using MyToolBar.Common;
 
 namespace MyToolBar.PopupWindows
 {

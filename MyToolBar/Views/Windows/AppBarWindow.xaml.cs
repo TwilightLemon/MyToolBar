@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Windows;
-using MyToolBar.WinApi;
 using System.Windows.Input;
 using System.Windows.Media;
-using MyToolBar.Func;
 using System.Windows.Media.Animation;
-using static MyToolBar.GlobalService;
+using static MyToolBar.Common.GlobalService;
 using System.Timers;
-using System.Text.Json.Nodes;
+using MyToolBar.Common.WinApi;
 using Microsoft.Win32;
 using MyToolBar.PenPackages;
 using MyToolBar.OuterControls;
 using MyToolBar.PopupWindows;
 using MyToolBar.Services;
 using MyToolBar.ViewModels;
+using MyToolBar.Common.UIBases;
+using System.Linq;
+using MyToolBar.Plugin;
 
 namespace MyToolBar.Views.Windows
 {
@@ -27,11 +28,14 @@ namespace MyToolBar.Views.Windows
 
         private int CurrentWindowStyle = 0;
         private readonly ThemeResourceService _themeResourceService;
+        private readonly PluginService _pluginService;
 
         public AppBarWindow(
+            PluginService pluginService,
             ThemeResourceService themeResourceService,
             AppBarViewModel viewModel)
         {
+            _pluginService = pluginService;
             _themeResourceService = themeResourceService;
 
             ViewModel = viewModel;
@@ -40,7 +44,7 @@ namespace MyToolBar.Views.Windows
             InitializeComponent();
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             #region Window Style
             ToolWindowApi.SetToolWindow(this);
@@ -57,12 +61,21 @@ namespace MyToolBar.Views.Windows
             GlobalTimer.Elapsed += (o, e) => Dispatcher.Invoke(Tick);
             GlobalTimer.Start();
 
-            Cap_weather.LoadData();
+            await _pluginService.WaitForLoading();
+            var defPkg=_pluginService.ManagedPkg.FirstOrDefault(p => p.Key == "MyToolBar.Plugin.BasicPackage").Value.Package;
+            if (defPkg.Plugins.FirstOrDefault(p => p.Type == PluginType.Capsule) is IPlugin capPlugin)
+            {
+                if (capPlugin.GetMainElement() is CapsuleBase cap)
+                {
+                    CapsulePanel.Children.Add(cap);
+                    cap.Init();
+                }
+            }
             Cap_hdm.Start();
             #endregion
 
             #region Load OutterControls
-            oc = new LemonAppMusic();//new DemoClock();
+            oc = new DemoClock();
             oc.IsShownChanged += (o, b) => ShowOutter(b);
             OutterFunc.Children.Add(oc);
             #endregion

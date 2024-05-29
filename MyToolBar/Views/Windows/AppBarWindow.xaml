@@ -7,7 +7,7 @@
         xmlns:ws="https://github.com/OrgEleCho/EleCho.WpfSuite"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:cap="clr-namespace:MyToolBar.Capsules"
-        xmlns:mb="clr-namespace:MyToolBar.Behaviors"
+        xmlns:mb="clr-namespace:MyToolBar.Common.Behaviors;assembly=MyToolBar.Common"
         mc:Ignorable="d" Topmost="True"
         Title="MyToolBar" 
         Height="30" 
@@ -27,13 +27,13 @@
     </Window.Resources>
 
     <i:Interaction.Behaviors>
-        <mb:BlurWindowBehavior IsToolBar="True" Opacity="{Binding Source={StaticResource DataContext},Mode=TwoWay,Path=Data.ViewModel.WindowAccentCompositorOpacity}"/>
+        <mb:BlurWindowBehavior IsToolWindow="True" Opacity="{Binding Source={StaticResource DataContext},Mode=TwoWay,Path=Data.ViewModel.WindowAccentCompositorOpacity}"/>
     </i:Interaction.Behaviors>
     
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1.2*"/>
-            <ColumnDefinition Width="2*" MaxWidth="600"/>
+            <ColumnDefinition Width="1*" />
             <ColumnDefinition Width="1.2*"/>
         </Grid.ColumnDefinitions>
         <Border x:Name="CloseButton" Cursor="Hand" HorizontalAlignment="Left" Height="25" Width="25" Background="#01000000" MouseDown="CloseButton_MouseDown"  Margin="10,0,0,0">
@@ -46,12 +46,12 @@
         <Grid x:Name="OutterFunc" Grid.Column="1" Background="Transparent">
            
         </Grid>
-        <WrapPanel x:Name="FuncPanel" 
+        <WrapPanel x:Name="CapsulePanel" 
                    HorizontalAlignment="Right" 
-                   Margin="14,0,10,0" 
+                   Orientation="Vertical"
+                   Margin="10,0,10,0" 
                    Grid.Column="2">
             <cap:HardwareMonitorCap x:Name="Cap_hdm"/>
-            <cap:WeatherCap x:Name="Cap_weather"/>
         </WrapPanel>
 
     </Grid>

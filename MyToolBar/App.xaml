@@ -5,9 +5,9 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/IconData.xaml"/>
-                <ResourceDictionary Source="/Styles/ThemeColor.xaml"/>
-                <ResourceDictionary Source="/Styles/UITemplate.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MyToolBar.Common;component/Styles/IconData.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MyToolBar.Common;component/Styles/ThemeColor.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MyToolBar.Common;component/Styles/UITemplate.xaml"/>
                 <ResourceDictionary Source="/LanguageRes/LangEn_US.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <!--全局TextBlock文本样式-->

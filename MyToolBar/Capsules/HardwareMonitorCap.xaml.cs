@@ -1,12 +1,9 @@
-﻿using MyToolBar.Func;
+﻿using MyToolBar.Common.UIBases;
+using MyToolBar.Func;
 using MyToolBar.PopupWindows;
-using System;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Animation;
-using static MyToolBar.GlobalService;
+using static MyToolBar.Common.GlobalService;
 
 namespace MyToolBar.Capsules
 {

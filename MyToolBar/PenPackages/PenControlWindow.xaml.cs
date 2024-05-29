@@ -1,8 +1,8 @@
-﻿using MyToolBar.WinApi;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using MyToolBar.Common.WinApi;
 using System.Windows.Media.Animation;
 
 namespace MyToolBar.PenPackages

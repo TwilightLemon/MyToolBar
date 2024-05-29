@@ -28,10 +28,6 @@ internal class CPUInfo
             // Convert the value to celsius degrees
             temperature = (temperature - 2732) / 10.0;
         }
-
-        // Print the values e.g:
-
-        // 29.8
         return temperature;
     }
     static PerformanceCounter counters;

@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MyToolBar.Common\MyToolBar.Common.csproj" />
+    <ProjectReference Include="..\MyToolBar.Plugin\MyToolBar.Plugin.csproj" />
+	<PackageReference Include="EleCho.WpfSuite" Version="0.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="OuterControls\" />
+  </ItemGroup>
+
+</Project>

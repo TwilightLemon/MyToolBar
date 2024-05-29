@@ -1,0 +1,152 @@
+﻿<base:PopWindowBase x:Class="MyToolBar.Plugin.BasicPackage.PopupWindows.WeatherBox"
+                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                     xmlns:base="clr-namespace:MyToolBar.Common.UIBases;assembly=MyToolBar.Common"
+                     xmlns:ws="https://github.com/OrgEleCho/EleCho.WpfSuite"
+                     mc:Ignorable="d"
+                     Title="WeatherBox" Height="520" Width="350">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MyToolBar.Common;component/Styles/IconData.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MyToolBar.Common;component/Styles/ThemeColor.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MyToolBar.Common;component/Styles/UITemplate.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <Storyboard x:Key="PageBack">
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="AddFavor" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                <EasingThicknessKeyFrame KeyTime="00:00:00.2000000" Value="-300,0,300,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+            </ThicknessAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AddFavor" Storyboard.TargetProperty="(UIElement.Visibility)">
+                <DiscreteObjectKeyFrame KeyTime="00:00:00.2000000" Value="{x:Static Visibility.Collapsed}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MainPage" Storyboard.TargetProperty="(UIElement.Visibility)">
+                <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="MainPage" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                <EasingThicknessKeyFrame KeyTime="00:00:00" Value="330,0,-330,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+                <EasingThicknessKeyFrame KeyTime="00:00:00.3000000" Value="0,0,0,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+            </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="PageToSearch">
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="MainPage" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                <EasingThicknessKeyFrame KeyTime="00:00:00.2000000" Value="330,0,-330,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+            </ThicknessAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MainPage" Storyboard.TargetProperty="(UIElement.Visibility)">
+                <DiscreteObjectKeyFrame KeyTime="00:00:00.2000000" Value="{x:Static Visibility.Collapsed}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AddFavor" Storyboard.TargetProperty="(UIElement.Visibility)">
+                <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="AddFavor" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                <EasingThicknessKeyFrame KeyTime="00:00:00" Value="-300,0,300,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+                <EasingThicknessKeyFrame KeyTime="00:00:00.3000000" Value="0,0,0,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+            </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid Margin="10,0,10,0">
+        <WrapPanel x:Name="MainPage" Orientation="Vertical" Height="550" ItemWidth="330" Margin="0,0,0,0">
+            <Grid Margin="0,20,0,0" >
+                <Border x:Name="FavorBtn" Cursor="Hand" Background="Transparent" Width="20" Height="20" HorizontalAlignment="Left" Margin="10,0,0,0" MouseLeftButtonUp="FavorBtn_MouseLeftButtonUp">
+                    <Path Data="{StaticResource Icon_favor}" Fill="{DynamicResource ForeColor}" Stretch="Uniform" Width="14" Height="14"/>
+                </Border>
+                <TextBlock x:Name="Now_Location" Cursor="Hand" HorizontalAlignment="Left" MouseLeftButtonUp="Now_Location_MouseLeftButtonUp" TextWrapping="Wrap" Margin="40,0,0,0" Text="where where" VerticalAlignment="Top" FontSize="16" FontWeight="Bold"/>
+                <TextBlock x:Name="UpdateTime" HorizontalAlignment="Right" Text="2024.3.30 23:02 Sat." Margin="0,5,20,0" VerticalAlignment="Top" FontSize="12" Opacity="0.8"/>
+            </Grid>
+            <Grid Height="220"  VerticalAlignment="Top" Margin="0,10,0,0">
+                <Border Background="{DynamicResource MaskColor}" CornerRadius="15,15,15,15" />
+                <WrapPanel VerticalAlignment="Top" Height="75" Margin="0 130 0 0">
+                    <Border Margin="10 0 0 0"  Height="70" Width="70" Background="{DynamicResource MaskColor}" CornerRadius="15,15,15,15">
+                        <Grid>
+                            <TextBlock x:Name="FeelsLike" HorizontalAlignment="Center" FontWeight="Bold" Margin="0,15,0,0" TextWrapping="Wrap" Text="42℃" VerticalAlignment="Top" FontSize="14"/>
+                            <TextBlock  HorizontalAlignment="Center" Margin="0,40,0,0" TextWrapping="Wrap" Text="FeelsLike" VerticalAlignment="Top"/>
+                        </Grid>
+                    </Border>
+                    <Border Margin="10 0 0 0"  Height="70" Width="70" Background="{DynamicResource MaskColor}" CornerRadius="15,15,15,15">
+                        <Grid>
+                            <TextBlock x:Name="WindScale" HorizontalAlignment="Center" FontWeight="Bold" Margin="0,15,0,0" TextWrapping="Wrap" Text="2" VerticalAlignment="Top" FontSize="14"/>
+                            <TextBlock x:Name="WindDir" HorizontalAlignment="Center" Margin="0,40,0,0" TextWrapping="Wrap" Text="North Wind" VerticalAlignment="Top"/>
+                        </Grid>
+                    </Border>
+                    <Border Margin="10 0 0 0"  Height="70" Width="70" Background="{DynamicResource MaskColor}" CornerRadius="15,15,15,15">
+                        <Grid>
+                            <TextBlock x:Name="Humidity" HorizontalAlignment="Center" FontWeight="Bold" Margin="0,15,0,0" TextWrapping="Wrap" Text="40%" VerticalAlignment="Top" FontSize="14"/>
+                            <TextBlock  HorizontalAlignment="Center" Margin="0,40,0,0" TextWrapping="Wrap" Text="Humidity" VerticalAlignment="Top"/>
+                        </Grid>
+                    </Border>
+                    <Border  Height="70" Width="70" Background="{DynamicResource MaskColor}" CornerRadius="15,15,15,15" Margin="10,0,0,0">
+                        <Grid>
+                            <TextBlock x:Name="vis" HorizontalAlignment="Center" FontWeight="Bold" Margin="0,15,0,0" TextWrapping="Wrap" Text="220km" VerticalAlignment="Top" FontSize="14"/>
+                            <TextBlock  HorizontalAlignment="Center" Margin="0,40,0,0" TextWrapping="Wrap" Text="Visibility" VerticalAlignment="Top"/>
+                        </Grid>
+                    </Border>
+                </WrapPanel>
+                <Border x:Name="Now_icon" HorizontalAlignment="Left" Margin="77,35,0,0" Width="75" Background="#FFCBCBCB" Height="75" VerticalAlignment="Top"/>
+                <TextBlock x:Name="Now_Temp" Margin="166,27,0,0" TextWrapping="Wrap" Text="24℃" VerticalAlignment="Top" FontSize="36" HorizontalAlignment="Left"/>
+                <TextBlock x:Name="Now_desc" HorizontalAlignment="Left" Height="36" Margin="165,76,0,0" TextWrapping="Wrap" Text="Sunny" VerticalAlignment="Top"  FontSize="18"/>
+                <Border x:Name="AQI_Viewer"  HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" Margin="0 10 20 0" CornerRadius="10" Background="Aqua">
+                    <TextBlock x:Name="AQI_text" Foreground="#0C0C0C" Text="AQI 51" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Margin="8 0 8 0"/>
+                </Border>
+            </Grid>
+            <Border Background="{DynamicResource MaskColor}" CornerRadius="15,15,15,15" Width="330" Margin="0,10,0,0">
+                <WrapPanel x:Name="Days" Margin="0,10,0,10"/>
+            </Border>
+            <TextBlock  Margin="0,10,0,0" FontSize="10" Opacity="0.5" TextAlignment="Center">
+                <Run Text="Weather service by QWeather."/>
+                <LineBreak/>
+                <Run Text="Air quality source: CNEMC"/>
+            </TextBlock>
+        </WrapPanel>
+        <ws:ScrollViewer x:Name="AddFavor" ws:StylusTouchDevice.Simulate="True" PanningMode="VerticalOnly"  VerticalScrollBarVisibility="Hidden" Visibility="Collapsed">
+            <WrapPanel   ItemWidth="330" Orientation="Vertical" Margin="0,0,0,0" >
+                <Grid Margin="0 20 0 20" Height="25">
+                    <TextBox Style="{DynamicResource SimpleTextBoxStyle}" x:Name="SearchCityBox" PreviewKeyDown="SearchCityBox_PreviewKeyDown" TextWrapping="Wrap" Text="Search City" Margin="40,0,40,0" Foreground="{DynamicResource ForeColor}" Background="{DynamicResource MaskColor}"/>
+                    <Border x:Name="BackBtn" Cursor="Hand" Background="Transparent" MouseLeftButtonUp="BackBtn_MouseLeftButtonUp" Width="25" Height="25" HorizontalAlignment="Left" Margin="10,0,0,0">
+                        <Path Data="{StaticResource Icon_back}" Stretch="Uniform" Width="14" Height="14" Fill="{DynamicResource ForeColor}"/>
+                    </Border>
+                    <Border x:Name="LocateBtn" Cursor="Hand" Background="Transparent" Width="25" Height="25" HorizontalAlignment="Right" Margin="0,0,10,0" MouseLeftButtonUp="LocateBtn_MouseLeftButtonUp">
+                        <Path Data="{StaticResource Icon_locate}" Fill="{DynamicResource ForeColor}" Stretch="Uniform" Width="14" Height="14"/>
+                    </Border>
+                </Grid>
+                <Border Background="{DynamicResource MaskColor}" CornerRadius="15">
+                    <WrapPanel x:Name="SearchCity_Result" ItemWidth="330"/>
+                </Border>
+                <TextBlock FontSize="16" Text="DefaultPositon" FontWeight="Bold" Margin="0,10,0,0"/>
+                <Border Background="{DynamicResource MaskColor}" CornerRadius="15">
+                    <WrapPanel x:Name="DefaultPosition" ItemWidth="330"/>
+                </Border>
+                <TextBlock FontSize="16" Text="Favorite" FontWeight="Bold" Margin="0,10,0,0"/>
+                <Border Background="{DynamicResource MaskColor}" CornerRadius="15">
+                    <WrapPanel x:Name="FavorCity" ItemWidth="330"/>
+                </Border>
+                <TextBlock Text="Tips: Long press or right-click to set as default." TextAlignment="Center" FontSize="10" Opacity="0.5"/>
+            </WrapPanel>
+        </ws:ScrollViewer>
+    </Grid>
+</base:PopWindowBase>
