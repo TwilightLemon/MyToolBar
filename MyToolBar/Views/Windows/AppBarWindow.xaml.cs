@@ -26,16 +26,18 @@ namespace MyToolBar.Views.Windows
         private OuterControlBase oc;
         private PenControlWindow pcw;
 
-        private int CurrentWindowStyle = 0;
         private readonly ThemeResourceService _themeResourceService;
-        private readonly PluginService _pluginService;
+        private readonly ManagedPackageService _mPackageService;
+        private readonly PluginReactiveService _pluginReactiveService;
 
         public AppBarWindow(
-            PluginService pluginService,
+            PluginReactiveService pluginReactiveService,
+            ManagedPackageService mPackageService,
             ThemeResourceService themeResourceService,
             AppBarViewModel viewModel)
         {
-            _pluginService = pluginService;
+            _mPackageService = mPackageService;
+            _pluginReactiveService = pluginReactiveService;
             _themeResourceService = themeResourceService;
 
             ViewModel = viewModel;
@@ -60,28 +62,42 @@ namespace MyToolBar.Views.Windows
             GlobalTimer.Interval = 1200;
             GlobalTimer.Elapsed += (o, e) => Dispatcher.Invoke(Tick);
             GlobalTimer.Start();
-
-            await _pluginService.WaitForLoading();
-            var defPkg=_pluginService.ManagedPkg.FirstOrDefault(p => p.Key == "MyToolBar.Plugin.BasicPackage").Value.Package;
-            if (defPkg.Plugins.FirstOrDefault(p => p.Type == PluginType.Capsule) is IPlugin capPlugin)
-            {
-                if (capPlugin.GetMainElement() is CapsuleBase cap)
-                {
-                    CapsulePanel.Children.Add(cap);
-                    cap.Init();
-                }
-            }
             Cap_hdm.Start();
             #endregion
 
             #region Load OutterControls
             oc = new DemoClock();
-            oc.IsShownChanged += (o, b) => ShowOutter(b);
+            oc.IsShownChanged += Oc_IsShownChanged;
             OutterFunc.Children.Add(oc);
             #endregion
 
             pcw = new PenControlWindow();
             pcw.Show();
+
+            _pluginReactiveService.OuterControlChanged += _pluginReactiveService_OuterControlChanged;
+            _pluginReactiveService.CapsuleRemoved += _pluginReactiveService_CapsuleRemoved;
+            _pluginReactiveService.CapsuleAdded += _pluginReactiveService_CapsuleAdded;
+            await _pluginReactiveService.Load();
+        }
+
+        private void Oc_IsShownChanged(object? sender, bool e) => ShowOutter(e);
+
+        private void _pluginReactiveService_CapsuleRemoved(IPlugin obj)
+        {
+            if (_pluginReactiveService.Capsules[obj] is var cap)
+                CapsulePanel.Children.Remove(cap);
+        }
+
+        private void _pluginReactiveService_CapsuleAdded(CapsuleBase cap)
+        {
+            CapsulePanel.Children.Add(cap);
+        }
+
+        private void _pluginReactiveService_OuterControlChanged(OuterControlBase obj) {
+            OutterFunc.Children.Clear();
+            oc = obj;
+            oc.IsShownChanged += Oc_IsShownChanged;
+            OutterFunc.Children.Add(oc);
         }
 
         #region OutterControl

@@ -9,6 +9,8 @@
     <sys:String x:Key="SettingsWindow_Title">Settings</sys:String>
     <sys:String x:Key="SettingsWindow_Tab_About">About</sys:String>
     <sys:String x:Key="SettingsWindow_Tab_Capsules">Capsules</sys:String>
-    <sys:String x:Key="SettingsWindow_Tab_OutterControl">Outter Control</sys:String>
+    <sys:String x:Key="SettingsWindow_Tab_OuterControl">Outer Control</sys:String>
     <sys:String x:Key="SettingsWindow_Tab_Components">Components</sys:String>
+    <sys:String x:Key="SettingsWindow_Desc">Desc</sys:String>
+    <sys:String x:Key="SettingsWindow_Version">Version</sys:String>
 </ResourceDictionary>

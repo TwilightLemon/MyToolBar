@@ -74,6 +74,10 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
         {
             InitializeComponent();
         }
+        ~WeatherCap()
+        {
+            GlobalService.GlobalTimer.Elapsed -= GlobalTimer_Elapsed;
+        }
 
         private WeatherCache cache = null;
         private async Task LoadWeatherData()

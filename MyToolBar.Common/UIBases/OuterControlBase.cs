@@ -23,7 +23,7 @@ namespace MyToolBar.Common.UIBases
         private void OuterControlBase_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
             //初始化前景色
-            if (GlobalService.IsDarkMode)
+            if (GlobalService.IsDarkMode&&GlobalService.CurrentWindowStyle==0)
                 // DarkMode下 OutterControl区域高亮显示
                 Foreground = GlobalService.OuterControlNormalDarkModeForeColor;
             else

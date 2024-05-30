@@ -34,18 +34,8 @@
                             d:ItemsSource="{d:SampleData ItemCount=5}"
                             Background="Transparent"
                             BorderThickness="0"
-                            SelectionChanged="ListBox_SelectionChanged">
-                    <ws:ListBox.ItemContainerStyle>
-                        <Style TargetType="ws:ListBoxItem">
-                            <Setter Property="Margin" Value="5 0"/>
-                            <Setter Property="CornerRadius" Value="10"/>
-                            <Setter Property="BorderThickness" Value="0"/>
-                            <Setter Property="Foreground" Value="{DynamicResource ForeColor}"/>
-                            <Setter Property="HoverBackground" Value="{DynamicResource MaskColor}"/>
-                            <Setter Property="SelectedBackground" Value="{DynamicResource MaskColor}"/>
-                            <Setter Property="SelectedActiveBackground" Value="{DynamicResource MaskColor}"/>
-                        </Style>
-                    </ws:ListBox.ItemContainerStyle>
+                            SelectionChanged="ListBox_SelectionChanged"
+                            ItemContainerStyle="{DynamicResource SimpleListBoxItemStyle}">
                     <ws:ListBox.ItemTemplate>
                         <DataTemplate>
                             <ws:Border Height="40"

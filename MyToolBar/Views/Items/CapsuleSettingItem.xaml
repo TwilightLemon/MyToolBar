@@ -1,0 +1,20 @@
+﻿<base:ItemBase x:Class="MyToolBar.Views.Items.CapsuleSettingItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:base="clr-namespace:MyToolBar.Common.UIBases;assembly=MyToolBar.Common"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MyToolBar.Views.Items"
+             mc:Ignorable="d" d:DesignWidth="800">
+    <base:ItemBase.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
+    </base:ItemBase.Resources>
+    <Grid>
+        <Border x:Name="EnabledMask" Background="{DynamicResource MaskColor}" Visibility="{Binding PluginIsEnabled,Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        <TextBlock Margin="20">
+            <Run d:Text="Capsule Name" FontSize="22" Text="{Binding Plugin.Name,Mode=OneWay}"/>
+            <LineBreak/>
+            <Run Text="{DynamicResource SettingsWindow_Desc}"/>: <Run d:Text="Desc." Text="{Binding Plugin.Description,Mode=OneWay}"/>
+        </TextBlock>
+    </Grid>
+</base:ItemBase>

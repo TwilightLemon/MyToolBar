@@ -26,10 +26,22 @@ namespace MyToolBar.Common.UIBases
                 GlassFrameThickness = new Thickness(1),
                 CaptionHeight = 1
             });
+
             Activate();
             Deactivated += PopWindowBase_Deactivated;
+            this.Initialized += PopWindowBase_Initialized;
             this.Loaded += PopWindowBase_Loaded;
             this.ContentRendered += PopWindowBase_ContentRendered;
+        }
+
+        private void PopWindowBase_Initialized(object? sender, EventArgs e)
+        {
+            //remove local resource dic, reflect ThemeConf to main Appdomain
+            if (Resources.MergedDictionaries.FirstOrDefault(d => d.Source.ToString().Contains("ThemeColor.xaml"))
+                is ResourceDictionary defResDic)
+            {
+                Resources.MergedDictionaries.Remove(defResDic);
+            }
         }
 
         private void PopWindowBase_ContentRendered(object? sender, EventArgs e)

@@ -9,24 +9,42 @@ using System.IO;
 using System.Threading.Tasks;
 
 namespace MyToolBar.Services;
-public class PluginService
+/// <summary>
+/// 托管的插件包管理服务 包括插件加载与设置Sign托管
+/// </summary>
+public class ManagedPackageService
 {
     private static readonly string _packageSettingsSign="ManagedPackageConf",
-                                       _packageSettingsName="MyToolBar.PluginService";
+                                       _packageSettingsName=typeof(ManagedPackageService).FullName;
     private static readonly string _packageDir=Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"Plugins");
     private readonly SettingsMgr< Dictionary<string,ManagedPkgConf>> _managedPkgConfs=new(_packageSettingsSign,_packageSettingsName);
     private Dictionary<string,ManagedPackage> _managedPkg=[];
-    private FileSystemWatcher _watcher;
+    private FileSystemWatcher? _watcher;
     private bool _isLoaded=false;
-
-    public List<string> ManagedSettingsSigns=[];
     public Dictionary<string,ManagedPackage> ManagedPkg=>_managedPkg;
-    public PluginService()
+
+    /// <summary>
+    /// 已启用的托管包中可用的特定类型的插件
+    /// </summary>
+    /// <param name="t">插件类型</param>
+    /// <returns></returns>
+    public List<IPlugin> GetTypePlugins(PluginType t)
+    {
+        var e = new List<IPlugin>();
+        var ava=_managedPkg.Values.Where(p=>p.IsEnabled);
+        foreach(var p in ava)
+        {
+            e.AddRange(p.Package.Plugins.Where(a => a.Type == t));
+        }
+        return e;
+    }
+
+    public ManagedPackageService()
     {
         CreateDir();
         InitWatcher();
     }
-    ~PluginService()
+    ~ManagedPackageService()
     {
         _watcher?.Dispose();
         foreach (var managedPkg in _managedPkg)
@@ -50,7 +68,7 @@ public class PluginService
         if(DateTime.Now-_lastTime<TimeSpan.FromSeconds(1)) return;
         _lastTime=DateTime.Now;
         var m=_managedPkgConfs.Data.FirstOrDefault(kv => kv.Value.FilePath == e.FullPath);
-        Unload(m.Key);
+        UnloadFromRegistered(m.Key);
     }
 
     private void _watcher_Created(object sender, FileSystemEventArgs e) {
@@ -67,7 +85,7 @@ public class PluginService
         }
     }
     /// <summary>
-    /// 加载所有启用的托管包(用于启动时)
+    /// 加载所有启用的托管包(App启动时调用)
     /// </summary>
     public async void Load()
     {
@@ -83,10 +101,16 @@ public class PluginService
         await _managedPkgConfs.Save();
         _isLoaded=true;
     }
+    /// <summary>
+    /// 等待托管包加载完成
+    /// </summary>
+    /// <returns></returns>
     public async Task WaitForLoading()
     {
         while (!_isLoaded) await Task.Delay(10);
     }
+    public ManagedPkgConf GetManagedPkgConf(string PackageName) =>_managedPkgConfs.Data[PackageName];
+    public Task SaveManagedPkgConf() => _managedPkgConfs.Save();
     /// <summary>
     /// 有新的托管包文件时同步
     /// </summary>
@@ -133,23 +157,36 @@ public class PluginService
         {
             foreach (var plugin in pkgObj.Plugins)
             {
+                //设置插件的包源
+                plugin.AcPackage = pkgObj;
+                /*
+                //添加托管的SettingsSignKeys
                 if (plugin.SettingsSignKeys != null)
                 {
                     ManagedSettingsSigns.AddRange(plugin.SettingsSignKeys);
                 }
+                */
             }
         }
     }
     
+    public async void EnableInRegistered(string packageName)
+    {
+        if(_managedPkgConfs.Data.TryGetValue(packageName,out var conf))
+        {
+            conf.IsEnabled=true;
+            SyncFromFile(conf.FilePath);
+            await _managedPkgConfs.Save();
+        }
+    }
     /// <summary>
     /// 从已装载的托管包中卸载
     /// </summary>
     /// <param name="packageName"></param>
-    public async void Unload(string packageName)
+    public async void UnloadFromRegistered(string packageName)
     {
         if (_managedPkg.TryGetValue(packageName, out var managedPkg))
         {
-            //这里暂时不需要移除SettingsSignKeys
             managedPkg.LoadContext.Unload();
             _managedPkg.Remove(packageName);
             _managedPkgConfs.Data[packageName].IsEnabled = false;

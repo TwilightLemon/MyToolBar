@@ -34,7 +34,8 @@ namespace MyToolBar
                 services.AddTransient<AboutPage>();
 
                 // function services
-                services.AddSingleton<PluginService>();
+                services.AddSingleton<ManagedPackageService>();
+                services.AddSingleton<PluginReactiveService>();
                 services.AddSingleton<ThemeResourceService>();
 
                 // logging

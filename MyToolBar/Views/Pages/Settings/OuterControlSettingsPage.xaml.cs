@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MyToolBar.Plugin;
+using MyToolBar.Services;
 
 namespace MyToolBar.Views.Pages.Settings
 {
@@ -20,9 +22,31 @@ namespace MyToolBar.Views.Pages.Settings
     /// </summary>
     public partial class OuterControlSettingsPage : Page
     {
-        public OuterControlSettingsPage()
+        private ManagedPackageService _managedPackageService;
+        private PluginReactiveService _pluginReactiveService;
+        public OuterControlSettingsPage(
+            ManagedPackageService managedPackageService,
+            PluginReactiveService pluginReactiveService
+            )
         {
             InitializeComponent();
+            _pluginReactiveService = pluginReactiveService;
+            _managedPackageService = managedPackageService;
+            Loaded += OuterControlSettingsPage_Loaded;
+        }
+
+        private void OuterControlSettingsPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            var plugins=_managedPackageService.GetTypePlugins(PluginType.OuterControl);
+            this.DataContext = plugins;
+        }
+
+        private async void OCPluginList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(OCPluginList.SelectedItem is IPlugin plugin)
+            {
+                await _pluginReactiveService.SetOuterControl(plugin);
+            }
         }
     }
 }

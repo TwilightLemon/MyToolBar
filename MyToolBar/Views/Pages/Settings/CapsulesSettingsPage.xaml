@@ -7,8 +7,6 @@
       xmlns:ws="https://github.com/OrgEleCho/EleCho.WpfSuite"
       mc:Ignorable="d"  Foreground="{DynamicResource ForeColor}"
       d:DesignHeight="450" d:DesignWidth="800"
-      d:Background="White"
-      d:Foreground="Black"
       Title="CapsulesSettingsPage">
 
     <Grid>
@@ -16,23 +14,7 @@
                    Margin="20,20,0,0" Text="{DynamicResource SettingsWindow_Tab_Capsules}" FontSize="20" FontWeight="Bold"/>
         <ws:ScrollViewer VerticalScrollBarVisibility="Hidden" PanningMode="VerticalOnly" ws:StylusTouchDevice.Simulate="True">
             <StackPanel x:Name="CapsuleList" Margin="0 60 0 0">
-                <Border  Height="180" 
-                     Background="{DynamicResource MaskColor}" 
-                     CornerRadius="15,15,15,15" 
-                     Margin="20,20,20,20">
-                    <Grid >
-                        <TextBox x:Name="WeatherCap_Key" TextWrapping="Wrap" 
-                             Style="{DynamicResource SimpleTextBoxStyle}" Height="30" Background="{DynamicResource MaskColor}" Foreground="{DynamicResource ForeColor}" Margin="100,55,20,0" VerticalAlignment="Top"/>
-                        <TextBlock HorizontalAlignment="Left" Margin="20,62,0,0" TextWrapping="Wrap" Text="ApiKey:" VerticalAlignment="Top" Width="65" Height="16"/>
-                        <TextBox x:Name="WeatherCap_host" TextWrapping="Wrap" 
-                             Style="{DynamicResource SimpleTextBoxStyle}" Height="30" Background="{DynamicResource MaskColor}" Foreground="{DynamicResource ForeColor}" Margin="100,92,20,0" VerticalAlignment="Top"/>
-                        <TextBlock HorizontalAlignment="Left" Margin="20,99,0,0" TextWrapping="Wrap" Text="Host:" VerticalAlignment="Top" Width="65" Height="16"/>
-                        <TextBox x:Name="WeatherCap_Lang" TextWrapping="Wrap" 
-                             Style="{DynamicResource SimpleTextBoxStyle}" Height="30" Background="{DynamicResource MaskColor}" Foreground="{DynamicResource ForeColor}" Margin="100,132,20,0" VerticalAlignment="Top"/>
-                        <TextBlock HorizontalAlignment="Left" Margin="20,139,0,0" TextWrapping="Wrap" Text="lang:" VerticalAlignment="Top" Width="65" Height="16"/>
-                        <TextBlock HorizontalAlignment="Left" Margin="20,20,0,0" TextWrapping="Wrap" Text="WeatherCap" VerticalAlignment="Top" FontSize="16"/>
-                    </Grid>
-                </Border>
+               
             </StackPanel>
         </ws:ScrollViewer>
     </Grid>

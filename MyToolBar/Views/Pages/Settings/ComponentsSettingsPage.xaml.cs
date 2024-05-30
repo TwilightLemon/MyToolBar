@@ -12,17 +12,31 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MyToolBar.Services;
+using MyToolBar.Views.Items;
 
 namespace MyToolBar.Views.Pages.Settings
 {
     /// <summary>
-    /// ComponentsSettingsPage.xaml 的交互逻辑
+    /// 显示可用的插件包 启用/禁用 以及插件包的托管设置项
     /// </summary>
     public partial class ComponentsSettingsPage : Page
     {
-        public ComponentsSettingsPage()
+        private readonly ManagedPackageService _managedPackage;
+        public ComponentsSettingsPage(ManagedPackageService managedPackage)
         {
             InitializeComponent();
+            _managedPackage = managedPackage;
+            Loaded += ComponentsSettingsPage_Loaded;
+        }
+
+        private void ComponentsSettingsPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            foreach(var pkg in _managedPackage.ManagedPkg.Values)
+            {
+                PackagesPanel.Children.Add(new ComponentSettingItem(_managedPackage, pkg.Package));
+            }
+            Loaded -= ComponentsSettingsPage_Loaded;
         }
     }
 }

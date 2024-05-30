@@ -14,6 +14,10 @@ namespace MyToolBar.Common
         /// 不知道为什么Transparent无法点击，所以用了一个很小的透明度
         /// </summary>
         public static readonly Brush CapsuleBackground= new SolidColorBrush(Color.FromArgb(1, 0, 0, 0));
+        /// <summary>
+        /// 指示前台窗口状态，用于适配OuterControl的高亮UI，0为正常，1为最大化
+        /// </summary>
+        public static  int CurrentWindowStyle = 0;
         public static bool IsDarkMode { get; set; } = true;
 
         public static System.Timers.Timer GlobalTimer = null;

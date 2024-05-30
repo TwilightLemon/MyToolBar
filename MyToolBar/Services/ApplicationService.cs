@@ -32,7 +32,7 @@ namespace MyToolBar.Services
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
             Settings.LoadPath();
-             _serviceProvider.GetRequiredService<PluginService>().Load();
+             _serviceProvider.GetRequiredService<ManagedPackageService>().Load();
             var mainWindow = _serviceProvider.GetRequiredService<AppBarWindow>();
             mainWindow.Show();
 

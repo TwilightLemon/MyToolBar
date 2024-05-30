@@ -30,6 +30,10 @@ public interface IPackage
     /// </summary>
     string PackageName { get; }
     /// <summary>
+    /// 描述
+    /// </summary>
+    string Description { get; }
+    /// <summary>
     /// 包版本
     /// </summary>
     Version Version { get; }
@@ -40,6 +44,10 @@ public interface IPackage
 }
 public interface IPlugin
 {
+    /// <summary>
+    /// 所属的包 该属性由主程序设置
+    /// </summary>
+    IPackage? AcPackage { get; set; }
     /// <summary>
     /// 插件名称
     /// </summary>

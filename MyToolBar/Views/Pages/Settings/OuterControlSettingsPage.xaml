@@ -7,13 +7,24 @@
       xmlns:ws="https://github.com/OrgEleCho/EleCho.WpfSuite"
       mc:Ignorable="d" Foreground="{DynamicResource ForeColor}"
       d:DesignHeight="450" d:DesignWidth="800"
-      d:Background="White"
-      d:Foreground="Black"
       Title="OuterControlSettingsPage">
 
-    <ws:StackPanel Margin="28 12 28 28">
-        <TextBlock Text="Outer Controls"
-                   FontSize="22"
-                   Margin="0 0 0 12"/>
-    </ws:StackPanel>
+    <ws:ScrollViewer PanningMode="VerticalOnly" VerticalScrollBarVisibility="Hidden"  ws:StylusTouchDevice.Simulate="True">
+        <StackPanel>
+            <TextBlock Text="{DynamicResource SettingsWindow_Tab_OuterControl}" FontSize="22" FontWeight="Bold" Margin="20"/>
+            <ws:ListBox x:Name="OCPluginList" Background="Transparent" ItemsSource="{Binding}" BorderThickness="0"  d:ItemsSource="{d:SampleData ItemCount=5}" ItemContainerStyle="{DynamicResource SimpleListBoxItemStyle}" SelectionChanged="OCPluginList_SelectionChanged">
+                <ws:ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border Height="Auto" Padding="10" Background="Transparent">
+                            <TextBlock >
+                                <Run Text="{Binding Name,Mode=OneWay}" FontSize="22" FontWeight="Bold"/>
+                                <LineBreak/>
+                                <Run Text="{DynamicResource SettingsWindow_Desc}"/>: <Run Text="{Binding Description,Mode=OneWay}"/>
+                            </TextBlock>
+                        </Border>
+                    </DataTemplate>
+                </ws:ListBox.ItemTemplate>
+            </ws:ListBox>
+        </StackPanel>
+    </ws:ScrollViewer>
 </Page>
