@@ -8,12 +8,10 @@ using System.Timers;
 using MyToolBar.Common.WinApi;
 using Microsoft.Win32;
 using MyToolBar.PenPackages;
-using MyToolBar.OuterControls;
 using MyToolBar.PopupWindows;
 using MyToolBar.Services;
 using MyToolBar.ViewModels;
 using MyToolBar.Common.UIBases;
-using System.Linq;
 using MyToolBar.Plugin;
 
 namespace MyToolBar.Views.Windows
@@ -23,7 +21,7 @@ namespace MyToolBar.Views.Windows
     /// </summary>
     public partial class AppBarWindow : Window
     {
-        private OuterControlBase oc;
+        private OuterControlBase? oc;
         private PenControlWindow pcw;
 
         private readonly ThemeResourceService _themeResourceService;
@@ -57,19 +55,13 @@ namespace MyToolBar.Views.Windows
             ShowOutter(false);
             #endregion
 
-            #region Load Capsules
+            #region GlobalTimer
             GlobalTimer = new Timer();
             GlobalTimer.Interval = 1200;
             GlobalTimer.Elapsed += (o, e) => Dispatcher.Invoke(Tick);
             GlobalTimer.Start();
-            Cap_hdm.Start();
             #endregion
 
-            #region Load OutterControls
-            oc = new DemoClock();
-            oc.IsShownChanged += Oc_IsShownChanged;
-            OutterFunc.Children.Add(oc);
-            #endregion
 
             pcw = new PenControlWindow();
             pcw.Show();
@@ -84,8 +76,11 @@ namespace MyToolBar.Views.Windows
 
         private void _pluginReactiveService_CapsuleRemoved(IPlugin obj)
         {
-            if (_pluginReactiveService.Capsules[obj] is var cap)
+            if (_pluginReactiveService.Capsules[obj] is var cap){
+                cap.Uninstall();
                 CapsulePanel.Children.Remove(cap);
+                cap = null;
+            }
         }
 
         private void _pluginReactiveService_CapsuleAdded(CapsuleBase cap)
@@ -94,6 +89,8 @@ namespace MyToolBar.Views.Windows
         }
 
         private void _pluginReactiveService_OuterControlChanged(OuterControlBase obj) {
+            oc?.Dispose();
+            oc = null;
             OutterFunc.Children.Clear();
             oc = obj;
             oc.IsShownChanged += Oc_IsShownChanged;

@@ -1,6 +1,8 @@
 ﻿using Microsoft.Win32;
 using System.Collections.Generic;
 using System.Timers;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace MyToolBar.Common
@@ -19,9 +21,24 @@ namespace MyToolBar.Common
         /// </summary>
         public static  int CurrentWindowStyle = 0;
         public static bool IsDarkMode { get; set; } = true;
+        /// <summary>
+        /// 公共Timer
+        /// </summary>
 
         public static System.Timers.Timer GlobalTimer = null;
 
         public static Brush OuterControlNormalDarkModeForeColor= new SolidColorBrush(Color.FromArgb(250, 3, 3, 3));
+        public static double GetPopupWindowLeft(FrameworkElement capsule,Window popupWindow)
+        {
+            //获取相对于MainWindow的坐标
+            double rel=capsule.TransformToAncestor(Application.Current.MainWindow).Transform(new Point(0, 0)).X;
+            //计算PopupWindow的左边界
+            double left=rel+capsule.ActualWidth/2 - popupWindow.Width/2;
+            //防止超出屏幕
+            double max=SystemParameters.WorkArea.Width- popupWindow.Width;
+            if(left < 0) left = 0;
+            else if(left > max) left = max;
+            return left;
+        }
     }
 }

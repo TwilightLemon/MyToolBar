@@ -74,8 +74,9 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
         {
             InitializeComponent();
         }
-        ~WeatherCap()
+        public override void Uninstall()
         {
+            base.Uninstall();
             GlobalService.GlobalTimer.Elapsed -= GlobalTimer_Elapsed;
         }
 
@@ -100,7 +101,7 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
             }
         }
         private SettingsMgr<WeatherApi.Property> KeyMgr;
-        public override async void Init()
+        public override async void Install()
         {
             if (KeyMgr == null)
             {
@@ -108,7 +109,7 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
                 await KeyMgr.Load();
                 KeyMgr.OnDataChanged += async delegate { 
                     await KeyMgr.Load();
-                    Dispatcher.Invoke(() => Init());
+                    Dispatcher.Invoke(() => Install());
                 };
             }
             if (string.IsNullOrEmpty(KeyMgr.Data.key))
@@ -149,7 +150,7 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
             wb.Closed += delegate { BoxShowed = false; };
             await wb.LoadData(cache.DefaultCity,cache);
             wb.DefaultCityChanged += Wb_DefaultCityChanged;
-            wb.Left = SystemParameters.WorkArea.Width - wb.Width;
+            wb.Left = GlobalService.GetPopupWindowLeft(this, wb);
             wb.Show();
             BoxShowed = true;
         }

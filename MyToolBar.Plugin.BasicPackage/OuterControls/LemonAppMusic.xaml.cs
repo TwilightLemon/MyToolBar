@@ -13,12 +13,17 @@ namespace MyToolBar.Plugin.BasicPackage.OuterControls
     /// </summary>
     public partial class LemonAppMusic : OuterControlBase
     {
+        private MsgHelper ms = new MsgHelper();
         public LemonAppMusic()
         {
             InitializeComponent();
             Loaded += LemonAppMusic_Loaded;
         }
-        private MsgHelper ms = new MsgHelper();
+        public override void Dispose()
+        {
+            base.Dispose();
+           ms.Stop();
+        }
         private void LemonAppMusic_Loaded(object sender, RoutedEventArgs e)
         {
             MaxStyleAct= maxStyleAct;

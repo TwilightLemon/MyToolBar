@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Management;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 
 /*
  * Get hardware information
  * using System.Management & OpenHardwareMonitorLib
  */
 
-namespace MyToolBar.Func;
+namespace MyToolBar.Plugin.BasicPackage.API;
 
 internal class CPUInfo
 {
-    public static double GetCPUTemperature()
+    public double GetCPUTemperature()
     {
         Double temperature = 0;
         // Query the MSAcpi_ThermalZoneTemperature API
@@ -30,13 +27,19 @@ internal class CPUInfo
         }
         return temperature;
     }
-    static PerformanceCounter counters;
-    public static void Load()
+    protected PerformanceCounter counters;
+    public static CPUInfo Create()
     {
-        counters = new PerformanceCounter("Processor Information", "% Processor Utility", "_Total");
-        counters.NextValue();
+        var ci=new CPUInfo();
+        ci.counters = new PerformanceCounter("Processor Information", "% Processor Utility", "_Total");
+        ci.counters.NextValue();
+        return ci;
     }
-    public static string GetCPUUsedPercent()
+    public void Dispose()
+    {
+        counters.Dispose();
+    }
+    public string GetCPUUsedPercent()
     {
         return Math.Round(counters.NextValue()) + "%";
     }
@@ -106,6 +109,17 @@ internal class NetworkInfo
         ni._performanceCounters[1] = pcs2;
         });
         return ni;
+    }
+    public void Dispose()
+    {
+        // Dispose performance counters
+        foreach (List<PerformanceCounter> pcs in _performanceCounters)
+        {
+            foreach (PerformanceCounter pc in pcs)
+            {
+                pc.Dispose();
+            }
+        }
     }
 
     public string[] GetNetworkSpeed()

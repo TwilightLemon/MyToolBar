@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace MyToolBar.Common.UIBases
         {
             Loaded += OuterControlBase_Loaded;
         }
+        public virtual void Dispose() { }
 
         private void OuterControlBase_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
@@ -46,6 +48,7 @@ namespace MyToolBar.Common.UIBases
         /// <summary>
         /// 指示是否需要显示OutterControl
         /// </summary>
+        [DefaultValue(false)]
         protected bool IsShown
         {
             get => _isShown;

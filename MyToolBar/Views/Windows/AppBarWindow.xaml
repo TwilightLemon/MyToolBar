@@ -6,7 +6,6 @@
         xmlns:local="clr-namespace:MyToolBar.Views.Windows"
         xmlns:ws="https://github.com/OrgEleCho/EleCho.WpfSuite"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-        xmlns:cap="clr-namespace:MyToolBar.Capsules"
         xmlns:mb="clr-namespace:MyToolBar.Common.Behaviors;assembly=MyToolBar.Common"
         mc:Ignorable="d" Topmost="True"
         Title="MyToolBar" 
@@ -50,9 +49,7 @@
                    HorizontalAlignment="Right" 
                    Orientation="Vertical"
                    Margin="10,0,10,0" 
-                   Grid.Column="2">
-            <cap:HardwareMonitorCap x:Name="Cap_hdm"/>
-        </WrapPanel>
+                   Grid.Column="2"/>
 
     </Grid>
 </Window>

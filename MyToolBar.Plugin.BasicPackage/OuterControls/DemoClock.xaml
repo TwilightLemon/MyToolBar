@@ -1,4 +1,4 @@
-﻿<base:OuterControlBase x:Class="MyToolBar.OuterControls.DemoClock"
+﻿<base:OuterControlBase x:Class="MyToolBar.Plugin.BasicPackage.OuterControls.DemoClock"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,24 +22,49 @@ namespace MyToolBar.Views.Items
     /// <summary>
     /// CapsuleSettingItem.xaml 的交互逻辑
     /// </summary>
-    public partial class CapsuleSettingItem : ItemBase
+    public partial class CapsuleSettingItem : ItemBase, INotifyPropertyChanged
     {
-        private  IPlugin Plugin;
-        private bool PluginIsEnabled=false;
+        public IPlugin Plugin { get; set; }
+        private  bool _pluginIsEnabled = false;
+        private bool IsMouseLeftButtonDown= false;
+        public bool PluginIsEnabled
+        {
+            get => _pluginIsEnabled;
+            set
+            {
+                _pluginIsEnabled = value;
+                OnPropertyChanged("PluginIsEnabled");
+            }
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
         public event Action<IPlugin,bool> OnIsEnableChanged;
         public CapsuleSettingItem(IPlugin plugin,bool isEnable)
         {
             InitializeComponent();
             this.MouseLeftButtonUp += CapsuleSettingItem_MouseLeftButtonUp;
+            MouseLeftButtonDown += CapsuleSettingItem_MouseLeftButtonDown;
             PluginIsEnabled = isEnable;
             Plugin = plugin;
             DataContext = this;
         }
 
+        private void CapsuleSettingItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            IsMouseLeftButtonDown = true;
+        }
+
         private void CapsuleSettingItem_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            PluginIsEnabled = !PluginIsEnabled;
-            OnIsEnableChanged?.Invoke(Plugin, PluginIsEnabled);
+            if (IsMouseLeftButtonDown)
+            {
+                IsMouseLeftButtonDown = false;
+                PluginIsEnabled = !PluginIsEnabled;
+                OnIsEnableChanged?.Invoke(Plugin, PluginIsEnabled);
+            }
         }
     }
 }

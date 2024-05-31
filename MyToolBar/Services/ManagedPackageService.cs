@@ -60,21 +60,22 @@ public class ManagedPackageService
             NotifyFilter = NotifyFilters.LastWrite,
             EnableRaisingEvents = true
         };
+        _watcher.Changed += _watcher_Created;
         _watcher.Created += _watcher_Created;
         _watcher.Deleted += _watcher_Deleted;
     }
     private DateTime _lastTime=DateTime.MinValue;
     private void _watcher_Deleted(object sender, FileSystemEventArgs e) {
         if(DateTime.Now-_lastTime<TimeSpan.FromSeconds(1)) return;
-        _lastTime=DateTime.Now;
         var m=_managedPkgConfs.Data.FirstOrDefault(kv => kv.Value.FilePath == e.FullPath);
         UnloadFromRegistered(m.Key);
+        _lastTime = DateTime.Now;
     }
 
     private void _watcher_Created(object sender, FileSystemEventArgs e) {
         if (DateTime.Now - _lastTime < TimeSpan.FromSeconds(1)) return;
-        _lastTime = DateTime.Now;
         SyncFromFile(e.FullPath);
+        _lastTime = DateTime.Now;
     }
 
     private void CreateDir()

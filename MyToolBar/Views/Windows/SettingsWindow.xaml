@@ -62,7 +62,7 @@
                       NavigationUIVisibility="Hidden">
                 <ws:Frame.Transition>
                     <ws:SlideFadeTransition Orientation="Vertical"
-                                            Duration="0:0:0.300"
+                                            Duration="0:0:0.200"
                                             Distance="50"/>
                 </ws:Frame.Transition>
             </ws:Frame>

@@ -17,18 +17,12 @@
     <PackageReference Include="NLog" Version="5.3.2" />
     <PackageReference Include="NLog.Extensions.Hosting" Version="5.3.11" />
     <PackageReference Include="System.Drawing.Common" Version="8.0.5" />
-    <PackageReference Include="System.Management" Version="8.0.0" />
+	 <PackageReference Include="System.Management" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MyToolBar.Common\MyToolBar.Common.csproj" />
     <ProjectReference Include="..\MyToolBar.Plugin\MyToolBar.Plugin.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="OpenHardwareMonitorLib">
-      <HintPath>Lib\OpenHardwareMonitorLib.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>

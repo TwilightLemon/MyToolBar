@@ -1,6 +1,4 @@
-﻿using MyToolBar.Func;
-using MyToolBar.PopupWindows.Items;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -11,8 +9,9 @@ using System.Windows.Media.Imaging;
 using MyToolBar.Common.UIBases;
 using MyToolBar.Common.WinApi;
 using MyToolBar.Common;
+using MyToolBar.Plugin.BasicPackage.API;
 
-namespace MyToolBar.PopupWindows
+namespace MyToolBar.Plugin.BasicPackage.PopupWindows
 {
     /// <summary>
     /// ResourceMonitor.xaml 的交互逻辑

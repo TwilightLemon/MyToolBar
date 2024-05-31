@@ -20,7 +20,8 @@ namespace MyToolBar.Common.UIBases
         }
         protected Grid? _Container;
         protected Border? _ViewMask;
-        public virtual void Init() { }
+        public virtual void Install() { }
+        public virtual void Uninstall() { }
         private void CapsuleBase_Initialized(object? sender, EventArgs e)
         {
             Background = GlobalService.CapsuleBackground;

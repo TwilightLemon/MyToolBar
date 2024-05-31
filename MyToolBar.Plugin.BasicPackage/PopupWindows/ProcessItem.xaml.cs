@@ -1,11 +1,11 @@
-﻿using MyToolBar.Func;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using MyToolBar.Common.UIBases;
 using System.Windows.Controls;
+using MyToolBar.Plugin.BasicPackage.API;
 
-namespace MyToolBar.PopupWindows.Items
+namespace MyToolBar.Plugin.BasicPackage.PopupWindows
 {
     /// <summary>
     /// ProcessItem.xaml 的交互逻辑

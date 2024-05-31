@@ -10,7 +10,7 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
     </base:ItemBase.Resources>
     <Grid>
-        <Border x:Name="EnabledMask" Background="{DynamicResource MaskColor}" Visibility="{Binding PluginIsEnabled,Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        <Border x:Name="EnabledMask" CornerRadius="15" Background="{DynamicResource MaskColor}" Visibility="{Binding PluginIsEnabled,Converter={StaticResource BooleanToVisibilityConverter}}"/>
         <TextBlock Margin="20">
             <Run d:Text="Capsule Name" FontSize="22" Text="{Binding Plugin.Name,Mode=OneWay}"/>
             <LineBreak/>

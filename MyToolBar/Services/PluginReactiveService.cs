@@ -53,7 +53,7 @@ namespace MyToolBar.Services
                         var pkg=package.Value.Package;
                         if (pkg.Plugins.FirstOrDefault(p => p.Name == capConf.PluginName) is { Type:PluginType.Capsule} plugin)
                         {
-                            AddCapsule(plugin);
+                            await AddCapsule(plugin,false);
                         }
                     }
                 }
@@ -73,37 +73,48 @@ namespace MyToolBar.Services
             if (plugin.GetMainElement() is OuterControlBase oc)
             {
                 Debug.Assert(plugin.AcPackage != null);
-                _installedConf.Data.OutterControl = new(plugin.AcPackage.PackageName, plugin.Name);
                 OuterControl = plugin;
                 OuterControlChanged?.Invoke(oc);
                 if (saveConf)
+                {
+                    _installedConf.Data.OutterControl = new(plugin.AcPackage.PackageName, plugin.Name);
                     await _installedConf.Save();
+                }
             }
             return true;
         }
-        public bool AddCapsule(IPlugin plugin) {
+        public async Task<bool> AddCapsule(IPlugin plugin,bool saveConf=true) {
             //不是Capsule or 已存在
             if (plugin.Type != PluginType.Capsule || Capsules.Any(p => p.Key.Name == plugin.Name))
                 return false;
 
             if (plugin.GetMainElement() is CapsuleBase cap)
             {
-                cap.Init();
+                cap.Install();
                 Capsules.Add(plugin, cap);
                 CapsuleAdded?.Invoke(cap);
+                if (saveConf)
+                {
+                    _installedConf.Data.Capsules.Add(new(plugin.AcPackage.PackageName, plugin.Name));
+                    await _installedConf.Save();
+                }
                 return true;
             }
             return false;
         }
-        public bool RemoveCapsule(IPlugin plugin)
+        public async Task<bool> RemoveCapsule(IPlugin plugin)
         {
             if (plugin.Type != PluginType.Capsule)
                 return false;
 
-            if(Capsules.FirstOrDefault(p => p.Key.Name == plugin.Name) is var cap)
+            if(Capsules.FirstOrDefault(p => p.Key.Name == plugin.Name) is var cap &&
+                _installedConf.Data.Capsules.FirstOrDefault(p=>
+                p.PluginName==plugin.Name&&p.PackageName==plugin.AcPackage.PackageName) is var conf)
             {
+                _installedConf.Data.Capsules.Remove(conf);
                 CapsuleRemoved?.Invoke(cap.Key);
                 Capsules.Remove(cap.Key);
+                await _installedConf.Save();
                 return true;
             }
             return false;

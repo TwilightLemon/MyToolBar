@@ -23,6 +23,13 @@ namespace MyToolBar.Common.Func
             //接收客户端的 Socket请求
             socket.BeginAccept(OnAccept, socket);
         }
+        public void Stop()
+        {
+            if (socket != null )
+            {
+                socket.Close();
+            }
+        }
         private void OnAccept(IAsyncResult async)
         {
             var serverSocket = async.AsyncState as Socket;
@@ -43,9 +50,6 @@ namespace MyToolBar.Common.Func
             }
             catch
             {
-                socket.Close();
-                socket.Dispose();
-                Start();
                 return;
             }
         }

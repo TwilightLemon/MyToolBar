@@ -19,7 +19,10 @@ public class SettingsMgr<T> where T : class
     public T Data { get; set; }
     [JsonIgnore]
     private FileSystemWatcher _watcher;
-    public event Action<T> OnDataChanged;
+    /// <summary>
+    /// 监测到配置文件改变时触发，之前不会自动更新数据
+    /// </summary>
+    public event Action OnDataChanged;
     public SettingsMgr() { }
     public SettingsMgr(string Sign, string pkgName)
     {
@@ -61,9 +64,9 @@ public class SettingsMgr<T> where T : class
     {
         if (DateTime.Now - _lastUpdateTime > TimeSpan.FromSeconds(1))
         {
-            _lastUpdateTime = DateTime.Now;
             Debug.WriteLine(Sign + "   changed!!");
-            OnDataChanged?.Invoke(Data);
+            OnDataChanged?.Invoke();
+            _lastUpdateTime = DateTime.Now;
         }
         else
         {
