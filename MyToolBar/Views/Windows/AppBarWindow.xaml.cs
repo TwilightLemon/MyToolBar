@@ -156,36 +156,37 @@ namespace MyToolBar.Views.Windows
         {
             //全屏样式  整体变暗
             CurrentWindowStyle = 1;
-            ViewModel.WindowAccentCompositorOpacity = 0.95f;
 
-
-
-            SolidColorBrush fore;
+            SolidColorBrush foreground;
             if (IsDarkMode)
             {
+                ViewModel.WindowAccentGradientColor = Color.FromScRgb(0.95f, 0, 0, 0);
                 OutterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(20, 255, 255, 255));
-                fore = new SolidColorBrush(Color.FromArgb(240, 252, 252, 252));
+                foreground = new SolidColorBrush(Color.FromArgb(240, 252, 252, 252));
             }
             else
             {
+                ViewModel.WindowAccentGradientColor = Color.FromScRgb(0.95f, 1, 1, 1);
                 OutterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(20, 0, 0, 0));
-                fore = new SolidColorBrush(Color.FromArgb(240, 3, 3, 3));
+                foreground = new SolidColorBrush(Color.FromArgb(240, 3, 3, 3));
             }
-            oc?.MaxStyleAct?.Invoke(true, fore);
+            oc?.MaxStyleAct?.Invoke(true, foreground);
         }
 
         private void NormalWindStyle()
         {
             CurrentWindowStyle = 0;
-            ViewModel.WindowAccentCompositorOpacity = 0.6f;
+
             Brush? foreground = null;
             if (IsDarkMode)
             {
+                ViewModel.WindowAccentGradientColor = Color.FromScRgb(0.6f, 0, 0, 0);
                 OutterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(120, 255, 255, 255));
                 foreground = OuterControlNormalDarkModeForeColor;
             }
             else
             {
+                ViewModel.WindowAccentGradientColor = Color.FromScRgb(0.6f, 1, 1, 1);
                 OutterFuncStatus.SetResourceReference(BackgroundProperty, "MaskColor");
             }
 

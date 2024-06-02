@@ -16,7 +16,7 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
     /// <summary>
     /// ResourceMonitor.xaml 的交互逻辑
     /// </summary>
-    public partial class ResourceMonitor : PopWindowBase
+    public partial class ResourceMonitor : PopupWindowBase
     {
         public ResourceMonitor()
         {

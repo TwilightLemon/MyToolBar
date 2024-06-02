@@ -12,7 +12,7 @@ namespace MyToolBar.Common.UIBases
     /// <summary>
     /// 为可交互Item提供基类 ViewMask 基本视觉样式
     /// </summary>
-    public class ItemBase:UserControl
+    public class ItemBase : UserControl
     {
         public ItemBase()
         {
@@ -22,16 +22,17 @@ namespace MyToolBar.Common.UIBases
         protected Border? _ViewMask;
         private void ItemBase_Initialized(object? sender, EventArgs e)
         {
-            if(Content is Grid g)
+            if (Content is Grid g)
             {
                 _Container = g;
                 _ViewMask = new Border()
                 {
-                    CornerRadius=new CornerRadius(15),
-                    Opacity=0
+                    CornerRadius = new CornerRadius(15),
+                    Opacity = 0
                 };
                 _ViewMask.SetResourceReference(BackgroundProperty, "MaskColor");
-                MouseEnter += delegate {
+                MouseEnter += delegate
+                {
                     _ViewMask.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 0.5, TimeSpan.FromMilliseconds(300)));
                 };
                 MouseLeave += delegate
