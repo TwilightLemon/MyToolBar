@@ -25,7 +25,7 @@ namespace MyToolBar.Common.UIBases
         private void OuterControlBase_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
             //初始化前景色
-            if (GlobalService.IsDarkMode && GlobalService.CurrentWindowStyle == 0)
+            if (GlobalService.IsDarkMode&&GlobalService.CurrentWindowStyle==0)
                 // DarkMode下 OutterControl区域高亮显示
                 Foreground = GlobalService.OuterControlNormalDarkModeForeColor;
             else
@@ -43,7 +43,7 @@ namespace MyToolBar.Common.UIBases
         /// <summary>
         /// 响应最大化样式 Brush为推荐的前景色
         /// </summary>
-        public Action<bool, Brush?>? MaxStyleAct;
+        public Action<bool,Brush>? MaxStyleAct;
 
         /// <summary>
         /// 指示是否需要显示OutterControl

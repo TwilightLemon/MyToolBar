@@ -1,4 +1,4 @@
-﻿<base:PopupWindowBase  x:Class="MyToolBar.PopupWindows.MainTitleMeum"
+﻿<base:PopWindowBase  x:Class="MyToolBar.PopupWindows.MainTitleMeum"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -8,4 +8,4 @@
         Title="MainTitleMeum" Height="Auto" Width="200">
     <WrapPanel x:Name="ItemPanel" ItemHeight="40" ItemWidth="200">
     </WrapPanel>
-</base:PopupWindowBase>
+</base:PopWindowBase>

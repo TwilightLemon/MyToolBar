@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
-	  <PackageReference Include="EleCho.WpfSuite" Version="0.3.3" />
+	  <PackageReference Include="EleCho.WpfSuite" Version="0.3.1" />
   </ItemGroup>
 
 </Project>
