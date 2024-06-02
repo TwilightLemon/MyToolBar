@@ -13,7 +13,7 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
     /// <summary>
     /// WeatherBox.xaml 的交互逻辑
     /// </summary>
-    public partial class WeatherBox : PopupWindowBase
+    public partial class WeatherBox : PopWindowBase
     {
         public WeatherBox()
         {
@@ -31,14 +31,12 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
         {
             Point end=e.GetPosition(this);
             //向右滑动->打开SearchPage
-            if (Math.Abs(end.Y - _touchStart.Y) > 5)
-                return;
-            if (end.X - _touchStart.X > 5 && !_AtSearchPage)
+            if (Math.Abs(end.Y - _touchStart.Y) > 5) return;
+            if (end.X - _touchStart.X > 5&&!_AtSearchPage)
             {
                 _AtSearchPage = true;
                 (Resources["PageToSearch"] as Storyboard).Begin();
-            }
-            else if (_touchStart.X - end.X > 5 && _AtSearchPage)
+            }else if(_touchStart.X-end.X>5&&_AtSearchPage)
             {
                 _AtSearchPage = false;
                 (Resources["PageBack"] as Storyboard).Begin();
@@ -47,26 +45,26 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
 
 
         private WeatherCache cache = null;
-        public async Task LoadData(WeatherApi.City city, WeatherCache dat = null)
+        public async Task LoadData(WeatherApi.City city,WeatherCache dat=null)
         {
             //Now Weather:
             cache ??= dat;
             var wdata = await dat.RequstCache(city);
             Now_Location.Tag = wdata.CurrentWeather.link;
-            Now_Location.Text = wdata.City.Area + " " + wdata.City.CityName;
-            Now_Temp.Text = wdata.CurrentWeather.temp + "℃";
+            Now_Location.Text = wdata.City.Area+" "+wdata.City.CityName;
+            Now_Temp.Text = wdata.CurrentWeather.temp+"℃";
             Now_desc.Text = wdata.CurrentWeather.status;
-            Now_icon.Background = new ImageBrush(new BitmapImage(new Uri(WeatherApi.GetIcon(wdata.CurrentWeather.code))));
+            Now_icon.Background= new ImageBrush(new BitmapImage(new Uri(WeatherApi.GetIcon(wdata.CurrentWeather.code))));
             WindDir.Text = wdata.CurrentWeather.windDir;
-            WindScale.Text = "Level " + wdata.CurrentWeather.windScale;
-            Humidity.Text = wdata.CurrentWeather.humidity + "%";
-            vis.Text = wdata.CurrentWeather.vis + " km";
-            FeelsLike.Text = wdata.CurrentWeather.feel + "℃";
-            UpdateTime.Text = "Updated at " + wdata.UpdateTime.ToString("HH:mm");
-            AQI_text.Text = "AQI " + wdata.CurrentAir.aqi;
+            WindScale.Text = "Level "+wdata.CurrentWeather.windScale;
+            Humidity.Text = wdata.CurrentWeather.humidity+"%";
+            vis.Text = wdata.CurrentWeather.vis+" km";
+            FeelsLike.Text = wdata.CurrentWeather.feel+"℃";
+            UpdateTime.Text="Updated at "+wdata.UpdateTime.ToString("HH:mm");
+            AQI_text.Text="AQI "+wdata.CurrentAir.aqi;
             AQI_text.ToolTip = wdata.CurrentAir.sug;
             AQI_Viewer.Background = new SolidColorBrush(WeatherApi.GetAirLevelColor(wdata.CurrentAir.level));
-
+            
             Days.Children.Clear();
             int averageTemp = 0;
             var data= wdata.DailyForecast;
@@ -75,29 +73,27 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
             int max = int.MinValue, min =int.MaxValue;
             foreach (var item in data)
             {
-                if (item.temp_max > max)
-                    max = item.temp_max;
-                if (item.temp_min < min)
-                    min = item.temp_min;
+                if (item.temp_max > max) max = item.temp_max;
+                if (item.temp_min < min) min = item.temp_min;
             }
-            for (int i = 0; i < 5; i++)
+            for(int i=0;i<5;i++)
             {
-                averageTemp += (data[i].temp_max + data[i].temp_min) / 2;
+                averageTemp += (data[i].temp_max+data[i].temp_min)/2;
                 Days.Children.Add(new WeatherDayItem(data[i], airData[i]));
             }
             averageTemp /= 5;
             double offset_max = 25.0 / (max-averageTemp+1),
                 offset_min=25.0/(averageTemp-min+1);
             DateTime date= DateTime.Now;
-            foreach (WeatherDayItem item in Days.Children)
+            foreach(WeatherDayItem item in Days.Children)
             {
                 //0:230 100 ,100:180 50
                 var margin = item.TempLine.Margin;
-                margin.Left = 230 - (item.DailyData.temp_max - averageTemp) * offset_max;
-                margin.Right = 50 + (averageTemp - item.DailyData.temp_min) * offset_min;
+                margin.Left=230-(item.DailyData.temp_max-averageTemp)*offset_max;
+                margin.Right = 50+ ( averageTemp- item.DailyData.temp_min) * offset_min;
                 item.TempLine.Margin = margin;
                 item.Day.Text = date.DayOfWeek.ToString()[..3];
-                date = date.AddDays(1);
+                date=date.AddDays(1);
             }
             //加载Favorite
             LoadFavorList();
@@ -165,8 +161,8 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
         private async void CityItem_CitySelected(object? sender, WeatherApi.City e)
         {
             SetLoadingStatus(true);
-            await LoadData(e, cache);
-            _AtSearchPage = false;
+            await LoadData(e,cache);
+            _AtSearchPage= false;
             (Resources["PageBack"] as Storyboard).Begin();
             cache.SaveCache();
             SetLoadingStatus(false);
@@ -174,7 +170,7 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
 
         private void Now_Location_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            Process.Start("explorer", Now_Location.Tag.ToString());
+            Process.Start("explorer",Now_Location.Tag.ToString());
         }
 
         private async void SearchCityBox_PreviewKeyDown(object sender, KeyEventArgs e)

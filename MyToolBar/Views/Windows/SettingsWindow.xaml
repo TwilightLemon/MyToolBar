@@ -11,17 +11,11 @@
         mc:Ignorable="d" ResizeMode="CanMinimize"
         Title="SettingsWindow" Height="550" Width="800"
         Foreground="{DynamicResource ForeColor}"
-        Background="{DynamicResource MaskColor}"
-        ws:WindowOption.Backdrop="Acrylic">
-
+        Background="{DynamicResource MaskColor}">
     <i:Interaction.Behaviors>
+        <mb:BlurWindowBehavior/>
         <mb:WindowDragMoveBehavior/>
     </i:Interaction.Behaviors>
-
-    <WindowChrome.WindowChrome>
-        <WindowChrome GlassFrameThickness="-1"/>
-    </WindowChrome.WindowChrome>
-    
     <Grid>
         <DockPanel>
             <DockPanel DockPanel.Dock="Left"
