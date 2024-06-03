@@ -1,7 +1,7 @@
 # MyToolBar (Beta)
 [![LICENSE](https://img.shields.io/badge/license-GPL%20v3.0-blue.svg?style=flat-square)](https://github.com/TwilightLemon/MyToolBar/blob/master/LICENSE)  
 ### Platform
-Run on Windows 10~11  
+Run on Windows 10 1803~11  
 Powered by .NET 8 on WPF  
 
 目前此App处于测试阶段，功能可能不稳定，作者正在努力提高可定制性。
@@ -47,6 +47,5 @@ Powered by .NET 8 on WPF
 本应用由 [Twilight./Lemon(https://twlm.space)(QQ:2728578956)](https://twlm.space) 开发，转载和使用请保留原仓库地址和版权信息
 使用和传播请遵守GPL协议，详见LICENSE
 
-硬件监测SDK使用开源库：[OpenHardwareMonitor](https://github.com/openhardwaremonitor/openhardwaremonitor)  
 App内部分矢量图标来自: [iconfont](https://www.iconfont.cn)  
 Weather Api及Icon来自： [和风天气](https://www.qweather.com)

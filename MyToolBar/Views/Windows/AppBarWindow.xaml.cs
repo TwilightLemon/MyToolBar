@@ -13,6 +13,7 @@ using MyToolBar.Services;
 using MyToolBar.ViewModels;
 using MyToolBar.Common.UIBases;
 using MyToolBar.Plugin;
+using System.Windows.Documents;
 
 namespace MyToolBar.Views.Windows
 {
@@ -243,11 +244,17 @@ namespace MyToolBar.Views.Windows
 
         #region Left Part
 
+        bool _isMainMenuOpen = false;
         private void MainMenuButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            var t = new MainTitleMenu();
-            t.Left = 0;
-            t.Show();
+            if (!_isMainMenuOpen)
+            {
+                _isMainMenuOpen = true;
+                var t = new MainTitleMenu();
+                t.Closing += delegate { _isMainMenuOpen = false; };
+                t.Left = 0;
+                t.Show();
+            }
         }
 
         private void TitleView_TouchDown(object sender, TouchEventArgs e)

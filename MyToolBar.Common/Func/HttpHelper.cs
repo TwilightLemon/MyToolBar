@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MyToolBar.Plugin.BasicPackage.API
+namespace MyToolBar.Common.Func
 {
-    internal static class HttpHelper
+    public static class HttpHelper
     {
         public static async Task<string> Get(string url,bool useGzip=true)
         {

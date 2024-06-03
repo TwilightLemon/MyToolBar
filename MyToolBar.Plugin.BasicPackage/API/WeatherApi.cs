@@ -7,6 +7,7 @@ using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using MyToolBar.Common.Func;
 using System.Windows;
 using System.Windows.Media;
 
@@ -71,6 +72,8 @@ namespace MyToolBar.Plugin.BasicPackage.API
         private static string key,
             lang = "en",
             host;
+
+        [Obsolete]
         public static async Task<City?> GetPositionByIpAsync()
         {
             string data = await HttpHelper.Get("https://www.useragentinfo.com", false);
@@ -88,6 +91,32 @@ namespace MyToolBar.Plugin.BasicPackage.API
             }
             return null;
         }
+        public static async Task<(double x,double y)?> GetPosition()
+        {
+            try
+            {
+                var locator = new Windows.Devices.Geolocation.Geolocator();
+                var location = await locator.GetGeopositionAsync();
+                var position = location.Coordinate.Point.Position;
+                return (position.Latitude, position.Longitude);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        public static async Task<City?> GetCityByPositionAsync()
+        {
+            if (await GetPosition() is (double x, double y))
+            {
+
+                string url = $"https://geoapi.qweather.com/v2/city/lookup?location={Math.Round(y,2)},{Math.Round(x,2)}&key={key}&lang={lang}";
+                var result = await CityLookUpAsync(url);
+                if (result.Count > 0)
+                    return result.First();
+            }
+            return null;
+        }
         public static async Task<bool> VerifyCityIdAsync(this City city)
         {
             string c1 = city.CityName, c2 = city.Area;
@@ -97,26 +126,25 @@ namespace MyToolBar.Plugin.BasicPackage.API
             }
 
             string url = $"https://geoapi.qweather.com/v2/city/lookup?location={HttpUtility.UrlEncode(c2)}&adm={HttpUtility.UrlEncode(c1)}&key={key}&lang={lang}";
-            string data=await HttpHelper.Get(url);
-            var obj= JsonNode.Parse(data);
-            if (obj != null && obj["code"].ToString() == "200")
+            var result= await CityLookUpAsync(url);
+            if(result.Count>0)
             {
-                JsonArray cities = obj["location"].AsArray();
-                if (cities.Count() > 0)
-                {
-                    var ci = cities[0];
-                    city.Area = ci["name"].ToString();
-                    city.CityName = ci["adm2"].ToString();
-                    city.Province = ci["adm1"].ToString();
-                    city.Id = ci["id"].ToString();
-                    return true;
-                }
+                var c=result.First();
+                city.Id = c.Id;
+                city.Area = c.Area;
+                city.CityName = c.CityName;
+                city.Province = c.Province;
+                return true;
             }
             return false;
         }
         public static async Task<List<City>> SearchCitiesAsync(string keyword)
         {
             string url = $"https://geoapi.qweather.com/v2/city/lookup?location={HttpUtility.UrlEncode(keyword)}&key={key}&lang={lang}";
+            return await CityLookUpAsync(url);
+        }
+        private static async Task<List<City>> CityLookUpAsync(string url)
+        {
             string data = await HttpHelper.Get(url);
             var obj = JsonNode.Parse(data);
             var list=new List<City>();

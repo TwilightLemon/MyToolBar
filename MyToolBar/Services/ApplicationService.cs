@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Documents;
+using System.Windows.Navigation;
+using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MyToolBar.Common;
 using MyToolBar.Views.Windows;
+using System.Diagnostics;
 
 namespace MyToolBar.Services
 {
@@ -32,7 +36,12 @@ namespace MyToolBar.Services
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
             Settings.LoadPath();
-             _serviceProvider.GetRequiredService<ManagedPackageService>().Load();
+            EventManager.RegisterClassHandler(typeof(Hyperlink), Hyperlink.RequestNavigateEvent, new RequestNavigateEventHandler((sender, e) =>
+            {
+                Process.Start("explorer.exe", e.Uri.AbsoluteUri);
+                e.Handled = true;
+            }));
+            _serviceProvider.GetRequiredService<ManagedPackageService>().Load();
             var mainWindow = _serviceProvider.GetRequiredService<AppBarWindow>();
             mainWindow.Show();
 

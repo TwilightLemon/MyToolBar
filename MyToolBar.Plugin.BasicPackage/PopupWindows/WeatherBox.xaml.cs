@@ -200,8 +200,8 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
             try
             {
                 SearchCity_Result.Children.Clear();
-                var city = await WeatherApi.GetPositionByIpAsync();
-                if (await city.VerifyCityIdAsync())
+                var city = await WeatherApi.GetCityByPositionAsync();
+                if (city!=null)
                 {
                     var item = new WeatherCityItem()
                     {

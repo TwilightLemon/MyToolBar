@@ -86,10 +86,10 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
                 cache ??=await WeatherCache.LoadCache();
 
             //初次使用或默认定位城市
-            if (cache.isEmpty|| cache.UsingIpAsDefault)
-                cache.DefaultCity = await WeatherApi.GetPositionByIpAsync();
+            if (cache.isEmpty || cache.UsingIpAsDefault)
+                cache.DefaultCity = await WeatherApi.GetCityByPositionAsync();
             
-            if (cache.DefaultCity.Id!=null||await cache.DefaultCity.VerifyCityIdAsync())
+            if (cache.DefaultCity!=null)
             {
                 var data=await cache.RequstCache(cache.DefaultCity);
                 var wdata = data.CurrentWeather;

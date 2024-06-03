@@ -11,9 +11,12 @@
       d:Foreground="Black"
       Title="AboutPage">
 
-    <ws:StackPanel Margin="28 12 28 28">
-        <TextBlock Text="About"
+    <ws:ScrollViewer Margin="28 12 28 28" PanningMode="VerticalOnly" VerticalScrollBarVisibility="Hidden"  ws:StylusTouchDevice.Simulate="True">
+        <ws:StackPanel>
+            <TextBlock Text="About"
                    FontSize="22"
                    Margin="0 0 0 12"/>
-    </ws:StackPanel>
+            <Grid x:Name="ContentGrid"/>
+        </ws:StackPanel>
+    </ws:ScrollViewer>
 </Page>

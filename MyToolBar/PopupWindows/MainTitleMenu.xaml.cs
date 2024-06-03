@@ -40,12 +40,11 @@ namespace MyToolBar.PopupWindows
 
             this.Height = ItemPanel.Children.Count * 40;
         }
-
         private void MeumItem_Settings(object sender, RoutedEventArgs e)
         {
             App.Host.Services
                 .GetRequiredService<SettingsWindow>()
-                .Show();
+                .ShowDialog();
         }
         private void MeumItem_Exit(object sender, RoutedEventArgs e)
         {
