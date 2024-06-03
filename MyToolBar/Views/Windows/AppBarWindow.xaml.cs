@@ -25,16 +25,13 @@ namespace MyToolBar.Views.Windows
         private PenControlWindow pcw;
 
         private readonly ThemeResourceService _themeResourceService;
-        private readonly ManagedPackageService _mPackageService;
         private readonly PluginReactiveService _pluginReactiveService;
 
         public AppBarWindow(
             PluginReactiveService pluginReactiveService,
-            ManagedPackageService mPackageService,
             ThemeResourceService themeResourceService,
             AppBarViewModel viewModel)
         {
-            _mPackageService = mPackageService;
             _pluginReactiveService = pluginReactiveService;
             _themeResourceService = themeResourceService;
 
@@ -62,16 +59,22 @@ namespace MyToolBar.Views.Windows
             GlobalTimer.Start();
             #endregion
 
-
             pcw = new PenControlWindow();
             pcw.Show();
 
+            #region Load Plugin
             _pluginReactiveService.OuterControlChanged += _pluginReactiveService_OuterControlChanged;
             _pluginReactiveService.CapsuleRemoved += _pluginReactiveService_CapsuleRemoved;
             _pluginReactiveService.CapsuleAdded += _pluginReactiveService_CapsuleAdded;
             await _pluginReactiveService.Load();
+            #endregion
         }
 
+        /// <summary>
+        /// 响应OuterControl显示/隐藏动画
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Oc_IsShownChanged(object? sender, bool e) => ShowOutter(e);
 
         private void _pluginReactiveService_CapsuleRemoved(IPlugin obj)
@@ -151,14 +154,16 @@ namespace MyToolBar.Views.Windows
         #endregion
 
         #region OutterFuncStatus & WindowStyle
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            AppBarFunctions.SetAppBar(this, ABEdge.None);
+        }
 
         private void MaxWindStyle()
         {
             //全屏样式  整体变暗
             CurrentWindowStyle = 1;
             ViewModel.WindowAccentCompositorOpacity = 0.95f;
-
-
 
             SolidColorBrush fore;
             if (IsDarkMode)
@@ -236,15 +241,11 @@ namespace MyToolBar.Views.Windows
 
         #endregion
 
-        #region Click & Touch Control
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            AppBarFunctions.SetAppBar(this, ABEdge.None);
-        }
+        #region Left Part
 
-        private void CloseButton_MouseDown(object sender, MouseButtonEventArgs e)
+        private void MainMenuButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            var t = new MainTitleMeum();
+            var t = new MainTitleMenu();
             t.Left = 0;
             t.Show();
         }

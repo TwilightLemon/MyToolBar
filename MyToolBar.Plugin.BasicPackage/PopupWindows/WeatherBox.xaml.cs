@@ -13,7 +13,7 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
     /// <summary>
     /// WeatherBox.xaml 的交互逻辑
     /// </summary>
-    public partial class WeatherBox : PopWindowBase
+    public partial class WeatherBox : PopupWindowBase
     {
         public WeatherBox()
         {

@@ -1,4 +1,4 @@
-﻿<base:PopWindowBase x:Class="MyToolBar.Plugin.BasicPackage.PopupWindows.WeatherBox"
+﻿<base:PopupWindowBase x:Class="MyToolBar.Plugin.BasicPackage.PopupWindows.WeatherBox"
                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -150,4 +150,4 @@
             </WrapPanel>
         </ws:ScrollViewer>
     </Grid>
-</base:PopWindowBase>
+</base:PopupWindowBase>

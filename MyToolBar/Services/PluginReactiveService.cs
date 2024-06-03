@@ -34,7 +34,7 @@ namespace MyToolBar.Services
             //加载OuterControl
             if(_installedConf.Data.OutterControl is { } conf)
             {
-                if(_managedPackageService.ManagedPkg.FirstOrDefault(p=>p.Key==conf.PackageName) is { } package)
+                if(_managedPackageService.ManagedPkg.FirstOrDefault(p=>p.Key==conf.PackageName&&p.Value.IsEnabled) is {Key:not null,Value: not null} package)
                 {
                     var pkg=package.Value.Package;
                     if (pkg.Plugins.FirstOrDefault(p => p.Name == conf.PluginName) is {Type:PluginType.OuterControl} plugin)
@@ -48,7 +48,7 @@ namespace MyToolBar.Services
             {
                 foreach(var capConf in _installedConf.Data.Capsules)
                 {
-                    if(_managedPackageService.ManagedPkg.FirstOrDefault(p=>p.Key==capConf.PackageName) is { } package)
+                    if(_managedPackageService.ManagedPkg.FirstOrDefault(p=>p.Key==capConf.PackageName && p.Value.IsEnabled) is { Key: not null, Value: not null } package)
                     {
                         var pkg=package.Value.Package;
                         if (pkg.Plugins.FirstOrDefault(p => p.Name == capConf.PluginName) is { Type:PluginType.Capsule} plugin)

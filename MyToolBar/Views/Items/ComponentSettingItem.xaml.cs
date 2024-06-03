@@ -32,6 +32,7 @@ namespace MyToolBar.Views.Items
             DataContext = package;
             _managedPackageService = managedPackageService;
             Package = package;
+            EnableCheckBox.IsChecked=managedPackageService.ManagedPkg.Any(p=>p.Key==package.PackageName&&p.Value.IsEnabled);
             Init();
         }
         private void Init() {
@@ -44,13 +45,13 @@ namespace MyToolBar.Views.Items
             }
         }
 
-        private async void CheckBox_Checked(object sender, RoutedEventArgs e)
+        private void CheckBox_Click(object sender, RoutedEventArgs e)
         {
             if (Package == null)
                 return;
             bool isEnable=EnableCheckBox.IsChecked==true;
             //if the package is already enabled, return
-            if (_managedPackageService.ManagedPkg.ContainsKey(Package.PackageName) == isEnable)
+            if (_managedPackageService.ManagedPkg.Any(p=>p.Key==Package.PackageName&&p.Value.IsEnabled==isEnable))
                 return;
             if (isEnable)
             {

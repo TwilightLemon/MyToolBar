@@ -16,7 +16,7 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
     /// <summary>
     /// ResourceMonitor.xaml 的交互逻辑
     /// </summary>
-    public partial class ResourceMonitor : PopWindowBase
+    public partial class ResourceMonitor : PopupWindowBase
     {
         public ResourceMonitor()
         {
@@ -40,7 +40,7 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
                     foreach (var p in processes)
                     {
                         var item = new ProcessItem(p);
-                        item.MouseLeftButtonUp += ProcItem_Clicked;
+                        item.Click += ProcItem_Clicked;
                         ProcessList.Children.Add(item);
                     }
                 }
@@ -48,7 +48,7 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
         }
         private Process? SelectedProcess = null;
         private Thickness? SeletedItemPos = null;
-        private void ProcItem_Clicked(object sender, MouseButtonEventArgs e)
+        private void ProcItem_Clicked(object sender, RoutedEventArgs e)
         {
             ProcessItem item = (ProcessItem)sender;
 

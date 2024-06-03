@@ -18,7 +18,7 @@ public class ManagedPackageService
                                        _packageSettingsName=typeof(ManagedPackageService).FullName;
     private static readonly string _packageDir=Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"Plugins");
     private readonly SettingsMgr< Dictionary<string,ManagedPkgConf>> _managedPkgConfs=new(_packageSettingsSign,_packageSettingsName);
-    private Dictionary<string,ManagedPackage> _managedPkg=[];
+    private readonly Dictionary<string,ManagedPackage> _managedPkg=[];
     private FileSystemWatcher? _watcher;
     private bool _isLoaded=false;
     public Dictionary<string,ManagedPackage> ManagedPkg=>_managedPkg;
@@ -138,13 +138,14 @@ public class ManagedPackageService
             return;
         }
         //检查配置文件中是否启用 不存在则默认启用并写入配置文件
+        //不启用也要先加载程序集 读取配置信息之后卸载
+        bool isEnable=true;
         if (_managedPkgConfs.Data.TryGetValue(pkgObj.PackageName, out var conf))
         {
             if (!conf.IsEnabled)
             {
                 //不启用
-                loadContext.Unload();
-                return;
+                isEnable=false;
             }
         }
         else
@@ -153,21 +154,18 @@ public class ManagedPackageService
             _managedPkgConfs.Data.Add(pkgObj.PackageName, new ManagedPkgConf { PackageName = pkgObj.PackageName, IsEnabled = true,FilePath=file });
         }
         //添加到托管包列表
-        _managedPkg.Add(pkgObj.PackageName, new ManagedPackage(loadContext, pkgObj));
+        _managedPkg.Add(pkgObj.PackageName, new ManagedPackage(loadContext, pkgObj,isEnable));
         if(pkgObj.Plugins!=null)
         {
             foreach (var plugin in pkgObj.Plugins)
             {
                 //设置插件的包源
                 plugin.AcPackage = pkgObj;
-                /*
-                //添加托管的SettingsSignKeys
-                if (plugin.SettingsSignKeys != null)
-                {
-                    ManagedSettingsSigns.AddRange(plugin.SettingsSignKeys);
-                }
-                */
             }
+        }
+        if(!isEnable)
+        {
+            loadContext.Unload();
         }
     }
     
@@ -176,8 +174,12 @@ public class ManagedPackageService
         if(_managedPkgConfs.Data.TryGetValue(packageName,out var conf))
         {
             conf.IsEnabled=true;
-            SyncFromFile(conf.FilePath);
-            await _managedPkgConfs.Save();
+            if(_managedPkg.TryGetValue(packageName,out var managedPkg))
+            {
+                managedPkg.IsEnabled=true;
+                _managedPkg[packageName]=managedPkg;
+                await _managedPkgConfs.Save();
+            }
         }
     }
     /// <summary>
@@ -189,7 +191,8 @@ public class ManagedPackageService
         if (_managedPkg.TryGetValue(packageName, out var managedPkg))
         {
             managedPkg.LoadContext.Unload();
-            _managedPkg.Remove(packageName);
+            managedPkg.IsEnabled= false;
+            _managedPkg[packageName] = managedPkg;
             _managedPkgConfs.Data[packageName].IsEnabled = false;
             await _managedPkgConfs.Save();
         }
@@ -198,12 +201,12 @@ public class ManagedPackageService
 /// <summary>
 /// 成功加载的托管包 包含已加载的程序集和包对象
 /// </summary>
-public class ManagedPackage(AssemblyLoadContext loadContext, IPackage package)
+public class ManagedPackage(AssemblyLoadContext loadContext, IPackage package,bool isEnable=true)
 {
     public readonly IPackage Package=package;
     public readonly AssemblyLoadContext LoadContext=loadContext;
     public string PackageName => Package.PackageName;
-    public bool IsEnabled { get; set; } = true;
+    public bool IsEnabled { get; set; } = isEnable;
 }
 /// <summary>
 /// 写入配置文件的托管包

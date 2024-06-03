@@ -31,21 +31,33 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
                 else Favor_icon.Fill = null;
             }
         }
+
+        private bool IsMousePressed= false;
         public WeatherCityItem()
         {
             InitializeComponent();
+            EnableClickEvent = false;
+            MouseLeftButtonDown += delegate
+            {
+                IsMousePressed = true;
+            };
             CityName.MouseLeftButtonUp += delegate
             {
-                CitySelected?.Invoke(this, city);
+                if (IsMousePressed)
+                    CitySelected?.Invoke(this, city);
+                IsMousePressed= false;
             };
             _ViewMask.MouseLeftButtonUp += delegate
             {
-                CitySelected?.Invoke(this, city);
+                if (IsMousePressed)
+                    CitySelected?.Invoke(this, city);
+                IsMousePressed = false;
             };
             AddFavorBtn.MouseLeftButtonUp += delegate
             {
                 AddFavorCity?.Invoke(this, city);
             };
+            //触摸长按 or 鼠标右击
             MouseRightButtonUp += delegate
             {
                 SetAsDefaultCity?.Invoke(this, city);

@@ -8,12 +8,11 @@ using MyToolBar.Common.Behaviors;
 
 namespace MyToolBar.Common.UIBases
 {
-    public class PopWindowBase:Window
+    public class PopupWindowBase:Window
     {
-        public PopWindowBase()
+        public PopupWindowBase()
         {
             Top = 0;
-            this.IsEnabled = false;
 
             //Set basic style for popup window
             SetResourceReference(BackgroundProperty,"MaskColor");
@@ -48,7 +47,6 @@ namespace MyToolBar.Common.UIBases
         {
             var da = new DoubleAnimation(0, 35, TimeSpan.FromMilliseconds(200));
             da.EasingFunction = new CubicEase();
-            da.Completed += (s, e) => this.IsEnabled = true;
             BeginAnimation(TopProperty, da);
             this.ContentRendered -= PopWindowBase_ContentRendered;
         }
@@ -62,7 +60,6 @@ namespace MyToolBar.Common.UIBases
 
         private void PopWindowBase_Deactivated(object? sender, EventArgs e)
         {
-            this.IsEnabled = false;
             var da = new DoubleAnimation(this.Top, -1 * this.Height, TimeSpan.FromMilliseconds(300));
             da.EasingFunction = new CubicEase();
             da.Completed += Da_Completed;

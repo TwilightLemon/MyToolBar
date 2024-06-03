@@ -26,7 +26,6 @@ namespace MyToolBar.Views.Items
     {
         public IPlugin Plugin { get; set; }
         private  bool _pluginIsEnabled = false;
-        private bool IsMouseLeftButtonDown= false;
         public bool PluginIsEnabled
         {
             get => _pluginIsEnabled;
@@ -45,26 +44,16 @@ namespace MyToolBar.Views.Items
         public CapsuleSettingItem(IPlugin plugin,bool isEnable)
         {
             InitializeComponent();
-            this.MouseLeftButtonUp += CapsuleSettingItem_MouseLeftButtonUp;
-            MouseLeftButtonDown += CapsuleSettingItem_MouseLeftButtonDown;
+            Click += CapsuleSettingItem_Click;
             PluginIsEnabled = isEnable;
             Plugin = plugin;
             DataContext = this;
         }
 
-        private void CapsuleSettingItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void CapsuleSettingItem_Click(object sender, RoutedEventArgs e) 
         {
-            IsMouseLeftButtonDown = true;
-        }
-
-        private void CapsuleSettingItem_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            if (IsMouseLeftButtonDown)
-            {
-                IsMouseLeftButtonDown = false;
-                PluginIsEnabled = !PluginIsEnabled;
-                OnIsEnableChanged?.Invoke(Plugin, PluginIsEnabled);
-            }
+            PluginIsEnabled = !PluginIsEnabled;
+            OnIsEnableChanged?.Invoke(Plugin, PluginIsEnabled);
         }
     }
 }
