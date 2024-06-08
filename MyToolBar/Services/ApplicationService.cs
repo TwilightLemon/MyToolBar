@@ -31,17 +31,22 @@ namespace MyToolBar.Services
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
+            //异常捕获+写日志
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             App.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
+            //加载AppData目录
             Settings.LoadPath();
+            //注册Hyperlink的跳转事件
             EventManager.RegisterClassHandler(typeof(Hyperlink), Hyperlink.RequestNavigateEvent, new RequestNavigateEventHandler((sender, e) =>
             {
                 Process.Start("explorer.exe", e.Uri.AbsoluteUri);
                 e.Handled = true;
             }));
+            //加载插件包管理器
             _serviceProvider.GetRequiredService<ManagedPackageService>().Load();
+
             var mainWindow = _serviceProvider.GetRequiredService<AppBarWindow>();
             mainWindow.Show();
 

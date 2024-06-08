@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MyToolBar"
         mc:Ignorable="d" Topmost="True" ShowInTaskbar="False"
-        Title="PenControlWindow" Height="40" Width="40" d:Width="200" d:Height="200" WindowStyle="None" ResizeMode="NoResize" Background="Transparent" PreviewStylusDown="Window_PreviewStylusDown" >
+        Title="PenControlWindow" Height="40" Width="40" d:Width="200" d:Height="200"
+        WindowStyle="None" ResizeMode="NoResize" Background="Transparent"
+        PreviewStylusDown="Window_PreviewStylusDown" >
     <Window.Resources>
         <Storyboard x:Key="OpenAni">
             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FunctionPanel" Storyboard.TargetProperty="(UIElement.Visibility)">

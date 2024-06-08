@@ -23,12 +23,6 @@ namespace MyToolBar.Views.Windows
             InitializeComponent();
 
             Loaded += SettingsWindow_Loaded;
-            Closing += SettingsWindow_Closing;
-        }
-
-        private  void SettingsWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
-        {
-            
         }
 
         private  void SettingsWindow_Loaded(object sender, RoutedEventArgs e)

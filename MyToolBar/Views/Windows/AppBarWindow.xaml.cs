@@ -50,7 +50,7 @@ namespace MyToolBar.Views.Windows
             Width = SystemParameters.WorkArea.Width;
             SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
             UpdateColorMode();
-            ShowOutter(false);
+            ShowOuter(false);
             #endregion
 
             #region GlobalTimer
@@ -76,7 +76,7 @@ namespace MyToolBar.Views.Windows
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Oc_IsShownChanged(object? sender, bool e) => ShowOutter(e);
+        private void Oc_IsShownChanged(object? sender, bool e) => ShowOuter(e);
 
         private void _pluginReactiveService_CapsuleRemoved(IPlugin obj)
         {
@@ -95,66 +95,67 @@ namespace MyToolBar.Views.Windows
         private void _pluginReactiveService_OuterControlChanged(OuterControlBase obj) {
             oc?.Dispose();
             oc = null;
-            OutterFunc.Children.Clear();
+            OuterFunc.Children.Clear();
             oc = obj;
             oc.IsShownChanged += Oc_IsShownChanged;
-            OutterFunc.Children.Add(oc);
+            OuterFunc.Children.Add(oc);
         }
 
-        #region OutterControl
+        #region OuterControl
         /// <summary>
-        /// 最后一个最大化窗口 用于判断是否全屏 以改变OutterFunc样式
+        /// 最后一个最大化窗口 用于判断是否全屏 以改变OuterFunc样式
         /// </summary>
         private IntPtr MaxedWindow = IntPtr.Zero;
         /// <summary>
-        /// OutterFuncStatus是否开启
+        /// OuterFuncStatus是否开启
         /// </summary>
-        static bool isOutterShow = true;
+        static bool isOuterShow = true;
 
         public AppBarViewModel ViewModel { get; }
 
         /// <summary>
-        /// 打开或关闭OutterFunc (Animation)
+        /// 打开或关闭OuterFunc (Animation)
         /// </summary>
         /// <param name="show">open or close</param>
-        private void ShowOutter(bool show = true)
+        private void ShowOuter(bool show = true)
         {
             Storyboard sb = new();
-            if (OutterFunc.ActualWidth == 0)
-                OutterFunc.Visibility = Visibility.Visible;
-            double width = OutterFunc.ActualWidth;
-            DoubleAnimation da, de;
-            if (show && !isOutterShow)
+            if (OuterFunc.ActualWidth == 0)
+                OuterFunc.Visibility = Visibility.Visible;
+            double hWidth = OuterFunc.ActualWidth/2;
+            DoubleAnimation da;
+            ThicknessAnimation de;
+            if (show && !isOuterShow)
             {
-                de = new DoubleAnimation(0, width, TimeSpan.FromSeconds(0.5));
+                de = new(new Thickness(hWidth, 0, hWidth, 0), new Thickness(0), TimeSpan.FromSeconds(0.5));
                 da = new DoubleAnimation(0, 1, TimeSpan.FromSeconds(0.5));
-                isOutterShow = true;
+                isOuterShow = true;
             }
-            else if (!show && isOutterShow)
+            else if (!show && isOuterShow)
             {
-                de = new DoubleAnimation(width, 0, TimeSpan.FromSeconds(0.5));
+                de = new(new Thickness(0), new Thickness(hWidth, 0, hWidth, 0), TimeSpan.FromSeconds(0.5));
                 da = new DoubleAnimation(1, 0, TimeSpan.FromSeconds(0.4));
-                isOutterShow = false;
+                isOuterShow = false;
             }
             else
                 return;
             de.EasingFunction = da.EasingFunction = new QuarticEase();
             sb.Children.Add(da);
             sb.Children.Add(de);
-            Storyboard.SetTarget(da, OutterFuncStatus);
-            Storyboard.SetTarget(de, OutterFuncStatus);
+            Storyboard.SetTarget(da, OuterFuncStatus);
+            Storyboard.SetTarget(de, OuterFuncStatus);
             Storyboard.SetTargetProperty(da, new PropertyPath(OpacityProperty));
-            Storyboard.SetTargetProperty(de, new PropertyPath(WidthProperty));
-            sb.Completed += OutterControlClosingAni;
+            Storyboard.SetTargetProperty(de, new PropertyPath(MarginProperty));
+            sb.Completed += OuterControlClosingAni;
             sb.Begin();
         }
-        private void OutterControlClosingAni(object? sender, EventArgs e)
+        private void OuterControlClosingAni(object? sender, EventArgs e)
         {
-            OutterFunc.Visibility = isOutterShow ? Visibility.Visible : Visibility.Collapsed;
+            OuterFunc.Visibility = isOuterShow ? Visibility.Visible : Visibility.Collapsed;
         }
         #endregion
 
-        #region OutterFuncStatus & WindowStyle
+        #region OuterFuncStatus & WindowStyle
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             AppBarFunctions.SetAppBar(this, ABEdge.None);
@@ -169,12 +170,12 @@ namespace MyToolBar.Views.Windows
             SolidColorBrush fore;
             if (IsDarkMode)
             {
-                OutterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(20, 255, 255, 255));
+                OuterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(20, 255, 255, 255));
                 fore = new SolidColorBrush(Color.FromArgb(240, 252, 252, 252));
             }
             else
             {
-                OutterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(20, 0, 0, 0));
+                OuterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(20, 0, 0, 0));
                 fore = new SolidColorBrush(Color.FromArgb(240, 3, 3, 3));
             }
             oc?.MaxStyleAct?.Invoke(true, fore);
@@ -187,12 +188,12 @@ namespace MyToolBar.Views.Windows
             Brush? foreground = null;
             if (IsDarkMode)
             {
-                OutterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(120, 255, 255, 255));
+                OuterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(120, 255, 255, 255));
                 foreground = OuterControlNormalDarkModeForeColor;
             }
             else
             {
-                OutterFuncStatus.SetResourceReference(BackgroundProperty, "MaskColor");
+                OuterFuncStatus.SetResourceReference(BackgroundProperty, "MaskColor");
             }
 
             oc?.MaxStyleAct?.Invoke(false, foreground);

@@ -41,8 +41,8 @@
         <Grid x:Name="TittleViewer" TouchLeave="TitleView_TouchDown" Margin="40 0 0 0" Background="#01000000">
             <TextBlock x:Name="TitleView" TextWrapping="Wrap" Text="Microsoft Visual Studio 2022" VerticalAlignment="Center" Foreground="{DynamicResource ForeColor}"/>
         </Grid>
-        <Border x:Name="OutterFuncStatus" Grid.Column="1"  Background="{DynamicResource HighlightColor}" CornerRadius="15"/>
-        <Grid x:Name="OutterFunc" Grid.Column="1" Background="Transparent">
+        <Border x:Name="OuterFuncStatus" Grid.Column="1"  Background="{DynamicResource HighlightColor}" CornerRadius="15"/>
+        <Grid x:Name="OuterFunc" Grid.Column="1" Background="Transparent">
            
         </Grid>
         <WrapPanel x:Name="CapsulePanel" 

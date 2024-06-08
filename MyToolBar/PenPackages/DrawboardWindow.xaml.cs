@@ -5,7 +5,9 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using Microsoft.Xaml.Behaviors;
 using MyToolBar.Common;
+using MyToolBar.Common.Behaviors;
 using MyToolBar.Common.WinApi;
 
 namespace MyToolBar.PenPackages
@@ -139,6 +141,9 @@ namespace MyToolBar.PenPackages
             this.Height = SystemParameters.WorkArea.Height;
             this.Left = 0;
             this.Top = 0;
+            var beh = Interaction.GetBehaviors(ToolPanel);
+            beh.Add(new DraggableUIBehavior(this,ViewMask));
+            
 
             //响应粘贴
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Paste, (s, e) =>

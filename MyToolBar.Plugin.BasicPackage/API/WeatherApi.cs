@@ -20,6 +20,10 @@ namespace MyToolBar.Plugin.BasicPackage.API
 {
     public static class WeatherApi
     {
+        #region Data
+        /// <summary>
+        /// Settings Data for Api config
+        /// </summary>
         public class Property
         {
             public string? key { get; set; }
@@ -36,14 +40,14 @@ namespace MyToolBar.Plugin.BasicPackage.API
         public class WeatherNow
         {
             public string status { get; set; }
-            public string link{ get; set; }
-            public string feel{ get; set; }
+            public string link { get; set; }
+            public string feel { get; set; }
             public string windDir { get; set; }
-            public string windScale{ get; set; }
+            public string windScale { get; set; }
             public string humidity { get; set; }
             public string vis { get; set; }
             public int code { get; set; }
-            public int temp{ get; set; }
+            public int temp { get; set; }
             //...more
         }
         public class WeatherDay
@@ -53,7 +57,7 @@ namespace MyToolBar.Plugin.BasicPackage.API
             public int code_day { get; set; }
             public int code_night { get; set; }
             public int temp_max { get; set; }
-            public int temp_min{ get; set; }
+            public int temp_min { get; set; }
         }
         public class AirData
         {
@@ -62,6 +66,7 @@ namespace MyToolBar.Plugin.BasicPackage.API
             public string desc { get; set; }
             public string sug { get; set; }
         }
+        #endregion
 
         public static void SetProperty(Property p)
         {
@@ -77,7 +82,7 @@ namespace MyToolBar.Plugin.BasicPackage.API
         public static async Task<City?> GetPositionByIpAsync()
         {
             string data = await HttpHelper.Get("https://www.useragentinfo.com", false);
-            string str= HttpHelper.FindByAB(data, "位置信息</th>", "</td>")+ "</td>";
+            string str = HttpHelper.FindByAB(data, "位置信息</th>", "</td>") + "</td>";
             Match m = Regex.Match(str, "<td class=\"col-auto fw-light\">(.*?) (.*?) (.*?) (.*?)</td>");
             if (m.Success)
             {
@@ -91,7 +96,7 @@ namespace MyToolBar.Plugin.BasicPackage.API
             }
             return null;
         }
-        public static async Task<(double x,double y)?> GetPosition()
+        public static async Task<(double x, double y)?> GetPosition()
         {
             try
             {
@@ -110,7 +115,7 @@ namespace MyToolBar.Plugin.BasicPackage.API
             if (await GetPosition() is (double x, double y))
             {
 
-                string url = $"https://geoapi.qweather.com/v2/city/lookup?location={Math.Round(y,2)},{Math.Round(x,2)}&key={key}&lang={lang}";
+                string url = $"https://geoapi.qweather.com/v2/city/lookup?location={Math.Round(y, 2)},{Math.Round(x, 2)}&key={key}&lang={lang}";
                 var result = await CityLookUpAsync(url);
                 if (result.Count > 0)
                     return result.First();
@@ -126,10 +131,10 @@ namespace MyToolBar.Plugin.BasicPackage.API
             }
 
             string url = $"https://geoapi.qweather.com/v2/city/lookup?location={HttpUtility.UrlEncode(c2)}&adm={HttpUtility.UrlEncode(c1)}&key={key}&lang={lang}";
-            var result= await CityLookUpAsync(url);
-            if(result.Count>0)
+            var result = await CityLookUpAsync(url);
+            if (result.Count > 0)
             {
-                var c=result.First();
+                var c = result.First();
                 city.Id = c.Id;
                 city.Area = c.Area;
                 city.CityName = c.CityName;
@@ -147,7 +152,7 @@ namespace MyToolBar.Plugin.BasicPackage.API
         {
             string data = await HttpHelper.Get(url);
             var obj = JsonNode.Parse(data);
-            var list=new List<City>();
+            var list = new List<City>();
             if (obj != null && obj["code"].ToString() == "200")
             {
                 JsonArray cities = obj["location"].AsArray();
@@ -168,8 +173,8 @@ namespace MyToolBar.Plugin.BasicPackage.API
         public static async Task<WeatherNow> GetCurrentWeather(this City city)
         {
             string url = $"https://{host}/v7/weather/now?location={city.Id}&key={key}&lang={lang}";
-            string data= await HttpHelper.Get(url);
-            var obj= JsonNode.Parse(data);
+            string data = await HttpHelper.Get(url);
+            var obj = JsonNode.Parse(data);
             if (obj != null & obj["code"].ToString() == "200")
             {
                 var now = obj["now"];
@@ -181,9 +186,9 @@ namespace MyToolBar.Plugin.BasicPackage.API
                     link = obj["fxLink"].ToString(),
                     feel = now["feelsLike"].ToString(),
                     humidity = now["humidity"].ToString(),
-                    windDir= now["windDir"].ToString(),
-                    windScale= now["windScale"].ToString(),
-                    vis= now["vis"].ToString()
+                    windDir = now["windDir"].ToString(),
+                    windScale = now["windScale"].ToString(),
+                    vis = now["vis"].ToString()
                 };
             }
             return null;
@@ -219,7 +224,7 @@ namespace MyToolBar.Plugin.BasicPackage.API
             {
                 List<AirData> list = new();
                 var daily = obj["daily"].AsArray();
-                foreach(var i in daily)
+                foreach (var i in daily)
                 {
                     list.Add(new AirData()
                     {
@@ -234,12 +239,12 @@ namespace MyToolBar.Plugin.BasicPackage.API
         }
         public static Color GetAirLevelColor(int level) => level switch
         {
-            1=>Color.FromArgb(255,0,228,0),
-            2=>Color.FromArgb(255,255,255,0),
-            3=>Color.FromArgb(255,255,126,0),
-            4=>Color.FromArgb(255,255,0,0),
-            5=>Color.FromArgb(255,153,0,76),
-            6=>Color.FromArgb(255,126,0,35)
+            1 => Color.FromArgb(255, 0, 228, 0),
+            2 => Color.FromArgb(255, 255, 255, 0),
+            3 => Color.FromArgb(255, 255, 126, 0),
+            4 => Color.FromArgb(255, 255, 0, 0),
+            5 => Color.FromArgb(255, 153, 0, 76),
+            6 => Color.FromArgb(255, 126, 0, 35)
         };
         public static async Task<List<WeatherDay>> GetForecastAsync(this City city)
         {
@@ -255,9 +260,9 @@ namespace MyToolBar.Plugin.BasicPackage.API
                     list.Add(new WeatherDay()
                     {
                         status_day = i["textDay"].ToString(),
-                        status_night= i["textNight"].ToString(),
-                        code_day= int.Parse(i["iconDay"].ToString()),
-                        code_night= int.Parse(i["iconNight"].ToString()),
+                        status_night = i["textNight"].ToString(),
+                        code_day = int.Parse(i["iconDay"].ToString()),
+                        code_night = int.Parse(i["iconNight"].ToString()),
                         temp_max = int.Parse(i["tempMax"].ToString()),
                         temp_min = int.Parse(i["tempMin"].ToString()),
                     });

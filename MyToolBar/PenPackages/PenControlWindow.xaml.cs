@@ -4,6 +4,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using MyToolBar.Common.WinApi;
 using System.Windows.Media.Animation;
+using MyToolBar.Common;
 
 namespace MyToolBar.PenPackages
 {
@@ -15,10 +16,21 @@ namespace MyToolBar.PenPackages
         public PenControlWindow()
         {
             InitializeComponent();
+            Init();
+        }
+        ~PenControlWindow()
+        {
+            GlobalService.GlobalTimer.Elapsed -= GlobalTimer_Elapsed;
+        }
+        private void Init()
+        {
             this.SizeChanged += PenControlWindow_SizeChanged;
             this.Loaded += PenControlWindow_Loaded;
             this.StylusLeave += PenControlWindow_StylusLeave;
             this.Deactivated += PenControlWindow_Deactivated;
+            GlobalService.GlobalTimer.Elapsed += GlobalTimer_Elapsed;
+
+
             _openAni = Resources["OpenAni"] as Storyboard;
             _openAni.Completed += delegate {
                 this.IsEnabled = true;
@@ -30,6 +42,13 @@ namespace MyToolBar.PenPackages
                 this.IsEnabled = true;
                 _isOpen = false;
             };
+        }
+
+        private void GlobalTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
+        {
+            Dispatcher.Invoke(() => {
+                ResetWindowLocation();
+            });
         }
 
         private void PenControlWindow_Deactivated(object? sender, System.EventArgs e)

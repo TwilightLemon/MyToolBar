@@ -73,8 +73,9 @@ namespace MyToolBar.Services
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
+#if !DEBUG //Debug模式下不进行内存优化
             _ = Task.Run(MemoryOptimizeLoop);
-
+#endif
             return Task.CompletedTask;
         }
 

@@ -15,6 +15,7 @@ namespace MyToolBar.Common.Func
         static Socket socket;
         public delegate void msg(string data);
         public event msg MsgReceived;
+        private bool _closed = false;
         public void Start()
         {
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -25,6 +26,7 @@ namespace MyToolBar.Common.Func
         }
         public void Stop()
         {
+            _closed = true;
             if (socket != null )
             {
                 socket.Close();
@@ -50,7 +52,10 @@ namespace MyToolBar.Common.Func
             }
             catch
             {
-                return;
+               if(_closed) return;
+                //restart
+                socket.Close();
+                Start();
             }
         }
         #endregion
