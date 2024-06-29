@@ -39,6 +39,11 @@ namespace MyToolBar.Views.Pages.Settings
         {
             var plugins=_managedPackageService.GetTypePlugins(PluginType.OuterControl);
             this.DataContext = plugins;
+            //寻找当前已启用的OuterControl，并选中
+            if(plugins.FirstOrDefault(plugins => _pluginReactiveService.OuterControl == plugins) is IPlugin plugin)
+            {
+                OCPluginList.SelectedItem = plugin;
+            }
         }
 
         private async void OCPluginList_SelectionChanged(object sender, SelectionChangedEventArgs e)

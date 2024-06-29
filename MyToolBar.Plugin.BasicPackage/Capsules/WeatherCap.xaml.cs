@@ -25,11 +25,25 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
     /// </summary>
     public class WeatherCache
     {
+        /// <summary>
+        /// 对应城市ID的天气缓存数据
+        /// </summary>
         public Dictionary<string, WeatherData> DataCache { get; set; } = new();
+        /// <summary>
+        /// Capsule上显示的默认城市
+        /// </summary>
         public WeatherApi.City DefaultCity { get; set; } = new();
+        /// <summary>
+        /// 收藏的城市列表
+        /// </summary>
         public List<WeatherApi.City> FavorCities { get; set; } = new();
+        /// <summary>
+        /// 上一次更新定位的时间
+        /// </summary>
+        [JsonIgnore]
+        public DateTime? LocatingDate { get; set; } = null;
         public bool UsingIpAsDefault { get; set; } = true;
-        private static string SettingSign="WeatherCache";
+        private static string SettingSign = "WeatherCache";
         [JsonIgnore]
         public bool isEmpty => DataCache.Count == 0;
         public async Task<WeatherData> RequstCache(WeatherApi.City city)
@@ -59,8 +73,8 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
         }
         public static async Task<WeatherCache> LoadCache()
         {
-            var wc=await Settings.Load<WeatherCache>(SettingSign, Settings.sType.Cache);
-            return wc??new WeatherCache();
+            var wc = await Settings.Load<WeatherCache>(SettingSign, Settings.sType.Cache);
+            return wc ?? new WeatherCache();
         }
     }
     /// <summary>
@@ -68,7 +82,7 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
     /// </summary>
     public partial class WeatherCap : CapsuleBase
     {
-        internal static readonly string _settingsAPIKey="MyToolBar.Plugin.BasicPackage.WeatherAPIKey";
+        internal static readonly string _settingsAPIKey = "MyToolBar.Plugin.BasicPackage.WeatherAPIKey";
 
         public WeatherCap()
         {
@@ -83,15 +97,29 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
         private WeatherCache cache = null;
         private async Task LoadWeatherData()
         {
-                cache ??=await WeatherCache.LoadCache();
+            //测试网络环境
+            if (!await IsNetworkConnecting())
+            {
+                Weather_info.Text = "No Network";
+                return;
+            }
+            cache ??= await WeatherCache.LoadCache();
 
             //初次使用或默认定位城市
             if (cache.isEmpty || cache.UsingIpAsDefault)
-                cache.DefaultCity = await WeatherApi.GetCityByPositionAsync();
-            
-            if (cache.DefaultCity!=null)
             {
-                var data=await cache.RequstCache(cache.DefaultCity);
+                if (cache.LocatingDate == null || DateTime.Now - cache.LocatingDate >= TimeSpan.FromHours(6))
+                {
+                    Weather_info.Text = "Locating...";
+                    cache.DefaultCity = await WeatherApi.GetCityByPositionAsync();
+                    cache.LocatingDate = DateTime.Now;
+                }
+            }
+
+            if (cache.DefaultCity != null)
+            {
+                Weather_info.Text= "Loading...";
+                var data = await cache.RequstCache(cache.DefaultCity);
                 var wdata = data.CurrentWeather;
                 Weather_info.Text = wdata.temp + "℃  " + wdata.status;
                 Weather_Icon.Background = new ImageBrush(new BitmapImage(new Uri(WeatherApi.GetIcon(wdata.code))));
@@ -105,9 +133,10 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
         {
             if (KeyMgr == null)
             {
-                KeyMgr  =new(_settingsAPIKey, WeatherCapPlugin._name);
+                KeyMgr = new(_settingsAPIKey, WeatherCapPlugin._name);
                 await KeyMgr.Load();
-                KeyMgr.OnDataChanged += async delegate { 
+                KeyMgr.OnDataChanged += async delegate
+                {
                     await KeyMgr.Load();
                     Dispatcher.Invoke(() => Install());
                 };
@@ -127,7 +156,7 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
         private void GlobalTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
             //update weather data every t minutes
-            if (DateTime.Now - cache.DataCache[cache.DefaultCity.Id].UpdateTime >= TimeSpan.FromMinutes(10))
+            if (cache==null||DateTime.Now - cache.DataCache[cache.DefaultCity.Id].UpdateTime >= TimeSpan.FromMinutes(10))
             {
                 Dispatcher.Invoke(async () => await LoadWeatherData());
             }
@@ -135,11 +164,11 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
         private bool BoxShowed = false;
         private async void ShowWeatherBox()
         {
-            if(string.IsNullOrEmpty(KeyMgr.Data.key))
+            if (string.IsNullOrEmpty(KeyMgr.Data.key))
             {
                 return;
             }
-            if(BoxShowed) return;
+            if (BoxShowed) return;
             try
             {
                 if (cache.DataCache[cache.DefaultCity.Id].CurrentWeather == null)
@@ -148,7 +177,7 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
             catch { }
             var wb = new WeatherBox();
             wb.Closed += delegate { BoxShowed = false; };
-            await wb.LoadData(cache.DefaultCity,cache);
+            await wb.LoadData(cache.DefaultCity, cache);
             wb.DefaultCityChanged += Wb_DefaultCityChanged;
             wb.Left = GlobalService.GetPopupWindowLeft(this, wb);
             wb.Show();

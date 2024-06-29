@@ -18,7 +18,7 @@ using System.Windows.Documents;
 namespace MyToolBar.Views.Windows
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// [Main] AppBar Window
     /// </summary>
     public partial class AppBarWindow : Window
     {
@@ -243,7 +243,7 @@ namespace MyToolBar.Views.Windows
 
         #endregion
 
-        #region Left Part
+        #region Left Part - Menu & Window Title
 
         bool _isMainMenuOpen = false;
         private void MainMenuButton_MouseDown(object sender, MouseButtonEventArgs e)
@@ -260,6 +260,7 @@ namespace MyToolBar.Views.Windows
 
         private void TitleView_TouchDown(object sender, TouchEventArgs e)
         {
+            //下滑显示任务视图
             SendHotKey.ShowTaskView();
         }
         #endregion

@@ -28,6 +28,12 @@ namespace MyToolBar.Common
         public static System.Timers.Timer GlobalTimer = null;
 
         public static Brush OuterControlNormalDarkModeForeColor= new SolidColorBrush(Color.FromArgb(250, 3, 3, 3));
+        /// <summary>
+        /// 获取PopupWindow相对于capsule弹出时的Left值
+        /// </summary>
+        /// <param name="capsule"></param>
+        /// <param name="popupWindow"></param>
+        /// <returns></returns>
         public static double GetPopupWindowLeft(FrameworkElement capsule,Window popupWindow)
         {
             //获取相对于MainWindow的坐标

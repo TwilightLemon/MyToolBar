@@ -10,6 +10,8 @@ using Microsoft.Extensions.Logging;
 using MyToolBar.Common;
 using MyToolBar.Views.Windows;
 using System.Diagnostics;
+using System.Net.Http;
+using System.Net;
 
 namespace MyToolBar.Services
 {
@@ -32,10 +34,11 @@ namespace MyToolBar.Services
         public Task StartAsync(CancellationToken cancellationToken)
         {
             //异常捕获+写日志
+#if !DEBUG
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             App.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
-
+#endif
             //加载AppData目录
             Settings.LoadPath();
             //注册Hyperlink的跳转事件
@@ -46,7 +49,9 @@ namespace MyToolBar.Services
             }));
             //加载插件包管理器
             _serviceProvider.GetRequiredService<ManagedPackageService>().Load();
-
+            //设置Http代理
+            HttpClient.DefaultProxy = new WebProxy();
+            //加载主窗口
             var mainWindow = _serviceProvider.GetRequiredService<AppBarWindow>();
             mainWindow.Show();
 

@@ -9,9 +9,10 @@ using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace MyToolBar.Common;
-/*
- *统一的缓存和配置服务
- */
+/// <summary>
+/// 统一的缓存和配置服务
+/// </summary>
+/// <typeparam name="T">数据类型</typeparam>
 public class SettingsMgr<T> where T : class
 {
     public string Sign { get; set; }
@@ -99,10 +100,17 @@ public static class Settings
     }, Sign + ".json");
     public static async Task Save<T>(T Data, string Sign, sType type) where T : class
     {
-        string path = GetPathBySign(Sign,type);
-        var fs = File.Create(path);
-        await JsonSerializer.SerializeAsync<T>(fs, Data, new JsonSerializerOptions { WriteIndented = true });
-        fs.Close();
+        try
+        {
+            string path = GetPathBySign(Sign, type);
+            var fs = File.Create(path);
+            await JsonSerializer.SerializeAsync<T>(fs, Data, new JsonSerializerOptions { WriteIndented = true });
+            fs.Close();
+        }
+        catch
+        {
+
+        }
     }
     public static async Task<T?> Load<T>(string Sign, sType t) where T : class
     {

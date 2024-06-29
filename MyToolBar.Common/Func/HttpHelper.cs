@@ -9,9 +9,23 @@ namespace MyToolBar.Common.Func
         {
             SocketsHttpHandler hd = new();
             if(useGzip)hd.AutomaticDecompression=DecompressionMethods.GZip;
-            HttpClient hc = new(hd);
+            using HttpClient hc = new(hd);
             hc.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 Edg/123.0.0.0");
             return await hc.GetStringAsync(url);
+        }
+
+        public static async Task<bool> Test(string url)
+        {
+            using HttpClient hc = new();
+            try
+            {
+                var res = await hc.GetAsync(url);
+                return res.IsSuccessStatusCode;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         /// <summary>

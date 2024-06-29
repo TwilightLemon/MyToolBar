@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:base="clr-namespace:MyToolBar.Common.UIBases;assembly=MyToolBar.Common"
              mc:Ignorable="d"  Height="30" d:Width="400">
-    <Grid  Background="Transparent">
+    <Grid  Background="Transparent" MouseUp="Grid_MouseUp">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="1*"/>

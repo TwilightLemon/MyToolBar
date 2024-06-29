@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -68,6 +69,7 @@ namespace MyToolBar.PenPackages
         private StylusButton _SideBtn = null;
         private void DrawboardWindow_PreviewStylusButtonDown(object sender, StylusButtonEventArgs e)
         {
+            if (e.StylusDevice.TabletDevice.Type != TabletDeviceType.Stylus) return;
            //判断是否为侧键
            if (e.StylusButton.Guid == StylusPointProperties.BarrelButton.Id)
             {
@@ -88,16 +90,18 @@ namespace MyToolBar.PenPackages
         private bool _isDrawingMode = false;
         private void DrawboardWindow_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (e.StylusDevice?.TabletDevice.Type == TabletDeviceType.Stylus)
+            //防止在使用笔时或有选中内容时触发穿透
+            if (e.StylusDevice?.TabletDevice.Type == TabletDeviceType.Stylus || 
+                ink.GetSelectedElements().Count>0||ink.GetSelectedStrokes().Count>0)
                 return;
-            Drawboard_into();
+            Drawboard_Penetrate();
         }
         /// <summary>
         ///绘画->穿透
         /// </summary>
-        private void Drawboard_into()
+        private void Drawboard_Penetrate()
         {
-            ink.IsEnabled = _isDrawingMode = false;
+            _isDrawingMode = false;
             SolidColorBrush bg = new SolidColorBrush();
             Background = bg;
             var ca = new ColorAnimation(Color.FromArgb(20, 0, 0, 0), Color.FromArgb(0, 0, 0, 0), TimeSpan.FromMilliseconds(400));
@@ -111,6 +115,7 @@ namespace MyToolBar.PenPackages
                 }
             };
             bg.BeginAnimation(SolidColorBrush.ColorProperty, ca);
+            Title= "Drawboard - Penetrating Mode";
         }
         private void Drawboard_ClearAll()
         {
@@ -120,8 +125,12 @@ namespace MyToolBar.PenPackages
 
         private void DrawboardWindow_PreviewStylusOutOfRange(object sender, StylusEventArgs e)
         {
-            //离开绘画区域时禁用绘画,防止鼠标和触摸绘制
-            ink.IsEnabled = false;
+            //笔离开时可用鼠标或触摸进行选择
+            if (e.StylusDevice.TabletDevice.Type == TabletDeviceType.Stylus)
+            {
+                ink.EditingMode = InkCanvasEditingMode.Select;
+                Debug.WriteLine("StylusOutOfRange --Select ");
+            }
         }
 
         private void DrawboardWindow_PreviewStylusInRange(object sender, StylusEventArgs e)
@@ -129,7 +138,12 @@ namespace MyToolBar.PenPackages
             //进入绘画区域时启用笔绘画
             if (e.StylusDevice.TabletDevice.Type == TabletDeviceType.Stylus)
             {
-                ink.IsEnabled= true;
+              //  ink.IsEnabled= true;
+                //没有按下侧键时才切换到墨迹
+                if (_SideBtn==null||_SideBtn.StylusButtonState == StylusButtonState.Up){
+                    Debug.WriteLine("StylusInRange --Ink ");
+                    ink.EditingMode = InkCanvasEditingMode.Ink;
+                }
             }
         }
 
@@ -168,7 +182,7 @@ namespace MyToolBar.PenPackages
         private Border _CurrentPen = null;
         private void PenColor_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            Border b = (Border)sender;
+            if (sender is not Border b) return;
             if (_CurrentPen != null)
             {
                 _CurrentPen.BorderThickness = new Thickness(0);
@@ -187,8 +201,61 @@ namespace MyToolBar.PenPackages
                 Background = bg;
                 bg.BeginAnimation(SolidColorBrush.ColorProperty, new ColorAnimation(Color.FromArgb(0, 0, 0, 0), Color.FromArgb(20, 0, 0, 0), TimeSpan.FromMilliseconds(400)));
             }
-            ink.IsEnabled = _isDrawingMode = true;
+            _isDrawingMode = true;
             ink.DefaultDrawingAttributes.Color = penColor;
+            Title = "Drawboard - Drawing Mode";
+        }
+        private bool _dragMoveElement = false;
+        protected override void OnPreviewMouseDown(MouseButtonEventArgs e)
+        {
+            base.OnPreviewMouseDown(e);
+            //非绘画模式或没有选中元素时不捕获鼠标
+            if (!_isDrawingMode || ink.GetSelectedElements().Count == 0) return; 
+
+            // 检查点击位置是否在选中的元素上
+            Point clickedPoint = e.GetPosition(ink);
+            foreach (UIElement element in ink.Children)
+            {
+                if (ink.GetSelectedElements().Contains(element))
+                {
+                    Rect elementBounds = VisualTreeHelper.GetDescendantBounds(element);
+                    Point elementPosition = element.TranslatePoint(new Point(0, 0), ink);
+
+                    Rect absoluteBounds = new Rect(elementPosition, elementBounds.Size);
+                    if (absoluteBounds.Contains(clickedPoint))
+                    {
+                        ink.CaptureMouse();
+                        _dragMoveElement = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        protected override void OnPreviewMouseUp(MouseButtonEventArgs e)
+        {
+            base.OnPreviewMouseUp(e);
+
+            if (ink.IsMouseCaptured&& _dragMoveElement)
+            {
+                ink.ReleaseMouseCapture();
+                _dragMoveElement = false;
+            }
+        }
+
+        protected override void OnPreviewMouseMove(MouseEventArgs e)
+        {
+            base.OnPreviewMouseMove(e);
+
+            if (_dragMoveElement&&ink.IsMouseCaptured && e.LeftButton == MouseButtonState.Pressed)
+            {
+                Point mousePos = e.GetPosition(ink);
+                foreach (UIElement element in ink.GetSelectedElements())
+                {
+                    InkCanvas.SetLeft(element, mousePos.X - element.RenderSize.Width / 2);
+                    InkCanvas.SetTop(element, mousePos.Y - element.RenderSize.Height / 2);
+                }
+            }
         }
 
         private void CloseBtn_MouseUp(object sender, MouseButtonEventArgs e)
@@ -236,7 +303,7 @@ namespace MyToolBar.PenPackages
 
         private void SwitchBtn_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            Drawboard_into();
+            Drawboard_Penetrate();
         }
 
         private void ClearBtn_MouseUp(object sender, MouseButtonEventArgs e)

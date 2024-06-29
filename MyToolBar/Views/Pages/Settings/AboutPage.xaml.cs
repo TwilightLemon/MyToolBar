@@ -1,6 +1,7 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Markup;
 using MyToolBar.Common.Func;
+using MyToolBar.Common.UIBases;
 
 namespace MyToolBar.Views.Pages.Settings
 {
@@ -17,8 +18,11 @@ namespace MyToolBar.Views.Pages.Settings
 
         private async void AboutPage_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
+            var loading = new LoadingIcon();
+            ContentGrid.Children.Add(loading);
             string data = await HttpHelper.Get("https://gitee.com/TwilightLemon/MyToolBarDynamics/raw/master/AboutPage.xaml");
             ContentGrid.Children.Add((Grid)XamlReader.Parse(data));
+            ContentGrid.Children.Remove(loading);
         }
     }
 }

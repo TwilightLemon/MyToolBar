@@ -13,7 +13,7 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
     /// </summary>
     public partial class HardwareMonitorCap : CapsuleBase
     {
-        private         NetworkInfo ni;
+        private NetworkInfo ni;
         private CPUInfo ci;
         public HardwareMonitorCap()
         {
@@ -28,9 +28,13 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
         }
         public override async void Install()
         {
-            ni =await NetworkInfo.Create();
+            MainPanel.Visibility = Visibility.Collapsed;
+            LoadingTextBlk.Visibility = Visibility.Visible;
+            ni = await NetworkInfo.Create();
             ci = CPUInfo.Create();
             GlobalTimer.Elapsed += GlobalTimer_Elapsed;
+            MainPanel.Visibility = Visibility.Visible;
+            LoadingTextBlk.Visibility = Visibility.Collapsed;
         }
 
         private void GlobalTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)

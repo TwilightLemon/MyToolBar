@@ -3,6 +3,7 @@ using System.Text.Json.Nodes;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using MyToolBar.Common;
 using MyToolBar.Common.Func;
 using MyToolBar.Common.UIBases;
 
@@ -86,6 +87,17 @@ namespace MyToolBar.Plugin.BasicPackage.OuterControls
         private void Func_Right_TouchDown(object sender, TouchEventArgs e)
         {
             MsgHelper.SendMsg(MsgHelper.SEND_NEXT, MsgHelper.ConnectedWindowHandle);
+        }
+
+        bool _popShown = false;
+        private void Grid_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (_popShown) return;
+            _popShown = true;
+            var w = new PopupWindows.LemonAppControlBox();
+            w.Left = GlobalService.GetPopupWindowLeft(this, w);
+            w.Closing += delegate { _popShown = false; };
+            w.Show();
         }
     }
 }

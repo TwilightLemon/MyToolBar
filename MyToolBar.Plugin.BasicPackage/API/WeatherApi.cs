@@ -78,6 +78,11 @@ namespace MyToolBar.Plugin.BasicPackage.API
             lang = "en",
             host;
 
+        public static async Task<bool> IsNetworkConnecting()
+        {
+            return await HttpHelper.Test("https://dev.qweather.com/");
+        }
+
         [Obsolete]
         public static async Task<City?> GetPositionByIpAsync()
         {
