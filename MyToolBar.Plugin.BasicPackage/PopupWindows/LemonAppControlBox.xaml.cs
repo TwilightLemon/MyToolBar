@@ -1,18 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using MyToolBar.Common.UIBases;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
+﻿using System.Windows.Input;
 using System.Windows.Shapes;
-using MyToolBar.Common.Func;
+using MyToolBar.Common.UIBases;
+using MyToolBar.Plugin.BasicPackage.OuterControls;
 
 namespace MyToolBar.Plugin.BasicPackage.PopupWindows
 {
@@ -24,21 +13,42 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
         public LemonAppControlBox()
         {
             InitializeComponent();
+            LemonAppMusic.Smtc.PlaybackInfoChanged += Smtc_PlaybackInfoChanged;
+            UpdateStatus();
         }
 
-        private void PlayLastBtn_MouseUp(object sender, MouseButtonEventArgs e)
+        private void Smtc_PlaybackInfoChanged(object? sender, EventArgs e)
         {
-            MsgHelper.SendMsg(MsgHelper.SEND_LAST, MsgHelper.ConnectedWindowHandle);
+            Dispatcher.Invoke(() => {
+                UpdateStatus();
+            });
         }
 
-        private void PlayBtn_MouseUp(object sender, MouseButtonEventArgs e)
+        private void UpdateStatus()
         {
-            MsgHelper.SendMsg(MsgHelper.SEND_PAUSE, MsgHelper.ConnectedWindowHandle);
+            var status = LemonAppMusic.Smtc.GetPlaybackStatus();
+            if (status == Windows.Media.Control.GlobalSystemMediaTransportControlsSessionPlaybackStatus.Playing)
+            {
+                PlayBtnIcon.SetResourceReference(Path.DataProperty, "Icon_Pause");
+            }
+            else if (status == Windows.Media.Control.GlobalSystemMediaTransportControlsSessionPlaybackStatus.Paused)
+            {
+                PlayBtnIcon.SetResourceReference(Path.DataProperty, "Icon_Play");
+            }
+        }
+        private async void PlayLastBtn_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            await LemonAppMusic.Smtc.Previous();
         }
 
-        private void Path_MouseUp(object sender, MouseButtonEventArgs e)
+        private async void PlayBtn_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            MsgHelper.SendMsg(MsgHelper.SEND_NEXT, MsgHelper.ConnectedWindowHandle);
+            await LemonAppMusic.Smtc.PlayOrPause();
+        }
+
+        private async void PlayNextBtn_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            await LemonAppMusic.Smtc.Next();
         }
     }
 }

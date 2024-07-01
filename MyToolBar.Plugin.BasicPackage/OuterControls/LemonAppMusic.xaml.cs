@@ -6,6 +6,7 @@ using System.Windows.Media;
 using MyToolBar.Common;
 using MyToolBar.Common.Func;
 using MyToolBar.Common.UIBases;
+using MyToolBar.Plugin.BasicPackage.API;
 
 namespace MyToolBar.Plugin.BasicPackage.OuterControls
 {
@@ -14,23 +15,47 @@ namespace MyToolBar.Plugin.BasicPackage.OuterControls
     /// </summary>
     public partial class LemonAppMusic : OuterControlBase
     {
-        private MsgHelper ms = new MsgHelper();
+        public static SMTCHelper Smtc;
         public LemonAppMusic()
         {
             InitializeComponent();
             Loaded += LemonAppMusic_Loaded;
         }
-        public override void Dispose()
-        {
-            base.Dispose();
-           ms.Stop();
-        }
-        private void LemonAppMusic_Loaded(object sender, RoutedEventArgs e)
+        private async void LemonAppMusic_Loaded(object sender, RoutedEventArgs e)
         {
             MaxStyleAct= maxStyleAct;
-            ms.Start();
-            ms.MsgReceived += Ms_MsgReceived;
+            Smtc =await SMTCHelper.CreateInstance();
+            Smtc.MediaPropertiesChanged += Smtc_MediaPropertiesChanged;
+            Smtc.SessionExited += Smtc_SessionExited;
+            Smtc_MediaPropertiesChanged(null, null);
         }
+
+        private void Smtc_SessionExited(object? sender, EventArgs e)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                IsShown = false;
+            });
+        }
+
+        private void Smtc_MediaPropertiesChanged(object? sender, EventArgs e)
+        {
+            Dispatcher.Invoke(async() =>
+            {
+                var info = await Smtc.GetMediaInfoAsync();
+                if (info == null) return;
+                IsShown = true;
+                if (Smtc.GetAppMediaId() == "LemonApp.exe")
+                {
+                    LyricTb.Text = info.AlbumTitle;
+                }
+                else
+                {
+                    LyricTb.Text = info.Title + " - " + info.Artist;
+                }
+            });
+        }
+
         private void maxStyleAct(bool max,Brush foreColor) {
             if(foreColor!=null)
                 LyricTb.Foreground = foreColor;
@@ -44,49 +69,20 @@ namespace MyToolBar.Plugin.BasicPackage.OuterControls
                 LyricTb.FontWeight = FontWeights.Bold;
             }
         }
-        private void Ms_MsgReceived(string str)
+
+        private async void Func_Left_TouchDown(object sender, TouchEventArgs e)
         {
-            Dispatcher.Invoke(() => {
-                var obj = JsonNode.Parse(str);
-                if (str.Contains("LemonAppLyricData"))
-                {
-                    if (str.Contains("Handle"))
-                        MsgHelper.ConnectedWindowHandle = int.Parse(obj["Handle"].ToString());
-                    string data = obj["Data"].ToString() + " 🎵";
-                    LyricTb.Text = data;
-                    IsShown = true;
-                }
-                else if (str.Contains("LemonAppOrd"))
-                {
-                    string data = obj["Data"].ToString();
-                    if (data == "Start")
-                    {
-                        IsShown = true;
-                        if (str.Contains("Handle"))
-                            MsgHelper.ConnectedWindowHandle = int.Parse(obj["Handle"].ToString());
-                    }
-                    else if (data == "Exit")
-                    {
-                        MsgHelper.ConnectedWindowHandle = 0;
-                        IsShown = false;
-                    }
-                }
-            });
+            await Smtc.Previous();
         }
 
-        private void Func_Left_TouchDown(object sender, TouchEventArgs e)
+        private async void Func_Center_TouchDown(object sender, TouchEventArgs e)
         {
-            MsgHelper.SendMsg(MsgHelper.SEND_LAST, MsgHelper.ConnectedWindowHandle);
+            await Smtc.PlayOrPause();
         }
 
-        private void Func_Center_TouchDown(object sender, TouchEventArgs e)
+        private async void Func_Right_TouchDown(object sender, TouchEventArgs e)
         {
-            MsgHelper.SendMsg(MsgHelper.SEND_PAUSE, MsgHelper.ConnectedWindowHandle);
-        }
-
-        private void Func_Right_TouchDown(object sender, TouchEventArgs e)
-        {
-            MsgHelper.SendMsg(MsgHelper.SEND_NEXT, MsgHelper.ConnectedWindowHandle);
+            await Smtc.Next();
         }
 
         bool _popShown = false;

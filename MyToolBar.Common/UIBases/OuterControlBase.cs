@@ -52,7 +52,7 @@ namespace MyToolBar.Common.UIBases
         protected bool IsShown
         {
             get => _isShown;
-            set => IsShownChanged?.Invoke(this, _isShown = value);
+            set { if (_isShown != value) IsShownChanged?.Invoke(this, _isShown = value); }
         }
     }
 }

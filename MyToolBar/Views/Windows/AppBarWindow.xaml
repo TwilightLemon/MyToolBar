@@ -29,7 +29,7 @@
         <mb:BlurWindowBehavior IsToolWindow="True" Opacity="{Binding Source={StaticResource DataContext},Mode=TwoWay,Path=Data.ViewModel.WindowAccentCompositorOpacity}"/>
     </i:Interaction.Behaviors>
     
-    <Grid>
+    <Grid x:Name="MainBarGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1.2*"/>
             <ColumnDefinition Width="1*" />

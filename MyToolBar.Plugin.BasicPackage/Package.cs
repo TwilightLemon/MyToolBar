@@ -47,8 +47,8 @@ namespace MyToolBar.Plugin.BasicPackage
     public class LemonAppMusicOutControlPlugin : IPlugin
     {
         public IPackage? AcPackage { get; set; }
-        public string Name { get; } = "LemonAppMusicOutControl";
-        public string Description { get; } = "与Lemon App联动显示歌词与控制";
+        public string Name { get; } = "Media OutControl";
+        public string Description { get; } = "通用媒体控制和Lemon App联动显示歌词与控制";
         public List<string>? SettingsSignKeys { get; } = null;
         public PluginType Type { get; } = PluginType.OuterControl;
         public UIElement GetMainElement()
@@ -58,7 +58,7 @@ namespace MyToolBar.Plugin.BasicPackage
     }
     public class DemoClockOutControlPlugin : IPlugin
     {
-        public static string _name="DemoClock";
+        public static string _name="Demo Clock";
         public IPackage? AcPackage { get; set; }
         public string Name { get; } = _name;
         public string Description { get; } = "时钟";

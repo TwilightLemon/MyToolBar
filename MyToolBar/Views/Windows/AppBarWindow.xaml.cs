@@ -206,9 +206,13 @@ namespace MyToolBar.Views.Windows
         {
             TitleView.Text = ActiveWindow.GetActiveWindowTitle();
             Width = SystemParameters.WorkArea.Width;
-
             var fore = ActiveWindow.GetForegroundWindow();
-            if (MaxedWindow == IntPtr.Zero && fore.IsZoomedWindow())
+            bool zoomed = fore.IsZoomedWindow();
+            if (MaxedWindow!=IntPtr.Zero)
+            {
+                UpdateWindowColor();
+            }
+            if (MaxedWindow == IntPtr.Zero && zoomed)
             {
                 MaxedWindow = fore;
                 MaxWindStyle();
@@ -217,10 +221,38 @@ namespace MyToolBar.Views.Windows
             {
                 //退出全屏 高亮
                 MaxedWindow = IntPtr.Zero;
+                MainBarGrid.Background = null;
                 NormalWindStyle();
             }
         }
 
+        private void UpdateWindowColor()
+        {
+            //实验性功能：根据下方窗口颜色调整AppBar颜色
+            //屏幕截图
+            using var source = new System.Windows.Interop.HwndSource(new System.Windows.Interop.HwndSourceParameters());
+            var dpiX = source.CompositionTarget.TransformToDevice.M11;
+            var dpiY = source.CompositionTarget.TransformToDevice.M22;
+            System.Drawing.Bitmap bmp = ScreenAPI.CaptureScreenArea(0, (int)(ActualHeight*dpiX), (int)(ActualWidth*dpiY), 4);
+            long _r = 0, _g = 0, _b = 0;
+            int total = 0;
+            //获取颜色
+            for (int x = 0; x < ActualWidth; x += 20)
+            {
+                for (int y = 0; y < 4; y++)
+                {
+                    System.Drawing.Color c = bmp.GetPixel(x, y);
+                    _r += c.R;
+                    _g += c.G;
+                    _b += c.B;
+                    total++;
+                }
+            }
+            Color themeColor= Color.FromRgb((byte)(_r / total), (byte)(_g / total), (byte)(_b / total));
+            
+            MainBarGrid.Background = new SolidColorBrush(themeColor);
+
+        }
 
         private void UpdateColorMode()
         {

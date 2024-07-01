@@ -22,11 +22,13 @@
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
         <Border x:Name="PlayLastBtn" Cursor="Hand" Height="48" Width="48" CornerRadius="24"  MouseUp="PlayLastBtn_MouseUp">
-            <Path Data="{DynamicResource Icon_playLast}" Stretch="Uniform" Width="18" Fill="{DynamicResource ForeColor}" d:Fill="#000"/>
+            <Path Data="{DynamicResource Icon_PlayLast}" Stretch="Uniform" Width="18" Fill="{DynamicResource ForeColor}" d:Fill="#000"/>
         </Border>
-        <Border x:Name="PlayBtn" Cursor="Hand" Grid.Column="1" Height="48" Width="48" CornerRadius="24" Background="#9CFFFFFF" MouseUp="PlayBtn_MouseUp"/>
+        <Border x:Name="PlayBtn" Cursor="Hand" Grid.Column="1" Height="48" Width="48" CornerRadius="24"  MouseUp="PlayBtn_MouseUp">
+            <Path x:Name="PlayBtnIcon" Data="{DynamicResource Icon_Play}" Stretch="Uniform"  Fill="{DynamicResource ForeColor}" d:Fill="#000" Margin="4"/>
+        </Border>
         <Border x:Name="PlayNextBtn" Cursor="Hand" Grid.Column="2" Height="48" Width="48" CornerRadius="24">
-            <Path Data="{DynamicResource Icon_playNext}" Stretch="Uniform" Width="18" Fill="{DynamicResource ForeColor}" d:Fill="#000" MouseUp="Path_MouseUp"/>
+            <Path Data="{DynamicResource Icon_PlayNext}" Stretch="Uniform" Width="18" Fill="{DynamicResource ForeColor}" d:Fill="#000" MouseUp="PlayNextBtn_MouseUp"/>
         </Border>
     </Grid>
 </base:PopupWindowBase>
