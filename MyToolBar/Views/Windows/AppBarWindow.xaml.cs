@@ -14,6 +14,7 @@ using MyToolBar.ViewModels;
 using MyToolBar.Common.UIBases;
 using MyToolBar.Plugin;
 using System.Windows.Documents;
+using MyToolBar.Common.Func;
 
 namespace MyToolBar.Views.Windows
 {
@@ -233,10 +234,15 @@ namespace MyToolBar.Views.Windows
             using var source = new System.Windows.Interop.HwndSource(new System.Windows.Interop.HwndSourceParameters());
             var dpiX = source.CompositionTarget.TransformToDevice.M11;
             var dpiY = source.CompositionTarget.TransformToDevice.M22;
-            System.Drawing.Bitmap bmp = ScreenAPI.CaptureScreenArea(0, (int)(ActualHeight*dpiX), (int)(ActualWidth*dpiY), 4);
+            using System.Drawing.Bitmap bmp = ScreenAPI.CaptureScreenArea(0, (int)(ActualHeight*dpiX), (int)(ActualWidth*dpiY), 10);
+            //高斯模糊处理
+            var rect = new System.Drawing.Rectangle(0, 0, bmp.Width, bmp.Height);
+            bmp.GaussianBlur(ref rect,100);
+            MainBarGrid.Background = new ImageBrush(bmp.ToImageSource());
+
+            /* 取平均值
             long _r = 0, _g = 0, _b = 0;
             int total = 0;
-            //获取颜色
             for (int x = 0; x < ActualWidth; x += 20)
             {
                 for (int y = 0; y < 4; y++)
@@ -251,7 +257,7 @@ namespace MyToolBar.Views.Windows
             Color themeColor= Color.FromRgb((byte)(_r / total), (byte)(_g / total), (byte)(_b / total));
             
             MainBarGrid.Background = new SolidColorBrush(themeColor);
-
+            */
         }
 
         private void UpdateColorMode()

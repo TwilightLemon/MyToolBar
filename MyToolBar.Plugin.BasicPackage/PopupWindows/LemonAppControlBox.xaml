@@ -6,7 +6,7 @@
         xmlns:base="clr-namespace:MyToolBar.Common.UIBases;assembly=MyToolBar.Common"
         xmlns:local="clr-namespace:MyToolBar.Plugin.BasicPackage.PopupWindows"
         mc:Ignorable="d"
-        Title="LemonAppControlBox" Height="75" Width="300" 
+        Title="LemonAppControlBox" Height="150" Width="300" 
         Background="{DynamicResource MaskColor}" d:Background="#3C000000">
     <base:PopupWindowBase.Resources>
         <ResourceDictionary>
@@ -16,19 +16,28 @@
         </ResourceDictionary>
     </base:PopupWindowBase.Resources>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
-        </Grid.ColumnDefinitions>
-        <Border x:Name="PlayLastBtn" Cursor="Hand" Height="48" Width="48" CornerRadius="24"  MouseUp="PlayLastBtn_MouseUp">
-            <Path Data="{DynamicResource Icon_PlayLast}" Stretch="Uniform" Width="18" Fill="{DynamicResource ForeColor}" d:Fill="#000"/>
-        </Border>
-        <Border x:Name="PlayBtn" Cursor="Hand" Grid.Column="1" Height="48" Width="48" CornerRadius="24"  MouseUp="PlayBtn_MouseUp">
-            <Path x:Name="PlayBtnIcon" Data="{DynamicResource Icon_Play}" Stretch="Uniform"  Fill="{DynamicResource ForeColor}" d:Fill="#000" Margin="4"/>
-        </Border>
-        <Border x:Name="PlayNextBtn" Cursor="Hand" Grid.Column="2" Height="48" Width="48" CornerRadius="24">
-            <Path Data="{DynamicResource Icon_PlayNext}" Stretch="Uniform" Width="18" Fill="{DynamicResource ForeColor}" d:Fill="#000" MouseUp="PlayNextBtn_MouseUp"/>
-        </Border>
+        <Grid x:Name="Controller" Height="75" VerticalAlignment="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Border x:Name="PlayLastBtn" Cursor="Hand" Height="48" Width="48" CornerRadius="24"  MouseUp="PlayLastBtn_MouseUp" Background="#00000000">
+                <Path Data="{DynamicResource Icon_PlayLast}" Stretch="Uniform" Width="18" Fill="{DynamicResource ForeColor}" d:Fill="#000"/>
+            </Border>
+            <Border x:Name="PlayBtn" Cursor="Hand" Grid.Column="1" Height="48" Width="48" CornerRadius="24"  MouseUp="PlayBtn_MouseUp" Background="#00000000">
+                <Path x:Name="PlayBtnIcon" Data="{DynamicResource Icon_Play}" Stretch="Uniform"  Fill="{DynamicResource ForeColor}" d:Fill="#000" Margin="4"/>
+            </Border>
+            <Border x:Name="PlayNextBtn" Cursor="Hand" Grid.Column="2" Height="48" Width="48" CornerRadius="24" Background="#00000000" MouseUp="PlayNextBtn_MouseUp">
+                <Path Data="{DynamicResource Icon_PlayNext}" Stretch="Uniform" Width="18" Fill="{DynamicResource ForeColor}" d:Fill="#000"/>
+            </Border>
+        </Grid>
+        <TextBlock x:Name="InfoTb" Margin="20,20,100,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="60">
+            <Run x:Name="TitleTb" d:Text="Dancing With Our Hand Tied" FontSize="14" FontWeight="Bold"/>
+            <LineBreak/>
+            <Run x:Name="ArtistTb" d:Text="Taylor Swift"/>
+        </TextBlock>
+        <Border x:Name="ThumbnailImg" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 20 20 0" Width="64" Height="64" CornerRadius="12" Background="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}"/>
+        <Border BorderBrush="Black" BorderThickness="1"/>
     </Grid>
 </base:PopupWindowBase>
