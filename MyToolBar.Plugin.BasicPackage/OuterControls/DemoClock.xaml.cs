@@ -58,7 +58,7 @@ namespace MyToolBar.Plugin.BasicPackage.OuterControls
         {
             if (foreColor != null)
                 TimeTb.Foreground = foreColor;
-            else TimeTb.SetResourceReference(ForegroundProperty, "ForeColor");
+            else TimeTb.SetResourceReference(ForegroundProperty, "AppBarFontColor");
         }
         private void RefreshTime(object? sender, System.Timers.ElapsedEventArgs e)
         {

@@ -143,10 +143,23 @@ namespace MyToolBar.Common.WinApi
             {
                 if (msg == CallbackId)
                 {
-                    if (wParam.ToInt32() == (int)Interop.ABNotify.ABN_POSCHANGED)
+                    switch (wParam.ToInt32())
                     {
-                        ABSetPos(this, Window, ChildElement);
-                        handled = true;
+                        case (int)Interop.ABNotify.ABN_POSCHANGED:
+                            ABSetPos(this, Window, ChildElement);
+                            handled = true;
+                            break;
+                        case (int)Interop.ABNotify.ABN_FULLSCREENAPP:
+                            if (lParam.ToInt32() == 1)
+                            {
+                                Window.Visibility = Visibility.Collapsed;
+                            }
+                            else
+                            {
+                                Window.Visibility = Visibility.Visible;
+                            }
+                            handled = true;
+                            break;
                     }
                 }
                 return IntPtr.Zero;

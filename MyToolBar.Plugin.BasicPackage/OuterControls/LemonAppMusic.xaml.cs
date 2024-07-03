@@ -59,7 +59,7 @@ namespace MyToolBar.Plugin.BasicPackage.OuterControls
         private void maxStyleAct(bool max,Brush foreColor) {
             if(foreColor!=null)
                 LyricTb.Foreground = foreColor;
-            else LyricTb.SetResourceReference(ForegroundProperty, "ForeColor");
+            else LyricTb.SetResourceReference(ForegroundProperty, "AppBarFontColor");
             if (max)
             {
                 LyricTb.FontWeight = FontWeights.Normal;

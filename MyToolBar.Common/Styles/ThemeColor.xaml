@@ -1,6 +1,9 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!--DarkMode-->
+    <!--For AppBar-->
+    <SolidColorBrush x:Key="AppBarFontColor" Color="#FEFEFE"/>
+    <!--For Others-->
     <SolidColorBrush x:Key="ForeColor" Color="#FEFEFE"/>
     <SolidColorBrush x:Key="MaskColor" Color="#19ffffff"/>
     <SolidColorBrush x:Key="HighlightColor" Color="#78FFFFFF"/>
