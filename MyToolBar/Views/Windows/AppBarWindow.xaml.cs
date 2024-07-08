@@ -48,7 +48,8 @@ namespace MyToolBar.Views.Windows
         {
             #region Window Style
             ToolWindowApi.SetToolWindow(this);
-            AppBarFunctions.SetAppBar(this, ABEdge.Top);
+            var abf=AppBarFunctions.SetAppBar(this, ABEdge.Top);
+            abf.OnFullScreenChanged += Abf_OnFullScreenChanged;
             Width = SystemParameters.WorkArea.Width;
             SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
             UpdateColorMode();
@@ -71,6 +72,11 @@ namespace MyToolBar.Views.Windows
             _pluginReactiveService.CapsuleAdded += _pluginReactiveService_CapsuleAdded;
             await _pluginReactiveService.Load();
             #endregion
+        }
+
+        private void Abf_OnFullScreenChanged(bool FullScreen)
+        {
+            Visibility= FullScreen && EnableHideWhenFullScreen ? Visibility.Collapsed : Visibility.Visible;
         }
 
         /// <summary>
@@ -166,7 +172,7 @@ namespace MyToolBar.Views.Windows
         private void MaxWindStyle()
         {
             //全屏样式  整体变暗
-            CurrentWindowStyle = 1;
+            CurrentAppBarStyle = 1;
             ViewModel.WindowAccentCompositorOpacity = 0.95f;
             if (IsDarkMode)
             {
@@ -181,9 +187,10 @@ namespace MyToolBar.Views.Windows
 
         private void NormalWindStyle()
         {
-            CurrentWindowStyle = 0;
+            CurrentAppBarStyle = 0;
             ViewModel.WindowAccentCompositorOpacity = 0.6f;
             Brush? foreground = null;
+            _themeResourceService.SetAppBarFontColor(!IsDarkMode);
             if (IsDarkMode)
             {
                 OuterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(120, 255, 255, 255));
@@ -204,45 +211,39 @@ namespace MyToolBar.Views.Windows
         {
             TitleView.Text = ActiveWindow.GetActiveWindowTitle();
             Width = SystemParameters.WorkArea.Width;
-            var fore = ActiveWindow.GetForegroundWindow();
-            bool zoomed = fore.IsZoomedWindow();
-            if (MaxedWindow!=IntPtr.Zero)
-            {
-                UpdateWindowColor();
-            }
-            if (MaxedWindow == IntPtr.Zero && zoomed)
-            {
-                MaxedWindow = fore;
-                MaxWindStyle();
-            }
-            if (!MaxedWindow.IsZoomedWindow() && MaxedWindow != IntPtr.Zero)
-            {
-                //退出全屏 高亮
-                MaxedWindow = IntPtr.Zero;
-                MainBarGrid.Background = null;
-                NormalWindStyle();
-            }
+            new MaxedWindowAPI((found) => {
+                if (found)
+                {
+                    UpdateWindowColor();
+                    if (CurrentAppBarStyle == 0)
+                        MaxWindStyle();
+                }
+                else
+                {
+                    if (CurrentAppBarStyle == 1)
+                    {
+                        NormalWindStyle();
+                        MainBarGrid.Background = null;
+                    }
+                }
+            }).Find();
         }
-
+        private Color? _lastEvaColor = null;
         private void UpdateWindowColor()
         {
             //实验性功能：根据下方窗口颜色调整AppBar颜色
             //屏幕截图
-            using var source = new System.Windows.Interop.HwndSource(new System.Windows.Interop.HwndSourceParameters());
+            using var source = new HwndSource(new HwndSourceParameters());
             var dpiX = source.CompositionTarget.TransformToDevice.M11;
             var dpiY = source.CompositionTarget.TransformToDevice.M22;
-            using System.Drawing.Bitmap bmp = ScreenAPI.CaptureScreenArea(0, (int)(ActualHeight*dpiX), (int)(ActualWidth*dpiY), 10);
-            //高斯模糊处理
-            var rect = new System.Drawing.Rectangle(0, 0, bmp.Width, bmp.Height);
-            bmp.GaussianBlur(ref rect,100);
-            MainBarGrid.Background = new ImageBrush(bmp.ToImageSource());
-
-            //取平均值
+            var capHeight = 6;
+            using System.Drawing.Bitmap bmp = ScreenAPI.CaptureScreenArea(0, (int)(ActualHeight*dpiX), (int)(ActualWidth*dpiY), capHeight);
+            //取平均值   粗浅的判断颜色变化，有变化时才更新
             long _r = 0, _g = 0, _b = 0;
             int total = 0;
             for (int x = 0; x < ActualWidth; x += 20)
             {
-                for (int y = 0; y < 10; y+=2)
+                for (int y = 0; y < capHeight; y += 2)
                 {
                     System.Drawing.Color c = bmp.GetPixel(x, y);
                     _r += c.R;
@@ -251,8 +252,24 @@ namespace MyToolBar.Views.Windows
                     total++;
                 }
             }
+            Color themeColor = Color.FromRgb((byte)(_r / total), (byte)(_g / total), (byte)(_b / total));
+            if (_lastEvaColor.HasValue && _lastEvaColor.Value.Equals(themeColor))
+                return;
+            _lastEvaColor = themeColor;
+            //高斯模糊处理
+            var rect = new System.Drawing.Rectangle(0, 0, bmp.Width, bmp.Height);
+            bmp.GaussianBlur(ref rect,100);
+            var imgBrush = BgImgEffector.Background = new ImageBrush(bmp.ToImageSource());
+            BgImgEffector.Opacity = 0;
+            BgImgEffector.Visibility = Visibility.Visible;
+            var ani = new DoubleAnimation(0, 1, TimeSpan.FromSeconds(0.2));
+            ani.Completed += delegate
+            {
+                MainBarGrid.Background = imgBrush;
+                BgImgEffector.Visibility = Visibility.Collapsed;
+            };
+            BgImgEffector.BeginAnimation(OpacityProperty, ani);
 
-            Color themeColor= Color.FromRgb((byte)(_r / total), (byte)(_g / total), (byte)(_b / total));
             //判断颜色深浅
             if (themeColor.R * 0.299 + themeColor.G * 0.578 + themeColor.B * 0.114 > 192)
             {
@@ -264,6 +281,7 @@ namespace MyToolBar.Views.Windows
                 //深色
                 _themeResourceService.SetAppBarFontColor(false);
             }
+            oc?.MaxStyleAct?.Invoke(CurrentAppBarStyle==0, null);
             /* 
             MainBarGrid.Background = new SolidColorBrush(themeColor);
             */
@@ -274,7 +292,7 @@ namespace MyToolBar.Views.Windows
             var isDarkMode = !ToolWindowApi.GetIsLightTheme();
             _themeResourceService.SetThemeMode(isDarkMode);
 
-            if (CurrentWindowStyle == 0)
+            if (CurrentAppBarStyle == 0)
                 NormalWindStyle();
             else
                 MaxWindStyle();

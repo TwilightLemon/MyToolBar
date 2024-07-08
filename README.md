@@ -43,6 +43,9 @@ Powered by .NET 8 on WPF
 - 全局亚克力材质特效
 ### More...
 
+## 如何使用
+编译整个项目，将MyToolBar.Plugin.BasicPackage.dll文件复制到MyToolBar.exe运行目录\\Plugins\\下，在设置页面中启用需要的组件即可。
+
 ## 版权声明
 本应用由 [Twilight./Lemon(https://twlm.space)(QQ:2728578956)](https://twlm.space) 开发，转载和使用请保留原仓库地址和版权信息
 使用和传播请遵守GPL协议，详见LICENSE

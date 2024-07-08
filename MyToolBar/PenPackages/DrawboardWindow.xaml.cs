@@ -20,6 +20,7 @@ namespace MyToolBar.PenPackages
     {
         public DrawboardWindow()
         {
+            GlobalService.EnableHideWhenFullScreen = false;
             InitializeComponent();
             this.Loaded += DrawboardWindow_Loaded;
             this.PreviewStylusInRange += DrawboardWindow_PreviewStylusInRange;
@@ -27,6 +28,12 @@ namespace MyToolBar.PenPackages
             this.PreviewStylusButtonDown += DrawboardWindow_PreviewStylusButtonDown;
             this.PreviewMouseDoubleClick += DrawboardWindow_PreviewMouseDoubleClick;
             this.StylusSystemGesture += DrawboardWindow_StylusSystemGesture;
+            this.Closing += DrawboardWindow_Closing;
+        }
+
+        private void DrawboardWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
+        {
+            GlobalService.EnableHideWhenFullScreen = true;
         }
 
         private void DrawboardWindow_StylusSystemGesture(object sender, StylusSystemGestureEventArgs e)

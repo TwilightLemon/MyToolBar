@@ -9,7 +9,6 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MyToolBar.Common;component/Styles/IconData.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/MyToolBar.Common;component/Styles/ThemeColor.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/MyToolBar.Common;component/Styles/UITemplate.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

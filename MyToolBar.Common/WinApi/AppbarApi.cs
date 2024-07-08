@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace MyToolBar.Common.WinApi
 {
-    class Interop
+    static class Interop
     {
         [StructLayout(LayoutKind.Sequential)]
         internal struct RECT
@@ -122,7 +122,7 @@ namespace MyToolBar.Common.WinApi
     public static class AppBarFunctions
     {
 
-        private class RegisterInfo
+        public class RegisterInfo
         {
             public int CallbackId { get; set; }
             public bool IsRegistered { get; set; }
@@ -135,7 +135,7 @@ namespace MyToolBar.Common.WinApi
             public bool OriginalTopmost { get; set; }
             public FrameworkElement ChildElement { get; set; }
 
-
+            public event Action<bool> OnFullScreenChanged;
             public Rect? DockedSize { get; set; }
 
             public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam,
@@ -150,14 +150,7 @@ namespace MyToolBar.Common.WinApi
                             handled = true;
                             break;
                         case (int)Interop.ABNotify.ABN_FULLSCREENAPP:
-                            if (lParam.ToInt32() == 1)
-                            {
-                                Window.Visibility = Visibility.Collapsed;
-                            }
-                            else
-                            {
-                                Window.Visibility = Visibility.Visible;
-                            }
+                            OnFullScreenChanged?.Invoke(lParam.ToInt32() == 1);
                             handled = true;
                             break;
                     }
@@ -214,7 +207,7 @@ namespace MyToolBar.Common.WinApi
 
         }
 
-        public static void SetAppBar(Window appbarWindow, ABEdge edge, FrameworkElement childElement = null, bool topMost = true)
+        public static RegisterInfo SetAppBar(Window appbarWindow, ABEdge edge, FrameworkElement childElement = null, bool topMost = true)
         {
             var info = GetRegisterInfo(appbarWindow);
             info.Edge = edge;
@@ -241,7 +234,7 @@ namespace MyToolBar.Common.WinApi
                 Interop.DwmSetWindowAttribute(abd.hWnd, (int)Interop.DWMWINDOWATTRIBUTE.DWMA_EXCLUDED_FROM_PEEK, ref renderPolicy, sizeof(int));
                 Interop.DwmSetWindowAttribute(abd.hWnd, (int)Interop.DWMWINDOWATTRIBUTE.DWMA_DISALLOW_PEEK, ref renderPolicy, sizeof(int));
 
-                return;
+                return info;
             }
 
             if (!info.IsRegistered)
@@ -269,6 +262,7 @@ namespace MyToolBar.Common.WinApi
             Interop.DwmSetWindowAttribute(abd.hWnd, (int)Interop.DWMWINDOWATTRIBUTE.DWMA_DISALLOW_PEEK, ref renderPolicy, sizeof(int));
 
             ABSetPos(info, appbarWindow, childElement);
+            return info;
         }
 
         private delegate void ResizeDelegate(Window appbarWindow, Rect rect);

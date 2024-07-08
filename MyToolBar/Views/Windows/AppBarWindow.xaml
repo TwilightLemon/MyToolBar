@@ -35,6 +35,7 @@
             <ColumnDefinition Width="1*" />
             <ColumnDefinition Width="1.2*"/>
         </Grid.ColumnDefinitions>
+        <Border x:Name="BgImgEffector" Opacity="0" Grid.ColumnSpan="3"/>
         <Border x:Name="MainMenuButton" Cursor="Hand" HorizontalAlignment="Left" Height="25" Width="25" Background="#01000000" MouseDown="MainMenuButton_MouseDown"  Margin="10,0,0,0">
             <Border BorderBrush="{DynamicResource AppBarFontColor}" BorderThickness="2" CornerRadius="25,25,25,25" Width="15" Height="15"/>
         </Border>

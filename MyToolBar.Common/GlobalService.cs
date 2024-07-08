@@ -19,7 +19,14 @@ namespace MyToolBar.Common
         /// <summary>
         /// 指示前台窗口状态，用于适配OuterControl的高亮UI，0为正常，1为最大化
         /// </summary>
-        public static  int CurrentWindowStyle = 0;
+        public static  int CurrentAppBarStyle = 0;
+        /// <summary>
+        /// 有窗口进入全屏时是否隐藏AppBar
+        /// </summary>
+        public static bool EnableHideWhenFullScreen = true;
+        /// <summary>
+        /// 全局主题模式
+        /// </summary>
         public static bool IsDarkMode { get; set; } = true;
         /// <summary>
         /// 公共Timer
