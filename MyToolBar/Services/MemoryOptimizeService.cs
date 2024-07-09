@@ -1,18 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Win32;
-
+/*
+ 该服务的设计初衷：
+ WPF本身占用内存很高，整个项目其实长时间都处于一个静默的状态，
+ 不需要太多的资源，故将大部分内存压缩至虚拟内存
+ */
 namespace MyToolBar.Services
 {
     /// <summary>
-    /// [周期任务] 压缩内存到虚拟内存，减少占用
+    /// [周期任务] 优化内存
     /// </summary>
     internal class MemoryOptimizeService : IHostedService
     {
@@ -20,60 +20,35 @@ namespace MyToolBar.Services
         [DllImport("kernel32.dll")]
         private static extern bool SetProcessWorkingSetSize(IntPtr proc, int min, int max);
 
-        private void SetDate()
-        {
-            CreateKey();
-            RegistryKey expr_0B = Registry.CurrentUser;
-            RegistryKey expr_17 = expr_0B.OpenSubKey("SOFTWARE\\DevExpress\\Components", true);
-            expr_17.GetValue("LastAboutShowedTime");
-            string value = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
-            expr_17.SetValue("LastAboutShowedTime", value);
-            expr_0B.Dispose();
-        }
-
         private void FlushMemory()
         {
-            GC.Collect();
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true);
             GC.WaitForPendingFinalizers();
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
                 SetProcessWorkingSetSize(Process.GetCurrentProcess().Handle, -1, -1);
         }
 
-        private void CreateKey()
+        private async Task MemoryOptimizeLoop(CancellationToken cancellationToken)
         {
-            RegistryKey currentUser = Registry.CurrentUser;
-            if (currentUser.OpenSubKey("SOFTWARE\\DevExpress\\Components", true) == null)
-            {
-                RegistryKey expr_1F = currentUser.CreateSubKey("SOFTWARE\\DevExpress\\Components");
-                expr_1F.CreateSubKey("LastAboutShowedTime").SetValue("LastAboutShowedTime", DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss"));
-                expr_1F.CreateSubKey("DisableSmartTag").SetValue("LastAboutShowedTime", false);
-                expr_1F.CreateSubKey("SmartTagWidth").SetValue("LastAboutShowedTime", 350);
-            }
-            currentUser.Dispose();
-        }
-
-        private async Task MemoryOptimizeLoop()
-        {
-            while (true)
+            while (!cancellationToken.IsCancellationRequested)
             {
                 try
                 {
-                    SetDate();
                     FlushMemory();
                     await Task.Delay(TimeSpan.FromSeconds(SecondsToSleep));
                 }
-                catch
+                catch(TaskCanceledException)
                 {
-                    // ignore exception
+                    break;
                 }
             }
         }
 
-        public double SecondsToSleep { get; set; } = 50;
+        public double SecondsToSleep { get; set; } = 120;
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            _ = Task.Run(MemoryOptimizeLoop,cancellationToken);
+            _ = MemoryOptimizeLoop(cancellationToken);
             return Task.CompletedTask;
         }
 

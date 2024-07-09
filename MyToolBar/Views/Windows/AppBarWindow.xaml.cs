@@ -25,18 +25,21 @@ namespace MyToolBar.Views.Windows
     public partial class AppBarWindow : Window
     {
         private OuterControlBase? oc;
-        private PenControlWindow pcw;
+        private PenControlWindow? pcw;
 
         private readonly ThemeResourceService _themeResourceService;
         private readonly PluginReactiveService _pluginReactiveService;
+        private readonly PowerOptimizeService _powerOptimizeService;
 
         public AppBarWindow(
             PluginReactiveService pluginReactiveService,
             ThemeResourceService themeResourceService,
+            PowerOptimizeService powerOptimizeService,
             AppBarViewModel viewModel)
         {
             _pluginReactiveService = pluginReactiveService;
             _themeResourceService = themeResourceService;
+            _powerOptimizeService = powerOptimizeService;
 
             ViewModel = viewModel;
             DataContext = this;
@@ -52,6 +55,7 @@ namespace MyToolBar.Views.Windows
             abf.OnFullScreenChanged += Abf_OnFullScreenChanged;
             Width = SystemParameters.WorkArea.Width;
             SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
+            _powerOptimizeService.OnEnergySaverStatusChanged += _powerOptimizeService_OnEnergySaverStatusChanged;
             UpdateColorMode();
             ShowOuter(false);
             #endregion
@@ -72,6 +76,11 @@ namespace MyToolBar.Views.Windows
             _pluginReactiveService.CapsuleAdded += _pluginReactiveService_CapsuleAdded;
             await _pluginReactiveService.Load();
             #endregion
+        }
+
+        private void _powerOptimizeService_OnEnergySaverStatusChanged(bool PowerModeOn)
+        {
+            IsPowerModeOn=PowerModeOn;
         }
 
         private void Abf_OnFullScreenChanged(bool FullScreen)
@@ -214,7 +223,8 @@ namespace MyToolBar.Views.Windows
             new MaxedWindowAPI((found) => {
                 if (found)
                 {
-                    UpdateWindowColor();
+                    if (!IsPowerModeOn)
+                        UpdateWindowColor();
                     if (CurrentAppBarStyle == 0)
                         MaxWindStyle();
                 }

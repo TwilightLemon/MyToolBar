@@ -5,15 +5,53 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:base="clr-namespace:MyToolBar.Common.UIBases;assembly=MyToolBar.Common"
              mc:Ignorable="d"  Height="30" d:Width="400">
-    <Grid  Background="Transparent" MouseUp="Grid_MouseUp">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
-        </Grid.ColumnDefinitions>
-        <TextBlock x:Name="LyricTb" FontWeight="Bold" TextWrapping="NoWrap" VerticalAlignment="Center" TextAlignment="Center"  Grid.ColumnSpan="3" FontSize="14"/>
-        <Border x:Name="Func_Left" Background="Transparent" Grid.Column="0" TouchLeave="Func_Left_TouchDown"/>
-        <Border x:Name="Func_Center" Background="Transparent" Grid.Column="1" TouchLeave="Func_Center_TouchDown"/>
-        <Border x:Name="Func_Right" Background="Transparent" Grid.Column="2" TouchLeave="Func_Right_TouchDown"/>
+    <base:OuterControlBase.Resources>
+        <Storyboard x:Key="DragRight">
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="grid" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                <EasingThicknessKeyFrame KeyTime="00:00:00.2000000" Value="30,0,-30,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+                <EasingThicknessKeyFrame KeyTime="00:00:00.4000000" Value="0,0,0,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+            </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="DragLeft">
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="grid" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                <EasingThicknessKeyFrame KeyTime="00:00:00.2000000" Value="-30,0,30,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+                <EasingThicknessKeyFrame KeyTime="00:00:00.4000000" Value="0,0,0,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+            </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="PlayOrPauseAni">
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="textBlock" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                <EasingThicknessKeyFrame KeyTime="00:00:00.2000000" Value="0,8,0,-8">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+                <EasingThicknessKeyFrame KeyTime="00:00:00.4000000" Value="0,0,0,0">
+                    <EasingThicknessKeyFrame.EasingFunction>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </EasingThicknessKeyFrame.EasingFunction>
+                </EasingThicknessKeyFrame>
+            </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
+    </base:OuterControlBase.Resources>
+    <Grid x:Name="grid" Background="Transparent" MouseUp="Grid_MouseUp" Margin="0,0,0,0">
+        <TextBlock x:Name="textBlock" FontWeight="Bold" TextWrapping="NoWrap" VerticalAlignment="Center" TextAlignment="Center"  Grid.ColumnSpan="3" FontSize="14" Margin="0,0,0,0">
+             <Run x:Name="LyricTb" d:Text="Dacing With Our Hands Tied - Taylor Swift"/> 🎵
+        </TextBlock>
     </Grid>
 </base:OuterControlBase>

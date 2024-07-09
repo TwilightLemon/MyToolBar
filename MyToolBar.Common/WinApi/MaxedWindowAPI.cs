@@ -59,7 +59,9 @@ namespace MyToolBar.Common.WinApi
         private bool EnumWindowsCallback(IntPtr hWnd, IntPtr lParam)
         {
             bool maxed= IsWindowMaximized(hWnd)&&IsWindowVisible(hWnd)&&hWnd.IsZoomedWindow();
-            Debug.WriteLineIf(maxed, hWnd.GetWindowTitle()+" \\ "+hWnd.GetWindowClass());
+            var title = hWnd.GetWindowTitle();
+            var className = hWnd.GetWindowClass();
+           // Debug.WriteLineIf(maxed,title+" \\ "+className);
             if (maxed)
             {
                 OnWindowFound(true);

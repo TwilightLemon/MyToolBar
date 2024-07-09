@@ -16,7 +16,6 @@ internal class CPUInfo
     {
         Double temperature = 0;
         // Query the MSAcpi_ThermalZoneTemperature API
-        // Note: run your app or Visual Studio (while programming) or you will get "Access Denied"
         ManagementObjectSearcher searcher = new ManagementObjectSearcher(@"root\WMI", "SELECT * FROM MSAcpi_ThermalZoneTemperature");
 
         foreach (ManagementObject obj in searcher.Get())

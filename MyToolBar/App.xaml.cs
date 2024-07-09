@@ -14,8 +14,12 @@ namespace MyToolBar
     /// </summary>
     public partial class App : Application
     {
-        public static IHost Host { get; } = new HostBuilder()
-            .ConfigureServices(services =>
+        public static IHost Host { get; private set; }
+
+        private void BuildHost()
+        {
+            var builder = new HostBuilder();
+            Host=builder.ConfigureServices(services =>
             {
                 // host
                 services.AddHostedService<ApplicationService>();
@@ -37,6 +41,8 @@ namespace MyToolBar
                 services.AddSingleton<ManagedPackageService>();
                 services.AddSingleton<PluginReactiveService>();
                 services.AddSingleton<ThemeResourceService>();
+                services.AddSingleton<PowerOptimizeService>();
+                services.AddHostedService(provider => provider.GetRequiredService<PowerOptimizeService>());
 
                 // logging
                 services.AddLogging(builder =>
@@ -45,10 +51,12 @@ namespace MyToolBar
                 });
             })
             .Build();
+        }
 
         public App()
         {
             InitializeComponent();
+            BuildHost();
         }
 
         protected override void OnStartup(StartupEventArgs e)

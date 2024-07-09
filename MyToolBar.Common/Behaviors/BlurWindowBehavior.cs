@@ -47,13 +47,20 @@ namespace MyToolBar.Common.Behaviors
         {
             base.OnAttached();
             AssociatedObject.Closing += AssociatedObject_Closing;
-            if (AssociatedObject.IsLoaded)
+            if (GlobalService.IsPowerModeOn)
             {
-                InitializeBehavior();
+                AssociatedObject.SetResourceReference(Window.BackgroundProperty, "BackgroundColor");
             }
             else
             {
-                AssociatedObject.Loaded += AssociatedObject_Loaded;
+                if (AssociatedObject.IsLoaded)
+                {
+                    InitializeBehavior();
+                }
+                else
+                {
+                    AssociatedObject.Loaded += AssociatedObject_Loaded;
+                }
             }
         }
 

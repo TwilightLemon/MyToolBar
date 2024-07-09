@@ -12,6 +12,7 @@ using MyToolBar.Views.Windows;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Net;
+using Microsoft.Win32;
 
 namespace MyToolBar.Services
 {
@@ -49,14 +50,16 @@ namespace MyToolBar.Services
             }));
             //加载插件包管理器
             _serviceProvider.GetRequiredService<ManagedPackageService>().Load();
-            //设置Http代理
+            //设置Http代理 (TODO:可选配置代理模式)
             HttpClient.DefaultProxy = new WebProxy();
             //加载主窗口
             var mainWindow = _serviceProvider.GetRequiredService<AppBarWindow>();
             mainWindow.Show();
 
+
             return Task.CompletedTask;
         }
+
 
         public Task StopAsync(CancellationToken cancellationToken)
         {

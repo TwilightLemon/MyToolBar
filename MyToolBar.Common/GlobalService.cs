@@ -31,8 +31,9 @@ namespace MyToolBar.Common
         /// <summary>
         /// 公共Timer
         /// </summary>
-
         public static System.Timers.Timer GlobalTimer = null;
+
+        public static bool IsPowerModeOn = false;
 
         public static Brush OuterControlNormalDarkModeForeColor= new SolidColorBrush(Color.FromArgb(250, 3, 3, 3));
         /// <summary>
