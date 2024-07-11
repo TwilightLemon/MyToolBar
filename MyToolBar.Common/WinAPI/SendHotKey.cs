@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyToolBar.Common.WinApi
+namespace MyToolBar.Common.WinAPI
 {
     public class SendHotKey
     {

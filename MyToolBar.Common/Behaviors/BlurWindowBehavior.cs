@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Media;
 using Microsoft.Win32;
 using Microsoft.Xaml.Behaviors;
-using MyToolBar.Common.WinApi;
+using MyToolBar.Common.WinAPI;
 
 namespace MyToolBar.Common.Behaviors
 {
@@ -26,7 +26,7 @@ namespace MyToolBar.Common.Behaviors
 
         private static void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
         {
-            var isDarkMode = !ToolWindowApi.GetIsLightTheme();
+            var isDarkMode = !ToolWindowAPI.GetIsLightTheme();
 
             foreach (var wac in s_allWindowsAccentCompositors.Values)
             {
@@ -95,7 +95,7 @@ namespace MyToolBar.Common.Behaviors
 
         private WindowAccentCompositor CreateWindowAccentCompositor()
         {
-            var isDarkMode = !ToolWindowApi.GetIsLightTheme();
+            var isDarkMode = !ToolWindowAPI.GetIsLightTheme();
             var wac = new WindowAccentCompositor(
                 AssociatedObject, IsToolWindow, (c) =>
                 {

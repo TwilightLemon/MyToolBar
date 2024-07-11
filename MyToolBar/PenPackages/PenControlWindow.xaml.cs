@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using MyToolBar.Common.WinApi;
+using MyToolBar.Common.WinAPI;
 using System.Windows.Media.Animation;
 using MyToolBar.Common;
 
@@ -74,7 +74,7 @@ namespace MyToolBar.PenPackages
         private void PenControlWindow_Loaded(object sender, RoutedEventArgs e)
         {
             ResetWindowLocation();
-            ToolWindowApi.SetToolWindow(this);
+            ToolWindowAPI.SetToolWindow(this);
         }
 
         private void PenControlWindow_SizeChanged(object sender, SizeChangedEventArgs e)

@@ -8,23 +8,22 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
 
-namespace MyToolBar.Common.WinApi
+namespace MyToolBar.Common.WinAPI
 {
-    public static class ToolWindowApi
+    public static class ToolWindowAPI
     {
         public static bool GetIsLightTheme()
         {
-            using (var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize"))
+            using var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
+            if (key != null)
             {
-                if (key != null)
+                var value = key.GetValue("AppsUseLightTheme");
+                if (value != null && value is int)
                 {
-                    var value = key.GetValue("AppsUseLightTheme");
-                    if (value != null && value is int)
-                    {
-                        return (int)value > 0;
-                    }
+                    return (int)value > 0;
                 }
             }
+
             return true; // 默认为浅色模式
         }
 

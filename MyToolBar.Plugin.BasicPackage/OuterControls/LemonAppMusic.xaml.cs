@@ -45,6 +45,22 @@ namespace MyToolBar.Plugin.BasicPackage.OuterControls
             {
                 Point end = e.GetPosition(this);
                 Debug.WriteLine(end.X - _touchStart.X);
+                //按区域滑动手势 左 中 右 为上一曲 播放 下一曲
+                if (Math.Abs(end.X - _touchStart.X) <= 5&&end.Y-_touchStart.Y>0)
+                {
+                    double regionLeft = ActualWidth / 3, regionRight = ActualWidth * 2 / 3;
+                    if (end.X < regionLeft)
+                        await Smtc.Previous();
+                    else if (end.X >= regionLeft && end.X <= regionRight)
+                        await Smtc.PlayOrPause();
+                    else if (end.X > regionRight)
+                        await Smtc.Next();
+                    //都是向下滑的手势，暂且用这个动画
+                    (Resources["PlayOrPauseAni"] as Storyboard).Begin();
+                    return;
+                }
+
+                //左右滑动手势
                 if (end.X - _touchStart.X > 5)
                 {
                     (Resources["DragRight"] as Storyboard).Begin();

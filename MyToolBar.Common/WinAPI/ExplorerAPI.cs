@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.IO;
-namespace MyToolBar.Common.WinApi;
+namespace MyToolBar.Common.WinAPI;
 public class ExplorerAPI
 {
     [DllImport("shell32.dll", CharSet = CharSet.Unicode)]

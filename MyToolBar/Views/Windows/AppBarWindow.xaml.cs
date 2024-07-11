@@ -5,7 +5,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using static MyToolBar.Common.GlobalService;
 using System.Timers;
-using MyToolBar.Common.WinApi;
+using MyToolBar.Common.WinAPI;
 using Microsoft.Win32;
 using MyToolBar.PenPackages;
 using MyToolBar.PopupWindows;
@@ -16,6 +16,7 @@ using MyToolBar.Plugin;
 using System.Windows.Documents;
 using MyToolBar.Common.Func;
 using System.Windows.Interop;
+using System.Diagnostics;
 
 namespace MyToolBar.Views.Windows
 {
@@ -24,8 +25,9 @@ namespace MyToolBar.Views.Windows
     /// </summary>
     public partial class AppBarWindow : Window
     {
-        private OuterControlBase? oc;
-        private PenControlWindow? pcw;
+        private OuterControlBase? _oc;
+        private PenControlWindow? _pcw;
+        private IntPtr _activeWindowHook;
 
         private readonly ThemeResourceService _themeResourceService;
         private readonly PluginReactiveService _pluginReactiveService;
@@ -50,25 +52,41 @@ namespace MyToolBar.Views.Windows
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             #region Window Style
-            ToolWindowApi.SetToolWindow(this);
-            var abf=AppBarFunctions.SetAppBar(this, ABEdge.Top);
+            //标记WS_EX_TOOLWINDOW 窗口不在任务视图中显示
+            ToolWindowAPI.SetToolWindow(this);
+            //设置AppBar & 全屏时隐藏AppBar
+            var abf =AppBarFunctions.SetAppBar(this, ABEdge.Top);
             abf.OnFullScreenChanged += Abf_OnFullScreenChanged;
+
             Width = SystemParameters.WorkArea.Width;
-            SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
-            _powerOptimizeService.OnEnergySaverStatusChanged += _powerOptimizeService_OnEnergySaverStatusChanged;
+            //初始化AppBar样式
             UpdateColorMode();
             ShowOuter(false);
             #endregion
 
-            #region GlobalTimer
+            #region Timers
             GlobalTimer = new Timer();
-            GlobalTimer.Interval = 1200;
-            GlobalTimer.Elapsed += (o, e) => Dispatcher.Invoke(Tick);
+            GlobalTimer.Interval = 1000;
+            GlobalTimer.Elapsed += delegate {
+                Dispatcher.Invoke(() => { UpdateBackground(); });
+            };
             GlobalTimer.Start();
             #endregion
 
-            pcw = new PenControlWindow();
-            pcw.Show();
+            #region Services
+            //响应系统颜色模式变化
+            SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
+            //响应节能模式变化
+            _powerOptimizeService.OnEnergySaverStatusChanged += _powerOptimizeService_OnEnergySaverStatusChanged;
+            //注册ActiveWindowHook
+            _activeWindowHook = ActiveWindow.RegisterActiveWindowHook((hWinEventHook, eventType, hwnd, idObject, idChild, dwEventThread, dwmsEventTime) =>
+            {
+                Dispatcher.Invoke(OnAvtiveWindowUpdated);
+            });
+            #endregion
+
+            _pcw = new PenControlWindow();
+            _pcw.Show();
 
             #region Load Plugin
             _pluginReactiveService.OuterControlChanged += _pluginReactiveService_OuterControlChanged;
@@ -81,6 +99,15 @@ namespace MyToolBar.Views.Windows
         private void _powerOptimizeService_OnEnergySaverStatusChanged(bool PowerModeOn)
         {
             IsPowerModeOn=PowerModeOn;
+            //疑似这段会间歇性造成UI线程卡死
+            Dispatcher.Invoke(() => {
+                if (IsPowerModeOn)
+                {
+                    MainBarGrid.SetResourceReference(BackgroundProperty, "BackgroundColor");
+                    _themeResourceService.SetAppBarFontColor(!IsDarkMode);
+                }
+                else MainBarGrid.Background = null;
+            });
         }
 
         private void Abf_OnFullScreenChanged(bool FullScreen)
@@ -110,19 +137,15 @@ namespace MyToolBar.Views.Windows
         }
 
         private void _pluginReactiveService_OuterControlChanged(OuterControlBase obj) {
-            oc?.Dispose();
-            oc = null;
+            _oc?.Dispose();
+            _oc = null;
             OuterFunc.Children.Clear();
-            oc = obj;
-            oc.IsShownChanged += Oc_IsShownChanged;
-            OuterFunc.Children.Add(oc);
+            _oc = obj;
+            _oc.IsShownChanged += Oc_IsShownChanged;
+            OuterFunc.Children.Add(_oc);
         }
 
         #region OuterControl
-        /// <summary>
-        /// 最后一个最大化窗口 用于判断是否全屏 以改变OuterFunc样式
-        /// </summary>
-        private IntPtr MaxedWindow = IntPtr.Zero;
         /// <summary>
         /// OuterFuncStatus是否开启
         /// </summary>
@@ -175,6 +198,7 @@ namespace MyToolBar.Views.Windows
         #region OuterFuncStatus & WindowStyle
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            ActiveWindow.UnregisterActiveWindowHook(_activeWindowHook);
             AppBarFunctions.SetAppBar(this, ABEdge.None);
         }
 
@@ -191,7 +215,7 @@ namespace MyToolBar.Views.Windows
             {
                 OuterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(20, 0, 0, 0));
             }
-            oc?.MaxStyleAct?.Invoke(true, null);
+            _oc?.MaxStyleAct?.Invoke(true, null);
         }
 
         private void NormalWindStyle()
@@ -210,16 +234,22 @@ namespace MyToolBar.Views.Windows
                 OuterFuncStatus.SetResourceReference(BackgroundProperty, "MaskColor");
             }
 
-            oc?.MaxStyleAct?.Invoke(false, foreground);
+            _oc?.MaxStyleAct?.Invoke(false, foreground);
         }
 
         /// <summary>
         /// 更新ForeWindow->Tittle & 自身窗口样式
         /// </summary>
-        private void Tick()
+        private void OnAvtiveWindowUpdated()
         {
             TitleView.Text = ActiveWindow.GetActiveWindowTitle();
             Width = SystemParameters.WorkArea.Width;
+        }
+        /// <summary>
+        /// 沉浸模式下更新AppBar背景
+        /// </summary>
+        private void UpdateBackground()
+        {
             new MaxedWindowAPI((found) => {
                 if (found)
                 {
@@ -237,6 +267,7 @@ namespace MyToolBar.Views.Windows
                     }
                 }
             }).Find();
+
         }
         private Color? _lastEvaColor = null;
         private void UpdateWindowColor()
@@ -248,6 +279,7 @@ namespace MyToolBar.Views.Windows
             var dpiY = source.CompositionTarget.TransformToDevice.M22;
             var capHeight = 6;
             using System.Drawing.Bitmap bmp = ScreenAPI.CaptureScreenArea(0, (int)(ActualHeight*dpiX), (int)(ActualWidth*dpiY), capHeight);
+            if (bmp == null) return;
             //取平均值   粗浅的判断颜色变化，有变化时才更新
             long _r = 0, _g = 0, _b = 0;
             int total = 0;
@@ -291,15 +323,18 @@ namespace MyToolBar.Views.Windows
                 //深色
                 _themeResourceService.SetAppBarFontColor(false);
             }
-            oc?.MaxStyleAct?.Invoke(CurrentAppBarStyle==0, null);
+            _oc?.MaxStyleAct?.Invoke(CurrentAppBarStyle==0, null);
             /* 
             MainBarGrid.Background = new SolidColorBrush(themeColor);
             */
         }
 
+        /// <summary>
+        /// 自动根据系统颜色模式切换主题
+        /// </summary>
         private void UpdateColorMode()
         {
-            var isDarkMode = !ToolWindowApi.GetIsLightTheme();
+            var isDarkMode = !ToolWindowAPI.GetIsLightTheme();
             _themeResourceService.SetThemeMode(isDarkMode);
 
             if (CurrentAppBarStyle == 0)

@@ -9,7 +9,7 @@ using System.Windows.Media.Animation;
 using Microsoft.Xaml.Behaviors;
 using MyToolBar.Common;
 using MyToolBar.Common.Behaviors;
-using MyToolBar.Common.WinApi;
+using MyToolBar.Common.WinAPI;
 
 namespace MyToolBar.PenPackages
 {
@@ -156,7 +156,7 @@ namespace MyToolBar.PenPackages
 
         private void DrawboardWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            ToolWindowApi.SetToolWindow(this);
+            ToolWindowAPI.SetToolWindow(this);
             Topmost = true;
             this.Width = SystemParameters.WorkArea.Width;
             this.Height = SystemParameters.WorkArea.Height;

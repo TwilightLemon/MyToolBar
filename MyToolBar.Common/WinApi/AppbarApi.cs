@@ -5,7 +5,7 @@ using System.Windows.Interop;
 using System.Windows.Threading;
 using System.Windows;
 
-namespace MyToolBar.Common.WinApi
+namespace MyToolBar.Common.WinAPI
 {
     static class Interop
     {
@@ -135,7 +135,7 @@ namespace MyToolBar.Common.WinApi
             public bool OriginalTopmost { get; set; }
             public FrameworkElement ChildElement { get; set; }
 
-            public event Action<bool> OnFullScreenChanged;
+            public event Action<bool>? OnFullScreenChanged;
             public Rect? DockedSize { get; set; }
 
             public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam,

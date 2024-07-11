@@ -10,7 +10,7 @@ using System.Windows.Media;
 using System.Windows.Shell;
 using System.Windows;
 
-namespace MyToolBar.Common.WinApi
+namespace MyToolBar.Common.WinAPI
 {
     /// <summary>
     /// 为窗口提供模糊特效。

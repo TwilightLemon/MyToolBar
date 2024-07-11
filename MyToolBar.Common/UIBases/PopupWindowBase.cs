@@ -3,7 +3,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Shell;
 using System.Windows.Controls;
 using Microsoft.Xaml.Behaviors;
-using MyToolBar.Common.WinApi;
+using MyToolBar.Common.WinAPI;
 using MyToolBar.Common.Behaviors;
 
 namespace MyToolBar.Common.UIBases
@@ -53,7 +53,7 @@ namespace MyToolBar.Common.UIBases
 
         private void PopWindowBase_Loaded(object sender, RoutedEventArgs e)
         {
-            ToolWindowApi.SetToolWindow(this);
+            ToolWindowAPI.SetToolWindow(this);
             BehaviorCollection behaviors = Interaction.GetBehaviors(this);
             behaviors.Add(new BlurWindowBehavior());
         }

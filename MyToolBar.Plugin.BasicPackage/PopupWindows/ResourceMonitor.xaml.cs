@@ -7,7 +7,7 @@ using System.Windows.Interop;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using MyToolBar.Common.UIBases;
-using MyToolBar.Common.WinApi;
+using MyToolBar.Common.WinAPI;
 using MyToolBar.Common;
 using MyToolBar.Plugin.BasicPackage.API;
 
