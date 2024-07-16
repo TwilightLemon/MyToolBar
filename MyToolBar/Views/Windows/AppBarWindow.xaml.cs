@@ -81,12 +81,19 @@ namespace MyToolBar.Views.Windows
             //注册ActiveWindowHook
             _activeWindowHook = ActiveWindow.RegisterActiveWindowHook((hWinEventHook, eventType, hwnd, idObject, idChild, dwEventThread, dwmsEventTime) =>
             {
-                Dispatcher.Invoke(OnAvtiveWindowUpdated);
+                Dispatcher.Invoke(OnActiveWindowUpdated);
             });
             #endregion
 
-            _pcw = new PenControlWindow();
-            _pcw.Show();
+            #region Pen Package
+            //存在触摸设备时才启动PenControlWindow
+            if (Tablet.TabletDevices.Count > 0)
+            {
+                _pcw = new PenControlWindow();
+                _pcw.Owner = this;//防止Appbar将其覆盖
+                _pcw.Show();
+            }
+            #endregion
 
             #region Load Plugin
             _pluginReactiveService.OuterControlChanged += _pluginReactiveService_OuterControlChanged;
@@ -240,7 +247,7 @@ namespace MyToolBar.Views.Windows
         /// <summary>
         /// 更新ForeWindow->Tittle & 自身窗口样式
         /// </summary>
-        private void OnAvtiveWindowUpdated()
+        private void OnActiveWindowUpdated()
         {
             TitleView.Text = ActiveWindow.GetActiveWindowTitle();
             Width = SystemParameters.WorkArea.Width;
@@ -280,7 +287,7 @@ namespace MyToolBar.Views.Windows
             var capHeight = 6;
             using System.Drawing.Bitmap bmp = ScreenAPI.CaptureScreenArea(0, (int)(ActualHeight*dpiX), (int)(ActualWidth*dpiY), capHeight);
             if (bmp == null) return;
-            //取平均值   粗浅的判断颜色变化，有变化时才更新
+            //取平均值
             long _r = 0, _g = 0, _b = 0;
             int total = 0;
             for (int x = 0; x < ActualWidth; x += 20)
@@ -295,6 +302,7 @@ namespace MyToolBar.Views.Windows
                 }
             }
             Color themeColor = Color.FromRgb((byte)(_r / total), (byte)(_g / total), (byte)(_b / total));
+            //粗浅的判断颜色变化，有变化时才更新 (不好用)
             if (_lastEvaColor.HasValue && _lastEvaColor.Value.Equals(themeColor))
                 return;
             _lastEvaColor = themeColor;
@@ -313,7 +321,9 @@ namespace MyToolBar.Views.Windows
             BgImgEffector.BeginAnimation(OpacityProperty, ani);
 
             //判断颜色深浅
-            if (themeColor.R * 0.299 + themeColor.G * 0.578 + themeColor.B * 0.114 > 192)
+            var sel = themeColor.R * 0.299 + themeColor.G * 0.578 + themeColor.B * 0.114;
+            Debug.WriteLine(sel);
+            if (sel > 150)
             {
                 //浅色
                 _themeResourceService.SetAppBarFontColor(true);
@@ -324,7 +334,7 @@ namespace MyToolBar.Views.Windows
                 _themeResourceService.SetAppBarFontColor(false);
             }
             _oc?.MaxStyleAct?.Invoke(CurrentAppBarStyle==0, null);
-            /* 
+            /*  纯色
             MainBarGrid.Background = new SolidColorBrush(themeColor);
             */
         }

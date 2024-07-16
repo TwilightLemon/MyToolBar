@@ -11,10 +11,11 @@
     </base:ItemBase.Resources>
     <Grid>
         <Border x:Name="EnabledMask" CornerRadius="15" Background="{DynamicResource MaskColor}" Visibility="{Binding PluginIsEnabled,Converter={StaticResource BooleanToVisibilityConverter}}"/>
-        <TextBlock Margin="20">
+        <TextBlock Margin="18">
             <Run d:Text="Capsule Name" FontSize="22" Text="{Binding Plugin.Name,Mode=OneWay}"/>
             <LineBreak/>
-            <Run Text="{DynamicResource SettingsWindow_Desc}"/>: <Run d:Text="Desc." Text="{Binding Plugin.Description,Mode=OneWay}"/>
+            <Run d:Text="Desc." Text="{Binding Plugin.Description,Mode=OneWay}"/>
         </TextBlock>
+        <Path VerticalAlignment="Center" Visibility="{Binding PluginIsEnabled,Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Right" Margin="0 0 36 0" Height="32" Width="32" Data="{DynamicResource Icon_Enabled}" Fill="#FF1DE9B6" Stretch="Uniform"/>
     </Grid>
 </base:ItemBase>

@@ -4,8 +4,8 @@
                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                      xmlns:base="clr-namespace:MyToolBar.Common.UIBases;assembly=MyToolBar.Common"
-                     xmlns:ws="https://github.com/OrgEleCho/EleCho.WpfSuite"
-                     mc:Ignorable="d"
+                     xmlns:ws="https://schemas.elecho.dev/wpfsuite"
+                     mc:Ignorable="d" d:Background="Transparent" d:Foreground="{DynamicResource ForeColor}"
                      Title="WeatherBox" Height="520" Width="350">
     <Window.Resources>
         <ResourceDictionary>
@@ -75,7 +75,7 @@
         <WrapPanel x:Name="MainPage" Orientation="Vertical" Height="550" ItemWidth="330" Margin="0,0,0,0">
             <Grid Margin="0,20,0,0" >
                 <Border x:Name="FavorBtn" Cursor="Hand" Background="Transparent" Width="20" Height="20" HorizontalAlignment="Left" Margin="10,0,0,0" MouseLeftButtonUp="FavorBtn_MouseLeftButtonUp">
-                    <Path Data="{StaticResource Icon_favor}" Fill="{DynamicResource ForeColor}" Stretch="Uniform" Width="14" Height="14"/>
+                    <Path Data="{StaticResource Icon_Menu}" Fill="{DynamicResource ForeColor}" Stretch="Uniform" Width="14" Height="14"/>
                 </Border>
                 <TextBlock x:Name="Now_Location" Cursor="Hand" HorizontalAlignment="Left" MouseLeftButtonUp="Now_Location_MouseLeftButtonUp" TextWrapping="Wrap" Margin="40,0,0,0" Text="where where" VerticalAlignment="Top" FontSize="16" FontWeight="Bold"/>
                 <TextBlock x:Name="UpdateTime" HorizontalAlignment="Right" Text="2024.3.30 23:02 Sat." Margin="0,5,20,0" VerticalAlignment="Top" FontSize="12" Opacity="0.8"/>
@@ -127,7 +127,15 @@
         <ws:ScrollViewer x:Name="AddFavor" ws:StylusTouchDevice.Simulate="True" PanningMode="VerticalOnly"  VerticalScrollBarVisibility="Hidden" Visibility="Collapsed">
             <WrapPanel   ItemWidth="330" Orientation="Vertical" Margin="0,0,0,0" >
                 <Grid Margin="0 20 0 20" Height="25">
-                    <TextBox Style="{DynamicResource SimpleTextBoxStyle}" x:Name="SearchCityBox" PreviewKeyDown="SearchCityBox_PreviewKeyDown" TextWrapping="Wrap" Text="Search City" Margin="40,0,40,0" Foreground="{DynamicResource ForeColor}" Background="{DynamicResource MaskColor}"/>
+                    <ws:TextBox x:Name="SearchCityBox" 
+                                CornerRadius="12"  
+                                PreviewKeyDown="SearchCityBox_PreviewKeyDown" 
+                                TextWrapping="Wrap" Placeholder="Search City" 
+                                Margin="40,0,40,0" 
+                                Foreground="{DynamicResource ForeColor}" 
+                                Background="{DynamicResource MaskColor}" 
+                                BorderThickness="0,0,0,0"
+                                Padding="6,4,0,0" CaretBrush="{DynamicResource ForeColor}"/>
                     <Border x:Name="BackBtn" Cursor="Hand" Background="Transparent" MouseLeftButtonUp="BackBtn_MouseLeftButtonUp" Width="25" Height="25" HorizontalAlignment="Left" Margin="10,0,0,0">
                         <Path Data="{StaticResource Icon_back}" Stretch="Uniform" Width="14" Height="14" Fill="{DynamicResource ForeColor}"/>
                     </Border>

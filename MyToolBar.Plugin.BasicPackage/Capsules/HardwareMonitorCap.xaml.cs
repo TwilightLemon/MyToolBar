@@ -33,6 +33,7 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
             ni = await NetworkInfo.Create();
             ci = CPUInfo.Create();
             GlobalTimer.Elapsed += GlobalTimer_Elapsed;
+            Tick();
             MainPanel.Visibility = Visibility.Visible;
             LoadingTextBlk.Visibility = Visibility.Collapsed;
         }

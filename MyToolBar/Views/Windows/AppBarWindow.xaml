@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MyToolBar.Views.Windows"
-        xmlns:ws="https://github.com/OrgEleCho/EleCho.WpfSuite"
+        xmlns:ws="https://schemas.elecho.dev/wpfsuite"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:mb="clr-namespace:MyToolBar.Common.Behaviors;assembly=MyToolBar.Common"
         mc:Ignorable="d" Topmost="True"

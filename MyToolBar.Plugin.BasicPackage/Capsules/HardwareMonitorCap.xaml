@@ -19,14 +19,12 @@
                 <Path Width="13" Height="13" HorizontalAlignment="Left" Data="{StaticResource Icon_memory}" Stretch="Uniform" SnapsToDevicePixels="True" Fill="{Binding Foreground, ElementName=uc}"/>
                 <TextBlock x:Name="Meo_text" Margin="20,0,0,0" TextWrapping="Wrap" d:Text="99%" VerticalAlignment="Center"/>
             </Grid>
-            <Grid x:Name="CPUViewer" Width="85" Height="30" Margin="10,0,0,0">
-                <TextBlock  Margin="20,0,0,0" TextWrapping="NoWrap" TextTrimming="None" VerticalAlignment="Center">
-                    <Run x:Name="Cpu_text" d:Text="100%"/>
-                    <Run x:Name="Cpu_temp" d:Text="36℃"/>
-                </TextBlock>
+            <Grid x:Name="CPUViewer" Width="90" Height="30" Margin="10,0,0,0">
+                <TextBlock x:Name="Cpu_text" d:Text="100%"  Margin="20,0,0,0" HorizontalAlignment="Left" TextWrapping="NoWrap" TextTrimming="None" VerticalAlignment="Center"/>
+                <TextBlock x:Name="Cpu_temp" d:Text="36℃" TextWrapping="NoWrap" Margin="0 0 6 0" HorizontalAlignment="Right" TextTrimming="None" VerticalAlignment="Center"/>
                 <Path Width="13" Height="13" Data="{StaticResource Icon_CPU}" HorizontalAlignment="Left" Fill="{Binding Foreground, ElementName=uc}" Stretch="Uniform" SnapsToDevicePixels="True" Margin="0,5,0,5"/>
             </Grid>
-            <Grid x:Name="NetworkViewer" Width="90" Height="30" Margin="10,0,0,0">
+            <Grid x:Name="NetworkViewer" Width="95" Height="30">
                 <TextBlock x:Name="Network_text" Margin="20,0,0,0" TextTrimming="None" VerticalAlignment="Center" FontSize="10" LineHeight="1">
                     <Run d:Text="↑90.00kb/s"/>
                     <LineBreak/>

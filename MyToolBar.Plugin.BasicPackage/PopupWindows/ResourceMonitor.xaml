@@ -4,12 +4,13 @@
                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                      xmlns:base="clr-namespace:MyToolBar.Common.UIBases;assembly=MyToolBar.Common"
-                     xmlns:ws="https://github.com/OrgEleCho/EleCho.WpfSuite"
+                     xmlns:ws="https://schemas.elecho.dev/wpfsuite"
                      mc:Ignorable="d"
                      Title="ResourceMonitor" Height="520" Width="350" Background="{DynamicResource MaskColor}" Foreground="{DynamicResource ForeColor}">
     <base:PopupWindowBase.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/MyToolBar.Plugin.BasicPackage;component/IconData.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/MyToolBar.Common;component/Styles/IconData.xaml"/>
                 <!--ThemeColor资源字典仅为设计时提供，实际运行时会通过PopWindowBase移除，以将资源映射到App域-->
                 <ResourceDictionary Source="pack://application:,,,/MyToolBar.Common;component/Styles/ThemeColor.xaml"/>
@@ -73,19 +74,85 @@
                     <DiscreteObjectKeyFrame KeyTime="00:00:00.2000000" Value="{x:Static Visibility.Collapsed}"/>
                 </ObjectAnimationUsingKeyFrames>
             </Storyboard>
+            <Storyboard x:Key="OpenFinalizerModeAni">
+                <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="ProcListPage" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                    <EasingThicknessKeyFrame KeyTime="00:00:00.2" Value="10,390,10,10">
+                        <EasingThicknessKeyFrame.EasingFunction>
+                            <CircleEase EasingMode="EaseOut"/>
+                        </EasingThicknessKeyFrame.EasingFunction>
+                    </EasingThicknessKeyFrame>
+                </ThicknessAnimationUsingKeyFrames>
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="FinalizerModePage" Storyboard.TargetProperty="(FrameworkElement.Height)">
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.2" Value="320">
+                        <EasingDoubleKeyFrame.EasingFunction>
+                            <CircleEase EasingMode="EaseOut"/>
+                        </EasingDoubleKeyFrame.EasingFunction>
+                    </EasingDoubleKeyFrame>
+                </DoubleAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FinalizerModePage" Storyboard.TargetProperty="(UIElement.Visibility)">
+                    <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+                    <DiscreteObjectKeyFrame KeyTime="00:00:00.2" Value="{x:Static Visibility.Visible}"/>
+                </ObjectAnimationUsingKeyFrames>
+            </Storyboard>
+            <Storyboard x:Key="CloseFinalizerModeAni">
+                <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="ProcListPage" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                    <SplineThicknessKeyFrame KeyTime="00:00:00.2" Value="10,70,10,10"/>
+                </ThicknessAnimationUsingKeyFrames>
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="FinalizerModePage" Storyboard.TargetProperty="(FrameworkElement.Height)">
+                    <SplineDoubleKeyFrame KeyTime="00:00:00.2" Value="0"/>
+                </DoubleAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FinalizerModePage" Storyboard.TargetProperty="(UIElement.Visibility)">
+                    <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+                    <DiscreteObjectKeyFrame KeyTime="00:00:00.2" Value="{x:Static Visibility.Collapsed}"/>
+                </ObjectAnimationUsingKeyFrames>
+            </Storyboard>
         </ResourceDictionary>
     </base:PopupWindowBase.Resources>
     <Grid x:Name="MainPage" Width="350">
-        <Grid Margin="10,20,10,0" Height="30" VerticalAlignment="Top" >
+        <Grid Margin="10,20,10,0" VerticalAlignment="Top" >
             <Border  Background="Transparent" Width="20" Height="20" HorizontalAlignment="Left" Margin="10,0,0,0">
                 <Path Data="{DynamicResource Icon_monitor}" Fill="{DynamicResource ForeColor}" Stretch="Uniform" Width="14" Height="14"/>
             </Border>
-            <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Margin="40,0,0,0" Text="Processes" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
-            <Border x:Name="OpenTaskMonitorBtn" Cursor="Hand"  MouseLeftButtonUp="OpenTaskMonitorBtn_MouseLeftButtonUp" CornerRadius="14,14,14,14" HorizontalAlignment="Right" Width="80" Background="{DynamicResource MaskColor}" Height="28">
-                <TextBlock Text="TaskMgr" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            </Border>
+            <TextBlock x:Name="TitleTb" HorizontalAlignment="Left" TextWrapping="Wrap" Margin="40,0,0,0" VerticalAlignment="Center" FontSize="16" FontWeight="Bold" >
+                    Processes <Run x:Name="TitleSignTb" d:Text="Fixed" FontSize="12"/>
+            </TextBlock>
+            <ws:Button x:Name="OpenTaskMonitorBtn" Click="OpenTaskMonitorBtn_Click"
+                        HorizontalAlignment="Right" Width="32"  Height="32" Style="{StaticResource SimpleButtonStyleForWs}">
+                <Path Data="{StaticResource Icon_TaskMgr}" Height="14" Fill="{DynamicResource ForeColor}" Stretch="Uniform" />
+            </ws:Button>
+            <ws:Button x:Name="FinalizerModeBtn" Margin="0 0 48 0"
+            HorizontalAlignment="Right" Width="32"  Height="32" Style="{StaticResource SimpleButtonStyleForWs}" Click="FinalizerModeBtn_Click">
+                <Path Data="{StaticResource Icon_Target}" Height="14" Fill="{DynamicResource ForeColor}" Stretch="Uniform" />
+            </ws:Button>
         </Grid>
-        <Border x:Name="ProcListPage"  Margin="10 60 10 10"  Background="{DynamicResource MaskColor}" CornerRadius="15">
+        <Border x:Name="FinalizerModePage" VerticalAlignment="Top" Margin="10 60 10 10" Height="0"
+                Background="{DynamicResource MaskColor}" CornerRadius="15">
+            <Grid>
+                <ws:ListBox x:Name="NotRespondingList"  VerticalAlignment="Top" Height="220"
+                            SelectionChanged="NotRespondingList_SelectionChanged"
+                            Background="Transparent" BorderThickness="0" 
+                            d:ItemsSource="{d:SampleData ItemCount=5}"
+                            ItemContainerStyle="{StaticResource SimpleListBoxItemStyle}">
+                    <ws:ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="Transparent" Padding="18 8">
+                                <TextBlock Text="{Binding ProcessName,Mode=OneWay}"/>
+                            </Border>
+                        </DataTemplate>
+                    </ws:ListBox.ItemTemplate>
+                </ws:ListBox>
+                <TextBlock x:Name="FinalizerNoItemTip" Margin="20" Text="No not-responding process detected." FontSize="24"
+                           TextWrapping="Wrap" TextAlignment="Center" Opacity="0.5"
+                           Visibility="Collapsed"/>
+                <TextBlock Margin="16,0,16,64"  VerticalAlignment="Bottom" >
+                    Choosen: <Run x:Name="FinalizerChoosenTb" d:Text="xxx.exe" />
+                </TextBlock>
+                <ws:Button x:Name="FinalizerModeKillBtn"
+                            HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="100" Height="30" Margin="0 0 0 20"
+                            Style="{StaticResource SimpleButtonStyleForWs}" Content="Kill" Click="FinalizerModeKillBtn_Click" />
+            </Grid>
+        </Border>
+        <Border x:Name="ProcListPage"  Margin="10,70,10,10"  Background="{DynamicResource MaskColor}" CornerRadius="15">
             <ws:ScrollViewer VerticalScrollBarVisibility="Hidden" ws:StylusTouchDevice.Simulate="True" PanningMode="VerticalOnly">
                 <WrapPanel x:Name="ProcessList" ItemWidth="330"/>
             </ws:ScrollViewer>

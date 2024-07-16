@@ -4,7 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:MyToolBar.Views.Pages.Settings"
-      xmlns:ws="https://github.com/OrgEleCho/EleCho.WpfSuite"
+      xmlns:ws="https://schemas.elecho.dev/wpfsuite"
       mc:Ignorable="d" Foreground="{DynamicResource ForeColor}"
       d:DesignHeight="450" d:DesignWidth="800"
       Title="OuterControlSettingsPage">
@@ -12,14 +12,18 @@
     <ws:ScrollViewer PanningMode="VerticalOnly" VerticalScrollBarVisibility="Hidden"  ws:StylusTouchDevice.Simulate="True">
         <StackPanel>
             <TextBlock Text="{DynamicResource SettingsWindow_Tab_OuterControl}" FontSize="22" FontWeight="Bold" Margin="20"/>
-            <ws:ListBox x:Name="OCPluginList" Background="Transparent" ItemsSource="{Binding}" BorderThickness="0"  d:ItemsSource="{d:SampleData ItemCount=5}" ItemContainerStyle="{DynamicResource SimpleListBoxItemStyle}" SelectionChanged="OCPluginList_SelectionChanged">
+            <ws:ListBox x:Name="OCPluginList" Background="Transparent"
+                        ItemsSource="{Binding}" BorderThickness="0"
+                        d:ItemsSource="{d:SampleData ItemCount=5}"
+                        ItemContainerStyle="{DynamicResource SimpleListBoxItemStyle}"
+                        SelectionChanged="OCPluginList_SelectionChanged">
                 <ws:ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Border Height="Auto" Padding="10" Background="Transparent">
+                        <Border Height="Auto" Padding="18" Background="Transparent">
                             <TextBlock >
                                 <Run Text="{Binding Name,Mode=OneWay}" FontSize="22" FontWeight="Bold"/>
                                 <LineBreak/>
-                                <Run Text="{DynamicResource SettingsWindow_Desc}"/>: <Run Text="{Binding Description,Mode=OneWay}"/>
+                                <Run Text="{Binding Description,Mode=OneWay}"/>
                             </TextBlock>
                         </Border>
                     </DataTemplate>

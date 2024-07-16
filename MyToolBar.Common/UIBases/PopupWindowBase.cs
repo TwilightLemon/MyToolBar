@@ -33,6 +33,21 @@ namespace MyToolBar.Common.UIBases
             this.ContentRendered += PopWindowBase_ContentRendered;
         }
 
+        /// <summary>
+        /// 指示PopupWindow是否总是保持打开，失去焦点时不自动关闭
+        /// </summary>
+        public bool AlwaysShow
+        {
+            get { return (bool)GetValue(AlwaysShowProperty); }
+            set { SetValue(AlwaysShowProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for AlwaysShow.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty AlwaysShowProperty =
+            DependencyProperty.Register("AlwaysShow", typeof(bool), typeof(PopupWindowBase), new PropertyMetadata(false));
+
+
+
         private void PopWindowBase_Initialized(object? sender, EventArgs e)
         {
             //remove local resource dic, reflect ThemeConf to main Appdomain
@@ -60,6 +75,7 @@ namespace MyToolBar.Common.UIBases
 
         private void PopWindowBase_Deactivated(object? sender, EventArgs e)
         {
+            if (AlwaysShow) return;
             var da = new DoubleAnimation(this.Top, -1 * this.Height, TimeSpan.FromMilliseconds(300));
             da.EasingFunction = new CubicEase();
             da.Completed += Da_Completed;

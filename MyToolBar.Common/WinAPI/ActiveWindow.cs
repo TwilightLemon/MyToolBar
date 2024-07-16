@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -28,9 +29,25 @@ namespace MyToolBar.Common.WinAPI
             UnhookWinEvent(hook);
         }
 
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint processId);
+
+        public static Process? GetWindowProcess(this IntPtr hWnd)
+        {
+            GetWindowThreadProcessId(hWnd, out uint processId);
+            try
+            {
+                return Process.GetProcessById((int)processId);
+            }
+            catch (ArgumentException)
+            {
+                // 指定的进程ID不存在
+                return null;
+            }
+        }
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-        static extern IntPtr GetForegroundWindow();
+        public static extern IntPtr GetForegroundWindow();
         [DllImport("user32.dll")]
         static extern int GetWindowTextLength(IntPtr hWnd);
 

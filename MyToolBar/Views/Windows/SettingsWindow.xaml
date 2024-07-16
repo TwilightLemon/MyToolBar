@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MyToolBar"
         xmlns:mb="clr-namespace:MyToolBar.Common.Behaviors;assembly=MyToolBar.Common"
-        xmlns:ws="https://github.com/OrgEleCho/EleCho.WpfSuite"
+        xmlns:ws="https://schemas.elecho.dev/wpfsuite"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:Items="clr-namespace:MyToolBar.PopupWindows.Items"
         x:Class="MyToolBar.Views.Windows.SettingsWindow"
@@ -19,7 +19,7 @@
     <Grid>
         <DockPanel>
             <DockPanel DockPanel.Dock="Left"
-                       Background="#19000000"
+                       Background="{DynamicResource MaskColor}"
                        Width="200">
                 <StackPanel DockPanel.Dock="Top">
                     <TextBlock Text="Settings"

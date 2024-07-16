@@ -35,11 +35,13 @@ namespace MyToolBar.Common.UIBases
                 };
                 _ViewMask.SetResourceReference(BackgroundProperty, "MaskColor");
                 MouseEnter += delegate {
-                    _ViewMask.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 0.5, TimeSpan.FromMilliseconds(300)));
+                    _ViewMask.Opacity = 0.5;
+                   // _ViewMask.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 0.5, TimeSpan.FromMilliseconds(300)));
                 };
                 MouseLeave += delegate
                 {
-                    _ViewMask.BeginAnimation(OpacityProperty, new DoubleAnimation(0.5, 0, TimeSpan.FromMilliseconds(300)));
+                    _ViewMask.Opacity = 0;
+                    //_ViewMask.BeginAnimation(OpacityProperty, new DoubleAnimation(0.5, 0, TimeSpan.FromMilliseconds(300)));
                 };
                 //插入到最底层
                 _Container.Children.Insert(0, _ViewMask);

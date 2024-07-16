@@ -21,6 +21,7 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
         public ResourceMonitor()
         {
             InitializeComponent();
+            DataContext = this;
             GlobalService.GlobalTimer.Elapsed += MonitorProcesses;
             MonitorProcesses(null, null);
             this.Closed += delegate
@@ -29,19 +30,30 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
             };
         }
 
+        private void InitProcessList(int count)
+        {
+            ProcessList.Children.Clear();
+            for (int i = 0; i < count; i++)
+            {
+                var item = new ProcessItem();
+                item.Click += ProcItem_Clicked;
+                ProcessList.Children.Add(item);
+            }
+        }
         private void MonitorProcesses(object? sender, System.Timers.ElapsedEventArgs e)
         {
             this.Dispatcher.Invoke(() =>
             {
                 if (ProcessList != null)
                 {
-                    ProcessList.Children.Clear();
-                    var processes = Process.GetProcesses().OrderByDescending(p => p.WorkingSet64).Take(20);
-                    foreach (var p in processes)
+                    //仅在第一次初始化时创建
+                    int count = 30;
+                    if (ProcessList.Children.Count == 0)
+                        InitProcessList(count);
+                    var processes = Process.GetProcesses().OrderByDescending(p => p.WorkingSet64).Take(count);
+                    for (int i = 0; i < count; i++)
                     {
-                        var item = new ProcessItem(p);
-                        item.Click += ProcItem_Clicked;
-                        ProcessList.Children.Add(item);
+                        (ProcessList.Children[i] as ProcessItem).UpdateData(i < processes.Count() ? processes.ElementAt(i) : null);
                     }
                 }
             });
@@ -83,16 +95,15 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
             sb.Begin();
         }
 
-        private void OpenTaskMonitorBtn_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            Process.Start("taskmgr");
-        }
-
         private void PInfo_EndBtn_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            SelectedProcess?.Kill();
-            SelectedProcess = null;
-            ((Storyboard)Resources["CloseDetalPage"]).Begin();
+            try
+            {
+                SelectedProcess?.Kill();
+                SelectedProcess = null;
+                ((Storyboard)Resources["CloseDetalPage"]).Begin();
+            }
+            catch { }
         }
 
         private void PInfo_OpenBtn_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -115,6 +126,94 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
             var sb = (Storyboard)Resources["CloseDetalPage"];
             (sb.Children[2] as ThicknessAnimationUsingKeyFrames).KeyFrames[1].Value = SeletedItemPos.Value;
             sb.Begin();
+        }
+
+        private void OpenTaskMonitorBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("taskmgr");
+        }
+
+        private bool _isFinalizerModeOpen = false,_isDetectingActiveWindow=false;
+        private IntPtr _finalizerActiveHook;
+        public List<Process>? NotRespondingProcData { get; set; }
+        public Process? NotRespondingProcChoosen { get; set; }
+
+
+        private void FinalizerModeBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (_isFinalizerModeOpen) {
+                AlwaysShow = false;
+                _isFinalizerModeOpen = false;
+                TitleSignTb.Text = "";
+                this.Deactivated -= Finalizer_StartDetectActiveWindow;
+                this.Activated -= Finalizer_StopDetectActiveWindow;
+                ActiveWindow.UnregisterActiveWindowHook(_finalizerActiveHook);
+                GlobalService.GlobalTimer.Elapsed -= FinalizerUpdateData;
+                (Resources["CloseFinalizerModeAni"] as Storyboard).Begin();
+            }
+            else
+            {
+                AlwaysShow = true;
+                _isFinalizerModeOpen = true;
+                TitleSignTb.Text = "(Fixed)";
+                this.Deactivated += Finalizer_StartDetectActiveWindow;
+                this.Activated += Finalizer_StopDetectActiveWindow;
+                _finalizerActiveHook = ActiveWindow.RegisterActiveWindowHook(Finalizer_OnActiveWindow);
+                GlobalService.GlobalTimer.Elapsed += FinalizerUpdateData;
+                (Resources["OpenFinalizerModeAni"] as Storyboard).Begin();
+            }
+        }
+
+        private void Finalizer_StopDetectActiveWindow(object? sender, EventArgs e)
+        {
+            _isDetectingActiveWindow = false;
+        }
+
+        private void Finalizer_StartDetectActiveWindow(object? sender, EventArgs e)
+        {
+            _isDetectingActiveWindow = true;
+        }
+
+        private void Finalizer_OnActiveWindow(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
+        {
+            if (_isDetectingActiveWindow)
+            {
+                NotRespondingList.SelectedItem = null;
+                NotRespondingProcChoosen = ActiveWindow.GetForegroundWindow().GetWindowProcess();
+                FinalizerChoosenTb.Text=NotRespondingProcChoosen?.ProcessName;
+            }
+        }
+
+
+        private void FinalizerUpdateData(object? sender, System.Timers.ElapsedEventArgs e)
+        {
+            var data = Process.GetProcesses().Where(p => !p.Responding).OrderBy(p=>p.Id).ToList();
+            Dispatcher.Invoke(() =>
+            {
+                //判断NotRespondingProcData是否不同，有不同才更新：
+                if (NotRespondingProcData == null || NotRespondingProcData.Count != data.Count
+                        || !NotRespondingProcData.Select(p => p.Id).SequenceEqual(data.Select(p => p.Id)))
+                    NotRespondingList.ItemsSource = NotRespondingProcData = data;
+                FinalizerNoItemTip.Visibility = NotRespondingProcData.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+            });
+        }
+
+        private void NotRespondingList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (NotRespondingList.SelectedItem == null) return;
+            NotRespondingProcChoosen = NotRespondingList.SelectedItem as Process;
+            FinalizerChoosenTb.Text = NotRespondingProcChoosen?.ProcessName;
+        }
+
+        private void FinalizerModeKillBtn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                NotRespondingProcChoosen?.Kill();
+                NotRespondingProcChoosen = null;
+                FinalizerChoosenTb.Text = "";
+            }
+            catch { }
         }
     }
 }

@@ -6,6 +6,7 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:behavior="clr-namespace:MyToolBar.Common.Behaviors;assembly=MyToolBar.Common"
         xmlns:local="clr-namespace:MyToolBar.PenPackages" AllowsTransparency="True"
+        RenderOptions.BitmapScalingMode="HighQuality"
         mc:Ignorable="d" ShowInTaskbar="true" WindowStyle="None" ResizeMode="NoResize" WindowState="Maximized"
         Title="Drawboard" Height="450" Width="800" Background="Transparent">
     <Grid x:Name="MainPanel">
