@@ -3,6 +3,7 @@ using MyToolBar.Common.UIBases;
 using MyToolBar.Plugin.BasicPackage.API;
 using MyToolBar.Plugin.BasicPackage.PopupWindows;
 using System.Windows;
+using Windows.System.Power;
 using System.Windows.Input;
 using static MyToolBar.Common.GlobalService;
 
@@ -28,6 +29,8 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
         }
         public override async void Install()
         {
+            if (PowerManager.BatteryStatus == BatteryStatus.NotPresent)
+                BatteryViewer.Visibility= Visibility.Collapsed;
             MainPanel.Visibility = Visibility.Collapsed;
             LoadingTextBlk.Visibility = Visibility.Visible;
             ni = await NetworkInfo.Create();
@@ -48,6 +51,11 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
             Cpu_temp.Text = ci.GetCPUTemperature() + "℃";
             var data = ni.GetNetworkSpeed();
             Network_text.Text = $"↑ {data[1]}/s\r\n↓ {data[0]}/s";
+
+            int battery = PowerManager.RemainingChargePercent;
+            Battery_value.Value = battery;
+            Battery_text.Text = battery + "%";
+            Battery_value.SetResourceReference(ForegroundProperty, battery <= 20?"Battery_Emergency":"Battery_Normal");
 
         }
         private bool BoxShowed = false;

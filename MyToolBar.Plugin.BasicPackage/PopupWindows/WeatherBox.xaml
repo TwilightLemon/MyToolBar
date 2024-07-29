@@ -10,6 +10,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MyToolBar.Plugin.BasicPackage;component/IconData.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/MyToolBar.Common;component/Styles/IconData.xaml"/>
                 <!--ThemeColor资源字典仅为设计时提供，实际运行时会通过PopWindowBase移除，以将资源映射到App域-->
                 <ResourceDictionary Source="pack://application:,,,/MyToolBar.Common;component/Styles/ThemeColor.xaml"/>

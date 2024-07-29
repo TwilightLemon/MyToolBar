@@ -7,6 +7,7 @@
         xmlns:ws="https://schemas.elecho.dev/wpfsuite"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:mb="clr-namespace:MyToolBar.Common.Behaviors;assembly=MyToolBar.Common"
+        xmlns:api="clr-namespace:MyToolBar.Common.WinAPI;assembly=MyToolBar.Common"
         mc:Ignorable="d" Topmost="True"
         Title="MyToolBar" 
         Height="30" 
@@ -20,7 +21,9 @@
         ShowInTaskbar="False" 
         AllowsTransparency="True"
         d:DataContext="{d:DesignInstance Type=local:AppBarWindow}">
-
+    <api:AppBarCreator.AppBar>
+        <api:AppBar Location="Top" OnFullScreenStateChanged="AppBar_OnFullScreenStateChanged"/>
+    </api:AppBarCreator.AppBar>
     <Window.Resources>
         <ws:BindingProxy x:Key="DataContext" Data="{Binding}"/>
     </Window.Resources>

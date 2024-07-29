@@ -10,22 +10,58 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MyToolBar.Common;component/Styles/IconData.xaml"/>
+                <ResourceDictionary Source="/MyToolBar.Plugin.BasicPackage;component/IconData.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="ProgressBarStyle" TargetType="{x:Type ProgressBar}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ProgressBar}">
+                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="1.8" BorderThickness="{TemplateBinding BorderThickness}">
+                                <Grid x:Name="TemplateRoot">
+                                    <Border x:Name="PART_Indicator" HorizontalAlignment="Left">
+                                        <Border  x:Name="Animation" CornerRadius="1"  Background="{TemplateBinding Foreground}"/>
+                                    </Border>
+                                    <Rectangle x:Name="PART_Track"/>
+                                </Grid>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="Orientation" Value="Vertical">
+                                    <Setter Property="LayoutTransform" TargetName="TemplateRoot">
+                                        <Setter.Value>
+                                            <RotateTransform Angle="-90"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <SolidColorBrush x:Key="Battery_Normal" Color="#FF06B025"/>
+            <SolidColorBrush x:Key="Battery_Emergency" Color="#FFF12424"/>
         </ResourceDictionary>
     </base:CapsuleBase.Resources>
     <Grid>
         <WrapPanel x:Name="MainPanel" Margin="5,0,5,0">
-            <Grid x:Name="MemoryViewer" Width="50" Height="30">
-                <Path Width="13" Height="13" HorizontalAlignment="Left" Data="{StaticResource Icon_memory}" Stretch="Uniform" SnapsToDevicePixels="True" Fill="{Binding Foreground, ElementName=uc}"/>
-                <TextBlock x:Name="Meo_text" Margin="20,0,0,0" TextWrapping="Wrap" d:Text="99%" VerticalAlignment="Center"/>
+            <Grid x:Name="BatteryViewer" Width="50" Height="30" >
+                <Canvas HorizontalAlignment="Left" Margin="0,8,0,8" Width="12" >
+                    <Path Height="3" Width="4" Data="{StaticResource Icon_Battery}"  Stretch="Uniform" SnapsToDevicePixels="True" Fill="{Binding Foreground, ElementName=uc}" VerticalAlignment="Center" HorizontalAlignment="Center" Canvas.Left="4" Canvas.Top="-0.246"/>
+                    <ProgressBar Foreground="{DynamicResource Battery_Normal}" x:Name="Battery_value" Style="{DynamicResource ProgressBarStyle}"  Canvas.Top="2" BorderBrush="{Binding Foreground, ElementName=uc}" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Left="2" Height="12" Width="8" Background="{x:Null}" Value="80" Orientation="Vertical"/>
+                </Canvas>
+                <TextBlock x:Name="Battery_text" Margin="14,0,0,0" TextAlignment="Center" d:Text="100%" VerticalAlignment="Center"/>
+
             </Grid>
-            <Grid x:Name="CPUViewer" Width="90" Height="30" Margin="10,0,0,0">
-                <TextBlock x:Name="Cpu_text" d:Text="100%"  Margin="20,0,0,0" HorizontalAlignment="Left" TextWrapping="NoWrap" TextTrimming="None" VerticalAlignment="Center"/>
+            <Grid x:Name="MemoryViewer" Width="50" Height="30" Margin="8,0,0,0">
+                <Path Width="13" Height="13" HorizontalAlignment="Left" Data="{StaticResource Icon_memory}" Stretch="Uniform" SnapsToDevicePixels="True" Fill="{Binding Foreground, ElementName=uc}"/>
+                <TextBlock x:Name="Meo_text" Margin="16,0,0,0" d:Text="100%" TextAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
+            <Grid x:Name="CPUViewer" Width="90" Height="30" Margin="8,0,0,0">
+                <TextBlock x:Name="Cpu_text" d:Text="100%"  Margin="18,0,0,0" HorizontalAlignment="Left" TextWrapping="NoWrap" TextTrimming="None" VerticalAlignment="Center"/>
                 <TextBlock x:Name="Cpu_temp" d:Text="36℃" TextWrapping="NoWrap" Margin="0 0 6 0" HorizontalAlignment="Right" TextTrimming="None" VerticalAlignment="Center"/>
                 <Path Width="13" Height="13" Data="{StaticResource Icon_CPU}" HorizontalAlignment="Left" Fill="{Binding Foreground, ElementName=uc}" Stretch="Uniform" SnapsToDevicePixels="True" Margin="0,5,0,5"/>
             </Grid>
-            <Grid x:Name="NetworkViewer" Width="95" Height="30">
-                <TextBlock x:Name="Network_text" Margin="20,0,0,0" TextTrimming="None" VerticalAlignment="Center" FontSize="10" LineHeight="1">
+            <Grid x:Name="NetworkViewer" Width="95" Height="30" Margin="8,0,0,0">
+                <TextBlock x:Name="Network_text" Margin="16,0,0,0" TextTrimming="None" VerticalAlignment="Center" FontSize="10" LineHeight="1">
                     <Run d:Text="↑90.00kb/s"/>
                     <LineBreak/>
                     <Run d:Text="↓1.00mb/s"/>

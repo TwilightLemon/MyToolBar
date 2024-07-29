@@ -54,10 +54,6 @@ namespace MyToolBar.Views.Windows
             #region Window Style
             //标记WS_EX_TOOLWINDOW 窗口不在任务视图中显示
             ToolWindowAPI.SetToolWindow(this);
-            //设置AppBar & 全屏时隐藏AppBar
-            var abf =AppBarFunctions.SetAppBar(this, ABEdge.Top);
-            abf.OnFullScreenChanged += Abf_OnFullScreenChanged;
-
             Width = SystemParameters.WorkArea.Width;
             //初始化AppBar样式
             UpdateColorMode();
@@ -115,11 +111,6 @@ namespace MyToolBar.Views.Windows
                 }
                 else MainBarGrid.Background = null;
             });
-        }
-
-        private void Abf_OnFullScreenChanged(bool FullScreen)
-        {
-            Visibility= FullScreen && EnableHideWhenFullScreen ? Visibility.Collapsed : Visibility.Visible;
         }
 
         /// <summary>
@@ -203,10 +194,13 @@ namespace MyToolBar.Views.Windows
         #endregion
 
         #region OuterFuncStatus & WindowStyle
+        private void AppBar_OnFullScreenStateChanged(object sender, bool e)
+        {
+            Visibility = e && EnableHideWhenFullScreen ? Visibility.Collapsed : Visibility.Visible;
+        }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             ActiveWindow.UnregisterActiveWindowHook(_activeWindowHook);
-            AppBarFunctions.SetAppBar(this, ABEdge.None);
         }
 
         private void MaxWindStyle()
