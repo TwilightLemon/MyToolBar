@@ -17,6 +17,7 @@ using System.Windows.Documents;
 using MyToolBar.Common.Func;
 using System.Windows.Interop;
 using System.Diagnostics;
+using MyToolBar.Common.Behaviors;
 
 namespace MyToolBar.Views.Windows
 {
@@ -36,15 +37,11 @@ namespace MyToolBar.Views.Windows
         public AppBarWindow(
             PluginReactiveService pluginReactiveService,
             ThemeResourceService themeResourceService,
-            PowerOptimizeService powerOptimizeService,
-            AppBarViewModel viewModel)
+            PowerOptimizeService powerOptimizeService)
         {
             _pluginReactiveService = pluginReactiveService;
             _themeResourceService = themeResourceService;
             _powerOptimizeService = powerOptimizeService;
-
-            ViewModel = viewModel;
-            DataContext = this;
 
             InitializeComponent();
         }
@@ -149,8 +146,6 @@ namespace MyToolBar.Views.Windows
         /// </summary>
         static bool isOuterShow = true;
 
-        public AppBarViewModel ViewModel { get; }
-
         /// <summary>
         /// 打开或关闭OuterFunc (Animation)
         /// </summary>
@@ -207,7 +202,6 @@ namespace MyToolBar.Views.Windows
         {
             //全屏样式  整体变暗
             CurrentAppBarStyle = 1;
-            ViewModel.WindowAccentCompositorOpacity = 0.95f;
             if (IsDarkMode)
             {
                 OuterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(20, 255, 255, 255));
@@ -222,7 +216,6 @@ namespace MyToolBar.Views.Windows
         private void NormalWindStyle()
         {
             CurrentAppBarStyle = 0;
-            ViewModel.WindowAccentCompositorOpacity = 0.6f;
             Brush? foreground = null;
             _themeResourceService.SetAppBarFontColor(!IsDarkMode);
             if (IsDarkMode)
@@ -265,6 +258,7 @@ namespace MyToolBar.Views.Windows
                     {
                         NormalWindStyle();
                         MainBarGrid.Background = null;
+                        _lastEvaColor = null;
                     }
                 }
             }).Find();
@@ -339,6 +333,7 @@ namespace MyToolBar.Views.Windows
         private void UpdateColorMode()
         {
             var isDarkMode = !ToolWindowAPI.GetIsLightTheme();
+            BlurWindowBehavior.SetDarkMode(isDarkMode);
             _themeResourceService.SetThemeMode(isDarkMode);
 
             if (CurrentAppBarStyle == 0)
@@ -346,9 +341,14 @@ namespace MyToolBar.Views.Windows
             else
                 MaxWindStyle();
         }
-
+        
+        private DateTime _lastSystemEvent = DateTime.MinValue;
         private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
         {
+            //防止频繁触发
+            if ((DateTime.Now - _lastSystemEvent).TotalSeconds < 1)
+                return;
+            _lastSystemEvent = DateTime.Now;
             if (e.Category == UserPreferenceCategory.General)
             {
                 UpdateColorMode();

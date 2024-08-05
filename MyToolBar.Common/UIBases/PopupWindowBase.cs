@@ -22,10 +22,9 @@ namespace MyToolBar.Common.UIBases
             Topmost = true;
             WindowChrome.SetWindowChrome(this, new WindowChrome()
             {
-                GlassFrameThickness = new Thickness(1),
-                CaptionHeight = 1
+                GlassFrameThickness=new Thickness(-1),
+                CaptionHeight=0
             });
-
             Activate();
             Deactivated += PopWindowBase_Deactivated;
             this.Initialized += PopWindowBase_Initialized;

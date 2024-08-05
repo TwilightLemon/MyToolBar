@@ -19,17 +19,13 @@
         Closing="Window_Closing" 
         Foreground="{DynamicResource AppBarFontColor}" 
         ShowInTaskbar="False" 
-        AllowsTransparency="True"
         d:DataContext="{d:DesignInstance Type=local:AppBarWindow}">
     <api:AppBarCreator.AppBar>
         <api:AppBar Location="Top" OnFullScreenStateChanged="AppBar_OnFullScreenStateChanged"/>
     </api:AppBarCreator.AppBar>
-    <Window.Resources>
-        <ws:BindingProxy x:Key="DataContext" Data="{Binding}"/>
-    </Window.Resources>
 
     <i:Interaction.Behaviors>
-        <mb:BlurWindowBehavior IsToolWindow="True" Opacity="{Binding Source={StaticResource DataContext},Mode=TwoWay,Path=Data.ViewModel.WindowAccentCompositorOpacity}"/>
+        <mb:BlurWindowBehavior IsToolWindow="True" />
     </i:Interaction.Behaviors>
     
     <Grid x:Name="MainBarGrid">

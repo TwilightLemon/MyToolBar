@@ -27,7 +27,6 @@ namespace MyToolBar
 
                 // windows
                 services.AddSingleton<AppBarWindow>();
-                services.AddSingleton<AppBarViewModel>();
                 services.AddTransient<SettingsWindow>();
                 services.AddTransient<SettingsViewModel>();
 
