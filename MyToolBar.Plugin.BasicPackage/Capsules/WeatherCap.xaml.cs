@@ -56,13 +56,15 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
                     return DataCache[city.Id];
                 }
             }
-            var data = new WeatherData();
-            data.City = city;
-            data.CurrentWeather = await city.GetCurrentWeather();
-            data.DailyAirForecast = await city.GetAirForecastAsync();
-            data.CurrentAir = await city.GetCurrentAQIAsync();
-            data.DailyForecast = await city.GetForecastAsync();
-            data.UpdateTime = DateTime.Now;
+            var data = new WeatherData
+            {
+                City = city,
+                CurrentWeather = await city.GetCurrentWeather(),
+                DailyAirForecast = await city.GetAirForecastAsync(),
+                CurrentAir = await city.GetCurrentAQIAsync(),
+                DailyForecast = await city.GetForecastAsync(),
+                UpdateTime = DateTime.Now
+            };
             DataCache[city.Id] = data;
             SaveCache();
             return data;

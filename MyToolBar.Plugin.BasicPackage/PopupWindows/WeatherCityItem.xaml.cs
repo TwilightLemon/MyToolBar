@@ -36,7 +36,7 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
         public WeatherCityItem()
         {
             InitializeComponent();
-            EnableClickEvent = false;
+            base.EnableClickEvent = false;
             MouseLeftButtonDown += delegate
             {
                 IsMousePressed = true;
@@ -56,6 +56,7 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
             AddFavorBtn.MouseLeftButtonUp += delegate
             {
                 AddFavorCity?.Invoke(this, city);
+                IsFavor = !IsFavor;
             };
             //触摸长按 or 鼠标右击
             MouseRightButtonUp += delegate

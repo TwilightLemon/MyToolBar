@@ -96,10 +96,11 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
                 date=date.AddDays(1);
             }
             //加载Favorite
-            LoadFavorList();
+             LoadFavorListAsync();
         }
-        private void LoadFavorList()
+        private async void LoadFavorListAsync()
         {
+            //Default City
             DefaultPosition.Children.Clear();
             var cur = new WeatherCityItem()
             {
@@ -110,12 +111,13 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
             cur.AddFavorCity += CityItem_AddFavorCity;
             cur.SetAsDefaultCity += CityItem_SetAsDefaultCity;
             DefaultPosition.Children.Add(cur);
+
+            //Favorite Cities
             FavorCity.Children.Clear();
             foreach (var i in cache.FavorCities)
             {
-                var item = new WeatherCityItem()
+                var item = new WeatherCityPreview(i,await cache.RequstCache(i))
                 {
-                    city = i,
                     IsFavor = true
                 };
                 item.CitySelected += CityItem_CitySelected;
@@ -131,7 +133,7 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
             DefaultPosition.Children.Clear();
             var cur = new WeatherCityItem()
             {
-                city = e,
+                city=e,
                 IsFavor = cache.FavorCities.Exists((c) => c.Id == e.Id)
             };
             cur.CitySelected += CityItem_CitySelected;
@@ -143,18 +145,16 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
 
         private void CityItem_AddFavorCity(object? sender, WeatherApi.City e)
         {
-            var item = sender as WeatherCityItem;
-            if (item.IsFavor)
+            bool isFavor = sender is WeatherCityPreview p ? p.IsFavor : (sender is WeatherCityItem i?i.IsFavor:false);
+            if (isFavor)
             {
-                item.IsFavor = false;
                 cache.FavorCities.Remove(e);
             }
             else
             {
-                item.IsFavor = true;
                 cache.FavorCities.Add(e);
             }
-            LoadFavorList();
+            LoadFavorListAsync();
             cache.SaveCache();
         }
 

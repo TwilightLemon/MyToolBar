@@ -25,6 +25,11 @@ namespace MyToolBar.Plugin.BasicPackage.OuterControls
             this.StylusSystemGesture += LemonAppMusic_StylusSystemGesture;
             this.StylusDown += LemonAppMusic_StylusDown;
         }
+        public override void Dispose()
+        {
+            base.Dispose();
+            _musicServier?.Stop();
+        }
         private Point _touchStart;
         private void LemonAppMusic_StylusDown(object sender, StylusDownEventArgs e)
         {
@@ -102,15 +107,29 @@ namespace MyToolBar.Plugin.BasicPackage.OuterControls
                 var info = await Smtc.GetMediaInfoAsync();
                 if (info == null) return;
                 IsShown = true;
-                if (Smtc.GetAppMediaId() == "aLemonApp.exe")
+                if (Smtc.GetAppMediaId() == "LemonApp.exe")
                 {
-                    LyricTb.Text = info.AlbumTitle;
+                    BeginLemonAppLyric();
                 }
                 else
                 {
                     LyricTb.Text = info.Title + " - " + info.Artist;
                 }
             });
+        }
+        private LemonAppMusicServier? _musicServier = null;
+        private async void BeginLemonAppLyric()
+        {
+            if (_musicServier == null)
+            {
+                _musicServier = new();
+                await _musicServier.StartAsync(str =>
+                {
+                    Dispatcher.Invoke(() => {
+                        LyricTb.Text = str;
+                    });
+                });
+            }
         }
 
         private void maxStyleAct(bool max,Brush foreColor) {
