@@ -1,19 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Nodes;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using MyToolBar.Common;
 using MyToolBar.Plugin;
 using MyToolBar.Services;
 
@@ -42,6 +29,10 @@ namespace MyToolBar.Views.Items
                 {
                     SettingsPanel.Children.Add(new PluginSettingItem(plugin));
                 }
+            }
+            if (SettingsPanel.Children.Count == 0)
+            {
+                PluginTb.Visibility = Visibility.Collapsed;
             }
         }
 

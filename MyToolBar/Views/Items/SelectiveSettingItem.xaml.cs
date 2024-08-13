@@ -9,7 +9,7 @@ namespace MyToolBar.Views.Items
     /// <summary>
     /// CapsuleSettingItem.xaml 的交互逻辑
     /// </summary>
-    public partial class CapsuleSettingItem : ItemBase, INotifyPropertyChanged
+    public partial class SelectiveSettingItem : ItemBase, INotifyPropertyChanged
     {
         public IPlugin Plugin { get; set; }
         private  bool _pluginIsEnabled = false;
@@ -19,7 +19,7 @@ namespace MyToolBar.Views.Items
             set
             {
                 _pluginIsEnabled = value;
-                OnPropertyChanged("PluginIsEnabled");
+                OnPropertyChanged(nameof(PluginIsEnabled));
             }
         }
         public event PropertyChangedEventHandler PropertyChanged;
@@ -28,7 +28,7 @@ namespace MyToolBar.Views.Items
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         public event Action<IPlugin,bool> OnIsEnableChanged;
-        public CapsuleSettingItem(IPlugin plugin,bool isEnable)
+        public SelectiveSettingItem(IPlugin plugin,bool isEnable)
         {
             InitializeComponent();
             Click += CapsuleSettingItem_Click;

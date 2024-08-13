@@ -14,8 +14,8 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
     /// </summary>
     public partial class HardwareMonitorCap : CapsuleBase
     {
-        private NetworkInfo ni;
-        private CPUInfo ci;
+        private NetworkInfo? ni=null;
+        private CPUInfo? ci=null;
         public HardwareMonitorCap()
         {
             InitializeComponent();
@@ -24,8 +24,8 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
         {
             base.Uninstall();
             GlobalTimer.Elapsed -= GlobalTimer_Elapsed;
-            ni.Dispose();
-            ci.Dispose();
+            ni?.Dispose();
+            ci?.Dispose();
         }
         public override async void Install()
         {
@@ -33,10 +33,18 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
                 BatteryViewer.Visibility= Visibility.Collapsed;
             MainPanel.Visibility = Visibility.Collapsed;
             LoadingTextBlk.Visibility = Visibility.Visible;
-            ni = await NetworkInfo.Create();
-            ci = CPUInfo.Create();
+            try
+            {
+                ni = await NetworkInfo.Create();
+                ci = CPUInfo.Create();
+                Tick();
+            }
+            catch
+            {
+                LoadingTextBlk.Text = "Not Supported";
+                return;
+            }
             GlobalTimer.Elapsed += GlobalTimer_Elapsed;
-            Tick();
             MainPanel.Visibility = Visibility.Visible;
             LoadingTextBlk.Visibility = Visibility.Collapsed;
         }
@@ -46,6 +54,8 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
 
         private void Tick()
         {
+            if(ni == null || ci == null)
+                return;
             Meo_text.Text = (int)MemoryInfo.GetUsedPercent() + "%";
             Cpu_text.Text = ci.GetCPUUsedPercent();
             Cpu_temp.Text = ci.GetCPUTemperature() + "℃";

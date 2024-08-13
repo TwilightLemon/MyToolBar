@@ -77,9 +77,6 @@ namespace MyToolBar.Services
                     }
                 }
             }
-#if DEBUG
-            await LoadAllForTest(PluginType.WindowService);
-#endif
         }
 
 

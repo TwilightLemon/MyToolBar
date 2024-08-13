@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using Microsoft.Xaml.Behaviors;
 using MyToolBar.Common.WinAPI;
 using MyToolBar.Common.Behaviors;
+using EleCho.WpfSuite;
 
 namespace MyToolBar.Common.UIBases
 {
@@ -18,13 +19,10 @@ namespace MyToolBar.Common.UIBases
             SetResourceReference(BackgroundProperty,"MaskColor");
             SetResourceReference(ForegroundProperty, "ForeColor");
             WindowStyle = WindowStyle.None;
+            ResizeMode = ResizeMode.NoResize;
+            WindowOption.SetCorner(this, WindowCorner.Round);
             ShowInTaskbar = false;
             Topmost = true;
-            WindowChrome.SetWindowChrome(this, new WindowChrome()
-            {
-                GlassFrameThickness=new Thickness(-1),
-                CaptionHeight=0
-            });
             Activate();
             Deactivated += PopWindowBase_Deactivated;
             this.Initialized += PopWindowBase_Initialized;

@@ -1,4 +1,4 @@
-﻿<base:ItemBase x:Class="MyToolBar.Views.Items.CapsuleSettingItem"
+﻿<base:ItemBase x:Class="MyToolBar.Views.Items.SelectiveSettingItem"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:base="clr-namespace:MyToolBar.Common.UIBases;assembly=MyToolBar.Common"

@@ -14,17 +14,24 @@ internal class CPUInfo
 {
     public double GetCPUTemperature()
     {
-        Double temperature = 0;
-        // Query the MSAcpi_ThermalZoneTemperature API
-        ManagementObjectSearcher searcher = new ManagementObjectSearcher(@"root\WMI", "SELECT * FROM MSAcpi_ThermalZoneTemperature");
-
-        foreach (ManagementObject obj in searcher.Get())
+        try
         {
-            temperature = Convert.ToDouble(obj["CurrentTemperature"].ToString());
-            // Convert the value to celsius degrees
-            temperature = (temperature - 2732) / 10.0;
+            Double temperature = 0;
+            // Query the MSAcpi_ThermalZoneTemperature API
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher(@"root\WMI", "SELECT * FROM MSAcpi_ThermalZoneTemperature");
+
+            foreach (ManagementObject obj in searcher.Get())
+            {
+                temperature = Convert.ToDouble(obj["CurrentTemperature"].ToString());
+                // Convert the value to celsius degrees
+                temperature = (temperature - 2732) / 10.0;
+            }
+            return temperature;
         }
-        return temperature;
+        catch
+        {
+            return double.NaN;
+        }
     }
     protected PerformanceCounter counters;
     public static CPUInfo Create()

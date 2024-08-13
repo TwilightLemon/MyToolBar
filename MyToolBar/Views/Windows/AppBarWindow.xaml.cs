@@ -99,7 +99,6 @@ namespace MyToolBar.Views.Windows
         private void _powerOptimizeService_OnEnergySaverStatusChanged(bool PowerModeOn)
         {
             IsPowerModeOn=PowerModeOn;
-            //疑似这段会间歇性造成UI线程卡死
             Dispatcher.Invoke(() => {
                 if (IsPowerModeOn)
                 {

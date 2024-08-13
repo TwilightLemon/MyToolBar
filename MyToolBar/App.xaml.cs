@@ -34,6 +34,7 @@ namespace MyToolBar
                 services.AddTransient<CapsulesSettingsPage>();
                 services.AddTransient<OuterControlSettingsPage>();
                 services.AddTransient<ComponentsSettingsPage>();
+                services.AddTransient<ServicesSettingsPage>();
                 services.AddTransient<AboutPage>();
 
                 // function services

@@ -40,7 +40,7 @@ namespace MyToolBar.Views.Pages.Settings
             foreach(var cap in caps)
             {
                 var IsEnable=_pluginReactiveService.Capsules.ContainsKey(cap);
-                var item=new CapsuleSettingItem(cap, IsEnable) {Margin=new Thickness(5,2,5,2)};
+                var item=new SelectiveSettingItem(cap, IsEnable) {Margin=new Thickness(5,2,5,2)};
                 item.OnIsEnableChanged += Item_OnIsEnableChanged;
                 CapsuleList.Children.Add(item);
             }

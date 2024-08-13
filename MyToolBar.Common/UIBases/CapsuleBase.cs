@@ -24,7 +24,6 @@ namespace MyToolBar.Common.UIBases
         public virtual void Uninstall() { }
         private void CapsuleBase_Initialized(object? sender, EventArgs e)
         {
-            Background = GlobalService.CapsuleBackground;
             if (Content is Grid g)
             {
                 _Container = g;
@@ -36,11 +35,11 @@ namespace MyToolBar.Common.UIBases
                 _ViewMask.SetResourceReference(BackgroundProperty, "MaskColor");
                 MouseEnter += delegate
                 {
-                    _ViewMask.BeginAnimation(OpacityProperty, new DoubleAnimation(0.2, 1, TimeSpan.FromMilliseconds(300)));
+                    _ViewMask.Opacity = 1;
                 };
                 MouseLeave += delegate
                 {
-                    _ViewMask.BeginAnimation(OpacityProperty, new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(300)));
+                    _ViewMask.Opacity = 0;
                 };
                 //插入到最底层
                 _Container.Children.Insert(0, _ViewMask);

@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System;
 using System.Diagnostics;
+using System.Windows;
 
 namespace MyToolBar.Services
 {
@@ -17,8 +18,11 @@ namespace MyToolBar.Services
         public Task StartAsync(CancellationToken cancellationToken)
         {
             GlobalService.IsPowerModeOn=PowerManager.EnergySaverStatus== EnergySaverStatus.On;
-            PowerManager.EnergySaverStatusChanged += PowerManager_EnergySaverStatusChanged;
-            SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
+           Application.Current.Dispatcher.Invoke(() =>
+            {
+                PowerManager.EnergySaverStatusChanged += PowerManager_EnergySaverStatusChanged;
+                SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
+            });
             ModernStandbyPowerAPI.RegisterNotification((IntPtr context, int type, IntPtr setting) =>
             {
                 if (type == ModernStandbyPowerAPI.PBT_APMSUSPEND)
@@ -42,9 +46,12 @@ namespace MyToolBar.Services
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            PowerManager.EnergySaverStatusChanged -= PowerManager_EnergySaverStatusChanged;
             ModernStandbyPowerAPI.UnregisterNotification(_standbyAPIHandle);
-            SystemEvents.PowerModeChanged -= SystemEvents_PowerModeChanged;
+            App.Current.Dispatcher.InvokeAsync(() =>
+            {
+                PowerManager.EnergySaverStatusChanged -= PowerManager_EnergySaverStatusChanged;
+                SystemEvents.PowerModeChanged -= SystemEvents_PowerModeChanged;
+            });
             return Task.CompletedTask;
         }
 

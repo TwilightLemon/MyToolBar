@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using MyToolBar.Common.UIBases;
+using MyToolBar.Common;
 
 namespace MyToolBar.PopupWindows
 {
@@ -48,6 +49,7 @@ namespace MyToolBar.PopupWindows
         }
         private void MeumItem_Exit(object sender, RoutedEventArgs e)
         {
+            GlobalService.GlobalTimer.Stop();
             _ = App.Host.StopAsync();
         }
     }
