@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
-using MyToolBar.Views.Pages;
 using MyToolBar.Views.Pages.Settings;
 
 namespace MyToolBar.ViewModels
@@ -19,6 +14,7 @@ namespace MyToolBar.ViewModels
 
         public ObservableCollection<SettingsPage> SettingsPages { get; } =
         [
+            new SettingsPage((string)App.Current.FindResource("SettingsWindow_Tab_Gerneral"), (Geometry)App.Current.FindResource("Icon_Gerneral"), typeof(AppSettingsPage)),
             new SettingsPage((string)App.Current.FindResource("SettingsWindow_Tab_Capsules"), (Geometry)App.Current.FindResource("Icon_Capsule"), typeof(CapsulesSettingsPage)),
             new SettingsPage((string)App.Current.FindResource("SettingsWindow_Tab_OuterControl"), (Geometry)App.Current.FindResource("Icon_OuterControl"), typeof(OuterControlSettingsPage)),
             new SettingsPage((string)App.Current.FindResource("SettingsWindow_Tab_Services"),(Geometry)App.Current.FindResource("Icon_Service"),typeof(ServicesSettingsPage)),

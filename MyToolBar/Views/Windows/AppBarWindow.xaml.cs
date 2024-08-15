@@ -33,17 +33,20 @@ namespace MyToolBar.Views.Windows
         private readonly ThemeResourceService _themeResourceService;
         private readonly PluginReactiveService _pluginReactiveService;
         private readonly PowerOptimizeService _powerOptimizeService;
+        private readonly AppSettingsService _appSettingsService;
 
         public AppBarWindow(
             PluginReactiveService pluginReactiveService,
             ThemeResourceService themeResourceService,
-            PowerOptimizeService powerOptimizeService)
+            PowerOptimizeService powerOptimizeService,
+            AppSettingsService appSettingsService)
         {
             _pluginReactiveService = pluginReactiveService;
             _themeResourceService = themeResourceService;
             _powerOptimizeService = powerOptimizeService;
 
             InitializeComponent();
+            _appSettingsService = appSettingsService;
         }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
@@ -183,11 +186,16 @@ namespace MyToolBar.Views.Windows
         }
         private void OuterControlClosingAni(object? sender, EventArgs e)
         {
-            OuterFunc.Visibility = isOuterShow ? Visibility.Visible : Visibility.Collapsed;
+            OuterFunc.Visibility = isOuterShow ? Visibility.Visible : Visibility.Hidden;
         }
         #endregion
 
         #region OuterFuncStatus & WindowStyle
+        /// <summary>
+        /// 在全屏时隐藏AppBar 退出全屏时显示
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AppBar_OnFullScreenStateChanged(object sender, bool e)
         {
             Visibility = e && EnableHideWhenFullScreen ? Visibility.Collapsed : Visibility.Visible;
@@ -197,7 +205,7 @@ namespace MyToolBar.Views.Windows
             ActiveWindow.UnregisterActiveWindowHook(_activeWindowHook);
         }
 
-        private void MaxWindStyle()
+        private void MaxWindowStyle()
         {
             //全屏样式  整体变暗
             CurrentAppBarStyle = 1;
@@ -212,7 +220,7 @@ namespace MyToolBar.Views.Windows
             _oc?.MaxStyleAct?.Invoke(true, null);
         }
 
-        private void NormalWindStyle()
+        private void NormalWindowStyle()
         {
             CurrentAppBarStyle = 0;
             Brush? foreground = null;
@@ -249,15 +257,24 @@ namespace MyToolBar.Views.Windows
                     if (!IsPowerModeOn)
                         UpdateWindowColor();
                     if (CurrentAppBarStyle == 0)
-                        MaxWindStyle();
+                        MaxWindowStyle();
                 }
                 else
                 {
+                    bool immerse = false;
+                    if (_appSettingsService.Settings.AlwaysUseImmerseMode && !IsPowerModeOn) 
+                    {
+                        immerse = true;
+                        UpdateWindowColor();
+                    }
                     if (CurrentAppBarStyle == 1)
                     {
-                        NormalWindStyle();
-                        MainBarGrid.Background = null;
-                        _lastEvaColor = null;
+                        NormalWindowStyle();
+                        if (!immerse)
+                        {
+                            MainBarGrid.Background = null;
+                            _lastEvaColor = null;
+                        }
                     }
                 }
             }).Find();
@@ -320,7 +337,6 @@ namespace MyToolBar.Views.Windows
                 //深色
                 _themeResourceService.SetAppBarFontColor(false);
             }
-            _oc?.MaxStyleAct?.Invoke(CurrentAppBarStyle==0, null);
             /*  纯色
             MainBarGrid.Background = new SolidColorBrush(themeColor);
             */
@@ -336,9 +352,9 @@ namespace MyToolBar.Views.Windows
             _themeResourceService.SetThemeMode(isDarkMode);
 
             if (CurrentAppBarStyle == 0)
-                NormalWindStyle();
+                NormalWindowStyle();
             else
-                MaxWindStyle();
+                MaxWindowStyle();
         }
         
         private DateTime _lastSystemEvent = DateTime.MinValue;

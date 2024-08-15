@@ -23,22 +23,6 @@ public class ManagedPackageService
     private bool _isLoaded=false;
     public Dictionary<string,ManagedPackage> ManagedPkg=>_managedPkg;
 
-    /// <summary>
-    /// 已启用的托管包中可用的特定类型的插件
-    /// </summary>
-    /// <param name="t">插件类型</param>
-    /// <returns></returns>
-    public List<IPlugin> GetTypePlugins(PluginType t)
-    {
-        var e = new List<IPlugin>();
-        var ava=_managedPkg.Values.Where(p=>p.IsEnabled);
-        foreach(var p in ava)
-        {
-            e.AddRange(p.Package.Plugins.Where(a => a.Type == t));
-        }
-        return e;
-    }
-
     public ManagedPackageService()
     {
         CreateDir();
@@ -85,6 +69,23 @@ public class ManagedPackageService
             Directory.CreateDirectory(_packageDir);
         }
     }
+
+    /// <summary>
+    /// 已启用的托管包中可用的特定类型的插件
+    /// </summary>
+    /// <param name="t">插件类型</param>
+    /// <returns></returns>
+    public List<IPlugin> GetTypePlugins(PluginType t)
+    {
+        var e = new List<IPlugin>();
+        var ava = _managedPkg.Values.Where(p => p.IsEnabled);
+        foreach (var p in ava)
+        {
+            e.AddRange(p.Package.Plugins.Where(a => a.Type == t));
+        }
+        return e;
+    }
+
     /// <summary>
     /// 加载所有启用的托管包(App启动时调用)
     /// </summary>

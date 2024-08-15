@@ -35,7 +35,7 @@ namespace MyToolBar.Services
                 try
                 {
                     FlushMemory();
-                    await Task.Delay(TimeSpan.FromSeconds(SecondsToSleep));
+                    await Task.Delay(TimeSpan.FromSeconds(SecondsToSleep), cancellationToken);
                 }
                 catch(TaskCanceledException)
                 {

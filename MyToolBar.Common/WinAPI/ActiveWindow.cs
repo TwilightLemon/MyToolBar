@@ -16,13 +16,14 @@ namespace MyToolBar.Common.WinAPI
         [DllImport("user32.dll")]
         static extern bool UnhookWinEvent(IntPtr hWinEventHook);
 
-        private const uint EVENT_SYSTEM_FOREGROUND = 3;
+        private const uint EVENT_SYSTEM_FOREGROUND = 3,
+                                    EVENT_OBJECT_NAMECHANGE = 0x800C;
         private const uint WINEVENT_OUTOFCONTEXT = 0;
 
         public static IntPtr RegisterActiveWindowHook(WinEventDelegate handler)
         {
             GCHandle.Alloc(handler);
-            return SetWinEventHook(EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, handler, 0, 0, WINEVENT_OUTOFCONTEXT);
+            return SetWinEventHook(EVENT_OBJECT_NAMECHANGE, EVENT_OBJECT_NAMECHANGE, IntPtr.Zero, handler, 0, 0, WINEVENT_OUTOFCONTEXT);
         }
         public static void UnregisterActiveWindowHook(IntPtr hook)
         {

@@ -12,7 +12,7 @@
     <Grid>
         <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" 
                    Margin="20,20,0,0" Text="{DynamicResource SettingsWindow_Tab_Capsules}" FontSize="20" FontWeight="Bold"/>
-        <ws:ScrollViewer VerticalScrollBarVisibility="Hidden" PanningMode="VerticalOnly" ws:StylusTouchDevice.Simulate="True">
+        <ws:ScrollViewer Style="{DynamicResource SimpleVerticalScrollViewerStyle}">
             <StackPanel x:Name="CapsuleList" Margin="0 60 0 0">
                
             </StackPanel>

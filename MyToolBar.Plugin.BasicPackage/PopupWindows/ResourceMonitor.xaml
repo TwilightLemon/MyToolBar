@@ -153,7 +153,7 @@
             </Grid>
         </Border>
         <Border x:Name="ProcListPage"  Margin="10,70,10,10"  Background="{DynamicResource MaskColor}" CornerRadius="15">
-            <ws:ScrollViewer VerticalScrollBarVisibility="Hidden" ws:StylusTouchDevice.Simulate="True" PanningMode="VerticalOnly">
+            <ws:ScrollViewer  Style="{StaticResource SimpleVerticalScrollViewerStyle}">
                 <WrapPanel x:Name="ProcessList" ItemWidth="330"/>
             </ws:ScrollViewer>
         </Border>

@@ -40,8 +40,6 @@ namespace MyToolBar.Services
             App.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 #endif
-            //加载AppData目录
-            Settings.LoadPath();
             //注册Hyperlink的跳转事件
             EventManager.RegisterClassHandler(typeof(Hyperlink), Hyperlink.RequestNavigateEvent, new RequestNavigateEventHandler((sender, e) =>
             {
@@ -50,6 +48,8 @@ namespace MyToolBar.Services
             }));
             //加载插件包管理器
             _serviceProvider.GetRequiredService<ManagedPackageService>().Load();
+            //等待配置文件加载完成
+            _=_serviceProvider.GetRequiredService<AppSettingsService>().WaitForLoading();
             //设置Http代理 (TODO:可选配置代理模式)
             HttpClient.DefaultProxy = new WebProxy();
             //加载主窗口

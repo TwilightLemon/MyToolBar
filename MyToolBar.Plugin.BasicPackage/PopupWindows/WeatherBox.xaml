@@ -125,13 +125,14 @@
                 <Run Text="Air quality source: CNEMC"/>
             </TextBlock>
         </WrapPanel>
-        <ws:ScrollViewer x:Name="AddFavor" ws:StylusTouchDevice.Simulate="True" PanningMode="VerticalOnly"  VerticalScrollBarVisibility="Hidden" Visibility="Collapsed">
+        <ws:ScrollViewer x:Name="AddFavor" Style="{StaticResource SimpleVerticalScrollViewerStyle}" Visibility="Collapsed">
             <WrapPanel   ItemWidth="330" Orientation="Vertical" Margin="0,0,0,0" >
                 <Grid Margin="0 20 0 20" Height="25">
                     <ws:TextBox x:Name="SearchCityBox" 
                                 CornerRadius="12"  
                                 PreviewKeyDown="SearchCityBox_PreviewKeyDown" 
-                                TextWrapping="Wrap" Placeholder="Search City" 
+                                TextWrapping="Wrap" 
+                                Placeholder="Search City" 
                                 Margin="40,0,40,0" 
                                 Foreground="{DynamicResource ForeColor}" 
                                 Background="{DynamicResource MaskColor}" 

@@ -14,7 +14,7 @@
         <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" 
             Margin="20,20,0,0" Text="{DynamicResource SettingsWindow_Tab_Services}" FontSize="20" FontWeight="Bold"/>
 
-        <ws:ScrollViewer VerticalScrollBarVisibility="Hidden" PanningMode="VerticalOnly" ws:StylusTouchDevice.Simulate="True">
+        <ws:ScrollViewer Style="{StaticResource SimpleVerticalScrollViewerStyle}">
             <StackPanel x:Name="ServiceList" Margin="0 60 0 0"/>
         </ws:ScrollViewer>
 

@@ -31,6 +31,7 @@ namespace MyToolBar
                 services.AddTransient<SettingsViewModel>();
 
                 // settings pages
+                services.AddTransient<AppSettingsPage>();
                 services.AddTransient<CapsulesSettingsPage>();
                 services.AddTransient<OuterControlSettingsPage>();
                 services.AddTransient<ComponentsSettingsPage>();
@@ -43,6 +44,8 @@ namespace MyToolBar
                 services.AddSingleton<ThemeResourceService>();
                 services.AddSingleton<PowerOptimizeService>();
                 services.AddHostedService(provider => provider.GetRequiredService<PowerOptimizeService>());
+                services.AddSingleton<AppSettingsService>();
+                services.AddHostedService(provider => provider.GetRequiredService<AppSettingsService>());
 
                 // logging
                 services.AddLogging(builder =>

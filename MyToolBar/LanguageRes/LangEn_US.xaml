@@ -12,8 +12,13 @@
     <sys:String x:Key="SettingsWindow_Tab_OuterControl">Outer Control</sys:String>
     <sys:String x:Key="SettingsWindow_Tab_Components">Components</sys:String>
     <sys:String x:Key="SettingsWindow_Tab_Services">Services</sys:String>
+    <sys:String x:Key="SettingsWindow_Tab_Gerneral">Gerneral</sys:String>
     <sys:String x:Key="SettingsWindow_Desc">Desc</sys:String>
     <sys:String x:Key="SettingsWindow_Version">Version</sys:String>
+    <!--App Settings-->
+    <sys:String x:Key="AppSettings_Item_AlwaysUseImmerseMode">Alway use immerse mode</sys:String>
+    <sys:String x:Key="AppSettings_Item_AutoRunAtStartup">Auto run at startup</sys:String>
+    <sys:String x:Key="AppSettings_Item_Language">Language</sys:String>
     <!--Drawboard-->
     <sys:String x:Key="Drawboard_Title">Drawboard</sys:String>
     <sys:String x:Key="Drawboard_Tool_ClearAll">Clear All</sys:String>

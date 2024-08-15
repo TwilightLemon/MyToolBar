@@ -9,7 +9,7 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="OuterControlSettingsPage">
 
-    <ws:ScrollViewer PanningMode="VerticalOnly" VerticalScrollBarVisibility="Hidden"  ws:StylusTouchDevice.Simulate="True">
+    <ws:ScrollViewer  Style="{StaticResource SimpleVerticalScrollViewerStyle}">
         <StackPanel>
             <TextBlock Text="{DynamicResource SettingsWindow_Tab_OuterControl}" FontSize="22" FontWeight="Bold" Margin="20"/>
             <ws:ListBox x:Name="OCPluginList" Background="Transparent"

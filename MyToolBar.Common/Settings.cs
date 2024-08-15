@@ -24,9 +24,13 @@ public class SettingsMgr<T> where T : class
     /// 监测到配置文件改变时触发，之前不会自动更新数据
     /// </summary>
     public event Action OnDataChanged;
+    /// <summary>
+    /// 为json序列化保留的构造函数
+    /// </summary>
     public SettingsMgr() { }
     public SettingsMgr(string Sign, string pkgName)
     {
+        Settings.LoadPath();
         this.Sign = Sign;
         this.PackageName = pkgName;
         _watcher = new FileSystemWatcher(Settings.SettingsPath)
@@ -77,6 +81,21 @@ public class SettingsMgr<T> where T : class
 }
 public static class Settings
 {
+    /// <summary>
+    /// json序列化配置选项
+    /// </summary>
+    private static JsonSerializerOptions _optionsSer = new(){
+        WriteIndented = true//格式化
+    };
+    /// <summary>
+    /// json反序列化配置选项
+    /// </summary>
+    private static JsonSerializerOptions _optionsDes = new()
+    {
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
+        ReadCommentHandling = JsonCommentHandling.Skip,
+        AllowTrailingCommas=true
+    };
     public enum sType { Cache, Settings }
     public static string MainPath =>
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MyToolBar");
@@ -104,7 +123,7 @@ public static class Settings
         {
             string path = GetPathBySign(Sign, type);
             var fs = File.Create(path);
-            await JsonSerializer.SerializeAsync<T>(fs, Data, new JsonSerializerOptions { WriteIndented = true });
+            await JsonSerializer.SerializeAsync<T>(fs, Data, _optionsSer);
             fs.Close();
         }
         catch
@@ -120,7 +139,7 @@ public static class Settings
             if (!File.Exists(path))
                 return null;
             var fs = File.OpenRead(path);
-            var data = await JsonSerializer.DeserializeAsync<T>(fs);
+            var data = await JsonSerializer.DeserializeAsync<T>(fs,_optionsDes);
             fs.Close();
             return data;
         }

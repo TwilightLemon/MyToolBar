@@ -10,6 +10,7 @@
         x:Class="MyToolBar.Views.Windows.SettingsWindow"
         mc:Ignorable="d" ResizeMode="CanMinimize"
         Height="550" Width="850"
+        Title="Settings"
         Foreground="{DynamicResource ForeColor}"
         Background="Transparent">
     <i:Interaction.Behaviors>
@@ -43,13 +44,23 @@
                         <DataTemplate>
                             <ws:Border Height="40"
                                        Padding="10 0"
+                                       d:Background="#3C000000"
                                        Background="Transparent">
                                 <ws:StackPanel Orientation="Horizontal"
                                                VerticalAlignment="Center"
                                                Spacing="8">
+                                    <Border x:Name="FocusedIcon" 
+                                            Width="3" Margin="-18 0 0 0"
+                                            Background="AliceBlue" 
+                                            CornerRadius="1.5" 
+                                            Height="16"
+                                            Visibility="Hidden"
+                                            d:Visibility="Visible">
+                                    </Border>
                                     <Path VerticalAlignment="Center"
                                           Fill="{DynamicResource ForeColor}"
                                           Data="{Binding Icon}"
+                                          d:Data="{StaticResource Icon_About}"
                                           Stretch="Uniform"
                                           Width="15"
                                           Height="15"/>
@@ -57,6 +68,27 @@
                                                VerticalAlignment="Center"/>
                                 </ws:StackPanel>
                             </ws:Border>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}, Path=IsSelected}" Value="True">
+                                    <Setter TargetName="FocusedIcon" Property="Visibility" Value="Visible"/>
+                                    <DataTrigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="FocusedIcon" 
+                                                                 Storyboard.TargetProperty="Height" 
+                                                                 From="0" To="16" Duration="0:0:0.3">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <CubicEase EasingMode="EaseOut"/>
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </DataTrigger.EnterActions>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}, Path=IsSelected}" Value="False">
+                                    <Setter TargetName="FocusedIcon" Property="Visibility" Value="Hidden"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
                         </DataTemplate>
                     </ws:ListBox.ItemTemplate>
                 </ws:ListBox>

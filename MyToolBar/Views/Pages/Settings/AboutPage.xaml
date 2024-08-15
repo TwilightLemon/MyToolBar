@@ -12,9 +12,9 @@
       d:Foreground="Black"
       Title="AboutPage">
 
-    <ws:ScrollViewer Margin="28 12 28 28" PanningMode="VerticalOnly" VerticalScrollBarVisibility="Hidden"  ws:StylusTouchDevice.Simulate="True">
+    <ws:ScrollViewer Style="{DynamicResource SimpleVerticalScrollViewerStyle}" Margin="28 12 28 28">
         <ws:StackPanel>
-            <TextBlock Text="About"
+            <TextBlock Text="{DynamicResource SettingsWindow_Tab_About}"
                    FontSize="22"
                    Margin="0 0 0 12"/>
             <Grid x:Name="ContentGrid"/>
