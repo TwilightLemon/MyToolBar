@@ -30,14 +30,14 @@ namespace MyToolBar.Views.Windows
         private PenControlWindow? _pcw;
         private IntPtr _activeWindowHook;
 
-        private readonly ThemeResourceService _themeResourceService;
+        private readonly UIResourceService _themeResourceService;
         private readonly PluginReactiveService _pluginReactiveService;
         private readonly PowerOptimizeService _powerOptimizeService;
         private readonly AppSettingsService _appSettingsService;
 
         public AppBarWindow(
             PluginReactiveService pluginReactiveService,
-            ThemeResourceService themeResourceService,
+            UIResourceService themeResourceService,
             PowerOptimizeService powerOptimizeService,
             AppSettingsService appSettingsService)
         {

@@ -6,12 +6,13 @@
                      xmlns:base="clr-namespace:MyToolBar.Common.UIBases;assembly=MyToolBar.Common"
                      xmlns:ws="https://schemas.elecho.dev/wpfsuite"
                      mc:Ignorable="d"
-                     Title="ResourceMonitor" Height="520" Width="350" Background="{DynamicResource MaskColor}" Foreground="{DynamicResource ForeColor}">
+                     Title="{DynamicResource WindowTitle}" Height="520" Width="350" 
+                      Background="{DynamicResource MaskColor}" Foreground="{DynamicResource ForeColor}">
     <base:PopupWindowBase.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/MyToolBar.Plugin.BasicPackage;component/IconData.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/MyToolBar.Common;component/Styles/IconData.xaml"/>
+                <ResourceDictionary Source="/MyToolBar.Plugin.BasicPackage;component/LanguageRes/ResouceMonitor/LangEn_US.xaml"/>
                 <!--ThemeColor资源字典仅为设计时提供，实际运行时会通过PopWindowBase移除，以将资源映射到App域-->
                 <ResourceDictionary Source="pack://application:,,,/MyToolBar.Common;component/Styles/ThemeColor.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/MyToolBar.Common;component/Styles/UITemplate.xaml"/>
@@ -114,13 +115,16 @@
                 <Path Data="{DynamicResource Icon_monitor}" Fill="{DynamicResource ForeColor}" Stretch="Uniform" Width="14" Height="14"/>
             </Border>
             <TextBlock x:Name="TitleTb" HorizontalAlignment="Left" TextWrapping="Wrap" Margin="40,0,0,0" VerticalAlignment="Center" FontSize="16" FontWeight="Bold" >
-                    Processes <Run x:Name="TitleSignTb" d:Text="Fixed" FontSize="12"/>
+                    <Run Text="{DynamicResource Title}"/> 
+                <TextBlock x:Name="TitleSignTb" Visibility="Hidden" Text="{DynamicResource Tip_Fixed}" FontSize="12"/>
             </TextBlock>
             <ws:Button x:Name="OpenTaskMonitorBtn" Click="OpenTaskMonitorBtn_Click"
+                       ToolTip="{DynamicResource Tip_OpenTM}"
                         HorizontalAlignment="Right" Width="32"  Height="32" Style="{StaticResource SimpleButtonStyleForWs}">
                 <Path Data="{StaticResource Icon_TaskMgr}" Height="14" Fill="{DynamicResource ForeColor}" Stretch="Uniform" />
             </ws:Button>
             <ws:Button x:Name="FinalizerModeBtn" Margin="0 0 48 0"
+                       ToolTip="{DynamicResource Tip_TerminatorMode}"
             HorizontalAlignment="Right" Width="32"  Height="32" Style="{StaticResource SimpleButtonStyleForWs}" Click="FinalizerModeBtn_Click">
                 <Path Data="{StaticResource Icon_Target}" Height="14" Fill="{DynamicResource ForeColor}" Stretch="Uniform" />
             </ws:Button>
@@ -141,15 +145,15 @@
                         </DataTemplate>
                     </ws:ListBox.ItemTemplate>
                 </ws:ListBox>
-                <TextBlock x:Name="FinalizerNoItemTip" Margin="20" Text="No not-responding process detected." FontSize="24"
+                <TextBlock x:Name="FinalizerNoItemTip" Margin="20" Text="{DynamicResource Tip_TerminatorMode_tipNone}" FontSize="24"
                            TextWrapping="Wrap" TextAlignment="Center" Opacity="0.5"
                            Visibility="Collapsed"/>
                 <TextBlock Margin="16,0,16,64"  VerticalAlignment="Bottom" >
-                    Choosen: <Run x:Name="FinalizerChoosenTb" d:Text="xxx.exe" />
+                    <Run Text="{DynamicResource Choosen}"/>: <Run x:Name="FinalizerChoosenTb" d:Text="xxx.exe" />
                 </TextBlock>
                 <ws:Button x:Name="FinalizerModeKillBtn"
                             HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="100" Height="30" Margin="0 0 0 20"
-                            Style="{StaticResource SimpleButtonStyleForWs}" Content="Kill" Click="FinalizerModeKillBtn_Click" />
+                            Style="{StaticResource SimpleButtonStyleForWs}" Content="{DynamicResource Kill}" Click="FinalizerModeKillBtn_Click" />
             </Grid>
         </Border>
         <Border x:Name="ProcListPage"  Margin="10,70,10,10"  Background="{DynamicResource MaskColor}" CornerRadius="15">
@@ -162,14 +166,14 @@
             <Border HorizontalAlignment="Center" Background="{DynamicResource MaskColor}" CornerRadius="15" Height="90" Margin="0 40 0 0" VerticalAlignment="Top" Width="90">
                 <Image x:Name="PInfo_Icon" Stretch="Uniform" Margin="20" />
             </Border>
-            <TextBlock x:Name="PInfo_Detal" FontSize="14"  VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="20 150 20 0" TextAlignment="Center">
+            <TextBlock x:Name="PInfo_Detal" FontSize="14" TextWrapping="Wrap"
+                       VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="20 150 20 0" TextAlignment="Center">
                 <Run x:Name="PInfo_Name" FontSize="16" d:Text="Visual Studio" FontWeight="Bold" />
                 <LineBreak/>
                 <Run x:Name="PInfo_file" d:Text="dev.exe" /><LineBreak/>
                 <LineBreak/>
-                <Run x:Name="PInfo_PID" d:Text="PID: 1234" /><LineBreak/>
-                <Run x:Name="PInfo_CPU" d:Text="CPU: 12%" /><LineBreak/>
-                <Run x:Name="PInfo_MEM" d:Text="MEM: 123MB" />
+                <Run Text="{DynamicResource PID}"/>: <Run x:Name="PInfo_PID" d:Text=": 1234" /><LineBreak/>
+                <Run Text="{DynamicResource Memory}"/>: <Run x:Name="PInfo_MEM" d:Text=": 123MB" />
             </TextBlock>
             <Border x:Name="PInfo_BackBtn" Cursor="Hand" Background="{DynamicResource MaskColor}" CornerRadius="50" Width="50" Height="50" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="30,0,0,100" MouseLeftButtonUp="PInfo_BackBtn_MouseLeftButtonUp">
                 <Path Data="{StaticResource Icon_back}" Stretch="Uniform" Width="14" Height="14" Fill="{DynamicResource ForeColor}"/>

@@ -14,7 +14,7 @@ namespace MyToolBar.Services
     /// 提供主题资源切换服务 ThemeMode为全局主题模式，AppBarFontColor为AppBar字体颜色
     /// AppBar字体颜色在沉浸模式下需要根据背景切换
     /// </summary>
-    public class ThemeResourceService
+    public class UIResourceService
     {
         /// <summary>
         /// 全局主题模式 Dark为深色，Light为浅色
@@ -35,11 +35,37 @@ namespace MyToolBar.Services
             App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = new Uri(uri, UriKind.Absolute) });
         }
 
+        /// <summary>
+        /// 单独为AppBar配置前景色
+        /// </summary>
+        /// <param name="IsDark"></param>
         public void SetAppBarFontColor(bool IsDark)
         {
             App.Current.Resources["AppBarFontColor"] = new SolidColorBrush(
                 IsDark?Color.FromRgb(0x0E, 0x0E, 0x0E) : Color.FromRgb(0xFE, 0xFE, 0xFE)
                 );
+        }
+
+        /// <summary>
+        /// 设置主程序的语言资源
+        /// </summary>
+        /// <param name="lang"></param>
+        public void SetLanguage(LocalCulture.Language lang)
+        {
+            string uri = $"/LanguageRes/Lang{
+                lang switch { 
+                    LocalCulture.Language.en_us=> "En_US",
+                    LocalCulture.Language.zh_cn=> "Zh_CN",
+                    _=>throw new Exception("Unsupported Language")
+                }
+                }.xaml";
+            // 移除当前语言资源字典（如果存在）
+            var oldDict = App.Current.Resources.MergedDictionaries.FirstOrDefault(d => d.Source != null && d.Source.OriginalString.Contains("LanguageRes/Lang"));
+            if (oldDict != null) {
+                App.Current.Resources.MergedDictionaries.Remove(oldDict);
+            }
+            // 添加新的语言资源字典
+            App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = new Uri(uri, UriKind.Relative) });
         }
     }
 }

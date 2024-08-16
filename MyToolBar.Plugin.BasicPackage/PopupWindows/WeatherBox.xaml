@@ -6,12 +6,13 @@
                      xmlns:base="clr-namespace:MyToolBar.Common.UIBases;assembly=MyToolBar.Common"
                      xmlns:ws="https://schemas.elecho.dev/wpfsuite"
                      mc:Ignorable="d" d:Background="Transparent" d:Foreground="{DynamicResource ForeColor}"
-                     Title="WeatherBox" Height="520" Width="350">
+                     Title="{DynamicResource WindowTitle}" Height="520" Width="350">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MyToolBar.Plugin.BasicPackage;component/IconData.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/MyToolBar.Common;component/Styles/IconData.xaml"/>
+                <ResourceDictionary Source="/MyToolBar.Plugin.BasicPackage;component/LanguageRes/WeatherBox/LangEn_US.xaml"/>
                 <!--ThemeColor资源字典仅为设计时提供，实际运行时会通过PopWindowBase移除，以将资源映射到App域-->
                 <ResourceDictionary Source="pack://application:,,,/MyToolBar.Common;component/Styles/ThemeColor.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/MyToolBar.Common;component/Styles/UITemplate.xaml"/>
@@ -79,7 +80,10 @@
                     <Path Data="{StaticResource Icon_Menu}" Fill="{DynamicResource ForeColor}" Stretch="Uniform" Width="14" Height="14"/>
                 </Border>
                 <TextBlock x:Name="Now_Location" Cursor="Hand" HorizontalAlignment="Left" MouseLeftButtonUp="Now_Location_MouseLeftButtonUp" TextWrapping="Wrap" Margin="40,0,0,0" Text="where where" VerticalAlignment="Top" FontSize="16" FontWeight="Bold"/>
-                <TextBlock x:Name="UpdateTime" HorizontalAlignment="Right" Text="2024.3.30 23:02 Sat." Margin="0,5,20,0" VerticalAlignment="Top" FontSize="12" Opacity="0.8"/>
+                <TextBlock  HorizontalAlignment="Right" d:Text="12:00" 
+                            Margin="0,5,20,0" VerticalAlignment="Top" FontSize="12" Opacity="0.8">
+                    <Run Text="{DynamicResource Tip_UpdatedAt}"/> <Run x:Name="UpdateTime"/>
+                </TextBlock>
             </Grid>
             <Grid Height="220"  VerticalAlignment="Top" Margin="0,10,0,0">
                 <Border Background="{DynamicResource MaskColor}" CornerRadius="15,15,15,15" />
@@ -87,25 +91,29 @@
                     <Border Margin="10 0 0 0"  Height="70" Width="70" Background="{DynamicResource MaskColor}" CornerRadius="15,15,15,15">
                         <Grid>
                             <TextBlock x:Name="FeelsLike" HorizontalAlignment="Center" FontWeight="Bold" Margin="0,15,0,0" TextWrapping="Wrap" Text="42℃" VerticalAlignment="Top" FontSize="14"/>
-                            <TextBlock  HorizontalAlignment="Center" Margin="0,40,0,0" TextWrapping="Wrap" Text="FeelsLike" VerticalAlignment="Top"/>
+                            <TextBlock  HorizontalAlignment="Center" Margin="0,40,0,0" TextWrapping="Wrap" Text="{DynamicResource Main_FeelsLike}" VerticalAlignment="Top"/>
                         </Grid>
                     </Border>
                     <Border Margin="10 0 0 0"  Height="70" Width="70" Background="{DynamicResource MaskColor}" CornerRadius="15,15,15,15">
                         <Grid>
-                            <TextBlock x:Name="WindScale" HorizontalAlignment="Center" FontWeight="Bold" Margin="0,15,0,0" TextWrapping="Wrap" Text="2" VerticalAlignment="Top" FontSize="14"/>
-                            <TextBlock x:Name="WindDir" HorizontalAlignment="Center" Margin="0,40,0,0" TextWrapping="Wrap" Text="North Wind" VerticalAlignment="Top"/>
+                            <TextBlock HorizontalAlignment="Center"
+                                       FontWeight="Bold" Margin="0,15,0,0" 
+                                       TextWrapping="Wrap" VerticalAlignment="Top" FontSize="14">
+                                <Run Text="{DynamicResource Main_WindLevel}"/>  <Run x:Name="WindScale" d:Text="2"/>
+                            </TextBlock>
+                            <TextBlock x:Name="WindDir" HorizontalAlignment="Center" Margin="0,40,0,0" TextWrapping="Wrap" d:Text="North Wind" VerticalAlignment="Top"/>
                         </Grid>
                     </Border>
                     <Border Margin="10 0 0 0"  Height="70" Width="70" Background="{DynamicResource MaskColor}" CornerRadius="15,15,15,15">
                         <Grid>
                             <TextBlock x:Name="Humidity" HorizontalAlignment="Center" FontWeight="Bold" Margin="0,15,0,0" TextWrapping="Wrap" Text="40%" VerticalAlignment="Top" FontSize="14"/>
-                            <TextBlock  HorizontalAlignment="Center" Margin="0,40,0,0" TextWrapping="Wrap" Text="Humidity" VerticalAlignment="Top"/>
+                            <TextBlock  HorizontalAlignment="Center" Margin="0,40,0,0" TextWrapping="Wrap" Text="{DynamicResource Main_Humidity}" VerticalAlignment="Top"/>
                         </Grid>
                     </Border>
                     <Border  Height="70" Width="70" Background="{DynamicResource MaskColor}" CornerRadius="15,15,15,15" Margin="10,0,0,0">
                         <Grid>
                             <TextBlock x:Name="vis" HorizontalAlignment="Center" FontWeight="Bold" Margin="0,15,0,0" TextWrapping="Wrap" Text="220km" VerticalAlignment="Top" FontSize="14"/>
-                            <TextBlock  HorizontalAlignment="Center" Margin="0,40,0,0" TextWrapping="Wrap" Text="Visibility" VerticalAlignment="Top"/>
+                            <TextBlock  HorizontalAlignment="Center" Margin="0,40,0,0" TextWrapping="Wrap" Text="{DynamicResource Main_Visibility}" VerticalAlignment="Top"/>
                         </Grid>
                     </Border>
                 </WrapPanel>
@@ -119,11 +127,7 @@
             <Border Background="{DynamicResource MaskColor}" CornerRadius="15,15,15,15" Width="330" Margin="0,10,0,0">
                 <WrapPanel x:Name="Days" Margin="0,10,0,10"/>
             </Border>
-            <TextBlock  Margin="0,10,0,0" FontSize="10" Opacity="0.5" TextAlignment="Center">
-                <Run Text="Weather service by QWeather."/>
-                <LineBreak/>
-                <Run Text="Air quality source: CNEMC"/>
-            </TextBlock>
+            <TextBlock  Margin="0,10,0,0" FontSize="10" Opacity="0.5" TextAlignment="Center" Text="{DynamicResource Copyright}"/>
         </WrapPanel>
         <ws:ScrollViewer x:Name="AddFavor" Style="{StaticResource SimpleVerticalScrollViewerStyle}" Visibility="Collapsed">
             <WrapPanel   ItemWidth="330" Orientation="Vertical" Margin="0,0,0,0" >
@@ -132,7 +136,7 @@
                                 CornerRadius="12"  
                                 PreviewKeyDown="SearchCityBox_PreviewKeyDown" 
                                 TextWrapping="Wrap" 
-                                Placeholder="Search City" 
+                                Placeholder="{DynamicResource Tip_Search}" 
                                 Margin="40,0,40,0" 
                                 Foreground="{DynamicResource ForeColor}" 
                                 Background="{DynamicResource MaskColor}" 
@@ -148,15 +152,15 @@
                 <Border Background="{DynamicResource MaskColor}" CornerRadius="15">
                     <WrapPanel x:Name="SearchCity_Result" ItemWidth="330"/>
                 </Border>
-                <TextBlock FontSize="16" Text="DefaultPositon" FontWeight="Bold" Margin="0,10,0,0"/>
+                <TextBlock FontSize="16" Text="{DynamicResource List_DefaultPosition}" FontWeight="Bold" Margin="12,10,0,6"/>
                 <Border Background="{DynamicResource MaskColor}" CornerRadius="15">
                     <WrapPanel x:Name="DefaultPosition" ItemWidth="330"/>
                 </Border>
-                <TextBlock FontSize="16" Text="Favorite" FontWeight="Bold" Margin="0,10,0,0"/>
+                <TextBlock FontSize="16" Text="{DynamicResource List_Favorite}" FontWeight="Bold" Margin="12,10,0,6"/>
                 <Border Background="{DynamicResource MaskColor}" CornerRadius="15">
                     <WrapPanel x:Name="FavorCity" ItemWidth="330"/>
                 </Border>
-                <TextBlock Text="Tips: Long press or right-click to set as default." TextAlignment="Center" FontSize="10" Opacity="0.5"/>
+                <TextBlock Text="{DynamicResource List_Tip_SetAsDefault}" TextAlignment="Center" FontSize="10" Opacity="0.5"/>
             </WrapPanel>
         </ws:ScrollViewer>
     </Grid>

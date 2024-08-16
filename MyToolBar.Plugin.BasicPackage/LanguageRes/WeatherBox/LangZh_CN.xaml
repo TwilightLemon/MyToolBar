@@ -1,0 +1,21 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=netstandard">
+
+    <sys:String x:Key="ApiLanguage">zh</sys:String>
+    <sys:String x:Key="WindowTitle">天气</sys:String>
+    <sys:String x:Key="Main_FeelsLike">体感</sys:String>
+    <sys:String x:Key="Main_WindLevel">风力</sys:String>
+    <sys:String x:Key="Main_Humidity">湿度</sys:String>
+    <sys:String x:Key="Main_Visibility">可见度</sys:String>
+
+    <sys:String x:Key="List_DefaultPosition">默认地区</sys:String>
+    <sys:String x:Key="List_Favorite">收藏</sys:String>
+    <sys:String x:Key="List_Tip_SetAsDefault">长按或右键点击可设置为默认城市喵</sys:String>
+
+    <sys:String x:Key="Tip_UpdatedAt">更新于</sys:String>
+    <sys:String x:Key="Tip_Search">搜索</sys:String>
+    <sys:String x:Key="Copyright">
+        和风天气提供数据支持 | 空气质量数据来自CNEMC
+    </sys:String>
+</ResourceDictionary>

@@ -19,18 +19,13 @@ namespace MyToolBar.Services
     /// <summary>
     /// [主线任务] 全局异常捕获写日志、加载应用缓存目录、加载主窗口
     /// </summary>
-    internal class ApplicationService : IHostedService
+    internal class ApplicationService(
+        IServiceProvider serviceProvider,
+        ILogger<ApplicationService> logger,
+        UIResourceService resourceService,
+        AppSettingsService appSettingsService) : IHostedService
     {
-        private readonly IServiceProvider _serviceProvider;
-        private readonly ILogger _logger;
-
-        public ApplicationService(
-            IServiceProvider serviceProvider,
-            ILogger<ApplicationService> logger)
-        {
-            _serviceProvider = serviceProvider;
-            _logger = logger;
-        }
+        private readonly ILogger _logger = logger;
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
@@ -47,19 +42,28 @@ namespace MyToolBar.Services
                 e.Handled = true;
             }));
             //加载插件包管理器
-            _serviceProvider.GetRequiredService<ManagedPackageService>().Load();
-            //等待配置文件加载完成
-            _=_serviceProvider.GetRequiredService<AppSettingsService>().WaitForLoading();
+            serviceProvider.GetRequiredService<ManagedPackageService>().Load();
             //设置Http代理 (TODO:可选配置代理模式)
             HttpClient.DefaultProxy = new WebProxy();
+            //加载配置
+            appSettingsService.Load();
+            appSettingsService.Loaded += delegate
+            {
+                LocalCulture.OnLanguageChanged += LocalCulture_OnLanguageChanged;
+                resourceService.SetLanguage((LocalCulture.Language)appSettingsService.Settings.Language);
+            };
             //加载主窗口
-            var mainWindow = _serviceProvider.GetRequiredService<AppBarWindow>();
+            var mainWindow = serviceProvider.GetRequiredService<AppBarWindow>();
             mainWindow.Show();
 
 
             return Task.CompletedTask;
         }
 
+        private void LocalCulture_OnLanguageChanged(object? sender, LocalCulture.Language e)
+        {
+            resourceService.SetLanguage(e);
+        }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {

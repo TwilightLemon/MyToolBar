@@ -149,6 +149,11 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
             }
             else
             {
+                KeyMgr.Data.lang = LocalCulture.Current switch { 
+                LocalCulture.Language.en_us=>"en",
+                LocalCulture.Language.zh_cn=>"zh",
+                _=>"en"
+                };
                 WeatherApi.SetProperty(KeyMgr.Data);
                 await LoadWeatherData();
                 GlobalService.GlobalTimer.Elapsed += GlobalTimer_Elapsed;

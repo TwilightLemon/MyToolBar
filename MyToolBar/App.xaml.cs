@@ -41,11 +41,10 @@ namespace MyToolBar
                 // function services
                 services.AddSingleton<ManagedPackageService>();
                 services.AddSingleton<PluginReactiveService>();
-                services.AddSingleton<ThemeResourceService>();
+                services.AddSingleton<UIResourceService>();
                 services.AddSingleton<PowerOptimizeService>();
                 services.AddHostedService(provider => provider.GetRequiredService<PowerOptimizeService>());
                 services.AddSingleton<AppSettingsService>();
-                services.AddHostedService(provider => provider.GetRequiredService<AppSettingsService>());
 
                 // logging
                 services.AddLogging(builder =>

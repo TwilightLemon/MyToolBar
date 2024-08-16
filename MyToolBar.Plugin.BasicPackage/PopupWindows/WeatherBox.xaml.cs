@@ -7,6 +7,7 @@ using System.Windows.Input;
 using MyToolBar.Common.UIBases;
 using MyToolBar.Plugin.BasicPackage.Capsules;
 using MyToolBar.Plugin.BasicPackage.API;
+using MyToolBar.Common;
 
 namespace MyToolBar.Plugin.BasicPackage.PopupWindows
 {
@@ -18,9 +19,31 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
         public WeatherBox()
         {
             InitializeComponent();
+            LocalCulture.OnLanguageChanged += LocalCulture_OnLanguageChanged;
+            LocalCulture_OnLanguageChanged(null, LocalCulture.Current);
             this.StylusDown += WeatherBox_StylusDown;
             this.StylusSystemGesture += WeatherBox_StylusSystemGesture;
+            Closing += delegate { 
+                LocalCulture.OnLanguageChanged -= LocalCulture_OnLanguageChanged;
+            };
         }
+
+        private void LocalCulture_OnLanguageChanged(object? sender, LocalCulture.Language e)
+        {
+            string uri = $"/MyToolBar.Plugin.BasicPackage;component/LanguageRes/WeatherBox/Lang{e switch
+            {
+                LocalCulture.Language.en_us => "En_US",
+                LocalCulture.Language.zh_cn => "Zh_CN",
+                _ => throw new Exception("Unsupported Language")
+            }}.xaml";
+            //删除旧资源
+            var old = Resources.MergedDictionaries.FirstOrDefault(p => p.Source != null && p.Source.OriginalString.Contains("LanguageRes/WeatherBox/Lang"));
+            if (old != null)
+                Resources.MergedDictionaries.Remove(old);
+            //添加新资源
+            Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = new Uri(uri, UriKind.Relative) });
+        }
+
         private Point _touchStart;
         private bool _AtSearchPage = false;
         private void WeatherBox_StylusDown(object sender, StylusDownEventArgs e)
@@ -56,11 +79,11 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
             Now_desc.Text = wdata.CurrentWeather.status;
             Now_icon.Background= new ImageBrush(new BitmapImage(new Uri(WeatherApi.GetIcon(wdata.CurrentWeather.code))));
             WindDir.Text = wdata.CurrentWeather.windDir;
-            WindScale.Text = "Level "+wdata.CurrentWeather.windScale;
+            WindScale.Text = wdata.CurrentWeather.windScale;
             Humidity.Text = wdata.CurrentWeather.humidity+"%";
             vis.Text = wdata.CurrentWeather.vis+" km";
             FeelsLike.Text = wdata.CurrentWeather.feel+"℃";
-            UpdateTime.Text="Updated at "+wdata.UpdateTime.ToString("HH:mm");
+            UpdateTime.Text=wdata.UpdateTime.ToString("HH:mm");
             AQI_text.Text="AQI "+wdata.CurrentAir.aqi;
             AQI_text.ToolTip = wdata.CurrentAir.sug;
             AQI_Viewer.Background = new SolidColorBrush(WeatherApi.GetAirLevelColor(wdata.CurrentAir.level));

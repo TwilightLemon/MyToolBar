@@ -15,6 +15,7 @@
     <sys:String x:Key="SettingsWindow_Tab_Gerneral">Gerneral</sys:String>
     <sys:String x:Key="SettingsWindow_Desc">Desc</sys:String>
     <sys:String x:Key="SettingsWindow_Version">Version</sys:String>
+    <sys:String x:Key="SettingsWindow_Enable">Enable</sys:String>
     <!--App Settings-->
     <sys:String x:Key="AppSettings_Item_AlwaysUseImmerseMode">Alway use immerse mode</sys:String>
     <sys:String x:Key="AppSettings_Item_AutoRunAtStartup">Auto run at startup</sys:String>

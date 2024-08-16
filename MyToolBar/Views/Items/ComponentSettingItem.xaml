@@ -16,7 +16,7 @@
                 <LineBreak/>
                 <Run Text="{DynamicResource SettingsWindow_Version}"/>: <Run Text="{Binding Version,Mode=OneWay}" d:Text="1.0.0.0"/>
             </TextBlock>
-            <CheckBox x:Name="EnableCheckBox" Margin="20 10 0 0" Content="Enable" Foreground="{DynamicResource ForeColor}" Click="CheckBox_Click"/>
+            <CheckBox x:Name="EnableCheckBox" Margin="20 10 0 0" Content="{DynamicResource SettingsWindow_Enable}" Foreground="{DynamicResource ForeColor}" Click="CheckBox_Click"/>
             <TextBlock x:Name="PluginTb"  FontSize="18" Margin="20 10 0 0" Text="Plugin Settings"/>
             <StackPanel x:Name="SettingsPanel"/>
         </StackPanel>

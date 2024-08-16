@@ -17,20 +17,23 @@ public class SettingsMgr<T> where T : class
 {
     public string Sign { get; set; }
     public string PackageName { get; set; }
-    public T Data { get; set; }
+    public T? Data { get; set; }
     [JsonIgnore]
-    private FileSystemWatcher _watcher;
+    private FileSystemWatcher? _watcher;
     /// <summary>
     /// 监测到配置文件改变时触发，之前不会自动更新数据
     /// </summary>
-    public event Action OnDataChanged;
+    public event Action? OnDataChanged;
     /// <summary>
     /// 为json序列化保留的构造函数
     /// </summary>
     public SettingsMgr() { }
-    public SettingsMgr(string Sign, string pkgName)
+    static SettingsMgr()
     {
         Settings.LoadPath();
+    }
+    public SettingsMgr(string Sign, string pkgName)
+    {
         this.Sign = Sign;
         this.PackageName = pkgName;
         _watcher = new FileSystemWatcher(Settings.SettingsPath)
@@ -92,9 +95,9 @@ public static class Settings
     /// </summary>
     private static JsonSerializerOptions _optionsDes = new()
     {
-        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
         ReadCommentHandling = JsonCommentHandling.Skip,
-        AllowTrailingCommas=true
+        AllowTrailingCommas =true,
+        PropertyNameCaseInsensitive = true
     };
     public enum sType { Cache, Settings }
     public static string MainPath =>
@@ -133,19 +136,13 @@ public static class Settings
     }
     public static async Task<T?> Load<T>(string Sign, sType t) where T : class
     {
-        try
-        {
-            string path = GetPathBySign(Sign,t);
-            if (!File.Exists(path))
-                return null;
-            var fs = File.OpenRead(path);
-            var data = await JsonSerializer.DeserializeAsync<T>(fs,_optionsDes);
-            fs.Close();
-            return data;
-        }
-        catch
-        {
+        string path = GetPathBySign(Sign, t);
+        if (!File.Exists(path))
             return null;
-        }
+        var fs = File.OpenRead(path);
+        var data = await JsonSerializer.DeserializeAsync<T>(fs,_optionsDes);
+        fs.Close();
+        return data;
+
     }
 }

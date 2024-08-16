@@ -1,0 +1,21 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=netstandard">
+
+    <sys:String x:Key="ApiLanguage">en</sys:String>
+    <sys:String x:Key="WindowTitle">Weather</sys:String>
+    <sys:String x:Key="Main_FeelsLike">FeelsLike</sys:String>
+    <sys:String x:Key="Main_WindLevel">Level</sys:String>
+    <sys:String x:Key="Main_Humidity">Humidity</sys:String>
+    <sys:String x:Key="Main_Visibility">Visibility</sys:String>
+
+    <sys:String x:Key="List_DefaultPosition">Default Position</sys:String>
+    <sys:String x:Key="List_Favorite">Favorite</sys:String>
+    <sys:String x:Key="List_Tip_SetAsDefault">Tip: Long-press or right-click to set as default.</sys:String>
+
+    <sys:String x:Key="Tip_UpdatedAt">Updated at</sys:String>
+    <sys:String x:Key="Tip_Search">Search</sys:String>
+    <sys:String x:Key="Copyright">
+        Weather service by QWeather. | Air quality source: CNEMC
+    </sys:String>
+</ResourceDictionary>

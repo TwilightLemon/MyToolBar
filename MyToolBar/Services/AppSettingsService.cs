@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,29 +13,23 @@ namespace MyToolBar.Services
     /// <summary>
     /// 管理MyToolBar主程序的配置服务
     /// </summary>
-    public class AppSettingsService:IHostedService
+    public class AppSettingsService
     {
         private static readonly string _settingsSign = "AppSettings",
                                                     _packageName = typeof(AppSettingsService).FullName;
         private readonly SettingsMgr<AppSettings> settingsMgr=new(_settingsSign,_packageName);
-        private bool _isLoaded = false;
-        public AppSettings Settings { get => settingsMgr.Data; }
-        public async Task WaitForLoading()
-        {
-            while (!_isLoaded) await Task.Delay(10);
-        }
+        public AppSettings? Settings { get => settingsMgr.Data; }
+        public event Action? Loaded;
         
-        public Task StartAsync(CancellationToken cancellationToken)
+        public async void Load()
         {
-            _= settingsMgr.Load();
-            _isLoaded = true;
-            return Task.CompletedTask;
+            await settingsMgr.Load();
+            Loaded?.Invoke();
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
+        public Task Save()
         {
-            _ = settingsMgr.Save();
-            return Task.CompletedTask;
+            return settingsMgr.Save();
         }
     }
 
@@ -53,7 +48,7 @@ namespace MyToolBar.Services
         /// <summary>
         /// App全局语言
         /// </summary>
-        public string Language { get; set; } = "en-us";
+        public int Language { get; set; } = 1;
 
 
     }

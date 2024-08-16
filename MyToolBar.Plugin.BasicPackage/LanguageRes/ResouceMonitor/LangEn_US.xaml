@@ -1,0 +1,16 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=netstandard">
+    <!--ResourceMonitor-->
+    <sys:String x:Key="WindowTitle">Resource Monitor</sys:String>
+    <sys:String x:Key="Title">Process</sys:String>
+    <sys:String x:Key="Memory">Memory</sys:String>
+    <sys:String x:Key="PID">PID</sys:String>
+    <sys:String x:Key="Kill">Kill</sys:String>
+    <sys:String x:Key="Choosen">Choosen</sys:String>
+    <sys:String x:Key="Tip_TerminatorMode">TerminatorMode</sys:String>
+    <sys:String x:Key="Tip_OpenTM">Open Task Manager</sys:String>
+    <sys:String x:Key="Tip_Fixed">Fixed</sys:String>
+    <sys:String x:Key="Tip_TerminatorMode_tipNone">No not-responding process detected.</sys:String>
+
+</ResourceDictionary>

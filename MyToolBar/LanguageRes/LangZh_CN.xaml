@@ -1,0 +1,29 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=netstandard">
+    <!--TODO: 多语言支持-->
+    <!--MainTitleMeum-->
+    <sys:String x:Key="MeumItem_Settings">设置</sys:String>
+    <sys:String x:Key="MeumItem_Exit">退出</sys:String>
+    <!--SettingsWindow-->
+    <sys:String x:Key="SettingsWindow_Title">设置</sys:String>
+    <sys:String x:Key="SettingsWindow_Tab_About">关于</sys:String>
+    <sys:String x:Key="SettingsWindow_Tab_Capsules">胶囊</sys:String>
+    <sys:String x:Key="SettingsWindow_Tab_OuterControl">外部控制</sys:String>
+    <sys:String x:Key="SettingsWindow_Tab_Components">组件</sys:String>
+    <sys:String x:Key="SettingsWindow_Tab_Services">常驻服务</sys:String>
+    <sys:String x:Key="SettingsWindow_Tab_Gerneral">AppBar设置</sys:String>
+    <sys:String x:Key="SettingsWindow_Desc">描述</sys:String>
+    <sys:String x:Key="SettingsWindow_Version">版本</sys:String>
+    <sys:String x:Key="SettingsWindow_Enable">启用</sys:String>
+    <!--App Settings-->
+    <sys:String x:Key="AppSettings_Item_AlwaysUseImmerseMode">始终启用沉浸模式</sys:String>
+    <sys:String x:Key="AppSettings_Item_AutoRunAtStartup">开机自启动</sys:String>
+    <sys:String x:Key="AppSettings_Item_Language">语言</sys:String>
+    <!--Drawboard-->
+    <sys:String x:Key="Drawboard_Title">绘板</sys:String>
+    <sys:String x:Key="Drawboard_Tool_ClearAll">清除所有</sys:String>
+    <sys:String x:Key="Drawboard_Tool_Penetrate">穿透模式(双击绘板)</sys:String>
+    <sys:String x:Key="Drawboard_Tool_InsertFromClipboard">插入(双指轻点)</sys:String>
+    <sys:String x:Key="Drawboard_Tool_SwitchPen">切换画笔</sys:String>
+</ResourceDictionary>

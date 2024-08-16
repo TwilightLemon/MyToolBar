@@ -10,6 +10,7 @@ using System.Web;
 using MyToolBar.Common.Func;
 using System.Windows;
 using System.Windows.Media;
+using System.Text.Json.Serialization;
 
 /*
  Weather Api
@@ -27,6 +28,7 @@ namespace MyToolBar.Plugin.BasicPackage.API
         public class Property
         {
             public string? key { get; set; }
+            [JsonIgnore]
             public string? lang { get; set; } = "en";
             public string? host { get; set; } = "devapi.qweather.com";
         }

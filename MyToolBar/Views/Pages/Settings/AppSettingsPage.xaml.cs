@@ -25,8 +25,14 @@ namespace MyToolBar.Views.Pages.Settings
         public AppSettingsPage(AppSettingsService appSettingsService)
         {
             InitializeComponent();
+            Unloaded += AppSettingsPage_Unloaded;
             _appSettingsService = appSettingsService;
             LoadSettings();
+        }
+
+        private async void AppSettingsPage_Unloaded(object sender, RoutedEventArgs e)
+        {
+            await _appSettingsService.Save();
         }
 
         private void LoadSettings()

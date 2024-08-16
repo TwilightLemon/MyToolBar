@@ -10,7 +10,7 @@
         x:Class="MyToolBar.Views.Windows.SettingsWindow"
         mc:Ignorable="d" ResizeMode="CanMinimize"
         Height="550" Width="850"
-        Title="Settings"
+        Title="{DynamicResource SettingsWindow_Title}"
         Foreground="{DynamicResource ForeColor}"
         Background="Transparent">
     <i:Interaction.Behaviors>
@@ -26,7 +26,7 @@
                        Background="{DynamicResource MaskColor}"
                        Width="200">
                 <StackPanel DockPanel.Dock="Top">
-                    <TextBlock Text="Settings"
+                    <TextBlock Text="{DynamicResource SettingsWindow_Title}"
                                VerticalAlignment="Center"
                                HorizontalAlignment="Center"
                                FontWeight="Bold"
