@@ -28,7 +28,9 @@ namespace MyToolBar.Plugin.BasicPackage.OuterControls
         public override void Dispose()
         {
             base.Dispose();
-            _musicServier?.Stop();
+            Dispatcher.Invoke(()=> _musicServier?.Stop());
+            Smtc.MediaPropertiesChanged -= Smtc_MediaPropertiesChanged;
+            Smtc.SessionExited -= Smtc_SessionExited;
         }
         private Point _touchStart;
         private void LemonAppMusic_StylusDown(object sender, StylusDownEventArgs e)

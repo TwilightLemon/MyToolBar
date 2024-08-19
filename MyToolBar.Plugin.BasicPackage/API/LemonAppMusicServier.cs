@@ -1,22 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MyToolBar.Plugin.BasicPackage.API;
 internal class LemonAppMusicServier
 {
     private TcpListener _listener;
     private CancellationTokenSource _cancellationTokenSource;
+    private Mutex _mutex;
     private bool _isRunning = false;
 
     public LemonAppMusicServier()
     {
         _listener = new TcpListener(IPAddress.Loopback,12587);
+        InitMutex();
+    }
+    private void InitMutex()
+    {
+        _mutex = new Mutex(false, "MyToolBar.Plugin.BasicPackage//LemonAppMusicServier",out _);
     }
     public async Task StartAsync(Action<string> onMsgReceived)
     {
@@ -54,6 +56,7 @@ internal class LemonAppMusicServier
     public void Stop()
     {
         _cancellationTokenSource.Cancel();
+        _mutex.Dispose();
         _listener.Stop();
         _isRunning = false;
     }

@@ -19,6 +19,17 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
         public HardwareMonitorCap()
         {
             InitializeComponent();
+            InitLangRes();
+        }
+        private void InitLangRes()
+        {
+            string uri = $"/MyToolBar.Plugin.BasicPackage;component/LanguageRes/Caps/Lang{LocalCulture.Current switch
+            {
+                LocalCulture.Language.en_us => "En_US",
+                LocalCulture.Language.zh_cn => "Zh_CN",
+                _ => throw new Exception("Unsupported Language")
+            }}.xaml";
+            Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = new Uri(uri, UriKind.Relative) });
         }
         public override void Uninstall()
         {

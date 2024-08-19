@@ -49,8 +49,11 @@ namespace MyToolBar.Services
             appSettingsService.Load();
             appSettingsService.Loaded += delegate
             {
+                if (appSettingsService.Settings == null) return;
+                var lang = (LocalCulture.Language)appSettingsService.Settings.Language;
+                LocalCulture.SetGlobalLanguage(lang, false);
                 LocalCulture.OnLanguageChanged += LocalCulture_OnLanguageChanged;
-                resourceService.SetLanguage((LocalCulture.Language)appSettingsService.Settings.Language);
+                resourceService.SetLanguage(lang);
             };
             //加载主窗口
             var mainWindow = serviceProvider.GetRequiredService<AppBarWindow>();

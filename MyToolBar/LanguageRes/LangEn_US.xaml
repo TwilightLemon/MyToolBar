@@ -2,9 +2,10 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=netstandard">
     <!--TODO: 多语言支持-->
-    <!--MainTitleMeum-->
-    <sys:String x:Key="MeumItem_Settings">Settings</sys:String>
-    <sys:String x:Key="MeumItem_Exit">Exit</sys:String>
+    <!--MainTitleMenu-->
+    <sys:String x:Key="MenuWindow_Title">Main menu</sys:String>
+    <sys:String x:Key="MenuItem_Settings">Settings</sys:String>
+    <sys:String x:Key="MenuItem_Exit">Exit</sys:String>
     <!--SettingsWindow-->
     <sys:String x:Key="SettingsWindow_Title">Settings</sys:String>
     <sys:String x:Key="SettingsWindow_Tab_About">About</sys:String>

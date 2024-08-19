@@ -1,6 +1,8 @@
-﻿using MyToolBar.Services;
+﻿using MyToolBar.Common;
+using MyToolBar.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,6 +41,8 @@ namespace MyToolBar.Views.Pages.Settings
         {
             AlwaysImModeCb.IsChecked = _appSettingsService.Settings.AlwaysUseImmerseMode;
             AutoRunCb.IsChecked = _appSettingsService.Settings.AutoRunAtStartup;
+            //载入语言设置
+            LanguageComboBox.SelectedItem = LocalCulture.Current;
         }
 
         private void AlwaysImModeCb_Click(object sender, RoutedEventArgs e)
@@ -49,6 +53,14 @@ namespace MyToolBar.Views.Pages.Settings
         private void AutoRunCb_Click(object sender, RoutedEventArgs e)
         {
             _appSettingsService.Settings.AutoRunAtStartup = (bool)AutoRunCb.IsChecked;
+        }
+
+        private void LanguageComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (LanguageComboBox.SelectedItem is LocalCulture.Language lang && lang != LocalCulture.Current)
+            {
+                LocalCulture.SetGlobalLanguage(lang);
+            }
         }
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.Xaml.Behaviors;
 using MyToolBar.Common.WinAPI;
 using MyToolBar.Common.Behaviors;
 using EleCho.WpfSuite;
+using System.Windows.Media;
 
 namespace MyToolBar.Common.UIBases
 {
@@ -16,7 +17,8 @@ namespace MyToolBar.Common.UIBases
             Top = 0;
 
             //Set basic style for popup window
-            SetResourceReference(BackgroundProperty,"MaskColor");
+            //SetResourceReference(BackgroundProperty,"MaskColor");
+            Background = Brushes.Transparent;
             SetResourceReference(ForegroundProperty, "ForeColor");
             WindowStyle = WindowStyle.None;
             ResizeMode = ResizeMode.NoResize;

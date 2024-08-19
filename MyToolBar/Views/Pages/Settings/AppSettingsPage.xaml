@@ -4,10 +4,19 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:MyToolBar.Views.Pages.Settings"
+      xmlns:sys="clr-namespace:System;assembly=netstandard"
+      xmlns:common="clr-namespace:MyToolBar.Common;assembly=MyToolBar.Common"
       xmlns:ws="https://schemas.elecho.dev/wpfsuite"
       mc:Ignorable="d"  Foreground="{DynamicResource ForeColor}"
       d:DesignHeight="450" d:DesignWidth="800"
       Title="AppSettingsPage">
+    <Page.Resources>
+        <ObjectDataProvider x:Key="LanguageEnumData" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="common:LocalCulture+Language" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Page.Resources>
     <Grid>
         <ws:ScrollViewer Style="{DynamicResource SimpleVerticalScrollViewerStyle}" Margin="28 12 28 28">
             <ws:StackPanel x:Name="SettingsList" Spacing="8">
@@ -21,9 +30,37 @@
                 </Border>
                 <Border Background="{DynamicResource MaskColor}" CornerRadius="12" Height="48">
                     <CheckBox x:Name="AutoRunCb" Style="{DynamicResource SimpleCheckBoxStyle}"
-                     Content="{DynamicResource AppSettings_Item_AutoRunAtStartup}"
-                              Click="AutoRunCb_Click"
-                    VerticalAlignment="Center" Margin="12"/>
+                              Content="{DynamicResource AppSettings_Item_AutoRunAtStartup}"
+                              Click="AutoRunCb_Click" VerticalAlignment="Center" Margin="12"/>
+                </Border>
+                <Border Background="{DynamicResource MaskColor}" CornerRadius="12" Height="48">
+                    <Grid>
+                        <TextBlock VerticalAlignment="Center" Margin="12" Text="{DynamicResource AppSettings_Item_Language}"
+                                  HorizontalAlignment="Left"/>
+                        <ws:ComboBox x:Name="LanguageComboBox" Width="72" Height="24"
+                                     HorizontalAlignment="Right" Margin="0 0 48 0"
+                                     Background="{DynamicResource MaskColor}" 
+                                     BorderBrush="{DynamicResource FocusMaskColor}"
+                                     Foreground="{DynamicResource ForeColor}" 
+                                     GlyphBrush="{DynamicResource ForeColor}" 
+                                     PopupBackground="AliceBlue"
+                                     CornerRadius="4,4,4,4" 
+                                     PopupCornerRadius="4,4,4,4"
+                                     
+                                     HoverBackground="{DynamicResource FocusMaskColor}"
+                                     HoverBorderBrush="{DynamicResource FocusMaskColor}"
+                                     HoverGlyphBrush="{DynamicResource ForeColor}" 
+                                     HoverForeground="{DynamicResource ForeColor}"
+                                     
+                                     PressedBackground="{DynamicResource FocusMaskColor}"
+                                     PressedBorderBrush="{DynamicResource FocusMaskColor}"
+                                     PressedGlyphBrush="{DynamicResource ForeColor}" PressedForeground="{DynamicResource ForeColor}"
+                                     
+                                     DisplayMemberPath="."
+                                     ItemsSource="{Binding Source={StaticResource LanguageEnumData}}"
+                                     SelectionChanged="LanguageComboBox_SelectionChanged" >
+                        </ws:ComboBox>
+                    </Grid>
                 </Border>
             </ws:StackPanel>
         </ws:ScrollViewer>

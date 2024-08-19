@@ -18,14 +18,14 @@ namespace MyToolBar.PopupWindows
         public MainTitleMenu()
         {
             InitializeComponent();
-            LoadMeumItems();
+            LoadMenuItems();
         }
-        private void LoadMeumItems()
+        private void LoadMenuItems()
         {
             void SetItem(string contResName, string iconResName, Action<object, RoutedEventArgs> Event)
             {
-                var item = new MeumItem();
-                item.MeumContent = (string)FindResource($"MeumItem_{contResName}");
+                var item = new MenuItem();
+                item.MenuContent = (string)FindResource($"MenuItem_{contResName}");
 
                 if (iconResName == null)
                     item.Icon = null;
@@ -36,18 +36,18 @@ namespace MyToolBar.PopupWindows
                 ItemPanel.Children.Add(item);
             }
 
-            SetItem("Settings", "Settings", MeumItem_Settings);
-            SetItem("Exit", null, MeumItem_Exit);
+            SetItem("Settings", "Settings", MenuItem_Settings);
+            SetItem("Exit", null, MenuItem_Exit);
 
             this.Height = ItemPanel.Children.Count * 40;
         }
-        private void MeumItem_Settings(object sender, RoutedEventArgs e)
+        private void MenuItem_Settings(object sender, RoutedEventArgs e)
         {
             App.Host.Services
                 .GetRequiredService<SettingsWindow>()
-                .ShowDialog();
+                .Show();
         }
-        private void MeumItem_Exit(object sender, RoutedEventArgs e)
+        private void MenuItem_Exit(object sender, RoutedEventArgs e)
         {
             GlobalService.GlobalTimer.Stop();
             _ = App.Host.StopAsync();

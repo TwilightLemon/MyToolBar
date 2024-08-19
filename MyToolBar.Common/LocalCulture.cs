@@ -17,9 +17,10 @@ public static class LocalCulture
     public static event EventHandler<Language>? OnLanguageChanged;
     public static Language Current { get; private set; }
 
-    public static void SetGlobalLanguage(Language lang)
+    public static void SetGlobalLanguage(Language lang,bool invoke=true)
     {
         Current = lang;
+        if(invoke)
         OnLanguageChanged?.Invoke(null, lang);
     }
 }

@@ -5,6 +5,7 @@
     <sys:String x:Key="WindowTitle">进程管理器</sys:String>
     <sys:String x:Key="Title">进程</sys:String>
     <sys:String x:Key="Memory">内存</sys:String>
+    <sys:String x:Key="State">状态</sys:String>
     <sys:String x:Key="PID">进程ID</sys:String>
     <sys:String x:Key="Kill">终结</sys:String>
     <sys:String x:Key="Choosen">选中</sys:String>
@@ -12,6 +13,8 @@
     <sys:String x:Key="Tip_OpenTM">打开任务管理器</sys:String>
     <sys:String x:Key="Tip_Fixed">已固定</sys:String>
     <sys:String x:Key="Tip_TerminatorMode_tipNone">未发现挂起的进程</sys:String>
-
+    <sys:String x:Key="Tip_AccessDenied">拒绝访问！</sys:String>
+    <sys:String x:Key="Tip_Responding">正在运行</sys:String>
+    <sys:String x:Key="Tip_Frozen">已冻结</sys:String>
 
 </ResourceDictionary>

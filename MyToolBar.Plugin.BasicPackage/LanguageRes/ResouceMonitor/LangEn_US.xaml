@@ -6,11 +6,16 @@
     <sys:String x:Key="Title">Process</sys:String>
     <sys:String x:Key="Memory">Memory</sys:String>
     <sys:String x:Key="PID">PID</sys:String>
+    <sys:String x:Key="State">State</sys:String>
     <sys:String x:Key="Kill">Kill</sys:String>
     <sys:String x:Key="Choosen">Choosen</sys:String>
     <sys:String x:Key="Tip_TerminatorMode">TerminatorMode</sys:String>
     <sys:String x:Key="Tip_OpenTM">Open Task Manager</sys:String>
     <sys:String x:Key="Tip_Fixed">Fixed</sys:String>
     <sys:String x:Key="Tip_TerminatorMode_tipNone">No not-responding process detected.</sys:String>
+    <sys:String x:Key="Tip_AccessDenied">Access Denied !</sys:String>
+    <sys:String x:Key="Tip_Responding">Responding</sys:String>
+    <sys:String x:Key="Tip_Frozen">Frozen</sys:String>
+
 
 </ResourceDictionary>

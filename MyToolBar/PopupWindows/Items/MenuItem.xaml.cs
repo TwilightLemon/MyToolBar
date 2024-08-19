@@ -5,15 +5,15 @@ using MyToolBar.Common.UIBases;
 namespace MyToolBar.PopupWindows.Items
 {
     /// <summary>
-    /// MeumItem.xaml 的交互逻辑
+    /// MenuItem.xaml 的交互逻辑
     /// </summary>
-    public partial class MeumItem : ItemBase
+    public partial class MenuItem : ItemBase
     {
-        public MeumItem()
+        public MenuItem()
         {
             InitializeComponent();
         }
-        public string MeumContent {
+        public string MenuContent {
             get => ContentTb.Text; set=>ContentTb.Text = value;
         }
     

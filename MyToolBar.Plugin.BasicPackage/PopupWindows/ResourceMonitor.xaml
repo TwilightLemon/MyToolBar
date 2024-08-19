@@ -7,11 +7,12 @@
                      xmlns:ws="https://schemas.elecho.dev/wpfsuite"
                      mc:Ignorable="d"
                      Title="{DynamicResource WindowTitle}" Height="520" Width="350" 
-                      Background="{DynamicResource MaskColor}" Foreground="{DynamicResource ForeColor}">
+                      Background="Transparent" Foreground="{DynamicResource ForeColor}">
     <base:PopupWindowBase.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/MyToolBar.Plugin.BasicPackage;component/IconData.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MyToolBar.Common;component/Styles/IconData.xaml"/>
                 <ResourceDictionary Source="/MyToolBar.Plugin.BasicPackage;component/LanguageRes/ResouceMonitor/LangEn_US.xaml"/>
                 <!--ThemeColor资源字典仅为设计时提供，实际运行时会通过PopWindowBase移除，以将资源映射到App域-->
                 <ResourceDictionary Source="pack://application:,,,/MyToolBar.Common;component/Styles/ThemeColor.xaml"/>
@@ -161,29 +162,55 @@
                 <WrapPanel x:Name="ProcessList" ItemWidth="330"/>
             </ws:ScrollViewer>
         </Border>
-        <Grid x:Name="ProcessInfoPage" Margin="10 60 10 10" Visibility="Collapsed">
+        <Grid x:Name="ProcessInfoPage" Margin="10 60 10 10"  Visibility="Collapsed">
             <Border Background="{DynamicResource MaskColor}" CornerRadius="15"/>
             <Border HorizontalAlignment="Center" Background="{DynamicResource MaskColor}" CornerRadius="15" Height="90" Margin="0 40 0 0" VerticalAlignment="Top" Width="90">
                 <Image x:Name="PInfo_Icon" Stretch="Uniform" Margin="20" />
             </Border>
             <TextBlock x:Name="PInfo_Detal" FontSize="14" TextWrapping="Wrap"
-                       VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="20 150 20 0" TextAlignment="Center">
+                       VerticalAlignment="Top" Margin="20,140,20,0" TextAlignment="Center" Height="143">
                 <Run x:Name="PInfo_Name" FontSize="16" d:Text="Visual Studio" FontWeight="Bold" />
                 <LineBreak/>
                 <Run x:Name="PInfo_file" d:Text="dev.exe" /><LineBreak/>
                 <LineBreak/>
-                <Run Text="{DynamicResource PID}"/>: <Run x:Name="PInfo_PID" d:Text=": 1234" /><LineBreak/>
-                <Run Text="{DynamicResource Memory}"/>: <Run x:Name="PInfo_MEM" d:Text=": 123MB" />
+                <Run Text="{DynamicResource PID}"/>: <Run x:Name="PInfo_PID" d:Text="1234" /><LineBreak/>
+                <Run Text="{DynamicResource Memory}"/>: <Run x:Name="PInfo_MEM" d:Text="123MB" /><LineBreak/>
+                <Run Text="{DynamicResource State}"/>: <Run x:Name="PInfo_STA" d:Text="Running" />
+
             </TextBlock>
-            <Border x:Name="PInfo_BackBtn" Cursor="Hand" Background="{DynamicResource MaskColor}" CornerRadius="50" Width="50" Height="50" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="30,0,0,100" MouseLeftButtonUp="PInfo_BackBtn_MouseLeftButtonUp">
+            <ws:Button x:Name="PInfo_BackBtn"
+                       Cursor="Hand" 
+                       Style="{StaticResource SimpleButtonStyleForWs}"
+                       CornerRadius="50" Width="50" Height="50"
+                       HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="30,0,0,96" 
+                       Click="PInfo_BackBtn_Click">
                 <Path Data="{StaticResource Icon_back}" Stretch="Uniform" Width="14" Height="14" Fill="{DynamicResource ForeColor}"/>
-            </Border>
-            <Border x:Name="PInfo_EndBtn" Cursor="Hand" CornerRadius="50" Width="50" Height="50" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,100" Background="#7FF72121" MouseLeftButtonUp="PInfo_EndBtn_MouseLeftButtonUp">
+            </ws:Button>
+            <ws:Button x:Name="PInfo_EndBtn" 
+                       Style="{StaticResource SimpleButtonStyleForWs}"
+                       HoverBackground="#99F72121"
+                       Cursor="Hand" CornerRadius="50" Width="50" Height="50" 
+                       HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,96"
+                       Background="#7FF72121" Click="PInfo_EndBtn_Click" PressedBackground="#B2F72121">
                 <Path Data="{StaticResource Icon_end}" Stretch="Uniform" Width="14" Height="14" Fill="{DynamicResource ForeColor}"/>
-            </Border>
-            <Border x:Name="PInfo_OpenBtn" Cursor="Hand" Background="{DynamicResource MaskColor}" CornerRadius="50" Width="50" Height="50" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,30,100" MouseLeftButtonUp="PInfo_OpenBtn_MouseLeftButtonUp">
+            </ws:Button>
+            <ws:Button x:Name="PInfo_OpenBtn"
+                       Cursor="Hand"
+                       Style="{StaticResource SimpleButtonStyleForWs}"
+                       CornerRadius="50" Width="50" Height="50" HorizontalAlignment="Right" 
+                       VerticalAlignment="Bottom" Margin="0,0,30,96" 
+                       Click="PInfo_OpenBtn_Click">
                 <Path Data="{StaticResource Icon_file}" Stretch="Uniform" Width="15" Height="15" Fill="{DynamicResource ForeColor}"/>
-            </Border>
+            </ws:Button>
+            <ws:Button x:Name="PInfo_FreezeBtn" 
+                Style="{StaticResource SimpleButtonStyleForWs}"
+                HoverBackground="#994885FD"
+                Cursor="Hand" CornerRadius="25" Width="128" Height="50" 
+                HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,20"
+                Background="#7F4885FD" PressedBackground="#B24885FD"
+                 Click="PInfo_FreezeBtn_Click">
+                <Path Data="{StaticResource Icon_Frozen}" Stretch="Uniform" Width="20" Height="20" Fill="{DynamicResource ForeColor}"/>
+            </ws:Button>
         </Grid>
     </Grid>
 </base:PopupWindowBase>

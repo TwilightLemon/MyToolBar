@@ -89,15 +89,18 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
         /// 选中的进程
         /// </summary>
         private Process? SelectedProcess = null;
+        private bool SelectedProcess_Accessible = true;
         /// <summary>
         /// 用于执行动画的位置
         /// </summary>
         private Thickness? SeletedItemPos = null;
         private void ProcItem_Clicked(object sender, RoutedEventArgs e)
         {
+            AlwaysShow = true;
             ProcessItem item = (ProcessItem)sender;
 
             SelectedProcess = item._pro;
+            SelectedProcess_Accessible = true;
             //获取process对应图标 高完整性进程无法获取
             try
             {
@@ -107,6 +110,7 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
             catch
             {
                 PInfo_Icon.Source = null;
+                SelectedProcess_Accessible = false;
             }
             PInfo_Name.Text = item._pro.MainWindowTitle;
             if (string.IsNullOrWhiteSpace(PInfo_Name.Text))
@@ -117,46 +121,88 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
             }
             catch
             {
-                PInfo_file.Text = "Access Denied !";
+                PInfo_file.Text = FindResource("Tip_AccessDenied").ToString();
+                SelectedProcess_Accessible = false;
             }
             PInfo_PID.Text = item._pro.Id.ToString();
             // PInfo_CPU.Text = item._pro.TotalProcessorTime.ToString();
             PInfo_MEM.Text = NetworkInfo.FormatSize(item._pro.WorkingSet64);
+            bool isResponding = item._pro.IsResponding();
+
+            PInfo_STA.Text = FindResource(isResponding ? "Tip_Responding" : "Tip_Frozen").ToString();
+
             Storyboard sb = (Storyboard)Resources["OpenDetalPage"];
             var trans = item.TranslatePoint(new Point(0, 0), this);
             SeletedItemPos = (sb.Children[1] as ThicknessAnimationUsingKeyFrames).KeyFrames[0].Value = new Thickness(10, trans.Y, 10, this.ActualHeight - trans.Y - item.ActualHeight);
             sb.Begin();
-        }
 
-        private void PInfo_EndBtn_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            try
+            if (SelectedProcess_Accessible)
             {
-                SelectedProcess?.Kill();
-                SelectedProcess = null;
-                ((Storyboard)Resources["CloseDetalPage"]).Begin();
+                GlobalService.GlobalTimer.Elapsed += RefreshPInfo;
             }
-            catch { }
         }
 
-        private void PInfo_OpenBtn_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void RefreshPInfo(object? sender, System.Timers.ElapsedEventArgs e)
+        {
+            if (SelectedProcess == null)
+            {
+                GlobalService.GlobalTimer.Elapsed -= RefreshPInfo;
+                return;
+            }
+            bool isResponding = SelectedProcess.IsResponding();
+            Dispatcher.Invoke(() => { 
+                PInfo_STA.Text = FindResource(isResponding ? "Tip_Responding" : "Tip_Frozen").ToString();
+                PInfo_MEM.Text = NetworkInfo.FormatSize(SelectedProcess.WorkingSet64);
+                PInfo_Name.Text = SelectedProcess.MainWindowTitle;
+                if (string.IsNullOrWhiteSpace(PInfo_Name.Text))
+                    PInfo_Name.Text = SelectedProcess.ProcessName;
+            });
+        }
+        private void ClosePInfoPage()
+        {
+            SelectedProcess = null;
+            var sb = (Storyboard)Resources["CloseDetalPage"];
+            AlwaysShow = false;
+            (sb.Children[2] as ThicknessAnimationUsingKeyFrames).KeyFrames[1].Value = SeletedItemPos.Value;
+            sb.Begin();
+            GlobalService.GlobalTimer.Elapsed -= RefreshPInfo;
+        }
+
+        private void PInfo_EndBtn_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                var path = SelectedProcess?.MainModule.FileName;
-                //Process.Start("explorer", "/select,"+path);
-                if (path != null)
+                if (SelectedProcess_Accessible)
                 {
-                    ExplorerAPI.OpenFolderAndSelectFile(path);
+                    SelectedProcess?.Kill();
+                    ClosePInfoPage();
                 }
             }
             catch { }
         }
 
-        private void PInfo_BackBtn_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void PInfo_OpenBtn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (SelectedProcess_Accessible)
+                {
+                    var path = SelectedProcess?.MainModule.FileName;
+                    //Process.Start("explorer", "/select,"+path);
+                    if (path != null)
+                    {
+                        ExplorerAPI.OpenFolderAndSelectFile(path);
+                    }
+                }
+            }
+            catch { }
+        }
+
+        private void PInfo_BackBtn_Click(object sender, RoutedEventArgs e)
         {
             SelectedProcess = null;
             var sb = (Storyboard)Resources["CloseDetalPage"];
+            AlwaysShow = false;
             (sb.Children[2] as ThicknessAnimationUsingKeyFrames).KeyFrames[1].Value = SeletedItemPos.Value;
             sb.Begin();
         }
@@ -165,7 +211,23 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
         {
             Process.Start("taskmgr");
         }
+        private void PInfo_FreezeBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (!SelectedProcess_Accessible) return;
+
+            if (SelectedProcess.IsResponding())
+            {
+                SelectedProcess.Freeze();
+                //PInfo_STA.Text = FindResource("Tip_Frozen").ToString();
+            }
+            else
+            {
+                SelectedProcess.Unfreeze();
+               // PInfo_STA.Text = FindResource("Tip_Responding").ToString();
+            }
+        }
         #endregion
+
         #region FinalizerMode
 
         private bool _isFinalizerModeOpen = false,

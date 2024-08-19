@@ -89,6 +89,18 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
         public WeatherCap()
         {
             InitializeComponent();
+            InitLangRes();
+        }
+        private void InitLangRes()
+        {
+            string uri = $"/MyToolBar.Plugin.BasicPackage;component/LanguageRes/Caps/Lang{
+               LocalCulture.Current switch
+            {
+                LocalCulture.Language.en_us => "En_US",
+                LocalCulture.Language.zh_cn => "Zh_CN",
+                _ => throw new Exception("Unsupported Language")
+            }}.xaml";
+            Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = new Uri(uri, UriKind.Relative) });
         }
         public override void Uninstall()
         {
@@ -112,7 +124,7 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
             {
                 if (cache.LocatingDate == null || DateTime.Now - cache.LocatingDate >= TimeSpan.FromHours(6))
                 {
-                    Weather_info.Text = "Locating...";
+                    Weather_info.Text = FindResource("Tip_Locating").ToString();
                     cache.DefaultCity = await WeatherApi.GetCityByPositionAsync();
                     cache.LocatingDate = DateTime.Now;
                 }
@@ -120,7 +132,7 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
 
             if (cache.DefaultCity != null)
             {
-                Weather_info.Text= "Loading...";
+                Weather_info.Text= FindResource("Tip_Loading").ToString();
                 var data = await cache.RequstCache(cache.DefaultCity);
                 var wdata = data.CurrentWeather;
                 Weather_info.Text = wdata.temp + "℃  " + wdata.status;

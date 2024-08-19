@@ -115,7 +115,7 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
                 margin.Left=230-(item.DailyData.temp_max-averageTemp)*offset_max;
                 margin.Right = 50+ ( averageTemp- item.DailyData.temp_min) * offset_min;
                 item.TempLine.Margin = margin;
-                item.Day.Text = date.DayOfWeek.ToString()[..3];
+                item.Day.Text = date.ToString("M/d");
                 date=date.AddDays(1);
             }
             //加载Favorite
