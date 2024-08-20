@@ -43,7 +43,7 @@ namespace MyToolBar.Common.UIBases
         /// <summary>
         /// 响应最大化样式 Brush为推荐的前景色
         /// </summary>
-        public Action<bool,Brush>? MaxStyleAct;
+        public Action<bool,Brush?>? MaxStyleAct;
 
         /// <summary>
         /// 指示是否需要显示OutterControl

@@ -18,13 +18,13 @@ namespace MyToolBar.Services
         private static readonly string _settingsSign = "AppSettings",
                                                     _packageName = typeof(AppSettingsService).FullName;
         private readonly SettingsMgr<AppSettings> settingsMgr=new(_settingsSign,_packageName);
-        public AppSettings? Settings { get => settingsMgr.Data; }
-        public event Action? Loaded;
+        public AppSettings Settings { get => settingsMgr.Data??new AppSettings(); }
+        public event Action<bool>? Loaded;
         
         public async void Load()
         {
-            await settingsMgr.Load();
-            Loaded?.Invoke();
+            bool success=await settingsMgr.Load();
+            Loaded?.Invoke(success);
         }
 
         public Task Save()

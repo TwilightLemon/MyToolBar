@@ -13,7 +13,7 @@ using MyToolBar.Plugin;
 namespace MyToolBar.Services
 {
     /// <summary>
-    /// 通知主窗口上的插件变更
+    /// 通知和应用主窗口插件的服务
     /// </summary>
     public class PluginReactiveService(ManagedPackageService managedPackageService)
     {

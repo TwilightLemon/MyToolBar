@@ -8,17 +8,18 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:mb="clr-namespace:MyToolBar.Common.Behaviors;assembly=MyToolBar.Common"
         xmlns:api="clr-namespace:MyToolBar.Common.WinAPI;assembly=MyToolBar.Common"
-        mc:Ignorable="d" Topmost="True"
+        mc:Ignorable="d" 
+        
         Title="MyToolBar" 
-        Height="30" 
-        Width="1480" 
-        Background="Transparent" 
-        ResizeMode="NoResize" 
-        WindowStyle="None" 
+        Height="30"  Width="1480" 
+        Background="Transparent"  Foreground="{DynamicResource AppBarFontColor}" 
+        ResizeMode="NoResize"  WindowStyle="None" ShowInTaskbar="False" 
+        Topmost="True" 
+        
         Loaded="Window_Loaded"
         Closing="Window_Closing" 
-        Foreground="{DynamicResource AppBarFontColor}" 
-        ShowInTaskbar="False" 
+        SourceInitialized="Window_SourceInitialized"
+        
         d:DataContext="{d:DesignInstance Type=local:AppBarWindow}">
     <api:AppBarCreator.AppBar>
         <api:AppBar Location="Top" OnFullScreenStateChanged="AppBar_OnFullScreenStateChanged"/>
@@ -41,7 +42,9 @@
         <Grid x:Name="TittleViewer" TouchLeave="TitleView_TouchDown" Margin="40 0 0 0" Background="#01000000">
             <TextBlock x:Name="TitleView" TextWrapping="Wrap" Text="Microsoft Visual Studio 2022" VerticalAlignment="Center" Foreground="{DynamicResource AppBarFontColor}"/>
         </Grid>
-        <Border x:Name="OuterFuncStatus" Grid.Column="1"  Background="{DynamicResource HighlightColor}" CornerRadius="15">
+        <Border x:Name="OuterFuncStatus" Grid.Column="1" 
+                Background="{DynamicResource HighlightColor}" CornerRadius="15"
+                Visibility="Hidden" d:Visibility="Visible">
             <Grid x:Name="OuterFunc" Background="Transparent"/>
         </Border>
         <WrapPanel x:Name="CapsulePanel" 

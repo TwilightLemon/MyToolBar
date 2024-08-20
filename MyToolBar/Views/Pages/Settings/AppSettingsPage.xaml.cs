@@ -60,6 +60,7 @@ namespace MyToolBar.Views.Pages.Settings
             if (LanguageComboBox.SelectedItem is LocalCulture.Language lang && lang != LocalCulture.Current)
             {
                 LocalCulture.SetGlobalLanguage(lang);
+                _appSettingsService.Settings.Language = (int)lang;
             }
         }
     }

@@ -32,7 +32,7 @@ public class BlurWindowBehavior : Behavior<Window>
     {
         base.OnAttached();
         AssociatedObject.Closing += AssociatedObject_Closing;
-        if (GlobalService.IsPowerModeOn)
+        if (GlobalService.IsEnergySaverModeOn)
         {
             AssociatedObject.SetResourceReference(Window.BackgroundProperty, "BackgroundColor");
         }
@@ -106,7 +106,7 @@ public class BlurWindowBehavior : Behavior<Window>
 
     public static readonly DependencyProperty ModeProperty =
         DependencyProperty.Register("Mode", typeof(MaterialMode), typeof(BlurWindowBehavior),
-            new PropertyMetadata(MaterialMode.Tabbed,OnModeChanged));
+            new PropertyMetadata(MaterialMode.Mica,OnModeChanged));
     public static void OnModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is BlurWindowBehavior behavior)

@@ -54,10 +54,11 @@ namespace MyToolBar.Services
                 LocalCulture.SetGlobalLanguage(lang, false);
                 LocalCulture.OnLanguageChanged += LocalCulture_OnLanguageChanged;
                 resourceService.SetLanguage(lang);
+
+                //加载主窗口
+                var mainWindow = serviceProvider.GetRequiredService<AppBarWindow>();
+                mainWindow.Show();
             };
-            //加载主窗口
-            var mainWindow = serviceProvider.GetRequiredService<AppBarWindow>();
-            mainWindow.Show();
 
 
             return Task.CompletedTask;

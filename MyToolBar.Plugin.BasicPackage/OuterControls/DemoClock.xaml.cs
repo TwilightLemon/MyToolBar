@@ -54,7 +54,7 @@ namespace MyToolBar.Plugin.BasicPackage.OuterControls
             MaxStyleAct = maxStyleAct;
             GlobalService.GlobalTimer.Elapsed += RefreshTime;
         }
-        private void maxStyleAct(bool max, Brush foreColor)
+        private void maxStyleAct(bool max, Brush? foreColor)
         {
             if (foreColor != null)
                 TimeTb.Foreground = foreColor;

@@ -11,13 +11,16 @@ using System.Windows;
 
 namespace MyToolBar.Services
 {
+    /// <summary>
+    /// 电源优化服务 用于处理电源模式变化和低功耗状态 适配Modern Standby
+    /// </summary>
     public class PowerOptimizeService:IHostedService
     {
         private IntPtr _standbyAPIHandle;
         public event Action<bool>? OnEnergySaverStatusChanged;
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            GlobalService.IsPowerModeOn=PowerManager.EnergySaverStatus== EnergySaverStatus.On;
+            GlobalService.IsEnergySaverModeOn=PowerManager.EnergySaverStatus== EnergySaverStatus.On;
            Application.Current.Dispatcher.Invoke(() =>
             {
                 PowerManager.EnergySaverStatusChanged += PowerManager_EnergySaverStatusChanged;

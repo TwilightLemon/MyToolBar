@@ -134,7 +134,7 @@ namespace MyToolBar.Plugin.BasicPackage.OuterControls
             }
         }
 
-        private void maxStyleAct(bool max,Brush foreColor) {
+        private void maxStyleAct(bool max,Brush? foreColor) {
             if(foreColor!=null)
                 Foreground = foreColor;
             else SetResourceReference(ForegroundProperty, "AppBarFontColor");

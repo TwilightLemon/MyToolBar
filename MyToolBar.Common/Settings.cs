@@ -48,17 +48,22 @@ public class SettingsMgr<T> where T : class
     {
         _watcher?.Dispose();
     }
-    public async Task Load()
+    public async Task<bool> Load()
     {
-        Debug.WriteLine(Sign + "   Load!!");
-        var dt = await Settings.Load<SettingsMgr<T>>(Sign,Settings.sType.Settings);
-        if (dt != null)
-            Data = dt.Data;
-        else
+        try
         {
-            Data = Activator.CreateInstance<T>();
-            await Save();
+            Debug.WriteLine(Sign + "   Load!!");
+            var dt = await Settings.Load<SettingsMgr<T>>(Sign, Settings.sType.Settings);
+            if (dt != null)
+                Data = dt.Data;
+            else
+            {
+                Data = Activator.CreateInstance<T>();
+                await Save();
+            }
+            return true;
         }
+        catch { return false; }
     }
     public async Task Save()
     {
