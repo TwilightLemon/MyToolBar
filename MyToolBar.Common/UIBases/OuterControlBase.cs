@@ -31,7 +31,7 @@ namespace MyToolBar.Common.UIBases
             else
             {
                 //LightMode下 OutterControl区域跟随全局前景色
-                SetResourceReference(ForegroundProperty, "ForeColor");
+                SetResourceReference(ForegroundProperty, "AppBarFontColor");
             }
         }
 

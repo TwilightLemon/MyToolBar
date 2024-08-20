@@ -12,20 +12,6 @@ namespace MyToolBar.Common.WinAPI
 {
     public static class ToolWindowAPI
     {
-        public static bool GetIsLightTheme()
-        {
-            using var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
-            if (key != null)
-            {
-                var value = key.GetValue("AppsUseLightTheme");
-                if (value != null && value is int)
-                {
-                    return (int)value > 0;
-                }
-            }
-
-            return true; // 默认为浅色模式
-        }
 
         public static void SetToolWindow(Window win)
         {

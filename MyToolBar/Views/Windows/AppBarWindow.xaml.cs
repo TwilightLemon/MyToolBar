@@ -74,10 +74,7 @@ namespace MyToolBar.Views.Windows
 
             #region Services event register
             //响应系统颜色模式变化
-            Dispatcher.Invoke(() =>
-            {
-                SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
-            });
+            SystemThemeAPI.RegesterOnThemeChanged(this, OnSystemThemeChanged);
             //响应节能模式变化
             _powerOptimizeService.OnEnergySaverStatusChanged += _powerOptimizeService_OnEnergySaverStatusChanged;
             //注册ActiveWindowHook
@@ -294,8 +291,10 @@ namespace MyToolBar.Views.Windows
                 if (found)
                 {
                     //存在最大化窗口
-                    if (!IsEnergySaverModeOn)
+                    if (!IsEnergySaverModeOn){
                         ImmerseMode_UpdateBackground();
+                        IsImmerseMode = true;
+                    }
                     else UpdateEnergySaverMode();
 
                     if (CurrentAppBarStyle == 0)
@@ -403,27 +402,27 @@ namespace MyToolBar.Views.Windows
         /// </summary>
         private void UpdateColorMode()
         {
-            var isDarkMode = !ToolWindowAPI.GetIsLightTheme();
+            var isDarkMode = !SystemThemeAPI.GetIsLightTheme();
             BlurWindowBehavior.SetDarkMode(isDarkMode);
             _themeResourceService.SetThemeMode(isDarkMode);
 
-            if (CurrentAppBarStyle == 0)
+            if (CurrentAppBarStyle == 0){
                 NormalWindowStyle();
+                if (!IsImmerseMode)
+                    _themeResourceService.SetAppBarFontColor(!isDarkMode);
+            }
             else
                 MaxWindowStyle();
         }
         
         private DateTime _lastSystemEvent = DateTime.MinValue;
-        private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
+        private void OnSystemThemeChanged()
         {
             //防止频繁触发
             if ((DateTime.Now - _lastSystemEvent).TotalSeconds < 1)
                 return;
             _lastSystemEvent = DateTime.Now;
-            if (e.Category == UserPreferenceCategory.General)
-            {
-                UpdateColorMode();
-            }
+            UpdateColorMode();
         }
 
         #endregion

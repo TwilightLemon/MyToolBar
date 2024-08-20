@@ -33,6 +33,7 @@ namespace MyToolBar.Plugin.BasicPackage.OuterControls
         public DemoClock()
         {
             InitializeComponent();
+            MaxStyleAct = maxStyleAct;
             settingsMgr = new(SettingSign, DemoClockOutControlPlugin._name);
             settingsMgr.OnDataChanged += SettingsMgr_OnDataChanged;
             Loaded += DemoClock_Loaded;
@@ -51,7 +52,6 @@ namespace MyToolBar.Plugin.BasicPackage.OuterControls
         {
             IsShown = true;
             await settingsMgr.Load();
-            MaxStyleAct = maxStyleAct;
             GlobalService.GlobalTimer.Elapsed += RefreshTime;
         }
         private void maxStyleAct(bool max, Brush? foreColor)

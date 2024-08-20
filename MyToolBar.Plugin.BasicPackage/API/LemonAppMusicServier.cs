@@ -29,27 +29,34 @@ internal class LemonAppMusicServier
 
         while (!_cancellationTokenSource.Token.IsCancellationRequested)
         {
-            using var client = await _listener.AcceptTcpClientAsync();
-            if (client != null) 
+            try
             {
-                using var stream = client.GetStream();
-                using var reader=new StreamReader(stream,Encoding.UTF8);
-                while (!_cancellationTokenSource.Token.IsCancellationRequested)
+                using var client = await _listener.AcceptTcpClientAsync();
+                if (client != null)
                 {
-                    try
+                    using var stream = client.GetStream();
+                    using var reader = new StreamReader(stream, Encoding.UTF8);
+                    while (!_cancellationTokenSource.Token.IsCancellationRequested)
                     {
-                        var data = await reader.ReadLineAsync();
-                        if (data == null)
+                        try
+                        {
+                            var data = await reader.ReadLineAsync();
+                            if (data == null)
+                            {
+                                break;
+                            }
+                            onMsgReceived(data);
+                        }
+                        catch
                         {
                             break;
                         }
-                        onMsgReceived(data);
-                    }
-                    catch
-                    {
-                        break;
                     }
                 }
+            }
+            catch
+            {
+                break;
             }
         }
     }

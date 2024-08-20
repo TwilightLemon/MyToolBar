@@ -80,7 +80,7 @@ public class BlurWindowBehavior : Behavior<Window>
 
     private WindowMaterial CreateWindowAccentCompositor()
     {
-        var isDarkMode = !ToolWindowAPI.GetIsLightTheme();
+        var isDarkMode = !SystemThemeAPI.GetIsLightTheme();
         var wac = new WindowMaterial();
         wac.MaterialMode = Mode;
         wac.UseWindowComposition = IsToolWindow;
@@ -106,7 +106,7 @@ public class BlurWindowBehavior : Behavior<Window>
 
     public static readonly DependencyProperty ModeProperty =
         DependencyProperty.Register("Mode", typeof(MaterialMode), typeof(BlurWindowBehavior),
-            new PropertyMetadata(MaterialMode.Mica,OnModeChanged));
+            new PropertyMetadata(MaterialMode.Tabbed,OnModeChanged));
     public static void OnModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is BlurWindowBehavior behavior)

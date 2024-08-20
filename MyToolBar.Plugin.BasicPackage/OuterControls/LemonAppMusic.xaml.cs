@@ -21,6 +21,7 @@ namespace MyToolBar.Plugin.BasicPackage.OuterControls
         public LemonAppMusic()
         {
             InitializeComponent();
+            MaxStyleAct = maxStyleAct;
             Loaded += LemonAppMusic_Loaded;
             this.StylusSystemGesture += LemonAppMusic_StylusSystemGesture;
             this.StylusDown += LemonAppMusic_StylusDown;
@@ -87,7 +88,6 @@ namespace MyToolBar.Plugin.BasicPackage.OuterControls
 
         private async void LemonAppMusic_Loaded(object sender, RoutedEventArgs e)
         {
-            MaxStyleAct= maxStyleAct;
             Smtc =await SMTCHelper.CreateInstance();
             Smtc.MediaPropertiesChanged += Smtc_MediaPropertiesChanged;
             Smtc.SessionExited += Smtc_SessionExited;

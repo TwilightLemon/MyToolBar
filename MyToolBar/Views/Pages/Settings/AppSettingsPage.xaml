@@ -43,7 +43,7 @@
                                      BorderBrush="{DynamicResource FocusMaskColor}"
                                      Foreground="{DynamicResource ForeColor}" 
                                      GlyphBrush="{DynamicResource ForeColor}" 
-                                     PopupBackground="AliceBlue"
+                                     PopupBackground="{DynamicResource BackgroundColor}"
                                      CornerRadius="4,4,4,4" 
                                      PopupCornerRadius="4,4,4,4"
                                      

@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using MyToolBar.Common.UIBases;
 using MyToolBar.Common;
+using System.Windows.Documents;
 
 namespace MyToolBar.PopupWindows
 {
@@ -22,7 +23,7 @@ namespace MyToolBar.PopupWindows
         }
         private void LoadMenuItems()
         {
-            void SetItem(string contResName, string iconResName, Action<object, RoutedEventArgs> Event)
+            void SetItem(string contResName, string? iconResName, Action<object, RoutedEventArgs> Event)
             {
                 var item = new MenuItem();
                 item.MenuContent = (string)FindResource($"MenuItem_{contResName}");
@@ -41,11 +42,17 @@ namespace MyToolBar.PopupWindows
 
             this.Height = ItemPanel.Children.Count * 40;
         }
+        bool _isSettingsWindowOpen = false;
         private void MenuItem_Settings(object sender, RoutedEventArgs e)
         {
-            App.Host.Services
-                .GetRequiredService<SettingsWindow>()
-                .Show();
+            if (_isSettingsWindowOpen) return;
+            _isSettingsWindowOpen = true;
+
+            var window = App.Host.Services.GetRequiredService<SettingsWindow>();
+            window.Closing += delegate {
+                _isSettingsWindowOpen = false;
+            };
+            window.Show();
         }
         private void MenuItem_Exit(object sender, RoutedEventArgs e)
         {
