@@ -7,6 +7,8 @@ using System.Windows.Controls;
 using MyToolBar.ViewModels;
 using System.Windows.Navigation;
 using MyToolBar.Common;
+using System.Diagnostics;
+using MyToolBar.Common.WinAPI;
 
 namespace MyToolBar.Views.Windows
 {
@@ -21,14 +23,13 @@ namespace MyToolBar.Views.Windows
             DataContext = this;
 
             InitializeComponent();
-
             Loaded += SettingsWindow_Loaded;
         }
 
         private  void SettingsWindow_Loaded(object sender, RoutedEventArgs e)
         {
             ViewModel.SelectedPage = ViewModel.SettingsPages.FirstOrDefault();
-
+            DwmAPI.EnableDwnAnimation(this);
         }
 
         public SettingsViewModel ViewModel { get; }

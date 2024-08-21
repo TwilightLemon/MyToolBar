@@ -46,7 +46,6 @@ namespace MyToolBar.Services
             //设置Http代理 (TODO:可选配置代理模式)
             HttpClient.DefaultProxy = new WebProxy();
             //加载配置
-            appSettingsService.Load();
             appSettingsService.Loaded += delegate
             {
                 if (appSettingsService.Settings == null) return;
@@ -59,6 +58,7 @@ namespace MyToolBar.Services
                 var mainWindow = serviceProvider.GetRequiredService<AppBarWindow>();
                 mainWindow.Show();
             };
+            appSettingsService.Load();
 
 
             return Task.CompletedTask;

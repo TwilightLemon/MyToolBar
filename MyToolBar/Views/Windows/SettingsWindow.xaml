@@ -8,22 +8,25 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:Items="clr-namespace:MyToolBar.PopupWindows.Items"
         x:Class="MyToolBar.Views.Windows.SettingsWindow"
-        mc:Ignorable="d" ResizeMode="CanMinimize"
+        mc:Ignorable="d"
+        
+        ResizeMode="CanMinimize" WindowStyle="None"
+        ws:WindowOption.Corner="Round"
         Height="550" Width="850"
         Title="{DynamicResource SettingsWindow_Title}"
         Foreground="{DynamicResource ForeColor}"
-        Background="Transparent">
+        Background="{DynamicResource WindowBackgroundColor}">
     <i:Interaction.Behaviors>
         <mb:BlurWindowBehavior/>
         <mb:WindowDragMoveBehavior/>
     </i:Interaction.Behaviors>
     <WindowChrome.WindowChrome>
-        <WindowChrome GlassFrameThickness="-1"/>
+        <WindowChrome CaptionHeight="48"/>
     </WindowChrome.WindowChrome>
     <Grid>
         <DockPanel>
             <DockPanel DockPanel.Dock="Left"
-                       Background="{DynamicResource MaskColor}"
+                       Background="Transparent"
                        Width="200">
                 <StackPanel DockPanel.Dock="Top">
                     <TextBlock Text="{DynamicResource SettingsWindow_Title}"
@@ -96,7 +99,7 @@
                 </ws:ListBox>
             </DockPanel>
             <ws:Frame Name="WindowFrame"
-                      NavigationUIVisibility="Hidden">
+                      NavigationUIVisibility="Hidden" Background="{DynamicResource TabMaskColor}">
                 <ws:Frame.Transition>
                     <ws:SlideFadeTransition Orientation="Vertical"
                                             Duration="0:0:0.200"
@@ -104,5 +107,46 @@
                 </ws:Frame.Transition>
             </ws:Frame>
         </DockPanel>
+        <ws:Button Name="CloseBtn" Width="48" Height="48"
+                   HorizontalAlignment="Right" VerticalAlignment="Top"
+                   BorderThickness="0"  ws:WindowOption.IsCloseButton="True"
+                   Background="Transparent"
+                   HoverBackground="#FFE32820" PressedBackground="#FFEF1E15"
+                   Click="CloseBtn_Click">
+            <x:Code>
+                <![CDATA[
+                    private void CloseBtn_Click(object sender, RoutedEventArgs e)
+                        {
+                            //WindowStyle = WindowStyle.SingleBorderWindow;
+                            Close();
+                        }
+                ]]>
+            </x:Code>
+            <Path Stretch="Uniform" Data="{StaticResource Icon_end}" Width="10" Height="10" Fill="{DynamicResource ForeColor}"/>
+        </ws:Button>
+        <ws:Button Name="MaxmizeBtn" Width="48" Height="48" Margin="0 0 48 0"
+                   IsEnabled="False" DisabledBackground="Transparent"
+                    HorizontalAlignment="Right" VerticalAlignment="Top"
+                    BorderThickness="0">
+            <Path Stretch="Uniform" Data="{StaticResource Icon_Maximize}" Opacity="0.5" Width="10" Height="10" Fill="{DynamicResource ForeColor}"/>
+        </ws:Button>
+        <ws:Button Name="MinimizeBtn" Width="48" Height="48" Margin="0 0 96 0"
+                   Background="Transparent"
+                   HorizontalAlignment="Right" VerticalAlignment="Top"
+                   BorderThickness="0"
+                   ws:WindowOption.IsMinimumButton="True"
+                   HoverBackground="{DynamicResource MaskColor}"
+                   PressedBackground="{DynamicResource FocusMaskColor}"
+                   Click="MinimizeBtn_Click">
+            <x:Code>
+                <![CDATA[
+                private void MinimizeBtn_Click(object sender, RoutedEventArgs e)
+                    {
+                            WindowState = WindowState.Minimized;
+                    }
+                ]]>
+            </x:Code>
+            <Path Stretch="Uniform" Data="{StaticResource Icon_Minimize}" Width="10" Height="10" Fill="{DynamicResource ForeColor}"/>
+        </ws:Button>
     </Grid>
 </Window>

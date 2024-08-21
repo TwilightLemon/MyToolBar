@@ -3,6 +3,8 @@
     <!--DarkMode-->
     <!--For AppBar-->
     <SolidColorBrush x:Key="AppBarFontColor" Color="#FEFEFE"/>
+    <SolidColorBrush x:Key="WindowBackgroundColor" Color="#CC000000"/>
+    <SolidColorBrush x:Key="TabMaskColor" Color="#4C000000"/>
     <!--For Others-->
     <SolidColorBrush x:Key="ForeColor" Color="#FEFEFE"/>
     <SolidColorBrush x:Key="MaskColor" Color="#19ffffff"/>

@@ -1,20 +1,28 @@
 using MyToolBar.Plugin.BasicPackage.Capsules;
 using MyToolBar.Plugin.BasicPackage.OuterControls;
+using static MyToolBar.Plugin.BasicPackage.Package;
+using System.Globalization;
+using System.Reflection;
+using System.Resources;
 using System.Windows;
 
 namespace MyToolBar.Plugin.BasicPackage
 {
     public class Package:IPackage
     {
-        public string Description { get; set; } = "MyToolBar官方基础插件包";
+        public static ResourceManager _rm 
+            = new("MyToolBar.Plugin.BasicPackage.LanguageRes.PluginLang",
+                Assembly.GetExecutingAssembly());
+        public static CultureInfo? _cultureInfo { get => CultureInfo.DefaultThreadCurrentCulture; }
+        public string Description { get => _rm.GetString("PackageDesc", _cultureInfo); }
         public string PackageName { get; set; } = "MyToolBar.Plugin.BasicPackage";
         public Version Version { get; set; } = new Version(1,0,0,0);
-        public List<IPlugin> Plugins { get; set; } = new List<IPlugin>() { 
+        public List<IPlugin> Plugins { get; set; } = [ 
         new WeatherCapPlugin(),
         new LemonAppMusicOutControlPlugin(),
         new DemoClockOutControlPlugin(),
         new HardwareMonitorCapPlugin()
-        };
+        ];
     }
 
     public class WeatherCapPlugin:IPlugin
@@ -22,7 +30,7 @@ namespace MyToolBar.Plugin.BasicPackage
         public IPackage? AcPackage { get; set; }
         internal static readonly string _name = "WeatherCap";
         public string Name { get; } = _name;
-        public string Description { get;} = "天气小组件";
+        public string Description { get => _rm.GetString("WeatherCapPluginDesc", _cultureInfo); }
         public List<string> SettingsSignKeys { get; } = [WeatherCap._settingsAPIKey];
         public PluginType Type { get; } = PluginType.Capsule;
         public UIElement GetMainElement()
@@ -36,7 +44,7 @@ namespace MyToolBar.Plugin.BasicPackage
        public IPackage? AcPackage { get; set; }
         internal static readonly string _name = "HardwareMonitorCap";
         public string Name { get; } = _name;
-        public string Description { get;} = "硬件监控小组件";
+        public string Description { get => _rm.GetString("HardwareMonitorCapPluginDesc", _cultureInfo); }
         public List<string> SettingsSignKeys { get; } = null;
         public PluginType Type { get; } = PluginType.Capsule;
         public UIElement GetMainElement()
@@ -48,7 +56,7 @@ namespace MyToolBar.Plugin.BasicPackage
     {
         public IPackage? AcPackage { get; set; }
         public string Name { get; } = "Media OutControl";
-        public string Description { get; } = "通用媒体控制和Lemon App联动显示歌词与控制";
+        public string Description { get => _rm.GetString("LemonAppMusicOutControlPluginDesc", _cultureInfo); }
         public List<string>? SettingsSignKeys { get; } = null;
         public PluginType Type { get; } = PluginType.OuterControl;
         public UIElement GetMainElement()
@@ -61,7 +69,7 @@ namespace MyToolBar.Plugin.BasicPackage
         public static string _name="Demo Clock";
         public IPackage? AcPackage { get; set; }
         public string Name { get; } = _name;
-        public string Description { get; } = "时钟";
+        public string Description { get => _rm.GetString("DemoClockOutControlPluginDesc", _cultureInfo); }
         public List<string>? SettingsSignKeys { get; } = [
             DemoClock.SettingSign
             ];

@@ -17,6 +17,7 @@
     <sys:String x:Key="SettingsWindow_Desc">描述</sys:String>
     <sys:String x:Key="SettingsWindow_Version">版本</sys:String>
     <sys:String x:Key="SettingsWindow_Enable">启用</sys:String>
+    <sys:String x:Key="SettingsWindow_PluginSettings">插件设置项</sys:String>
     <!--App Settings-->
     <sys:String x:Key="AppSettings_Item_AlwaysUseImmerseMode">始终启用沉浸模式</sys:String>
     <sys:String x:Key="AppSettings_Item_AutoRunAtStartup">开机自启动</sys:String>

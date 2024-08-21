@@ -19,7 +19,7 @@
             <CheckBox x:Name="EnableCheckBox" Style="{DynamicResource SimpleCheckBoxStyle}"
                       Margin="20 10 0 0" Content="{DynamicResource SettingsWindow_Enable}"
                       Foreground="{DynamicResource ForeColor}" Click="CheckBox_Click"/>
-            <TextBlock x:Name="PluginTb"  FontSize="18" Margin="20 10 0 0" Text="Plugin Settings"/>
+            <TextBlock x:Name="PluginTb"  FontSize="18" Margin="20 10 0 0" Text="{DynamicResource SettingsWindow_PluginSettings}"/>
             <StackPanel x:Name="SettingsPanel"/>
         </StackPanel>
     </Grid>

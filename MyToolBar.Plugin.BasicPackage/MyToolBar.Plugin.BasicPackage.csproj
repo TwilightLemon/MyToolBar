@@ -15,4 +15,13 @@
 	  <PackageReference Include="System.Drawing.Common" Version="8.0.7" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Update="LanguageRes\PluginLang.En-US.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="LanguageRes\PluginLang.Zh-CN.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

@@ -17,8 +17,7 @@ namespace MyToolBar.Common.UIBases
             Top = 0;
 
             //Set basic style for popup window
-            //SetResourceReference(BackgroundProperty,"MaskColor");
-            Background = Brushes.Transparent;
+            SetResourceReference(BackgroundProperty, "WindowBackgroundColor");
             SetResourceReference(ForegroundProperty, "ForeColor");
             WindowStyle = WindowStyle.None;
             ResizeMode = ResizeMode.NoResize;

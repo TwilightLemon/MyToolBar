@@ -7,7 +7,7 @@
                      xmlns:ws="https://schemas.elecho.dev/wpfsuite"
                      mc:Ignorable="d"
                      Title="{DynamicResource WindowTitle}" Height="520" Width="350" 
-                      Background="Transparent" Foreground="{DynamicResource ForeColor}">
+                      d:Background="Transparent" d:Foreground="{DynamicResource ForeColor}">
     <base:PopupWindowBase.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

@@ -20,7 +20,7 @@ public class BlurWindowBehavior : Behavior<Window>
         }
     }
 
-    private static void UpdateWindowBlurMode(WindowMaterial wac, bool isDarkMode, float opacity = .7f)
+    private static void UpdateWindowBlurMode(WindowMaterial wac, bool isDarkMode, float opacity = 0)
     {
         wac.IsDarkMode = isDarkMode;
         wac.CompositonColor = isDarkMode ?
@@ -106,7 +106,7 @@ public class BlurWindowBehavior : Behavior<Window>
 
     public static readonly DependencyProperty ModeProperty =
         DependencyProperty.Register("Mode", typeof(MaterialMode), typeof(BlurWindowBehavior),
-            new PropertyMetadata(MaterialMode.Tabbed,OnModeChanged));
+            new PropertyMetadata(MaterialMode.Acrylic,OnModeChanged));
     public static void OnModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is BlurWindowBehavior behavior)
