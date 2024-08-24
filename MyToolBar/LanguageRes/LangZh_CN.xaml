@@ -13,7 +13,7 @@
     <sys:String x:Key="SettingsWindow_Tab_OuterControl">外部控制</sys:String>
     <sys:String x:Key="SettingsWindow_Tab_Components">组件</sys:String>
     <sys:String x:Key="SettingsWindow_Tab_Services">常驻服务</sys:String>
-    <sys:String x:Key="SettingsWindow_Tab_Gerneral">顶部栏设置</sys:String>
+    <sys:String x:Key="SettingsWindow_Tab_General">顶部栏设置</sys:String>
     <sys:String x:Key="SettingsWindow_Desc">描述</sys:String>
     <sys:String x:Key="SettingsWindow_Version">版本</sys:String>
     <sys:String x:Key="SettingsWindow_Enable">启用</sys:String>

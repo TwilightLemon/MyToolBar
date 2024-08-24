@@ -39,7 +39,7 @@ namespace MyToolBar.ViewModels
 
         public ObservableCollection<SettingsPage> SettingsPages { get; private set; } =
         [
-            new SettingsPage("SettingsWindow_Tab_Gerneral", (Geometry)App.Current.FindResource("Icon_Gerneral"), typeof(AppSettingsPage)),
+            new SettingsPage("SettingsWindow_Tab_General", (Geometry)App.Current.FindResource("Icon_General"), typeof(AppSettingsPage)),
             new SettingsPage("SettingsWindow_Tab_Capsules", (Geometry)App.Current.FindResource("Icon_Capsule"), typeof(CapsulesSettingsPage)),
             new SettingsPage("SettingsWindow_Tab_OuterControl", (Geometry)App.Current.FindResource("Icon_OuterControl"), typeof(OuterControlSettingsPage)),
             new SettingsPage("SettingsWindow_Tab_Services",(Geometry)App.Current.FindResource("Icon_Service"),typeof(ServicesSettingsPage)),
