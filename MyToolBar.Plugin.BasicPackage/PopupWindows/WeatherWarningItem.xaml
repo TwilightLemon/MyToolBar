@@ -1,0 +1,23 @@
+﻿<base:ItemBase x:Class="MyToolBar.Plugin.BasicPackage.PopupWindows.WeatherWarningItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MyToolBar.Plugin.BasicPackage.PopupWindows"
+             xmlns:base="clr-namespace:MyToolBar.Common.UIBases;assembly=MyToolBar.Common"
+             mc:Ignorable="d" d:Foreground="Black"
+             d:DesignWidth="350">
+    <Grid>
+        <Ellipse x:Name="LevelColor" Margin="16 18"
+                 Width="12" Height="12" HorizontalAlignment="Left" VerticalAlignment="Top" Fill="#FFF2BE3E"/>
+        <TextBlock Name="TitleTb" Margin="36 12 12 0" VerticalAlignment="Top"
+                   FontSize="18" FontWeight="Bold">
+            <Run Name="SeverityTb" d:Text="Red"/> | <Run Name="TypeTb" d:Text="Heat Wave"/>
+        </TextBlock>
+        <Grid Name="DetalPart" d:Visibility="Visible" Visibility="Collapsed">
+            <TextBlock x:Name="DetalTb" d:Text="xxxx" Margin="36 40 36 16" TextWrapping="Wrap"/>
+            <TextBlock x:Name="PublisherTb" FontSize="10" d:Text="publisher" VerticalAlignment="Bottom" Margin="3"
+                   TextAlignment="Center" Opacity="0.5"/>
+        </Grid>
+    </Grid>
+</base:ItemBase>

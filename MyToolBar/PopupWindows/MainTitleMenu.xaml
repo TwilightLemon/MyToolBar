@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:base="clr-namespace:MyToolBar.Common.UIBases;assembly=MyToolBar.Common"
         mc:Ignorable="d"
-        Title="MainTitleMenu" Height="Auto" Width="200">
+        Title="{DynamicResource MenuWindow_Title}" Height="Auto" Width="200">
     <WrapPanel x:Name="ItemPanel" ItemHeight="40" ItemWidth="200">
     </WrapPanel>
 </base:PopupWindowBase>

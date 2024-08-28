@@ -68,6 +68,15 @@ namespace MyToolBar.Plugin.BasicPackage.API
             public string desc { get; set; }
             public string sug { get; set; }
         }
+        public class Warning
+        {
+            public string sender { get; set; }
+            public string level { get; set; }
+            public string severity { get; set; }
+            public string typeName { get; set; }
+            public string text { get; set; }
+            public DateTime endTime { get; set; }
+        }
         #endregion
 
         public static void SetProperty(Property p)
@@ -277,6 +286,43 @@ namespace MyToolBar.Plugin.BasicPackage.API
                 return list;
             }
             return null;
+        }
+
+        public static Color GetWarningLevelColor(string level)
+            => level switch
+            {
+                "White" => Color.FromArgb(255, 255, 255, 255),
+                "Blue" => Color.FromArgb(255, 59,151,221),
+                "Green" => Color.FromArgb(255, 107,239,92),
+                "Yellow"=>Color.FromArgb(255,242,190,62),
+                "Orange" => Color.FromArgb(255, 255, 126, 0),
+                "Red" => Color.FromArgb(255, 254, 94, 94),
+                "Black"=>Colors.Black
+            };
+        public static async Task<List<Warning>> GetWarningAsync(this City city)
+        {
+            string url = $"https://{host}/v7/warning/now?location={city.Id}&lang={lang}&key={key}";
+            string data=await HttpHelper.Get(url);
+            var obj = JsonNode.Parse(data);
+            var list = new List<Warning>();
+            if (obj != null & obj["code"].ToString() == "200")
+            {
+                var warning = obj["warning"].AsArray();
+                foreach( var i in warning)
+                {
+                    var a = new Warning()
+                    {
+                        sender = i["sender"].ToString(),
+                        level = i["severityColor"].ToString(),
+                        severity = i["level"].ToString(),
+                        typeName = i["typeName"].ToString(),
+                        text = i["text"].ToString(),
+                        endTime= DateTime.Parse(i["endTime"].ToString())
+                    };
+                    list.Add(a);
+                }
+            }
+            return list;
         }
     }
 }

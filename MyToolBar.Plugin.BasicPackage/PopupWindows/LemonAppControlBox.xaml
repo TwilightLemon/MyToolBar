@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:MyToolBar.Plugin.BasicPackage.PopupWindows"
         mc:Ignorable="d"
         Title="LemonAppControlBox" Height="150" Width="300" 
-        Background="Transparent" d:Background="#3C000000">
+        d:Background="Transparent">
     <base:PopupWindowBase.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

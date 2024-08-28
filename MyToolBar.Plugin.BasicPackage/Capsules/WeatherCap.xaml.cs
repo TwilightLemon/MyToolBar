@@ -16,6 +16,7 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
         public DateTime UpdateTime { get; set; }
         public City City { get; set; }
         public AirData CurrentAir { get; set; }
+        public List<Warning> Warnings { get; set; }
         public WeatherNow CurrentWeather { get; set; }
         public List<WeatherDay> DailyForecast { get; set; }
         public List<AirData> DailyAirForecast { get; set; }
@@ -42,7 +43,7 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
         /// </summary>
         [JsonIgnore]
         public DateTime? LocatingDate { get; set; } = null;
-        public bool UsingIpAsDefault { get; set; } = true;
+        public bool UsingLocatingAsDefault { get; set; } = true;
         private static string SettingSign = "WeatherCache";
         [JsonIgnore]
         public bool isEmpty => DataCache.Count == 0;
@@ -63,6 +64,7 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
                 DailyAirForecast = await city.GetAirForecastAsync(),
                 CurrentAir = await city.GetCurrentAQIAsync(),
                 DailyForecast = await city.GetForecastAsync(),
+                Warnings = await city.GetWarningAsync(),
                 UpdateTime = DateTime.Now
             };
             DataCache[city.Id] = data;
@@ -120,7 +122,7 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
             cache ??= await WeatherCache.LoadCache();
 
             //初次使用或默认定位城市
-            if (cache.isEmpty || cache.UsingIpAsDefault)
+            if (cache.isEmpty || cache.UsingLocatingAsDefault)
             {
                 if (cache.LocatingDate == null || DateTime.Now - cache.LocatingDate >= TimeSpan.FromHours(6))
                 {
@@ -205,8 +207,8 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
 
         private async void Wb_DefaultCityChanged(object? sender, WeatherApi.City e)
         {
+            cache.UsingLocatingAsDefault = cache.DefaultCity.Id == e.Id;
             cache.DefaultCity = e;
-            cache.UsingIpAsDefault = cache.DefaultCity.Id == e.Id;
             cache.SaveCache();
             await LoadWeatherData();
         }
