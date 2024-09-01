@@ -35,6 +35,11 @@ namespace MyToolBar.Services
             App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = new Uri(uri, UriKind.Absolute) });
         }
 
+        public void UpdateDwmColor()
+        {
+            App.Current.Resources["SystemThemeColor"] = new SolidColorBrush(SystemParameters.WindowGlassColor);
+        }
+
         /// <summary>
         /// 单独为AppBar配置前景色
         /// </summary>

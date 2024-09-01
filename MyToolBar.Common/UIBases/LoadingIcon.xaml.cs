@@ -27,7 +27,6 @@ namespace MyToolBar.Common.UIBases
 
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            ellipse.Stroke = new SolidColorBrush(SystemParameters.WindowGlassColor);
             while (true)
             {
                 for (double x = 3; x <= 9; x += 0.02)

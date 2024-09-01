@@ -59,6 +59,7 @@ namespace MyToolBar.Views.Windows
             //初始化AppBar背景样式
             UpdateBackground();
             UpdateColorMode();
+            OnSystemColorChanged();
         }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
@@ -74,7 +75,7 @@ namespace MyToolBar.Views.Windows
 
             #region Services event register
             //响应系统颜色模式变化
-            SystemThemeAPI.RegesterOnThemeChanged(this, OnSystemThemeChanged);
+            SystemThemeAPI.RegesterOnThemeChanged(this, OnSystemThemeChanged, OnSystemColorChanged);
             //响应节能模式变化
             _powerOptimizeService.OnEnergySaverStatusChanged += _powerOptimizeService_OnEnergySaverStatusChanged;
             //注册ActiveWindowHook
@@ -403,9 +404,11 @@ namespace MyToolBar.Views.Windows
         private void UpdateColorMode()
         {
             var isDarkMode = !SystemThemeAPI.GetIsLightTheme();
+            //更新窗口模糊特效颜色模式
             BlurWindowBehavior.SetDarkMode(isDarkMode);
+            //更新主题
             _themeResourceService.SetThemeMode(isDarkMode);
-
+            //更新AppBar颜色
             if (CurrentAppBarStyle == 0){
                 NormalWindowStyle();
                 if (!IsImmerseMode)
@@ -423,6 +426,10 @@ namespace MyToolBar.Views.Windows
                 return;
             _lastSystemEvent = DateTime.Now;
             UpdateColorMode();
+        }
+        private void OnSystemColorChanged()
+        {
+            _themeResourceService.UpdateDwmColor();
         }
 
         #endregion

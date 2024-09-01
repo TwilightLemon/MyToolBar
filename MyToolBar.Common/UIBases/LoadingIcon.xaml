@@ -22,7 +22,7 @@
     </UserControl.Resources>
     <Grid>
         <Ellipse x:Name="ellipse"
-         d:Stroke="#FFFF0EC4"
+         Stroke="{DynamicResource SystemThemeColor}"
          StrokeThickness="6"
          Height="50"
          Width="50" StrokeDashCap="Round" StrokeEndLineCap="Round" StrokeDashArray="3" RenderTransformOrigin="0.5,0.5" >

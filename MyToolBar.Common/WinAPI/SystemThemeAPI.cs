@@ -27,23 +27,26 @@ namespace MyToolBar.Common.WinAPI
             return true; // 默认为浅色模式
         }
         public const int WM_SETTINGCHANGE = 0x001A;
-        public const int WM_SYSCOLORCHANGE = 0x0015;
-        public const int WM_USER = 0x0400;
-        public const int WM_REFLECT = WM_USER + 0x1C00;
-        public const int WM_THEMECHANGED = 0x031A;
+        public const int WM_DWMCOLORIZATIONCOLORCHANGED = 0x0320;
         static Action? _onThemeChanged = null;
-        public static void RegesterOnThemeChanged(Window window,Action onThemeChanged)
+        static Action? _onSystemColorChanged = null;
+        public static void RegesterOnThemeChanged(Window window,Action onThemeChanged,Action onSystemColorChanged)
         {
+            _onThemeChanged = onThemeChanged;
+            _onSystemColorChanged = onSystemColorChanged;
             var source = HwndSource.FromHwnd(new WindowInteropHelper(window).Handle);
             source?.AddHook(WndProc);
-            _onThemeChanged = onThemeChanged;
         }
 
         public static IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            if (msg ==26)
+            if (msg == WM_SETTINGCHANGE)
             {
                 _onThemeChanged?.Invoke();
+                handled = true;
+            }else if(msg== WM_DWMCOLORIZATIONCOLORCHANGED)
+            {
+                _onSystemColorChanged?.Invoke();
                 handled = true;
             }
             return IntPtr.Zero;

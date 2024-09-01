@@ -6,7 +6,7 @@
                      xmlns:base="clr-namespace:MyToolBar.Common.UIBases;assembly=MyToolBar.Common"
                      xmlns:ws="https://schemas.elecho.dev/wpfsuite"
                      mc:Ignorable="d" d:Background="Transparent" d:Foreground="{DynamicResource ForeColor}"
-                     Title="{DynamicResource WindowTitle}" Height="570" Width="350">
+                     Title="{DynamicResource WindowTitle}" Height="520" Width="350">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

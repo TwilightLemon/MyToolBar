@@ -1,6 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!--DarkMode-->
+    <!--系统主题色 此字典值由UIResourceService负责实时更新-->
+    <SolidColorBrush x:Key="SystemThemeColor" Color="#69F"/>
     <!--For AppBar-->
     <SolidColorBrush x:Key="AppBarFontColor" Color="#FEFEFE"/>
     <SolidColorBrush x:Key="WindowBackgroundColor" Color="#CC000000"/>

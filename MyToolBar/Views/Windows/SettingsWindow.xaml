@@ -54,13 +54,11 @@
                                                Spacing="8">
                                     <Border x:Name="FocusedIcon" 
                                             Width="3" Margin="-18 0 0 0"
+                                            Background="{DynamicResource SystemThemeColor}"
                                             CornerRadius="1.5" 
                                             Height="16"
                                             Visibility="Hidden"
                                             d:Visibility="Visible">
-                                        <Border.Background>
-                                            <SolidColorBrush Color="AliceBlue"/>
-                                        </Border.Background>
                                     </Border>
                                     <Path VerticalAlignment="Center"
                                           Fill="{DynamicResource ForeColor}"
