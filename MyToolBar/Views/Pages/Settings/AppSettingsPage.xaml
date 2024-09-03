@@ -6,62 +6,102 @@
       xmlns:local="clr-namespace:MyToolBar.Views.Pages.Settings"
       xmlns:sys="clr-namespace:System;assembly=netstandard"
       xmlns:common="clr-namespace:MyToolBar.Common;assembly=MyToolBar.Common"
+      xmlns:service="clr-namespace:MyToolBar.Services"
+      xmlns:converter="clr-namespace:MyToolBar.Converters"
       xmlns:ws="https://schemas.elecho.dev/wpfsuite"
       mc:Ignorable="d"  Foreground="{DynamicResource ForeColor}"
       d:DesignHeight="450" d:DesignWidth="800"
       Title="AppSettingsPage">
     <Page.Resources>
+        <converter:EnumToTextConverter x:Key="EnumToTextConverter"/>
         <ObjectDataProvider x:Key="LanguageEnumData" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
             <ObjectDataProvider.MethodParameters>
                 <x:Type TypeName="common:LocalCulture+Language" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
+        <ObjectDataProvider x:Key="ProxyModeEnumData" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="service:AppSettings+ProxyMode" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <DataTemplate x:Key="ComboBoxItemTemplate">
+            <TextBlock Text="{Binding Converter={StaticResource EnumToTextConverter}}"/>
+        </DataTemplate>
     </Page.Resources>
     <Grid>
         <ws:ScrollViewer Style="{DynamicResource SimpleVerticalScrollViewerStyle}" Margin="28 12 28 28">
             <ws:StackPanel x:Name="SettingsList" Spacing="8">
-                <TextBlock Text="{DynamicResource SettingsWindow_Tab_Gerneral}"
-                   FontSize="22"/>
-                <Border Background="{DynamicResource MaskColor}" CornerRadius="12" Height="48">
-                    <CheckBox x:Name="AlwaysImModeCb" Style="{DynamicResource SimpleCheckBoxStyle}"
-                                     Content="{DynamicResource AppSettings_Item_AlwaysUseImmerseMode}"
-                                    Click="AlwaysImModeCb_Click"
+                <!--Common settings-->
+                <ws:StackPanel Spacing="8">
+                    <TextBlock Text="{DynamicResource SettingsWindow_Tab_Gerneral}"
+                                 FontSize="22"/>
+                    <Border Background="{DynamicResource MaskColor}" CornerRadius="12" Height="48">
+                        <CheckBox x:Name="AlwaysImModeCb" Style="{DynamicResource SimpleCheckBoxStyle}"
+                                    Content="{DynamicResource AppSettings_Item_AlwaysUseImmerseMode}"
+                                   IsChecked="{Binding AlwaysImMode}"
                                     VerticalAlignment="Center" Margin="12"/>
-                </Border>
-                <Border Background="{DynamicResource MaskColor}" CornerRadius="12" Height="48">
-                    <CheckBox x:Name="AutoRunCb" Style="{DynamicResource SimpleCheckBoxStyle}"
+                    </Border>
+                    <Border Background="{DynamicResource MaskColor}" CornerRadius="12" Height="48">
+                        <CheckBox x:Name="AutoRunCb" Style="{DynamicResource SimpleCheckBoxStyle}"
                               Content="{DynamicResource AppSettings_Item_AutoRunAtStartup}"
-                              Click="AutoRunCb_Click" VerticalAlignment="Center" Margin="12"/>
-                </Border>
-                <Border Background="{DynamicResource MaskColor}" CornerRadius="12" Height="48">
-                    <Grid>
-                        <TextBlock VerticalAlignment="Center" Margin="12" Text="{DynamicResource AppSettings_Item_Language}"
+                                  IsChecked="{Binding AutoRunAtStartup}"
+                               VerticalAlignment="Center" Margin="12"/>
+                    </Border>
+                    <Border Background="{DynamicResource MaskColor}" CornerRadius="12" Height="48">
+                        <Grid>
+                            <TextBlock VerticalAlignment="Center" Margin="12" Text="{DynamicResource AppSettings_Item_Language}"
                                   HorizontalAlignment="Left"/>
-                        <ws:ComboBox x:Name="LanguageComboBox" Width="72" Height="24"
+                            <ws:ComboBox x:Name="LanguageComboBox" Width="72" Height="24"
                                      HorizontalAlignment="Right" Margin="0 0 48 0"
-                                     Background="{DynamicResource MaskColor}" 
-                                     BorderBrush="{DynamicResource FocusMaskColor}"
-                                     Foreground="{DynamicResource ForeColor}" 
-                                     GlyphBrush="{DynamicResource ForeColor}" 
-                                     PopupBackground="{DynamicResource BackgroundColor}"
-                                     CornerRadius="4,4,4,4" 
-                                     PopupCornerRadius="4,4,4,4"
-                                     
-                                     HoverBackground="{DynamicResource FocusMaskColor}"
-                                     HoverBorderBrush="{DynamicResource FocusMaskColor}"
-                                     HoverGlyphBrush="{DynamicResource ForeColor}" 
-                                     HoverForeground="{DynamicResource ForeColor}"
-                                     
-                                     PressedBackground="{DynamicResource FocusMaskColor}"
-                                     PressedBorderBrush="{DynamicResource FocusMaskColor}"
-                                     PressedGlyphBrush="{DynamicResource ForeColor}" PressedForeground="{DynamicResource ForeColor}"
-                                     
-                                     DisplayMemberPath="."
+                                     Style="{StaticResource SimpleComboBoxStyleForWs}"
+                                     ItemTemplate="{DynamicResource ComboBoxItemTemplate}" 
                                      ItemsSource="{Binding Source={StaticResource LanguageEnumData}}"
-                                     SelectionChanged="LanguageComboBox_SelectionChanged" >
+                                     SelectedItem="{Binding AppLanguage}" >
+                            </ws:ComboBox>
+                        </Grid>
+                    </Border>
+                </ws:StackPanel>
+                <Border Background="{DynamicResource MaskColor}" CornerRadius="12" >
+                    <Grid>
+                        <TextBlock Text="{DynamicResource AppSettings_Item_WebProxy_ProxyMode}"
+                                   VerticalAlignment="top" 
+                                   Margin="12 18 0 0" HorizontalAlignment="Left"/>
+                        <ws:ComboBox x:Name="ProxyModeComboBox" Width="98" Height="24"
+                                     VerticalAlignment="Top"
+                                     ItemTemplate="{DynamicResource ComboBoxItemTemplate}" 
+                                     ItemsSource="{Binding Source={StaticResource ProxyModeEnumData}}"
+                                     SelectedItem="{Binding ProxyMode}"
+                                     HorizontalAlignment="Right" Margin="0 12 48 0"
+                                     Style="{StaticResource SimpleComboBoxStyleForWs}">
                         </ws:ComboBox>
+                        <ws:TextBox x:Name="ProxyAddressTextBox" Width="160" Height="30"
+                                    Style="{StaticResource SimpleTextBoxStyleForWs}"
+                                    VerticalAlignment="Top"
+                                    Padding="6 6 0 0"
+                                    Text="{Binding ProxyConf.Address}"
+                                    Placeholder="{DynamicResource AppSettings_Item_WebProxy_ProxyAddress}"
+                                    HorizontalAlignment="Left" Margin="12 48 48 0"/>
+                        <ws:TextBox x:Name="ProxyPortTextBox" Width="72" Height="30"
+                                    VerticalAlignment="Top"
+                                    Text="{Binding ProxyConf.Port}"
+                                    Style="{StaticResource SimpleTextBoxStyleForWs}"
+                                    Placeholder="{DynamicResource AppSettings_Item_WebProxy_ProxyPort}"
+                                    HorizontalAlignment="Left" Margin="180 48 48 0" Padding="6,6,0,0"/>
+                        <ws:TextBox x:Name="ProxyUsernameTextBox" Width="160" Height="30"
+                                    VerticalAlignment="Top"
+                                    Text="{Binding ProxyConf.UserName}"
+                                    Style="{StaticResource SimpleTextBoxStyleForWs}"
+                                    Placeholder="{DynamicResource AppSettings_Item_WebProxy_ProxyUsername}"
+                                    HorizontalAlignment="Left" Margin="12 84 48 12" Padding="6,6,0,0"/>
+                        <ws:PasswordBox x:Name="ProxyPasswordBox" Width="160" Height="30"
+                                        VerticalAlignment="Top"
+                                        Password="{Binding ProxyConf.Pwd}"
+                                        Style="{StaticResource  SimplePasswordBoxStyleForWs}"
+                                        Placeholder="{DynamicResource AppSettings_Item_WebProxy_ProxyPassword}"
+                                        HorizontalAlignment="Left" Margin="180 84 48 12" Padding="6,6,0,0"/>
                     </Grid>
                 </Border>
+                <!--WebProxy-->
             </ws:StackPanel>
         </ws:ScrollViewer>
     </Grid>

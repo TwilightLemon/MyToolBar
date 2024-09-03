@@ -5,7 +5,7 @@ using System.Windows.Media;
 /*
  *Basic info of Plugins
  *Assembly->Package->Plugs
- *One Package for single assembly, including several plugs.
+ *One Package for single assembly, including several plug-ins.
  */
 namespace MyToolBar.Plugin;
 public enum PluginType
@@ -19,9 +19,9 @@ public enum PluginType
     /// </summary>
     Capsule,
     /// <summary>
-    /// 全局自定义基于Window的服务
+    /// 全局自定义服务
     /// </summary>
-    WindowService
+    UserService
 }
 public interface IPackage
 {
@@ -68,5 +68,6 @@ public interface IPlugin
     /// 向主程序提供的主要UIElement
     /// </summary>
     /// <returns></returns>
-    UIElement GetMainElement();
+    virtual UIElement? GetMainElement() => null;
+    virtual ServiceBase? GetServiceHost() => null;
 }

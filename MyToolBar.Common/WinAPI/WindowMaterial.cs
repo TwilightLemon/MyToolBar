@@ -268,6 +268,9 @@ internal static class MaterialApis
     [DllImport("user32.dll")]
     private static extern int SetWindowCompositionAttribute(IntPtr hwnd, ref WindowCompositionAttributeData data);
 
+    [DllImport("user32.dll")]
+    private static extern bool GetWindowCompositionAttribute(IntPtr hwnd, ref WindowCompositionAttributeData data);
+
     private enum AccentState
     {
         /// <summary>

@@ -5,8 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MyToolBar.Views.Items"
              xmlns:ws="https://github.com/OrgEleCho/EleCho.WpfSuite"
-             mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800">
+             mc:Ignorable="d" d:DesignWidth="800">
     <Grid Margin="20">
         <Border x:Name="ViewMask" Background="{DynamicResource MaskColor}" CornerRadius="15"/>
         <StackPanel Orientation="Vertical">
@@ -17,9 +16,9 @@
                 <Run Text="{DynamicResource SettingsWindow_Version}"/>: <Run Text="{Binding Version,Mode=OneWay}" d:Text="1.0.0.0"/>
             </TextBlock>
             <CheckBox x:Name="EnableCheckBox" Style="{DynamicResource SimpleCheckBoxStyle}"
-                      Margin="20 10 0 0" Content="{DynamicResource SettingsWindow_Enable}"
+                      Margin="20 10 0 10" Content="{DynamicResource SettingsWindow_Enable}"
                       Foreground="{DynamicResource ForeColor}" Click="CheckBox_Click"/>
-            <TextBlock x:Name="PluginTb"  FontSize="18" Margin="20 10 0 0" Text="{DynamicResource SettingsWindow_PluginSettings}"/>
+            <TextBlock x:Name="PluginTb"  FontSize="18" Margin="20 0 0 0" Text="{DynamicResource SettingsWindow_PluginSettings}"/>
             <StackPanel x:Name="SettingsPanel"/>
         </StackPanel>
     </Grid>

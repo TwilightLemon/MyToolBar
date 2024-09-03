@@ -22,7 +22,8 @@ namespace MyToolBar
             Host=builder.ConfigureServices(services =>
             {
                 // host
-                services.AddHostedService<ApplicationService>();
+                services.AddSingleton<ApplicationService>();
+                services.AddHostedService(p=>p.GetRequiredService<ApplicationService>());
                 services.AddHostedService<MemoryOptimizeService>();
 
                 // windows

@@ -13,7 +13,7 @@ namespace MyToolBar.Plugin.BasicPackage
         public static ResourceManager _rm 
             = new("MyToolBar.Plugin.BasicPackage.LanguageRes.PluginLang",
                 Assembly.GetExecutingAssembly());
-        public static CultureInfo? _cultureInfo { get => CultureInfo.DefaultThreadCurrentCulture; }
+        internal static CultureInfo? _cultureInfo { get => CultureInfo.DefaultThreadCurrentCulture; }
         public string Description { get => _rm.GetString("PackageDesc", _cultureInfo); }
         public string PackageName { get; set; } = "MyToolBar.Plugin.BasicPackage";
         public Version Version { get; set; } = new Version(1,0,0,0);
@@ -45,7 +45,7 @@ namespace MyToolBar.Plugin.BasicPackage
         internal static readonly string _name = "HardwareMonitorCap";
         public string Name { get; } = _name;
         public string Description { get => _rm.GetString("HardwareMonitorCapPluginDesc", _cultureInfo); }
-        public List<string> SettingsSignKeys { get; } = null;
+        public List<string>? SettingsSignKeys { get; } = null;
         public PluginType Type { get; } = PluginType.Capsule;
         public UIElement GetMainElement()
         {

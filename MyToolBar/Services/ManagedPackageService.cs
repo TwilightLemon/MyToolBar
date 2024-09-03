@@ -51,15 +51,15 @@ public class ManagedPackageService
     private DateTime _lastTime=DateTime.MinValue;
     private void _watcher_Deleted(object sender, FileSystemEventArgs e) {
         if(DateTime.Now-_lastTime<TimeSpan.FromSeconds(1)) return;
+        _lastTime = DateTime.Now;
         var m=_managedPkgConfs.Data.FirstOrDefault(kv => kv.Value.FilePath == e.FullPath);
         UnloadFromRegistered(m.Key);
-        _lastTime = DateTime.Now;
     }
 
     private void _watcher_Created(object sender, FileSystemEventArgs e) {
         if (DateTime.Now - _lastTime < TimeSpan.FromSeconds(1)) return;
-        SyncFromFile(e.FullPath);
         _lastTime = DateTime.Now;
+        SyncFromFile(e.FullPath);
     }
 
     private void CreateDir()

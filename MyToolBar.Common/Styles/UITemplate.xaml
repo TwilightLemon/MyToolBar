@@ -99,6 +99,20 @@
             </MultiTrigger>
         </Style.Triggers>
     </Style>
+    <Style x:Key="SimpleTextBoxStyleForWs" TargetType="{x:Type ws:TextBox}">
+        <Setter Property="Background" Value="{DynamicResource MaskColor}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ForeColor}"/>
+        <Setter Property="CaretBrush" Value="{DynamicResource ForeColor}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="CornerRadius" Value="10"/>
+    </Style>
+    <Style x:Key="SimplePasswordBoxStyleForWs" TargetType="{x:Type ws:PasswordBox}">
+        <Setter Property="Background" Value="{DynamicResource MaskColor}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ForeColor}"/>
+        <Setter Property="CaretBrush" Value="{DynamicResource ForeColor}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="CornerRadius" Value="10"/>
+    </Style>
     <Style x:Key="SimpleListBoxItemStyle" TargetType="ws:ListBoxItem">
         <Setter Property="Margin" Value="5 2"/>
         <Setter Property="CornerRadius" Value="15"/>
@@ -116,5 +130,22 @@
         <Setter Property="CornerRadius" Value="14"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+    <Style x:Key="SimpleComboBoxStyleForWs" TargetType="ws:ComboBox">
+        <Setter Property="Background" Value="{DynamicResource MaskColor}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource FocusMaskColor}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ForeColor}"/>
+        <Setter Property="GlyphBrush" Value="{DynamicResource ForeColor}"/>
+        <Setter Property="PopupBackground" Value="{DynamicResource BackgroundColor}"/>
+        <Setter Property="CornerRadius" Value="4,4,4,4"/>
+        <Setter Property="PopupCornerRadius" Value="4,4,4,4"/>
+        <Setter Property="HoverBackground" Value="{DynamicResource FocusMaskColor}"/>
+        <Setter Property="HoverBorderBrush" Value="{DynamicResource FocusMaskColor}"/>
+        <Setter Property="HoverGlyphBrush" Value="{DynamicResource ForeColor}"/>
+        <Setter Property="HoverForeground" Value="{DynamicResource ForeColor}"/>
+        <Setter Property="PressedBackground" Value="{DynamicResource FocusMaskColor}"/>
+        <Setter Property="PressedBorderBrush" Value="{DynamicResource FocusMaskColor}"/>
+        <Setter Property="PressedGlyphBrush" Value="{DynamicResource ForeColor}"/>
+        <Setter Property="PressedForeground" Value="{DynamicResource ForeColor}"/>
     </Style>
 </ResourceDictionary>

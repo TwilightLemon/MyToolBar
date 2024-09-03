@@ -23,10 +23,10 @@ namespace MyToolBar.Views.Pages.Settings
         }
         private void Init()
         {
-            var services = _managedPackageService.GetTypePlugins(PluginType.WindowService);
+            var services = _managedPackageService.GetTypePlugins(PluginType.UserService);
             foreach (var service in services)
             {
-                var IsEnable = _pluginReactiveService.WindowServices.ContainsKey(service);
+                var IsEnable = _pluginReactiveService.UserServices.ContainsKey(service);
                 var item = new SelectiveSettingItem(service, IsEnable) { Margin = new System.Windows.Thickness(5, 2, 5, 2) };
                 item.OnIsEnableChanged += Item_OnIsEnableChanged;
                 ServiceList.Children.Add(item);
@@ -37,11 +37,11 @@ namespace MyToolBar.Views.Pages.Settings
         {
             if (enable)
             {
-                await _pluginReactiveService.AddWindowService(plugin);
+                await _pluginReactiveService.AddUserService(plugin);
             }
             else
             {
-                await _pluginReactiveService.RemoveWindowService(plugin);
+                await _pluginReactiveService.RemoveUserService(plugin);
             }
         }
     }

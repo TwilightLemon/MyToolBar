@@ -19,7 +19,7 @@ namespace MyToolBar.Services
     /// <summary>
     /// [主线任务] 全局异常捕获写日志、加载应用缓存目录、加载主窗口
     /// </summary>
-    internal class ApplicationService(
+    public class ApplicationService(
         IServiceProvider serviceProvider,
         ILogger<ApplicationService> logger,
         UIResourceService resourceService,
@@ -44,7 +44,7 @@ namespace MyToolBar.Services
             //加载插件包管理器
             serviceProvider.GetRequiredService<ManagedPackageService>().Load();
             //设置Http代理 (TODO:可选配置代理模式)
-            HttpClient.DefaultProxy = new WebProxy();
+            UpdateDefaultProxy();
             //加载配置
             appSettingsService.Loaded += delegate
             {
@@ -92,6 +92,43 @@ namespace MyToolBar.Services
                 return;
 
             _logger.LogError(new EventId(-1), exception, exception.Message);
+        }
+
+        public void UpdateDefaultProxy()
+        {
+            var type = appSettingsService.Settings.UserProxyMode;
+            switch (type)
+            {
+                case AppSettings.ProxyMode.None:
+                    HttpClient.DefaultProxy = new WebProxy();
+                    break;
+                    case AppSettings.ProxyMode.Global:
+                    HttpClient.DefaultProxy = WebRequest.GetSystemWebProxy();
+                    break;
+                case AppSettings.ProxyMode.Custom:
+                    var proxy = new WebProxy();
+                    var conf = appSettingsService.Settings.Proxy;
+                    if (conf != null)
+                    {
+                        proxy.Address = new Uri($"{conf.Address}:{conf.Port}");
+                        if (!string.IsNullOrEmpty(conf.UserName))
+                        {
+                            proxy.Credentials = new NetworkCredential(conf.UserName, conf.Pwd);
+                        }
+                    }
+                    HttpClient.DefaultProxy = proxy;
+                    break;
+            }
+            Debug.WriteLine(HttpClient.DefaultProxy);
+        }
+
+        public void SetAutoRunAtStartup()
+        {
+            //Not working...?
+/*            bool autoRun = appSettingsService.Settings.AutoRunAtStartup;
+            string exePath = $"\"{Process.GetCurrentProcess().MainModule.FileName}\"";
+            using RegistryKey RKey = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
+            RKey.SetValue("MyToolBar", autoRun ? exePath : "");*/
         }
     }
 }

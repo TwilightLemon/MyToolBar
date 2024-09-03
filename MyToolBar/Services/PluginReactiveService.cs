@@ -20,11 +20,11 @@ namespace MyToolBar.Services
         private readonly ManagedPackageService _managedPackageService=managedPackageService;
         private static readonly string _installConfSign="InstalledPluginConf",
                                                     _installConfPkgName=typeof(PluginReactiveService).FullName;
-        private SettingsMgr<InstalledPluginConf> _installedConf=new(_installConfSign,_installConfPkgName);
+        private readonly SettingsMgr<InstalledPluginConf> _installedConf=new(_installConfSign,_installConfPkgName);
 
         public IPlugin? OuterControl { get;private set; }
         public Dictionary<IPlugin,CapsuleBase> Capsules { get; private set; } = [];
-        public Dictionary<IPlugin, Window> WindowServices = [];
+        public Dictionary<IPlugin, ServiceBase> UserServices = [];
 
         public event Action<OuterControlBase>? OuterControlChanged;
         public event Action<CapsuleBase>? CapsuleAdded;
@@ -63,16 +63,16 @@ namespace MyToolBar.Services
                 }
             }
             //加载WindowServices
-            if (_installedConf.Data.WindowServices.Count > 0)
+            if (_installedConf.Data.UserServices.Count > 0)
             {
-                foreach (var serviceConf in _installedConf.Data.WindowServices)
+                foreach (var serviceConf in _installedConf.Data.UserServices)
                 {
                     if (_managedPackageService.ManagedPkg.FirstOrDefault(p => p.Key == serviceConf.PackageName && p.Value.IsEnabled) is { Key: not null, Value: not null } package)
                     {
                         var pkg = package.Value.Package;
-                        if (pkg.Plugins.FirstOrDefault(p => p.Name == serviceConf.PluginName) is { Type: PluginType.WindowService } plugin)
+                        if (pkg.Plugins.FirstOrDefault(p => p.Name == serviceConf.PluginName) is { Type: PluginType.UserService } plugin)
                         {
-                            await AddWindowService(plugin, false);
+                            await AddUserService(plugin, false);
                         }
                     }
                 }
@@ -96,8 +96,8 @@ namespace MyToolBar.Services
                             case PluginType.Capsule:
                                 await AddCapsule(plugin, false);
                                 break;
-                            case PluginType.WindowService:
-                                await AddWindowService(plugin, false);
+                            case PluginType.UserService:
+                                await AddUserService(plugin, false);
                                 break;
                         }
                     }
@@ -115,7 +115,7 @@ namespace MyToolBar.Services
             //不是OuterControl or 已存在
             if (plugin.Type != PluginType.OuterControl||plugin.Name==OuterControl?.Name)
                 return false;
-            if (plugin.GetMainElement() is OuterControlBase oc)
+            if (plugin.GetMainElement() is OuterControlBase{ } oc)
             {
                 Debug.Assert(plugin.AcPackage != null);
                 OuterControl = plugin;
@@ -128,38 +128,60 @@ namespace MyToolBar.Services
             }
             return true;
         }
-        public async Task<bool> AddWindowService(IPlugin plugin, bool saveConf = true)
+
+        public async Task<bool> AddUserService(IPlugin plugin, bool saveConf = true)
         {
-            //不是WindowService or 已存在
-            if (plugin.Type != PluginType.WindowService || WindowServices.Any(p => p.Key.Name == plugin.Name))
+            //不是UserService or 已存在
+            if (plugin.Type != PluginType.UserService || UserServices.Any(p => p.Key.Name == plugin.Name))
                 return false;
 
-            if (plugin.GetMainElement() is Window window)
+            if (plugin.GetServiceHost() is ServiceBase { } service)
             {
-                WindowServices.Add(plugin, window);
-                window.Show();
+                UserServices.Add(plugin,service);
+                service.IsRunningChanged += Service_IsRunningChanged;
+                await service.Start();
                 if (saveConf)
                 {
-                    _installedConf.Data.WindowServices.Add(new(plugin.AcPackage.PackageName, plugin.Name));
+                    _installedConf.Data.UserServices.Add(new(plugin.AcPackage.PackageName, plugin.Name));
                     await _installedConf.Save();
                 }
                 return true;
             }
             return false;
         }
-        public async Task<bool> RemoveWindowService(IPlugin plugin)
+
+        /// <summary>
+        /// UserService自行退出时解除引用
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="isRunning"></param>
+        private async void Service_IsRunningChanged(object? sender, bool isRunning)
         {
-            if (plugin.Type!= PluginType.WindowService)
-                return false;
-            if(WindowServices.FirstOrDefault(p=>p.Key.Name==plugin.Name) is var window &&
-                 _installedConf.Data.WindowServices.FirstOrDefault(
-                     p => p.PluginName == plugin.Name && p.PackageName==plugin.AcPackage.PackageName) is var conf)
+            Debug.WriteLine(sender + " IsRunning: " + isRunning);
+
+            if (!isRunning&& sender is ServiceBase { } service&&
+                UserServices.FirstOrDefault(p => p.Value == service).Key is IPlugin { } plugin)
             {
-                _installedConf.Data.WindowServices.Remove(conf);
-                WindowServices.Remove(window.Key);
-                if(window.Value is {IsLoaded:true} w)
+                service.IsRunningChanged -= Service_IsRunningChanged;
+                await RemoveUserService(plugin);
+            }
+        }
+
+        public async Task<bool> RemoveUserService(IPlugin plugin)
+        {
+            if (plugin.Type!= PluginType.UserService)
+                return false;
+
+            if(UserServices.FirstOrDefault(p=>p.Key.Name==plugin.Name) is { } service &&
+                 _installedConf.Data.UserServices.FirstOrDefault(
+                     p => p.PluginName == plugin.Name && p.PackageName==plugin.AcPackage.PackageName) is { } conf)
+            {
+                _installedConf.Data.UserServices.Remove(conf);
+                UserServices.Remove(service.Key);
+                if(service.Value is {IsRunning:true} w)
                 {
-                    w.Close();
+                    await w.Stop();
+                    w.Dispose();
                 }
                 await _installedConf.Save();
                 return true;
@@ -171,7 +193,7 @@ namespace MyToolBar.Services
             if (plugin.Type != PluginType.Capsule || Capsules.Any(p => p.Key.Name == plugin.Name))
                 return false;
 
-            if (plugin.GetMainElement() is CapsuleBase cap)
+            if (plugin.GetMainElement() is CapsuleBase{ } cap)
             {
                 cap.Install();
                 Capsules.Add(plugin, cap);
@@ -208,6 +230,6 @@ namespace MyToolBar.Services
         public record struct InstalledPlugin(string PackageName,string PluginName);
         public InstalledPlugin? OutterControl { get; set; } = null;
         public List<InstalledPlugin> Capsules { get; set; } = [];
-        public List<InstalledPlugin> WindowServices { get; set; } = [];
+        public List<InstalledPlugin> UserServices { get; set; } = [];
     }
 }

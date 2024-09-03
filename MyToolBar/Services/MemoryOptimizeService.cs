@@ -48,7 +48,9 @@ namespace MyToolBar.Services
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
+#if !DEBUG //仅在Release模式下启用
             _ = MemoryOptimizeLoop(cancellationToken);
+#endif
             return Task.CompletedTask;
         }
 

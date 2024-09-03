@@ -29,6 +29,7 @@ public static class LocalCulture
 
     public static void SetGlobalLanguage(Language lang,bool invoke=true)
     {
+        if (lang == Current) return;
         Current = lang;
         CultureInfo.DefaultThreadCurrentCulture = lang.ToCultureInfo();
         if(invoke)

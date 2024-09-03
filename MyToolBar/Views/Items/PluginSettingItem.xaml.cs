@@ -53,7 +53,7 @@ namespace MyToolBar.Views.Items
                 //生成边框
                 Border b = new()
                 {
-                    Height=200,
+                    Height=double.NaN,
                     CornerRadius = new CornerRadius(15),
                     Margin=new Thickness(20)
                 };

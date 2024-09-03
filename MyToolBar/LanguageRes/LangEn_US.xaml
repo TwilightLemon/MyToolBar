@@ -23,6 +23,21 @@
     <sys:String x:Key="AppSettings_Item_AlwaysUseImmerseMode">Alway use immerse mode</sys:String>
     <sys:String x:Key="AppSettings_Item_AutoRunAtStartup">Auto run at startup</sys:String>
     <sys:String x:Key="AppSettings_Item_Language">Language</sys:String>
+
+    <sys:String x:Key="AppSettings_Item_WebProxy_ProxyMode">Proxy Mode</sys:String>
+    <sys:String x:Key="AppSettings_Item_WebProxy_ProxyAddress">Proxy Address</sys:String>
+    <sys:String x:Key="AppSettings_Item_WebProxy_ProxyPort">Proxy Port</sys:String>
+    <sys:String x:Key="AppSettings_Item_WebProxy_ProxyUsername">Proxy Username</sys:String>
+    <sys:String x:Key="AppSettings_Item_WebProxy_ProxyPassword">Proxy Password</sys:String>
+    
+    <!--Converter Texts-->
+    <sys:String x:Key="AS_Proxy_None">None</sys:String>
+    <sys:String x:Key="AS_Proxy_Global">Global</sys:String>
+    <sys:String x:Key="AS_Proxy_Custom">Custom</sys:String>
+
+    <sys:String x:Key="AS_Language_English">English</sys:String>
+    <sys:String x:Key="AS_Language_Chinese">简体中文</sys:String>
+
     <!--Drawboard-->
     <sys:String x:Key="Drawboard_Title">Drawboard</sys:String>
     <sys:String x:Key="Drawboard_Tool_ClearAll">Clear All</sys:String>

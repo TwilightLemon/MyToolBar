@@ -1,11 +1,5 @@
-﻿using Microsoft.Extensions.Hosting;
-using MyToolBar.Common;
+﻿using MyToolBar.Common;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MyToolBar.Services
@@ -50,6 +44,16 @@ namespace MyToolBar.Services
         /// </summary>
         public int Language { get; set; } = 1;
 
+        public record ProxyConf(string Address, string Port, string UserName, string Pwd);
+        public enum ProxyMode
+        {
+            None,
+            Global,
+            Custom
+        }
+        public ProxyMode UserProxyMode { get; set; } = ProxyMode.None;
+
+        public ProxyConf? Proxy { get; set; } = null;
 
     }
 }
