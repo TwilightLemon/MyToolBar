@@ -36,16 +36,17 @@
                     <TextBlock Text="{DynamicResource SettingsWindow_Tab_Gerneral}"
                                  FontSize="22"/>
                     <Border Background="{DynamicResource MaskColor}" CornerRadius="12" Height="48">
-                        <CheckBox x:Name="AlwaysImModeCb" Style="{DynamicResource SimpleCheckBoxStyle}"
+                        <ToggleButton Name="AlwaysImModeCb"
+                                    Style="{StaticResource RoundToggleButtonStyle}"
                                     Content="{DynamicResource AppSettings_Item_AlwaysUseImmerseMode}"
-                                   IsChecked="{Binding AlwaysImMode}"
-                                    VerticalAlignment="Center" Margin="12"/>
+                                    IsChecked="{Binding AlwaysImMode}"
+                                    Margin="12 0 12 0"/>
                     </Border>
                     <Border Background="{DynamicResource MaskColor}" CornerRadius="12" Height="48">
-                        <CheckBox x:Name="AutoRunCb" Style="{DynamicResource SimpleCheckBoxStyle}"
+                        <ToggleButton x:Name="AutoRunCb" Style="{DynamicResource RoundToggleButtonStyle}"
                               Content="{DynamicResource AppSettings_Item_AutoRunAtStartup}"
                                   IsChecked="{Binding AutoRunAtStartup}"
-                               VerticalAlignment="Center" Margin="12"/>
+                                Margin="12 0 12 0"/>
                     </Border>
                     <Border Background="{DynamicResource MaskColor}" CornerRadius="12" Height="48">
                         <Grid>

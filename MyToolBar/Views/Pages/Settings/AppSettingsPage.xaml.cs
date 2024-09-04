@@ -1,21 +1,8 @@
 ﻿using MyToolBar.Common;
 using MyToolBar.Services;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MyToolBar.Views.Pages.Settings
 {
@@ -30,30 +17,41 @@ namespace MyToolBar.Views.Pages.Settings
         {
             InitializeComponent();
             DataContext = this;
+            Loaded += AppSettingsPage_Loaded;
             Unloaded += AppSettingsPage_Unloaded;
             _appSettingsService = appSettingsService;
             _applicationService = applicationService;
         }
+
+        private void AppSettingsPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Load settings
+            AlwaysImMode = _appSettingsService.Settings.AlwaysUseImmerseMode;
+            AutoRunAtStartup = _appSettingsService.Settings.AutoRunAtStartup;
+        }
+        #region XAML Bindings
         public event PropertyChangedEventHandler? PropertyChanged;
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        private bool _alwaysImMode = false;
         public bool AlwaysImMode 
-        { 
-            get => _appSettingsService.Settings.AlwaysUseImmerseMode; 
+        {
+            get => _alwaysImMode;
             set 
-            { 
-                _appSettingsService.Settings.AlwaysUseImmerseMode = value;
+            {
+                _alwaysImMode=_appSettingsService.Settings.AlwaysUseImmerseMode = value;
                 OnPropertyChanged(nameof(AlwaysImMode));
             }
         }
+        private bool _autoRunAtStartup = false;
         public bool AutoRunAtStartup
         {
-            get => _appSettingsService.Settings.AutoRunAtStartup;
+            get => _autoRunAtStartup;
             set
             {
-                _appSettingsService.Settings.AutoRunAtStartup = value;
+                _autoRunAtStartup = _appSettingsService.Settings.AutoRunAtStartup = value;
                 OnPropertyChanged(nameof(AutoRunAtStartup));
                 _applicationService.SetAutoRunAtStartup();
             }
@@ -85,6 +83,7 @@ namespace MyToolBar.Views.Pages.Settings
         public AppSettings.ProxyConf? ProxyConf {
             get => _appSettingsService.Settings.Proxy;
         }
+        #endregion
 
         private async void AppSettingsPage_Unloaded(object sender, RoutedEventArgs e)
         {

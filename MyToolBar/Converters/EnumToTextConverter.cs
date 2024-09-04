@@ -1,6 +1,7 @@
 ﻿using MyToolBar.Common;
 using MyToolBar.Services;
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Windows.Data;
 
@@ -13,24 +14,17 @@ namespace MyToolBar.Converters
         {
             if (value is AppSettings.ProxyMode proxyMode)
             {
-                switch (proxyMode)
-                {
-                    case AppSettings.ProxyMode.None:
-                        return App.Current.FindResource("AS_Proxy_None");
-                    case AppSettings.ProxyMode.Global:
-                        return App.Current.FindResource("AS_Proxy_Global");
-                    case AppSettings.ProxyMode.Custom:
-                        return App.Current.FindResource("AS_Proxy_Custom");
-                }
-            }else if(value is LocalCulture.Language language)
+                return App.Current.FindResource($"AS_Proxy_{proxyMode}");
+            }
+            else if(value is LocalCulture.Language language)
             {
-                switch (language)
+                return App.Current.FindResource($"AS_Language_{language switch
                 {
-                    case LocalCulture.Language.en_us:
-                        return App.Current.FindResource("AS_Language_English");
-                    case LocalCulture.Language.zh_cn:
-                        return App.Current.FindResource("AS_Language_Chinese");
-                }
+                    LocalCulture.Language.en_us => "English",
+                    LocalCulture.Language.zh_cn => "Chinese",
+                    _ => throw new NotImplementedException()
+                }}"
+                );
             }
             return value;
         }

@@ -51,8 +51,14 @@ namespace MyToolBar.Services
             Global,
             Custom
         }
+        /// <summary>
+        /// 代理模式
+        /// </summary>
         public ProxyMode UserProxyMode { get; set; } = ProxyMode.None;
 
+        /// <summary>
+        /// 代理配置
+        /// </summary>
         public ProxyConf? Proxy { get; set; } = null;
 
     }
