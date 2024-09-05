@@ -29,7 +29,7 @@ namespace MyToolBar.Views.Windows
         private  void SettingsWindow_Loaded(object sender, RoutedEventArgs e)
         {
             ViewModel.SelectedPage = ViewModel.SettingsPages.FirstOrDefault();
-            DwmAPI.EnableDwnAnimation(this);
+            WindowLongAPI.EnableDwnAnimation(this);
         }
 
         public SettingsViewModel ViewModel { get; }

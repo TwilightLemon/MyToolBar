@@ -10,7 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\MyToolBar.Common\MyToolBar.Common.csproj" />
     <ProjectReference Include="..\MyToolBar.Plugin\MyToolBar.Plugin.csproj" />
-	<PackageReference Include="EleCho.WpfSuite" Version="0.5.3" />
+	<PackageReference Include="EleCho.WpfSuite" Version="0.8.1" />
 	<PackageReference Include="System.Management" Version="8.0.0" />
 	  <PackageReference Include="System.Drawing.Common" Version="8.0.7" />
   </ItemGroup>

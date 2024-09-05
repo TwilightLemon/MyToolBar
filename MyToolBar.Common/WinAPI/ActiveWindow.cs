@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace MyToolBar.Common.WinAPI
 {
+    /// <summary>
+    /// 提供实时监测活动窗口Hook，及获取窗口相关信息的API
+    /// </summary>
     public static class ActiveWindow
     {
         public delegate void WinEventDelegate(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
@@ -19,6 +22,7 @@ namespace MyToolBar.Common.WinAPI
         private const uint EVENT_SYSTEM_FOREGROUND = 3,
                                     EVENT_OBJECT_NAMECHANGE = 0x800C;
         private const uint WINEVENT_OUTOFCONTEXT = 0;
+
 
         public static IntPtr RegisterActiveWindowHook(WinEventDelegate handler)
         {
@@ -33,6 +37,11 @@ namespace MyToolBar.Common.WinAPI
         [DllImport("user32.dll", SetLastError = true)]
         static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint processId);
 
+        /// <summary>
+        /// 获取指定窗口hWnd所属的进程
+        /// </summary>
+        /// <param name="hWnd">窗口句柄</param>
+        /// <returns></returns>
         public static Process? GetWindowProcess(this IntPtr hWnd)
         {
             GetWindowThreadProcessId(hWnd, out uint processId);
@@ -57,12 +66,22 @@ namespace MyToolBar.Common.WinAPI
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
 
+        /// <summary>
+        /// 获取窗口的类名
+        /// </summary>
+        /// <param name="hWnd"></param>
+        /// <returns></returns>
         public static string GetWindowClass(this IntPtr hWnd)
         {
             var sb= new StringBuilder(60);
             GetClassName(hWnd, sb, sb.Capacity);
             return sb.ToString();
         }
+        /// <summary>
+        /// 获取窗口的标题
+        /// </summary>
+        /// <param name="hWnd"></param>
+        /// <returns></returns>
         public static string GetWindowTitle(this IntPtr hWnd)
         {
             int length = GetWindowTextLength(hWnd);
@@ -70,6 +89,10 @@ namespace MyToolBar.Common.WinAPI
             GetWindowText(hWnd, sb, sb.Capacity);
             return sb.ToString();
         }
+        /// <summary>
+        /// 仅获取当前活动窗口的标题
+        /// </summary>
+        /// <returns></returns>
         public static string GetActiveWindowTitle() {
             IntPtr hWnd = GetForegroundWindow();
             int length = GetWindowTextLength(hWnd);

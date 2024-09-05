@@ -43,12 +43,14 @@ namespace MyToolBar.Services
             }));
             //加载插件包管理器
             serviceProvider.GetRequiredService<ManagedPackageService>().Load();
-            //设置Http代理 (TODO:可选配置代理模式)
-            UpdateDefaultProxy();
             //加载配置
             appSettingsService.Loaded += delegate
             {
                 if (appSettingsService.Settings == null) return;
+
+                //设置Http代理
+                UpdateDefaultProxy();
+
                 var lang = (LocalCulture.Language)appSettingsService.Settings.Language;
                 LocalCulture.SetGlobalLanguage(lang, false);
                 LocalCulture.OnLanguageChanged += LocalCulture_OnLanguageChanged;
@@ -110,7 +112,7 @@ namespace MyToolBar.Services
                     var conf = appSettingsService.Settings.Proxy;
                     if (conf != null)
                     {
-                        proxy.Address = new Uri($"{conf.Address}:{conf.Port}");
+                        proxy.Address = new Uri($"http://{conf.Address}:{conf.Port}");
                         if (!string.IsNullOrEmpty(conf.UserName))
                         {
                             proxy.Credentials = new NetworkCredential(conf.UserName, conf.Pwd);

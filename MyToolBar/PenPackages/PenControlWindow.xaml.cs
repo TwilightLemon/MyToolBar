@@ -74,7 +74,7 @@ namespace MyToolBar.PenPackages
         private void PenControlWindow_Loaded(object sender, RoutedEventArgs e)
         {
             ResetWindowLocation();
-            ToolWindowAPI.SetToolWindow(this);
+            WindowLongAPI.SetToolWindow(this);
         }
 
         private void PenControlWindow_SizeChanged(object sender, SizeChangedEventArgs e)

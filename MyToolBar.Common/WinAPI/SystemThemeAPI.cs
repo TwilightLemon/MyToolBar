@@ -10,6 +10,9 @@ using System.Windows.Interop;
 
 namespace MyToolBar.Common.WinAPI
 {
+    /// <summary>
+    /// 注册系统主题颜色改变事件和获取主题颜色的方法集
+    /// </summary>
     public static class SystemThemeAPI
     {
         public static bool GetIsLightTheme()

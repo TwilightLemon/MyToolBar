@@ -66,7 +66,7 @@ namespace MyToolBar.Common.UIBases
 
         private void PopWindowBase_Loaded(object sender, RoutedEventArgs e)
         {
-            ToolWindowAPI.SetToolWindow(this);
+            WindowLongAPI.SetToolWindow(this);
             BehaviorCollection behaviors = Interaction.GetBehaviors(this);
             behaviors.Add(new BlurWindowBehavior());
         }
@@ -85,9 +85,13 @@ namespace MyToolBar.Common.UIBases
         }
 
         private LoadingIcon? _loadingIcon = null;
+        /// <summary>
+        /// 设置加载状态
+        /// </summary>
+        /// <param name="isLoading"></param>
         public void SetLoadingStatus(bool isLoading)
         {
-            if(Content is Grid container)
+            if(Content is System.Windows.Controls.Grid {} container)
             {
                 if (isLoading)
                 {

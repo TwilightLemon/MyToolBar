@@ -11,7 +11,8 @@ using System.Windows.Media.Animation;
 namespace MyToolBar.Common.UIBases
 {
     /// <summary>
-    /// 为可交互Item提供基类 ViewMask 基本视觉样式 与Click事件
+    /// 为可交互Item提供基类 ViewMask 基本视觉样式 与Click事件与Command绑定
+    /// 要求Content为Grid
     /// </summary>
     public class ItemBase:UserControl
     {

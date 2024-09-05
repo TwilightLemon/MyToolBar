@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace MyToolBar.Common.WinAPI
 {
+    /// <summary>
+    /// 遍历窗口查找是否存在最大化窗口
+    /// </summary>
+    /// <param name="OnWindowFound"></param>
     public class MaxedWindowAPI(Action<bool> OnWindowFound)
     {
         public void Find()

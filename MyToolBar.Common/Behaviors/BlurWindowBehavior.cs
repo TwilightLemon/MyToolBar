@@ -5,13 +5,23 @@ using Microsoft.Xaml.Behaviors;
 using MyToolBar.Common.WinAPI;
 
 namespace MyToolBar.Common.Behaviors;
+/// <summary>
+/// 提供窗口模糊效果和统一的暗亮色模式管理行为
+/// </summary>
 public class BlurWindowBehavior : Behavior<Window>
 {
-    static readonly Dictionary<Window, WindowMaterial> _allWindowMaterialManager = new();
+    static readonly Dictionary<Window, WindowMaterial> _allWindowMaterialManager = [];
+    /// <summary>
+    /// 是否为ToolWindow
+    /// </summary>
     public bool IsToolWindow { get; set; } = false;
 
     private WindowMaterial _windowMaterial;
 
+    /// <summary>
+    /// 更新所有窗口的暗亮色模式，此方法由主程序调用
+    /// </summary>
+    /// <param name="isDarkMode"></param>
     public static void SetDarkMode(bool isDarkMode)
     {
         foreach (var wac in _allWindowMaterialManager.Values)
@@ -32,6 +42,7 @@ public class BlurWindowBehavior : Behavior<Window>
     {
         base.OnAttached();
         AssociatedObject.Closing += AssociatedObject_Closing;
+        //在节能模式下不使用模糊效果
         if (GlobalService.IsEnergySaverModeOn)
         {
             AssociatedObject.SetResourceReference(Window.BackgroundProperty, "BackgroundColor");

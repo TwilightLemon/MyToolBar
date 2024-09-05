@@ -54,7 +54,7 @@ namespace MyToolBar.Views.Windows
         private void Window_SourceInitialized(object sender, EventArgs e)
         {
             //标记WS_EX_TOOLWINDOW 窗口不在任务视图中显示
-            ToolWindowAPI.SetToolWindow(this);
+            WindowLongAPI.SetToolWindow(this);
             Width = SystemParameters.WorkArea.Width;
             //初始化AppBar背景样式
             UpdateBackground();

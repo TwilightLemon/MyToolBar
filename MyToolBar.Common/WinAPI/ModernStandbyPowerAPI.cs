@@ -2,6 +2,9 @@
 
 namespace MyToolBar.Common.WinAPI;
 
+/// <summary>
+/// 注册Modern Standby电源通知
+/// </summary>
 public class ModernStandbyPowerAPI
 {
     /// <summary>

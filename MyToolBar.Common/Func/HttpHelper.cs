@@ -5,6 +5,12 @@ namespace MyToolBar.Common.Func
 {
     public static class HttpHelper
     {
+        /// <summary>
+        /// 发送简单的Get请求
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="useGzip">是否启用Gzip</param>
+        /// <returns></returns>
         public static async Task<string> Get(string url,bool useGzip=true)
         {
             try
@@ -21,6 +27,11 @@ namespace MyToolBar.Common.Func
             }
         }
 
+        /// <summary>
+        /// 测试url是否可用(返回code 200)
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
         public static async Task<bool> Test(string url)
         {
             using HttpClient hc = new();

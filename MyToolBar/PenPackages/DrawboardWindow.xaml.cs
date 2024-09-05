@@ -156,7 +156,7 @@ namespace MyToolBar.PenPackages
 
         private void DrawboardWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            ToolWindowAPI.SetToolWindow(this);
+            WindowLongAPI.SetToolWindow(this);
             Topmost = true;
             this.Width = SystemParameters.WorkArea.Width;
             this.Height = SystemParameters.WorkArea.Height;
