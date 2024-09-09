@@ -52,3 +52,27 @@ Powered by .NET 8 on WPF
 
 App内部分矢量图标来自: [iconfont](https://www.iconfont.cn)  
 Weather Api及Icon来自： [和风天气](https://www.qweather.com)
+
+
+## MyToolBar.Common API Doc
+//TODO: 提供统一的WindowBase实现
+//GlobalService提供由主进程注册的全局服务
+
+- WinAPI
+  #### 静态类 可直接使用
+
+  #### 注册类 由GlobalService提供接口
+
+- Behaviors
+    - [x] BlurWindowBehavior 提供窗口模糊效果和统一的暗亮色模式管理行为
+    - [x] DraggableUIBehavior 
+    - [x] WindowDragMoveBehavior
+
+- Func
+     - [x] HttpHelper
+     - [x] ImageHelper
+
+- Styles
+     - [x] IconData 提供统一的常用图标资源
+     - [x] ThemeColor(_Light) 提供统一的主题颜色资源
+     - [x] UITemplate 提供常用控件的模板及样式 

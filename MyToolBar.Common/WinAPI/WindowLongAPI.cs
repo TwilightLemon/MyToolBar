@@ -114,6 +114,49 @@ public static class WindowLongAPI
         SetWindowLong(wndHelper.Handle, (int)GetWindowLongFields.GWL_EXSTYLE, (IntPtr)exStyle);
     }
 
+
+
+
+    public static bool GetDwmAnimation(DependencyObject obj)
+    {
+        return (bool)obj.GetValue(DwmAnimationProperty);
+    }
+
+    public static void SetDwmAnimation(DependencyObject obj, bool value)
+    {
+        obj.SetValue(DwmAnimationProperty, value);
+    }
+
+    public static readonly DependencyProperty DwmAnimationProperty =
+        DependencyProperty.RegisterAttached("DwmAnimation", 
+            typeof(bool), typeof(WindowLongAPI),
+            new PropertyMetadata(false,OnDwmAnimationChanged));
+
+    private static void OnDwmAnimationChanged(DependencyObject o,DependencyPropertyChangedEventArgs e)
+    {
+        if(o is Window{ } w&&(bool)e.NewValue)
+        {
+            if (w.IsLoaded)
+            {
+                EnableDwnAnimation(w);
+            }
+            else
+            {
+                w.Loaded += Window_Loaded;
+            }
+        }
+    }
+
+    private static void Window_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (sender is Window { } w){
+            EnableDwnAnimation(w);
+            w.Loaded -= Window_Loaded;
+        }
+    }
+
+
+
     //https://stackoverflow.com/questions/56175722/how-to-restore-the-default-show-close-animations-for-a-window-when-setting-windo
     public static void EnableDwnAnimation(Window w)
     {

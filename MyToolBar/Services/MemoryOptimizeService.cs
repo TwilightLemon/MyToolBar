@@ -22,8 +22,8 @@ namespace MyToolBar.Services
 
         private void FlushMemory()
         {
-            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true);
-            GC.WaitForPendingFinalizers();
+/*            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true);
+            GC.WaitForPendingFinalizers();*/
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
                 SetProcessWorkingSetSize(Process.GetCurrentProcess().Handle, -1, -1);
         }

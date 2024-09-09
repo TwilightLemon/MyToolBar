@@ -18,6 +18,7 @@ namespace MyToolBar.Services
     {
         private IntPtr _standbyAPIHandle;
         public event Action<bool>? OnEnergySaverStatusChanged;
+        public event Action<bool>? OnStandbyStateChanged;
         public Task StartAsync(CancellationToken cancellationToken)
         {
             GlobalService.IsEnergySaverModeOn=PowerManager.EnergySaverStatus== EnergySaverStatus.On;
@@ -32,10 +33,13 @@ namespace MyToolBar.Services
                 {
                     //进入低功耗状态时停止全局Timer
                     GlobalService.GlobalTimer.Stop();
-                }else if (type == ModernStandbyPowerAPI.PBT_APMRESUMESUSPEND)
+                    OnStandbyStateChanged?.Invoke(true);
+                }
+                else if (type == ModernStandbyPowerAPI.PBT_APMRESUMESUSPEND)
                 {
                     //手动唤醒时启动全局Timer
                     GlobalService.GlobalTimer.Start();
+                    OnStandbyStateChanged?.Invoke(false);
                 }
                 return 0;
             }, ref _standbyAPIHandle);
@@ -64,11 +68,13 @@ namespace MyToolBar.Services
             {
                 //休眠时停止全局Timer
                 GlobalService.GlobalTimer.Stop();
+                OnStandbyStateChanged?.Invoke(true);
             }
             else if (e.Mode == PowerModes.Resume)
             {
                 //唤醒时启动全局Timer
                 GlobalService.GlobalTimer.Start();
+                OnStandbyStateChanged?.Invoke(false);
             }
         }
     }

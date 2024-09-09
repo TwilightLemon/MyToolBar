@@ -23,8 +23,8 @@ namespace MyToolBar.Services
         private readonly SettingsMgr<InstalledPluginConf> _installedConf=new(_installConfSign,_installConfPkgName);
 
         public IPlugin? OuterControl { get;private set; }
-        public Dictionary<IPlugin,CapsuleBase> Capsules { get; private set; } = [];
-        public Dictionary<IPlugin, ServiceBase> UserServices = [];
+        public Dictionary<IPlugin,CapsuleBase> Capsules { get; } = [];
+        public Dictionary<IPlugin, ServiceBase> UserServices { get; } = [];
 
         public event Action<OuterControlBase>? OuterControlChanged;
         public event Action<CapsuleBase>? CapsuleAdded;

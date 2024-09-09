@@ -6,11 +6,16 @@ using MyToolBar.Common.Func;
 using System.Windows.Media;
 using System.Text.Json.Serialization;
 
+//TODO： 处理空值 from HttpHelper.Get
+
 /*
  Weather Api
  see as : https://dev.qweather.com/docs/
  */
 
+#pragma warning disable CS8601 // 引用类型赋值可能为 null。
+#pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。
+#pragma warning disable CS8602 // 解引用可能出现空引用。
 namespace MyToolBar.Plugin.BasicPackage.API
 {
     public static class WeatherApi
@@ -92,6 +97,7 @@ namespace MyToolBar.Plugin.BasicPackage.API
         public static async Task<City?> GetPositionByIpAsync()
         {
             string data = await HttpHelper.Get("https://www.useragentinfo.com", false);
+            if(string.IsNullOrEmpty(data)) return null;
             string str = HttpHelper.FindByAB(data, "位置信息</th>", "</td>") + "</td>";
             Match m = Regex.Match(str, "<td class=\"col-auto fw-light\">(.*?) (.*?) (.*?) (.*?)</td>");
             if (m.Success)
@@ -161,6 +167,7 @@ namespace MyToolBar.Plugin.BasicPackage.API
         private static async Task<List<City>> CityLookUpAsync(string url)
         {
             string data = await HttpHelper.Get(url);
+            if (string.IsNullOrEmpty(data)) return [];
             var obj = JsonNode.Parse(data);
             var list = new List<City>();
             if (obj != null && obj["code"].ToString() == "200")
@@ -184,6 +191,7 @@ namespace MyToolBar.Plugin.BasicPackage.API
         {
             string url = $"https://{host}/v7/weather/now?location={city.Id}&key={key}&lang={lang}";
             string data = await HttpHelper.Get(url);
+            if (string.IsNullOrEmpty(data)) return new();
             var obj = JsonNode.Parse(data);
             if (obj != null & obj["code"].ToString() == "200")
             {
@@ -207,6 +215,7 @@ namespace MyToolBar.Plugin.BasicPackage.API
         {
             string url = $"https://{host}/airquality/v1/now/{city.Id}?key={key}&lang={lang}";
             string data = await HttpHelper.Get(url);
+            if (string.IsNullOrEmpty(data)) return new();
             var obj = JsonNode.Parse(data);
             if (obj != null & obj["code"].ToString() == "200")
             {
@@ -229,6 +238,7 @@ namespace MyToolBar.Plugin.BasicPackage.API
         {
             string url = $"https://{host}/v7/air/5d?location={city.Id}&key={key}&lang={lang}";
             string data = await HttpHelper.Get(url);
+            if (string.IsNullOrEmpty(data)) return new();
             var obj = JsonNode.Parse(data);
             if (obj != null & obj["code"].ToString() == "200")
             {
@@ -260,6 +270,7 @@ namespace MyToolBar.Plugin.BasicPackage.API
         {
             string url = $"https://{host}/v7/weather/7d?location={city.Id}&key={key}&lang={lang}";
             string data = await HttpHelper.Get(url);
+            if (string.IsNullOrEmpty(data)) return new();
             var obj = JsonNode.Parse(data);
             if (obj != null & obj["code"].ToString() == "200")
             {
@@ -297,6 +308,7 @@ namespace MyToolBar.Plugin.BasicPackage.API
         {
             string url = $"https://{host}/v7/warning/now?location={city.Id}&lang={lang}&key={key}";
             string data=await HttpHelper.Get(url);
+            if (string.IsNullOrEmpty(data)) return new();
             var obj = JsonNode.Parse(data);
             var list = new List<Warning>();
             if (obj != null & obj["code"].ToString() == "200")
@@ -320,3 +332,7 @@ namespace MyToolBar.Plugin.BasicPackage.API
         }
     }
 }
+
+#pragma warning restore CS8602 // 解引用可能出现空引用。
+#pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。
+#pragma warning restore CS8601 // 引用类型赋值可能为 null。

@@ -6,6 +6,9 @@ using System.Runtime.InteropServices;
 /*
  * Get hardware information
  * using System.Management & OpenHardwareMonitorLib
+ * 
+ * TODO: fix mem overflow caused by ManagementObjectSearcher
+ * 
  */
 
 namespace MyToolBar.Plugin.BasicPackage.API;
@@ -18,13 +21,14 @@ internal class CPUInfo
         {
             Double temperature = 0;
             // Query the MSAcpi_ThermalZoneTemperature API
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher(@"root\WMI", "SELECT * FROM MSAcpi_ThermalZoneTemperature");
+            using ManagementObjectSearcher searcher = new (@"root\WMI", "SELECT * FROM MSAcpi_ThermalZoneTemperature");
 
             foreach (ManagementObject obj in searcher.Get())
             {
                 temperature = Convert.ToDouble(obj["CurrentTemperature"].ToString());
                 // Convert the value to celsius degrees
                 temperature = (temperature - 2732) / 10.0;
+                obj.Dispose();
             }
             return temperature;
         }
@@ -33,6 +37,7 @@ internal class CPUInfo
             return double.NaN;
         }
     }
+
     protected PerformanceCounter counters;
     public static CPUInfo Create()
     {
@@ -41,6 +46,7 @@ internal class CPUInfo
         ci.counters.NextValue();
         return ci;
     }
+
     public void Dispose()
     {
         counters.Dispose();
@@ -88,31 +94,35 @@ internal class NetworkInfo
     public static async Task<NetworkInfo> Create()
     {
         var ni = new NetworkInfo();
-        //无法直接判断事例是否有效，用try catch 但是严重影响性能
+        //无法直接判断实例是否有效，用try catch 但是严重影响性能
         //所以丢到线程里去初始化，不要影响UI加载
-        await Task.Run(() => { 
-        List<PerformanceCounter> pcs = new();
-        List<PerformanceCounter> pcs2 = new();
-        string[] names = GetAdapter();
-        foreach (string name in names)
+        await Task.Run(() =>
         {
-            try
+            List<PerformanceCounter> pcs = new();
+            List<PerformanceCounter> pcs2 = new();
+            string[] names = GetAdapter();
+            foreach (string name in names)
             {
-                PerformanceCounter pc = new("Network Interface", "Bytes Received/sec", name.Replace('(', '[').Replace(')', ']'), ".");
-                PerformanceCounter pc2 = new("Network Interface", "Bytes Sent/sec", name.Replace('(', '[').Replace(')', ']'), ".");
-                pc.NextValue();
-                pcs.Add(pc);
-                pcs2.Add(pc2);
-            }
-            catch
-            {
-                continue;
-            }
+                PerformanceCounter? pc=null, pc2=null;
+                try
+                {
+                    pc = new("Network Interface", "Bytes Received/sec", name.Replace('(', '[').Replace(')', ']'), ".");
+                    pc2 = new("Network Interface", "Bytes Sent/sec", name.Replace('(', '[').Replace(')', ']'), ".");
+                    pc.NextValue();
+                    pcs.Add(pc);
+                    pcs2.Add(pc2);
+                }
+                catch
+                {
+                    pc?.Dispose();
+                    pc2?.Dispose();
+                    continue;
+                }
 
-        }
-        ni._performanceCounters = new List<PerformanceCounter>[2];
-        ni._performanceCounters[0] = pcs;
-        ni._performanceCounters[1] = pcs2;
+            }
+            ni._performanceCounters = new List<PerformanceCounter>[2];
+            ni._performanceCounters[0] = pcs;
+            ni._performanceCounters[1] = pcs2;
         });
         return ni;
     }
@@ -144,7 +154,7 @@ internal class NetworkInfo
             sent += Convert.ToInt32(pc.NextValue());
         }
 
-        return new string[] { FormatSize(received), FormatSize(sent) };
+        return [FormatSize(received), FormatSize(sent)];
     }
 
     public static string FormatSize(double size)
