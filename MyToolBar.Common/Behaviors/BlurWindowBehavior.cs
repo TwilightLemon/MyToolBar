@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Media;
+using System.Windows.Shell;
 using Microsoft.Win32;
 using Microsoft.Xaml.Behaviors;
 using MyToolBar.Common.WinAPI;
@@ -16,6 +17,20 @@ public class BlurWindowBehavior : Behavior<Window>
     /// </summary>
     public bool IsToolWindow { get; set; } = false;
 
+    private WindowChrome? _windowChrome = null;
+    public WindowChrome? WindowChromeEx
+    {
+        get => _windowChrome;
+        set
+        {
+            if (_windowChrome != value)
+            {
+                _windowChrome = value;
+                UpdateWindowChromeEx();
+            }
+        }
+    }
+
     private WindowMaterial _windowMaterial;
 
     /// <summary>
@@ -28,6 +43,12 @@ public class BlurWindowBehavior : Behavior<Window>
         {
             UpdateWindowBlurMode(wac, isDarkMode);
         }
+    }
+
+    private void UpdateWindowChromeEx()
+    {
+        if (_windowMaterial != null && WindowChromeEx != null)
+            _windowMaterial.WindowChromeEx = WindowChromeEx;
     }
 
     private static void UpdateWindowBlurMode(WindowMaterial wac, bool isDarkMode, float opacity = 0)
@@ -78,7 +99,7 @@ public class BlurWindowBehavior : Behavior<Window>
         {
             _allWindowMaterialManager.Remove(AssociatedObject);
             acc.UseWindowComposition = false;
-            acc.MaterialMode = MaterialMode.None;
+            acc.MaterialMode = MaterialType.None;
         }
     }
 
@@ -95,6 +116,8 @@ public class BlurWindowBehavior : Behavior<Window>
         var wac = new WindowMaterial();
         wac.MaterialMode = Mode;
         wac.UseWindowComposition = IsToolWindow;
+        if (WindowChromeEx != null)
+            wac.WindowChromeEx = WindowChromeEx;
         UpdateWindowBlurMode(wac, isDarkMode);
         WindowMaterial.SetMaterial(AssociatedObject, wac);
         return wac;
@@ -109,20 +132,20 @@ public class BlurWindowBehavior : Behavior<Window>
 
 
 
-    public MaterialMode Mode
+    public MaterialType Mode
     {
-        get { return (MaterialMode)GetValue(ModeProperty); }
+        get { return (MaterialType)GetValue(ModeProperty); }
         set { SetValue(ModeProperty, value); }
     }
 
     public static readonly DependencyProperty ModeProperty =
-        DependencyProperty.Register("Mode", typeof(MaterialMode), typeof(BlurWindowBehavior),
-            new PropertyMetadata(MaterialMode.Acrylic,OnModeChanged));
+        DependencyProperty.Register("Mode", typeof(MaterialType), typeof(BlurWindowBehavior),
+            new PropertyMetadata(MaterialType.Acrylic,OnModeChanged));
     public static void OnModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is BlurWindowBehavior behavior)
         {
-            behavior.WindowMaterial.MaterialMode = (MaterialMode)e.NewValue;
+            behavior.WindowMaterial.MaterialMode = (MaterialType)e.NewValue;
         }
     }
 

@@ -3,18 +3,23 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Shell;
 
 namespace MyToolBar.Common.WinAPI;
+
 public class WindowMaterial : DependencyObject
 {
     /// <summary>
-    /// 指示内部使用的API类型
+    /// 调用API的类型
     /// </summary>
-    internal enum APIType
+    private enum APIType
     {
         NONE, SYSTEMBACKDROP, COMPOSITION
     }
-    public Window? AttachedWindow
+    /// <summary>
+    /// 所附加的窗口
+    /// </summary>
+    private Window? AttachedWindow
     {
         get => _window;
         set
@@ -24,36 +29,9 @@ public class WindowMaterial : DependencyObject
             {
                 _hWnd = new WindowInteropHelper(_window).Handle;
                 if (_hWnd == IntPtr.Zero)
+                    //窗口句柄未创建
                     value.SourceInitialized += AttachedWindow_SourceInitialized;
                 else InitWindow();
-            }
-        }
-    }
-    private void InitWindow()
-    {
-        _hWnd = new WindowInteropHelper(_window).Handle;
-        SetDarkMode(IsDarkMode);
-        Apply();
-    }
-
-    private void Apply()
-    {
-        bool enable = _window != null && (MaterialMode != MaterialMode.None || UseWindowComposition);
-        if (enable)
-        {
-            //操作系统判定，如果是window10 即使使用MaterialMode也调用CompositionAPI
-            var osVersion = Environment.OSVersion.Version;
-            var windows10_1809 = new Version(10, 0, 17763);
-            var windows11 = new Version(10, 0, 22621);
-            if (UseWindowComposition || (osVersion >= windows10_1809 && osVersion < windows11))
-            {
-                SetWindowProperty(true);
-                SetWindowCompositon(true);
-            }
-            else
-            {
-                SetWindowProperty(false);
-                SetBackDropType(MaterialMode);
             }
         }
     }
@@ -61,8 +39,59 @@ public class WindowMaterial : DependencyObject
     private void AttachedWindow_SourceInitialized(object? sender, EventArgs e)
     {
         InitWindow();
+        _window.SourceInitialized -= AttachedWindow_SourceInitialized;
     }
 
+    /// <summary>
+    /// 初始化时调用
+    /// </summary>
+    private void InitWindow()
+    {
+        _hWnd = new WindowInteropHelper(_window).Handle;
+        if (WindowChromeEx != null)
+        {
+            WindowChrome.SetWindowChrome(_window, WindowChromeEx);
+        }
+        SetDarkMode(IsDarkMode);
+        Apply();
+    }
+
+    private void Apply()
+    {
+        if (_window == null | _hWnd == IntPtr.Zero) return;
+
+        bool enable = MaterialMode != MaterialType.None || UseWindowComposition;
+        if (enable)
+        {
+            //操作系统判定，如果是window10 即使使用MaterialMode也调用CompositionAPI
+            var osVersion = Environment.OSVersion.Version;
+            var windows10_1809 = new Version(10, 0, 17763);
+            var windows11 = new Version(10, 0, 22621);
+            //强制使用或仅支持CompositionAPI的系统
+            if (UseWindowComposition || (osVersion >= windows10_1809 && osVersion < windows11))
+            {
+                SetWindowProperty(true);
+                SetWindowCompositon(true);
+            }
+            else
+            {
+                //先关闭CompositionAPI 如果开启
+                if (CurrentAPI == APIType.COMPOSITION)
+                    SetWindowCompositon(false);
+                SetWindowProperty(false);
+                SetBackDropType(MaterialMode);
+            }
+        }
+        else
+        {
+            if (CurrentAPI == APIType.COMPOSITION)
+                SetWindowCompositon(false);
+            else if (CurrentAPI == APIType.SYSTEMBACKDROP)
+                SetBackDropType(MaterialMode);
+        }
+    }
+
+    #region Window 附加属性
     public static WindowMaterial GetMaterial(Window obj)
     {
         return (WindowMaterial)obj.GetValue(MaterialProperty);
@@ -78,14 +107,18 @@ public class WindowMaterial : DependencyObject
             typeof(WindowMaterial), typeof(WindowMaterial),
             new PropertyMetadata(null, OnMaterialChanged));
 
-    public static void OnMaterialChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void OnMaterialChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is Window w && e.NewValue is WindowMaterial m)
         {
             m.AttachedWindow = w;
         }
     }
-
+    #endregion
+    #region WindowMaterial 依赖属性
+    /// <summary>
+    /// 是否启用暗色模式
+    /// </summary>
     public bool IsDarkMode
     {
         get { return (bool)GetValue(IsDarkModeProperty); }
@@ -96,7 +129,7 @@ public class WindowMaterial : DependencyObject
         DependencyProperty.Register("IsDarkMode",
             typeof(bool), typeof(WindowMaterial),
             new PropertyMetadata(false, OnIsDarkModeChanged));
-    public static void OnIsDarkModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void OnIsDarkModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is WindowMaterial w)
         {
@@ -104,31 +137,51 @@ public class WindowMaterial : DependencyObject
         }
     }
 
-
-    public MaterialMode MaterialMode
+    /// <summary>
+    /// 指定窗口的材质类型
+    /// </summary>
+    public MaterialType MaterialMode
     {
-        get { return (MaterialMode)GetValue(MaterialModeProperty); }
+        get { return (MaterialType)GetValue(MaterialModeProperty); }
         set { SetValue(MaterialModeProperty, value); }
     }
 
     public static readonly DependencyProperty MaterialModeProperty =
         DependencyProperty.Register("MaterialMode",
-            typeof(MaterialMode), typeof(WindowMaterial),
-            new PropertyMetadata(MaterialMode.None, OnMaterialModeChanged));
-    public static void OnMaterialModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+            typeof(MaterialType), typeof(WindowMaterial),
+            new PropertyMetadata(MaterialType.None, OnMaterialModeChanged));
+    private static void OnMaterialModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is WindowMaterial m)
         {
-            if (m.CurrentAPI != APIType.COMPOSITION)
-            {
-                if (m.CurrentAPI != APIType.SYSTEMBACKDROP)
-                    m.SetWindowProperty(false);
-                m.SetBackDropType((MaterialMode)e.NewValue);
-            }
+            m.Apply();
         }
     }
 
+    /// <summary>
+    /// 另需指定的WindowChrome
+    /// </summary>
+    public WindowChrome WindowChromeEx
+    {
+        get { return (WindowChrome)GetValue(WindowChromeExProperty); }
+        set { SetValue(WindowChromeExProperty, value); }
+    }
 
+    public static readonly DependencyProperty WindowChromeExProperty =
+        DependencyProperty.Register("WindowChromeEx",
+            typeof(WindowChrome), typeof(WindowMaterial),
+            new PropertyMetadata(null, OnWindowChromeExChanged));
+
+    private static void OnWindowChromeExChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is WindowMaterial { } m && e.NewValue is WindowChrome { } wc && m._window != null)
+        {
+            //如果WindowChrome直接附加在窗口上会覆盖掉我们设置的GlassFrameThickness
+            //故这里的设计是将WindowChrome附加在WindowMaterial上进行管理
+            WindowChrome.SetWindowChrome(m._window, wc);
+            m.Apply();
+        }
+    }
 
     public bool UseWindowComposition
     {
@@ -141,34 +194,13 @@ public class WindowMaterial : DependencyObject
             typeof(bool), typeof(WindowMaterial),
             new PropertyMetadata(false, OnUseWindowCompositionChanged));
 
-    public static void OnUseWindowCompositionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void OnUseWindowCompositionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is WindowMaterial m)
         {
-            if ((bool)e.NewValue)
-            {
-                if (m.CurrentAPI != APIType.COMPOSITION)
-                {
-                    m.SetWindowProperty(true);
-                    m.SetWindowCompositon(true);
-                }
-            }
-            else
-            {
-                m.SetWindowCompositon(false);
-                if (m.MaterialMode != MaterialMode.None)
-                {
-                    m.SetWindowProperty(false);
-                    m.SetBackDropType(m.MaterialMode);
-                }
-            }
+            m.Apply();
         }
     }
-
-
-    private Color _compositionColor;
-    private int _blurColor;
-
 
     public Color CompositonColor
     {
@@ -177,55 +209,48 @@ public class WindowMaterial : DependencyObject
     }
 
     public static readonly DependencyProperty CompositonColorProperty =
-        DependencyProperty.Register("CompositonColor", 
+        DependencyProperty.Register("CompositonColor",
             typeof(Color), typeof(WindowMaterial),
-            new PropertyMetadata(Color.FromArgb(180,0,0,0),OnCompositionColorChanged));
-    public static void OnCompositionColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+            new PropertyMetadata(Color.FromArgb(180, 0, 0, 0), OnCompositionColorChanged));
+    private static void OnCompositionColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is WindowMaterial m)
         {
             m.SetCompositionColor((Color)e.NewValue);
-            if(m.CurrentAPI==APIType.COMPOSITION)
-                m.SetWindowCompositon(true);
+            m.Apply();
         }
     }
+    #endregion
 
     private IntPtr _hWnd = IntPtr.Zero;
     private Window? _window = null;
-    internal APIType CurrentAPI = APIType.NONE;
-    public void SetCompositionColor(Color value)
+    private APIType CurrentAPI = APIType.NONE;
+    private int _blurColor;
+    private void SetCompositionColor(Color value)
     {
-        _compositionColor = value;
-        _blurColor =
-       // 组装红色分量。
-       value.R << 0 |
-       // 组装绿色分量。
-       value.G << 8 |
-       // 组装蓝色分量。
-       value.B << 16 |
-       // 组装透明分量。
-       value.A << 24;
+        _blurColor = value.R << 0 | value.G << 8 | value.B << 16 | value.A << 24;
     }
-    public void SetDarkMode(bool isDarkMode)
+    private void SetDarkMode(bool isDarkMode)
     {
         if (_hWnd == IntPtr.Zero) return;
         MaterialApis.SetDarkMode(_hWnd, isDarkMode);
     }
-    public void SetBackDropType(MaterialMode blurMode)
+    private void SetBackDropType(MaterialType blurMode)
     {
         if (_hWnd == IntPtr.Zero) return;
         MaterialApis.SetBackDropType(_hWnd, blurMode);
-        CurrentAPI = blurMode == MaterialMode.None ? APIType.NONE : APIType.SYSTEMBACKDROP;
+        CurrentAPI = blurMode == MaterialType.None ? APIType.NONE : APIType.SYSTEMBACKDROP;
     }
-    public void SetWindowCompositon(bool enable)
+    private void SetWindowCompositon(bool enable)
     {
         if (_hWnd == IntPtr.Zero) return;
         MaterialApis.SetWindowComposition(_hWnd, enable, _blurColor);
         CurrentAPI = enable ? APIType.COMPOSITION : APIType.NONE;
     }
-    public void SetWindowProperty(bool isLagcy = false)
+    private void SetWindowProperty(bool isLagcy = false)
     {
         if (_hWnd == IntPtr.Zero) return;
+        // 设置窗口背景透明
         var hwndSource = (HwndSource)PresentationSource.FromVisual(_window);
         hwndSource.CompositionTarget.BackgroundColor = Colors.Transparent;
 
@@ -242,13 +267,18 @@ public class WindowMaterial : DependencyObject
         MaterialApis.DwmExtendFrameIntoClientArea(hwndSource.Handle, ref margins);
     }
 }
-public enum MaterialMode
+
+/// <summary>
+/// 材质类型
+/// </summary>
+public enum MaterialType
 {
     None = 1,
     Acrylic = 3,
     Mica = 2,
-    Tabbed = 4
+    MicaAlt = 4
 }
+
 internal static class MaterialApis
 {
 
@@ -268,14 +298,8 @@ internal static class MaterialApis
     [DllImport("user32.dll")]
     private static extern int SetWindowCompositionAttribute(IntPtr hwnd, ref WindowCompositionAttributeData data);
 
-    [DllImport("user32.dll")]
-    private static extern bool GetWindowCompositionAttribute(IntPtr hwnd, ref WindowCompositionAttributeData data);
-
     private enum AccentState
     {
-        /// <summary>
-        /// 完全禁用 DWM 的叠加特效。
-        /// </summary>
         ACCENT_DISABLED = 0,
         ACCENT_ENABLE_GRADIENT = 1,
         ACCENT_ENABLE_TRANSPARENTGRADIENT = 2,
@@ -341,7 +365,7 @@ internal static class MaterialApis
         SetWindowCompositionAttribute(handle, ref data);
         Marshal.FreeHGlobal(data.Data);
     }
-    public static void SetBackDropType(IntPtr handle, MaterialMode mode)
+    public static void SetBackDropType(IntPtr handle, MaterialType mode)
     {
         SetWindowAttribute(
             handle,

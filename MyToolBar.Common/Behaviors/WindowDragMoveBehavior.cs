@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Input;
 using Microsoft.Xaml.Behaviors;
 
 namespace MyToolBar.Common.Behaviors
@@ -8,23 +9,23 @@ namespace MyToolBar.Common.Behaviors
         protected override void OnAttached()
         {
             base.OnAttached();
-
-            AssociatedObject.MouseLeftButtonDown += AssociatedObject_MouseDown;
+            AssociatedObject.MouseLeftButtonDown += AssociatedObject_MouseLeftButtonDown;
         }
 
+        private void AssociatedObject_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is Window w)
+            {
+                if (e.LeftButton == MouseButtonState.Pressed)
+                {
+                    w.DragMove();
+                }
+            }
+        }
         protected override void OnDetaching()
         {
             base.OnDetaching();
-
-            AssociatedObject.MouseLeftButtonDown -= AssociatedObject_MouseDown;
-        }
-
-        private void AssociatedObject_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            if (sender is not Window window)
-                return;
-
-            window.DragMove();
+            AssociatedObject.MouseLeftButtonDown -= AssociatedObject_MouseLeftButtonDown;
         }
     }
 }

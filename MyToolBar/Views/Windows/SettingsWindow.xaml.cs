@@ -1,21 +1,17 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json.Nodes;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using MyToolBar.ViewModels;
 using System.Windows.Navigation;
-using MyToolBar.Common;
-using System.Diagnostics;
 using MyToolBar.Common.WinAPI;
+using MyToolBar.Common.UIBases;
 
 namespace MyToolBar.Views.Windows
 {
     /// <summary>
     /// SettingsWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class SettingsWindow : Window
+    public partial class SettingsWindow : FluentWindowBase
     {
         public SettingsWindow(SettingsViewModel viewModel)
         {
@@ -29,7 +25,6 @@ namespace MyToolBar.Views.Windows
         private  void SettingsWindow_Loaded(object sender, RoutedEventArgs e)
         {
             ViewModel.SelectedPage = ViewModel.SettingsPages.FirstOrDefault();
-            WindowLongAPI.EnableDwnAnimation(this);
         }
 
         public SettingsViewModel ViewModel { get; }
