@@ -19,6 +19,7 @@ using System.Windows.Interop;
 using System.Diagnostics;
 using MyToolBar.Common.Behaviors;
 using System.Windows.Threading;
+using System.Threading.Tasks;
 
 namespace MyToolBar.Views.Windows
 {
@@ -97,11 +98,13 @@ namespace MyToolBar.Views.Windows
 
             #region Load Plugin
             _pluginReactiveService.OuterControlChanged += _pluginReactiveService_OuterControlChanged;
+            _pluginReactiveService.OuterControlRemoved += _pluginReactiveService_OuterControlRemoved;
             _pluginReactiveService.CapsuleRemoved += _pluginReactiveService_CapsuleRemoved;
             _pluginReactiveService.CapsuleAdded += _pluginReactiveService_CapsuleAdded;
             await _pluginReactiveService.Load();
             #endregion
         }
+
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             ActiveWindow.UnregisterActiveWindowHook(_activeWindowHook);
@@ -170,13 +173,35 @@ namespace MyToolBar.Views.Windows
         /// 响应OuterControl组件更换
         /// </summary>
         /// <param name="obj"></param>
-        private void _pluginReactiveService_OuterControlChanged(OuterControlBase obj) {
-            _oc?.Dispose();
-            _oc = null;
-            OuterFunc.Children.Clear();
+        private async void _pluginReactiveService_OuterControlChanged(OuterControlBase obj) {
+            if (_oc != null)
+            {
+                ShowOuter(false);
+                _oc.Dispose();
+                _oc = null;
+                OuterFunc.Children.Clear();
+                await Task.Delay(800);
+            }
+            OuterControlCol.Width = new GridLength(1.2, GridUnitType.Star);
             _oc = obj;
             _oc.IsShownChanged += Oc_IsShownChanged;
             OuterFunc.Children.Add(_oc);
+        }
+        /// <summary>
+        /// OuterControl组件移除
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
+        private async void _pluginReactiveService_OuterControlRemoved()
+        {
+            if(_oc != null)
+            {
+                ShowOuter(false);
+                _oc.Dispose();
+                _oc = null;
+                OuterFunc.Children.Clear();
+                await Task.Delay(1200);
+                OuterControlCol.Width = new GridLength(0, GridUnitType.Star);
+            }
         }
         #endregion
 
@@ -192,39 +217,42 @@ namespace MyToolBar.Views.Windows
         /// <param name="show">open or close</param>
         private void ShowOuter(bool show = true)
         {
+            OuterFuncStatus.BeginAnimation(MarginProperty, null);
+            OuterFunc.BeginAnimation(OpacityProperty, null);
+
             Storyboard sb = new();
-            if (OuterFunc.ActualWidth == 0)
-                OuterFunc.Visibility = Visibility.Visible;
-            double hWidth = OuterFunc.ActualWidth/2;
-            DoubleAnimation da;
             ThicknessAnimation de;
             if (show && !isOuterShow)
             {
-                de = new(new Thickness(hWidth, 0, hWidth, 0), new Thickness(0), TimeSpan.FromSeconds(0.5));
-                da = new DoubleAnimation(0, 1, TimeSpan.FromSeconds(0.5));
+                //open
+                OuterFuncStatus.Visibility = Visibility.Visible;
+                double hWidth = OuterFuncStatus.ActualWidth / 2;
+
+                de = new(new Thickness(hWidth, 0, hWidth, 0), new Thickness(0), TimeSpan.FromSeconds(0.4));
+                de.EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut };
                 isOuterShow = true;
             }
             else if (!show && isOuterShow)
             {
+                //close
+                double hWidth = OuterFuncStatus.ActualWidth / 2;
                 de = new(new Thickness(0), new Thickness(hWidth, 0, hWidth, 0), TimeSpan.FromSeconds(0.5));
-                da = new DoubleAnimation(1, 0, TimeSpan.FromSeconds(0.4));
+                de.EasingFunction = new ElasticEase() { Oscillations = 1, Springiness=5, EasingMode = EasingMode.EaseIn };
                 isOuterShow = false;
+                sb.Completed += OuterControlClosingAni;
             }
             else
                 return;
-            de.EasingFunction = da.EasingFunction = new QuarticEase();
-            sb.Children.Add(da);
             sb.Children.Add(de);
-            Storyboard.SetTarget(da, OuterFuncStatus);
             Storyboard.SetTarget(de, OuterFuncStatus);
-            Storyboard.SetTargetProperty(da, new PropertyPath(OpacityProperty));
             Storyboard.SetTargetProperty(de, new PropertyPath(MarginProperty));
-            sb.Completed += OuterControlClosingAni;
             sb.Begin();
         }
         private void OuterControlClosingAni(object? sender, EventArgs e)
         {
             OuterFuncStatus.Visibility = isOuterShow ? Visibility.Visible : Visibility.Hidden;
+            OuterFuncStatus.BeginAnimation(MarginProperty, null);
+            OuterFunc.BeginAnimation(OpacityProperty, null);
         }
         #endregion
 

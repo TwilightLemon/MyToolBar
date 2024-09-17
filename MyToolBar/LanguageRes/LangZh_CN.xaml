@@ -19,6 +19,9 @@
     <sys:String x:Key="SettingsWindow_Enable">启用</sys:String>
     <sys:String x:Key="SettingsWindow_PluginSettings">插件设置项</sys:String>
     <!--App Settings-->
+    <sys:String x:Key="AppSettings_Group_Appearence">外观</sys:String>
+    <sys:String x:Key="AppSettings_Group_Behavior">行为</sys:String>
+
     <sys:String x:Key="AppSettings_Item_AlwaysUseImmerseMode">始终启用沉浸模式</sys:String>
     <sys:String x:Key="AppSettings_Item_AutoRunAtStartup">开机自启动</sys:String>
     <sys:String x:Key="AppSettings_Item_Language">语言</sys:String>
@@ -28,6 +31,9 @@
     <sys:String x:Key="AppSettings_Item_WebProxy_ProxyPort">端口</sys:String>
     <sys:String x:Key="AppSettings_Item_WebProxy_ProxyUsername">用户名</sys:String>
     <sys:String x:Key="AppSettings_Item_WebProxy_ProxyPassword">密码</sys:String>
+
+    <!--OuterControl Settings Page-->
+    <sys:String x:Key="OuterControlSettings_Remove">移除外部控制（部分会自动隐藏）</sys:String>
 
     <!--Converter Texts-->
     <sys:String x:Key="AS_Proxy_None">不使用代理</sys:String>

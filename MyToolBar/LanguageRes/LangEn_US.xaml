@@ -20,6 +20,9 @@
     <sys:String x:Key="SettingsWindow_PluginSettings">Plugin Settings</sys:String>
 
     <!--App Settings-->
+    <sys:String x:Key="AppSettings_Group_Appearence">Appearence</sys:String>
+    <sys:String x:Key="AppSettings_Group_Behavior">Behaviors</sys:String>
+
     <sys:String x:Key="AppSettings_Item_AlwaysUseImmerseMode">Alway use immerse mode</sys:String>
     <sys:String x:Key="AppSettings_Item_AutoRunAtStartup">Auto run at startup</sys:String>
     <sys:String x:Key="AppSettings_Item_Language">Language</sys:String>
@@ -29,7 +32,10 @@
     <sys:String x:Key="AppSettings_Item_WebProxy_ProxyPort">Proxy Port</sys:String>
     <sys:String x:Key="AppSettings_Item_WebProxy_ProxyUsername">Proxy Username</sys:String>
     <sys:String x:Key="AppSettings_Item_WebProxy_ProxyPassword">Proxy Password</sys:String>
-    
+
+    <!--OuterControl Settings Page-->
+    <sys:String x:Key="OuterControlSettings_Remove">Remove Outer Control (some of them hide automatically)</sys:String>
+
     <!--Converter Texts-->
     <sys:String x:Key="AS_Proxy_None">None</sys:String>
     <sys:String x:Key="AS_Proxy_Global">Global</sys:String>

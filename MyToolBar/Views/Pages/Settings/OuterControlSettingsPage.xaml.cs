@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using MyToolBar.Plugin;
 using MyToolBar.Services;
 
@@ -40,7 +29,7 @@ namespace MyToolBar.Views.Pages.Settings
             var plugins=_managedPackageService.GetTypePlugins(PluginType.OuterControl);
             this.DataContext = plugins;
             //寻找当前已启用的OuterControl，并选中
-            if(plugins.FirstOrDefault(plugins => _pluginReactiveService.OuterControl == plugins) is IPlugin plugin)
+            if (plugins.FirstOrDefault(plugins => _pluginReactiveService.OuterControl == plugins) is IPlugin plugin)
             {
                 OCPluginList.SelectedItem = plugin;
             }
@@ -52,6 +41,12 @@ namespace MyToolBar.Views.Pages.Settings
             {
                 await _pluginReactiveService.SetOuterControl(plugin);
             }
+        }
+
+        private async void RemoveOuterControlBtn_Click(object sender, RoutedEventArgs e)
+        {
+            await _pluginReactiveService.RemoveOuterControl();
+            OCPluginList.SelectedItem = null;
         }
     }
 }

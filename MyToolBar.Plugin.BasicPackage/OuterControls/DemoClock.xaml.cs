@@ -50,8 +50,9 @@ namespace MyToolBar.Plugin.BasicPackage.OuterControls
 
         private async void DemoClock_Loaded(object sender, RoutedEventArgs e)
         {
-            IsShown = true;
             await settingsMgr.Load();
+            RefreshTime(null, null);
+            IsShown = true;
             GlobalService.GlobalTimer.Elapsed += RefreshTime;
         }
         private void maxStyleAct(bool max, Brush? foreColor)
@@ -62,7 +63,6 @@ namespace MyToolBar.Plugin.BasicPackage.OuterControls
         }
         private void RefreshTime(object? sender, System.Timers.ElapsedEventArgs e)
         {
-            var code=this.GetHashCode();
             Dispatcher.Invoke(() =>
             {
                 TimeTb.Text = DateTime.Now.ToString(settingsMgr.Data.FormatStr) + settingsMgr.Data.Sign;

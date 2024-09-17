@@ -42,7 +42,7 @@ namespace MyToolBar.PopupWindows
 
             this.Height = ItemPanel.Children.Count * 40;
         }
-        bool _isSettingsWindowOpen = false;
+        static bool _isSettingsWindowOpen = false;
         private void MenuItem_Settings(object sender, RoutedEventArgs e)
         {
             if (_isSettingsWindowOpen) return;

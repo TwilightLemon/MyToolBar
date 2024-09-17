@@ -6,7 +6,8 @@
                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                        xmlns:local="clr-namespace:ProjTest"
                        mc:Ignorable="d"
-                       ResizeMode="NoResize"
+                       ResizeMode="CanMinimize"
+                       WindowStyle="None"
                        Title="MainWindow"
                        Height="450"
                        Width="800">

@@ -32,19 +32,19 @@
     <Grid x:Name="MainBarGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1.2*"/>
-            <ColumnDefinition Width="1*" />
+            <ColumnDefinition x:Name="OuterControlCol" Width="1.2*"  MaxWidth="680"/>
             <ColumnDefinition Width="1.2*"/>
         </Grid.ColumnDefinitions>
         <Border x:Name="BgImgEffector" Opacity="0" Grid.ColumnSpan="3"/>
         <Border x:Name="MainMenuButton" Cursor="Hand" HorizontalAlignment="Left" Height="25" Width="25" Background="#01000000" MouseDown="MainMenuButton_MouseDown"  Margin="10,0,0,0">
             <Border BorderBrush="{DynamicResource AppBarFontColor}" BorderThickness="2" CornerRadius="25,25,25,25" Width="15" Height="15"/>
         </Border>
-        <Grid x:Name="TittleViewer" TouchLeave="TitleView_TouchDown" Margin="40 0 0 0" Background="#01000000">
-            <TextBlock x:Name="TitleView" TextWrapping="Wrap" Text="Microsoft Visual Studio 2022" VerticalAlignment="Center" Foreground="{DynamicResource AppBarFontColor}"/>
+        <Grid x:Name="TittleViewer" ClipToBounds="True" TouchLeave="TitleView_TouchDown" Margin="40 0 0 0" Background="#01000000">
+            <TextBlock x:Name="TitleView" TextWrapping="Wrap" d:Text="Microsoft Visual Studio 2022" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="{DynamicResource AppBarFontColor}"/>
         </Grid>
         <Border x:Name="OuterFuncStatus" Grid.Column="1" 
                 Background="{DynamicResource HighlightColor}" CornerRadius="15"
-                Visibility="Hidden" d:Visibility="Visible">
+                Visibility="Hidden" d:Visibility="Visible" Margin="0 0 0 0">
             <Grid x:Name="OuterFunc" Background="Transparent"/>
         </Border>
         <WrapPanel x:Name="CapsulePanel" 

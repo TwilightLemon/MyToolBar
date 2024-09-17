@@ -57,7 +57,7 @@ public class SMTCHelper(GlobalSystemMediaTransportControlsSession session)
         return _globalSMTCSession.GetPlaybackInfo().PlaybackStatus;
     }
 
-    public string GetAppMediaId() => _globalSMTCSession.SourceAppUserModelId;
+    public string? GetAppMediaId() => _globalSMTCSession?.SourceAppUserModelId;
 
     public async Task<bool> PlayOrPause()
     {

@@ -30,9 +30,15 @@ namespace MyToolBar.Plugin.BasicPackage.OuterControls
         {
             base.Dispose();
             Dispatcher.Invoke(()=> _musicServier?.Stop());
+            if (_musicServier != null)
+            {
+                _musicServier.OnMsgReceived -= _musicServier_OnMsgReceived;
+                _musicServier.OnClientExited -= _musicServier_OnClientExited;
+            }
             Smtc.MediaPropertiesChanged -= Smtc_MediaPropertiesChanged;
             Smtc.SessionExited -= Smtc_SessionExited;
         }
+
         private Point _touchStart;
         private void LemonAppMusic_StylusDown(object sender, StylusDownEventArgs e)
         {
@@ -88,6 +94,7 @@ namespace MyToolBar.Plugin.BasicPackage.OuterControls
 
         private async void LemonAppMusic_Loaded(object sender, RoutedEventArgs e)
         {
+            IsShown = false;
             Smtc =await SMTCHelper.CreateInstance();
             Smtc.MediaPropertiesChanged += Smtc_MediaPropertiesChanged;
             Smtc.SessionExited += Smtc_SessionExited;
@@ -113,10 +120,7 @@ namespace MyToolBar.Plugin.BasicPackage.OuterControls
                 {
                     BeginLemonAppLyric();
                 }
-                else
-                {
-                    LyricTb.Text = info.Title + " - " + info.Artist;
-                }
+                LyricTb.Text = info.Title + " - " + info.Artist;
             });
         }
         private LemonAppMusicServier? _musicServier = null;
@@ -125,13 +129,23 @@ namespace MyToolBar.Plugin.BasicPackage.OuterControls
             if (_musicServier == null)
             {
                 _musicServier = new();
-                await _musicServier.StartAsync(str =>
-                {
-                    Dispatcher.Invoke(() => {
-                        LyricTb.Text = str;
-                    });
-                });
+                _musicServier.OnMsgReceived += _musicServier_OnMsgReceived;
+                _musicServier.OnClientExited += _musicServier_OnClientExited;
+                await _musicServier.StartAsync();
             }
+        }
+
+        private async void _musicServier_OnClientExited()
+        {
+            if (await Smtc.GetMediaInfoAsync() is { } info)
+                LyricTb.Text = info.Title + " - " + info.Artist;
+        }
+
+        private void _musicServier_OnMsgReceived(string str)
+        {
+            Dispatcher.Invoke(() => {
+                LyricTb.Text = str;
+            });
         }
 
         private void maxStyleAct(bool max,Brush? foreColor) {

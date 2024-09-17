@@ -11,10 +11,11 @@
                        x:Class="MyToolBar.Views.Windows.SettingsWindow"
                        mc:Ignorable="d"
                        ResizeMode="CanMinimize"
+                       WindowStyle="None"
                        Height="550"
                        Width="850"
                        Title="{DynamicResource SettingsWindow_Title}">
-    <DockPanel Background="{DynamicResource WindowBackgroundColor}">
+    <DockPanel>
         <DockPanel DockPanel.Dock="Left"
                    Background="Transparent"
                    Width="200">

@@ -27,6 +27,7 @@ namespace MyToolBar.Services
         public Dictionary<IPlugin, ServiceBase> UserServices { get; } = [];
 
         public event Action<OuterControlBase>? OuterControlChanged;
+        public event Action? OuterControlRemoved;
         public event Action<CapsuleBase>? CapsuleAdded;
         public event Action<IPlugin>? CapsuleRemoved;
 
@@ -127,6 +128,18 @@ namespace MyToolBar.Services
                 }
             }
             return true;
+        }
+        public async Task<bool> RemoveOuterControl()
+        {
+            if (OuterControl != null)
+            {
+                OuterControl= null;
+                OuterControlRemoved?.Invoke();
+                _installedConf.Data.OutterControl = null;
+                await _installedConf.Save();
+                return true;
+            }
+            return false;
         }
 
         public async Task<bool> AddUserService(IPlugin plugin, bool saveConf = true)

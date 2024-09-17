@@ -161,7 +161,11 @@ public static class WindowLongAPI
     public static void EnableDwnAnimation(Window w)
     {
         var myHWND = new WindowInteropHelper(w).Handle;
-        IntPtr myStyle = new IntPtr(WS.WS_CAPTION);
+        IntPtr myStyle = new(WS.WS_CAPTION | WS.WS_THICKFRAME | WS.WS_MAXIMIZEBOX | WS.WS_MINIMIZEBOX);
+        if (w.ResizeMode == ResizeMode.NoResize || w.ResizeMode == ResizeMode.CanMinimize)
+        {
+            myStyle = new(WS.WS_CAPTION | WS.WS_MINIMIZEBOX);
+        }
         SetWindowLong(myHWND, (int)GetWindowLongFields.GWL_STYLE, myStyle);
     }
 
