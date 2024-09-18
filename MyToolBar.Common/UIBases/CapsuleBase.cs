@@ -1,49 +1,64 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media.Animation;
+﻿using System.Windows;
+using System.Windows.Input;
 
 namespace MyToolBar.Common.UIBases
 {
     /// <summary>
     /// 为Capsule提供基类
     /// </summary>
-    public class CapsuleBase : UserControl
+    public class CapsuleBase : ItemBase
     {
-        public CapsuleBase()
-        {
-            Initialized += CapsuleBase_Initialized;
-        }
-        protected Grid? _Container;
-        protected Border? _ViewMask;
         public virtual void Install() { }
         public virtual void Uninstall() { }
-        private void CapsuleBase_Initialized(object? sender, EventArgs e)
+
+        public Type? PopupWindowType { get; set; }
+        public bool IsPopupWindowOpen { get; set; } = false;
+        public WeakReference<PopupWindowBase>? PopupWindowInstance { get; set; }
+
+        protected virtual void SetPopupProperty()
         {
-            if (Content is Grid g)
+            if(PopupWindowInstance!=null&&PopupWindowInstance.TryGetTarget(out var window))
             {
-                _Container = g;
-                _ViewMask = new Border()
-                {
-                    CornerRadius = new CornerRadius(12),
-                    Opacity = 0
-                };
-                _ViewMask.SetResourceReference(BackgroundProperty, "MaskColor");
-                MouseEnter += delegate
-                {
-                    _ViewMask.Opacity = 1;
-                };
-                MouseLeave += delegate
-                {
-                    _ViewMask.Opacity = 0;
-                };
-                //插入到最底层
-                _Container.Children.Insert(0, _ViewMask);
+                window.Closed += delegate { IsPopupWindowOpen = false; };
+                window.Left = GlobalService.GetPopupWindowLeft(this, window);
             }
+        }
+        protected virtual void RequestPopup()
+        {
+            if (IsPopupWindowOpen|| PopupWindowType==null ||
+                PopupWindowType.IsAssignableFrom(typeof(PopupWindowBase)))
+                return;
+
+            if(Activator.CreateInstance(PopupWindowType) is PopupWindowBase window)
+            {
+                PopupWindowInstance = new WeakReference<PopupWindowBase>(window);
+                SetPopupProperty();
+                window.Show();
+                IsPopupWindowOpen = true;
+            }
+        }
+
+        protected override void OnInitialized(EventArgs e)
+        {
+            base.OnInitialized(e);
+            PreviewStylusDown += CapsuleBase_PreviewStylusDown;
+            StylusLeave += CapsuleBase_StylusLeave;
+            Click += delegate { RequestPopup(); };
+        }
+
+        private Point _startPosition;
+        private void CapsuleBase_StylusLeave(object sender, StylusEventArgs e)
+        {
+            Point endPoint= e.GetPosition(this);
+            //向下滑动
+            if (endPoint.Y - _startPosition.Y > 0)
+                RequestPopup();
+        }
+
+        private void CapsuleBase_PreviewStylusDown(object sender, StylusDownEventArgs e)
+        {
+            if (e.StylusDevice != null)//防止mouse触发
+                _startPosition = e.GetPosition(this);
         }
     }
 }

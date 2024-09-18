@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using System.Windows.Media.Animation;
 
 namespace MyToolBar.Common.UIBases
 {
     /// <summary>
-    /// 为可交互Item提供基类 ViewMask 基本视觉样式 与Click事件与Command绑定
+    /// 为可交互Item提供基类 ViewMask 基本视觉样式 Click事件与Command绑定
     /// 要求Content为Grid
     /// </summary>
     public class ItemBase:UserControl
@@ -31,13 +26,12 @@ namespace MyToolBar.Common.UIBases
                 _Container = g;
                 _ViewMask = new Border()
                 {
-                    CornerRadius=new CornerRadius(15),
+                    CornerRadius=new CornerRadius(12),
                     Opacity=0
                 };
                 _ViewMask.SetResourceReference(BackgroundProperty, "MaskColor");
                 MouseEnter += delegate {
-                    _ViewMask.Opacity = 0.5;
-                   // _ViewMask.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 0.5, TimeSpan.FromMilliseconds(300)));
+                    _ViewMask.Opacity = 1;
                 };
                 MouseLeave += delegate
                 {
@@ -70,10 +64,10 @@ namespace MyToolBar.Common.UIBases
 
 
         public static readonly DependencyProperty CommandProperty =
-            MenuItem.CommandProperty.AddOwner(typeof(ItemBase));
+            ButtonBase.CommandProperty.AddOwner(typeof(ItemBase));
 
         public static readonly DependencyProperty CommandParameterProperty =
-            MenuItem.CommandParameterProperty.AddOwner(typeof(ItemBase));
+            ButtonBase.CommandParameterProperty.AddOwner(typeof(ItemBase));
 
 
 
@@ -92,7 +86,7 @@ namespace MyToolBar.Common.UIBases
             IsPressedPropertyKey.DependencyProperty;
 
         public static readonly RoutedEvent ClickEvent =
-            MenuItem.ClickEvent.AddOwner(typeof(ItemBase));
+            ButtonBase.ClickEvent.AddOwner(typeof(ItemBase));
 
         private void SetIsPressed(bool value)
         {
@@ -118,7 +112,7 @@ namespace MyToolBar.Common.UIBases
 
         protected virtual void OnClick()
         {
-            RoutedEventArgs newEventArgs = new RoutedEventArgs(MenuItem.ClickEvent, this);
+            RoutedEventArgs newEventArgs = new RoutedEventArgs(ButtonBase.ClickEvent, this);
             RaiseEvent(newEventArgs);
 
             if (Command is ICommand command)

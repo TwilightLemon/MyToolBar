@@ -47,6 +47,23 @@
                 Visibility="Hidden" d:Visibility="Visible" Margin="0 0 0 0">
             <Grid x:Name="OuterFunc" Background="Transparent"/>
         </Border>
+        <Border x:Name="NotificationBox"
+                CornerRadius="15"
+                Background="Black"
+                Grid.ColumnSpan="3"
+                Visibility="Collapsed"
+                HorizontalAlignment="Center">
+            <Grid>
+                <TextBlock x:Name="NotificationContent"
+                           VerticalAlignment="Center"
+                           Foreground="White"
+                           TextAlignment="Center"
+                           Margin="10 0 10 0"
+                           d:Text="Notification">
+
+                </TextBlock>
+            </Grid>
+        </Border>
         <WrapPanel x:Name="CapsulePanel" 
                    HorizontalAlignment="Right" 
                    Orientation="Vertical"

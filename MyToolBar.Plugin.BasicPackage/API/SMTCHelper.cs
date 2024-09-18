@@ -47,8 +47,15 @@ public class SMTCHelper(GlobalSystemMediaTransportControlsSession session)
 
     public async Task<GlobalSystemMediaTransportControlsSessionMediaProperties?> GetMediaInfoAsync()
     {
-        if (_globalSMTCSession == null) return null;
-        return await _globalSMTCSession.TryGetMediaPropertiesAsync();
+        try
+        {
+            if (_globalSMTCSession == null) return null;
+            return await _globalSMTCSession.TryGetMediaPropertiesAsync();
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     public GlobalSystemMediaTransportControlsSessionPlaybackStatus? GetPlaybackStatus()

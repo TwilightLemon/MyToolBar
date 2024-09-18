@@ -91,6 +91,7 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
         public WeatherCap()
         {
             InitializeComponent();
+            PopupWindowType = typeof(WeatherBox);
             InitLangRes();
         }
         private void InitLangRes()
@@ -182,27 +183,24 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
                 Dispatcher.Invoke(async () => await LoadWeatherData());
             }
         }
-        private bool BoxShowed = false;
-        private async void ShowWeatherBox()
+
+        protected override void RequestPopup()
         {
             if (string.IsNullOrEmpty(KeyMgr.Data.key))
             {
                 return;
             }
-            if (BoxShowed) return;
-            try
+
+            base.RequestPopup();
+        }
+        protected override async void SetPopupProperty()
+        {
+            base.SetPopupProperty();
+            if (PopupWindowInstance != null && PopupWindowInstance.TryGetTarget(out var window) && window is WeatherBox wb)
             {
-                if (cache.DataCache[cache.DefaultCity.Id].CurrentWeather == null)
-                    await LoadWeatherData();
+                await wb.LoadData(cache.DefaultCity, cache);
+                wb.DefaultCityChanged += Wb_DefaultCityChanged;
             }
-            catch { }
-            var wb = new WeatherBox();
-            wb.Closed += delegate { BoxShowed = false; };
-            await wb.LoadData(cache.DefaultCity, cache);
-            wb.DefaultCityChanged += Wb_DefaultCityChanged;
-            wb.Left = GlobalService.GetPopupWindowLeft(this, wb);
-            wb.Show();
-            BoxShowed = true;
         }
 
         private async void Wb_DefaultCityChanged(object? sender, WeatherApi.City e)
@@ -211,16 +209,6 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
             cache.DefaultCity = e;
             cache.SaveCache();
             await LoadWeatherData();
-        }
-
-        private void UserControl_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            ShowWeatherBox();
-        }
-
-        private void UserControl_TouchEnter(object sender, TouchEventArgs e)
-        {
-            ShowWeatherBox();
         }
     }
 }

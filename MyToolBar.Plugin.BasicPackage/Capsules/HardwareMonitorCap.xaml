@@ -4,8 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:base="clr-namespace:MyToolBar.Common.UIBases;assembly=MyToolBar.Common"
-             TouchLeave="uc_TouchLeave"
-             mc:Ignorable="d" Height="30" MouseLeftButtonUp="uc_MouseLeftButtonUp" Cursor="Hand">
+             mc:Ignorable="d" Height="30">
     <base:CapsuleBase.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

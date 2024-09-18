@@ -4,4 +4,6 @@
     <sys:String x:Key="Tip_Locating">Locating...</sys:String>
     <sys:String x:Key="Tip_Loading">Loading...</sys:String>
 
+    <sys:String x:Key="Notify_BatteryLow">Battery is low! </sys:String>
+
 </ResourceDictionary>

@@ -30,7 +30,7 @@ namespace MyToolBar.Services
         public Task StartAsync(CancellationToken cancellationToken)
         {
             //异常捕获+写日志
-#if !DEBUG
+#if DEBUG
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             App.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;

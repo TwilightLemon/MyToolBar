@@ -19,6 +19,7 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
         public HardwareMonitorCap()
         {
             InitializeComponent();
+            PopupWindowType = typeof(ResourceMonitor);
             InitLangRes();
         }
         private void InitLangRes()
@@ -78,25 +79,11 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
             Battery_text.Text = battery + "%";
             Battery_value.SetResourceReference(ForegroundProperty, battery <= 20?"Battery_Emergency":"Battery_Normal");
 
-        }
-        private bool BoxShowed = false;
-        private void OpenBox()
-        {
-            if (BoxShowed) return;
-            var w = new ResourceMonitor();
-            w.Left = GlobalService.GetPopupWindowLeft(this, w);
-            w.Closing += delegate { BoxShowed = false; };
-            w.Show();
-            BoxShowed = true;
-        }
-        private void uc_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            OpenBox();
-        }
-
-        private void uc_TouchLeave(object sender, TouchEventArgs e)
-        {
-            OpenBox();
+            //Notify
+            if(battery == 19)
+            {
+                NotificationManager.Send(new((string)FindResource("Notify_BatteryLow"), NotificationType.Warning, null, NotificationTimeSpan.Short));
+            }
         }
     }
 }

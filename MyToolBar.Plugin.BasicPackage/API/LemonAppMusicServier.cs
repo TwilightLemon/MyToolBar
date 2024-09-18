@@ -12,8 +12,8 @@ internal class LemonAppMusicServier
     private Mutex _mutex;
     private bool _isRunning = false;
 
-    public event Action<string> OnMsgReceived;
-    public event Action OnClientExited;
+    public event Action<string>? OnMsgReceived;
+    public event Action? OnClientExited;
 
     public LemonAppMusicServier()
     {

@@ -8,6 +8,12 @@ using MyToolBar.Common;
 using System.IO;
 using System.Threading.Tasks;
 
+/*
+ TODO: Plugin 加载模式改为从文件夹中加载；
+             新增方法：解包和验证
+ */
+
+
 namespace MyToolBar.Services;
 /// <summary>
 /// 托管的插件包管理服务 包括插件加载与设置Sign托管

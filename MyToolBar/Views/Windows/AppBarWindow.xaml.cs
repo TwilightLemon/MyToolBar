@@ -20,13 +20,14 @@ using System.Diagnostics;
 using MyToolBar.Common.Behaviors;
 using System.Windows.Threading;
 using System.Threading.Tasks;
+using MyToolBar.Common;
 
 namespace MyToolBar.Views.Windows
 {
     /// <summary>
     /// [Main] AppBar Window
     /// </summary>
-    public partial class AppBarWindow : Window
+    public partial class AppBarWindow : Window,INotificationReceiver
     {
         private OuterControlBase? _oc;
         private PenControlWindow? _pcw;
@@ -84,6 +85,8 @@ namespace MyToolBar.Views.Windows
             {
                 Dispatcher.Invoke(OnActiveWindowUpdated);
             });
+            //注册NotificationReceiver
+            NotificationManager.RegisterReceiver(this);
             #endregion
 
             #region Pen Package
@@ -202,6 +205,85 @@ namespace MyToolBar.Views.Windows
                 await Task.Delay(1200);
                 OuterControlCol.Width = new GridLength(0, GridUnitType.Star);
             }
+        }
+        #endregion
+
+        #region Notification
+        private bool _isNotificationShown = false;
+        private async Task ShowNotificationBox(Notification notification)
+        {
+            NotificationContent.Text = notification.Msg;
+            NotificationBox.Background= notification.Type switch
+            {
+                NotificationType.Msg => Brushes.Black,
+                NotificationType.Warning => Brushes.HotPink,
+                _ => Brushes.LightGreen
+            };
+            if (_isNotificationShown)
+            {
+                return;
+            }
+            _isNotificationShown = true;
+                        NotificationBox.BeginAnimation(WidthProperty, null);
+            //Show Notification
+            NotificationBox.Visibility = Visibility.Visible;
+            double shownWidth = Math.Min(ActualWidth / 3,680);
+            double minWidth = shownWidth / 2;
+            {
+                Storyboard sb = new();
+                ThicknessAnimationUsingKeyFrames ta = new();
+                ta.KeyFrames.Add(new EasingThicknessKeyFrame(new Thickness(0, -30, 0, 30), TimeSpan.FromMilliseconds(0)));
+                ta.KeyFrames.Add(new EasingThicknessKeyFrame(new Thickness(0), TimeSpan.FromMilliseconds(200)) {EasingFunction=new CubicEase()});
+                Storyboard.SetTarget(ta, NotificationBox);
+                Storyboard.SetTargetProperty(ta, new PropertyPath(MarginProperty));
+                sb.Children.Add(ta);
+
+                DoubleAnimationUsingKeyFrames da = new();
+                da.KeyFrames.Add(new EasingDoubleKeyFrame(minWidth, TimeSpan.FromMilliseconds(100)));
+                da.KeyFrames.Add(new EasingDoubleKeyFrame(shownWidth, TimeSpan.FromMilliseconds(300)) { EasingFunction = new CubicEase() });
+                Storyboard.SetTarget(da, NotificationBox);
+                Storyboard.SetTargetProperty(da, new PropertyPath(WidthProperty));
+                sb.Children.Add(da);
+                sb.Begin();
+            }
+
+            //wait
+            await Task.Delay(notification.TimeSpan switch { 
+                NotificationTimeSpan.Short=>3000,
+                NotificationTimeSpan.Long=>5000,
+                _=> 3000
+            });
+
+            //Hide Notification
+            {
+                Storyboard sb = new();
+                ThicknessAnimationUsingKeyFrames ta = new();
+                ta.KeyFrames.Add(new EasingThicknessKeyFrame(new Thickness(0), TimeSpan.FromMilliseconds(0)));
+                ta.KeyFrames.Add(new EasingThicknessKeyFrame(new Thickness(0), TimeSpan.FromMilliseconds(450)));
+                ta.KeyFrames.Add(new EasingThicknessKeyFrame(new Thickness(0,-30,0,30), TimeSpan.FromMilliseconds(700)) { EasingFunction = new CubicEase() });
+                Storyboard.SetTarget(ta, NotificationBox);
+                Storyboard.SetTargetProperty(ta, new PropertyPath(MarginProperty));
+                sb.Children.Add(ta);
+
+                DoubleAnimationUsingKeyFrames da = new();
+                da.KeyFrames.Add(new EasingDoubleKeyFrame(shownWidth, TimeSpan.FromMilliseconds(0)));
+                da.KeyFrames.Add(new EasingDoubleKeyFrame(minWidth, TimeSpan.FromMilliseconds(500)) { EasingFunction= new ElasticEase() { Oscillations = 1, Springiness = 5, EasingMode = EasingMode.EaseIn }});
+                Storyboard.SetTarget(da, NotificationBox);
+                Storyboard.SetTargetProperty(da, new PropertyPath(WidthProperty));
+                sb.Children.Add(da);
+                sb.Completed += delegate {
+                    NotificationBox.Visibility = Visibility.Collapsed;
+                    _isNotificationShown = false;
+                };
+                sb.Begin();
+            }
+        }
+        public void OnNotificationReceived(Notification notification)
+        {
+            Dispatcher.Invoke(async() =>
+            {
+                await ShowNotificationBox(notification);
+            });
         }
         #endregion
 

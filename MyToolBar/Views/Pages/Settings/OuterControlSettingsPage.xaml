@@ -15,6 +15,12 @@
                        FontSize="22"
                        FontWeight="Bold"
                        Margin="20 20 20 8" />
+            <ws:Button x:Name="testBtn"
+                       Style="{StaticResource SimpleButtonStyleForWs}"
+                       Content="test notification"
+                       Height="48"
+                       Margin="5 0 5 10" 
+                       Click="testBtn_Click"/>
             <ws:Button x:Name="RemoveOuterControlBtn"  Style="{StaticResource SimpleButtonStyleForWs}"
                         Content="{DynamicResource OuterControlSettings_Remove}"
                         Height="48"
