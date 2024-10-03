@@ -140,8 +140,7 @@ public class BlurWindowBehavior : Behavior<Window>
     {
         InitializeBehavior();
     }
-    public WindowMaterial WindowMaterial => _windowMaterial ??
-        throw new InvalidOperationException("Window is not loaded");
+    public WindowMaterial WindowMaterial => _windowMaterial;
 
 
 
@@ -156,7 +155,7 @@ public class BlurWindowBehavior : Behavior<Window>
             new PropertyMetadata(MaterialType.Acrylic,OnModeChanged));
     public static void OnModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is BlurWindowBehavior behavior)
+        if (d is BlurWindowBehavior{ } behavior&& behavior.WindowMaterial!=null)
         {
             behavior.WindowMaterial.MaterialMode = (MaterialType)e.NewValue;
         }

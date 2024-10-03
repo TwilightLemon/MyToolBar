@@ -150,8 +150,10 @@ namespace MyToolBar.Services
 
             if (plugin.GetServiceHost() is ServiceBase { } service)
             {
+                Debug.Assert(plugin.AcPackage != null);
                 UserServices.Add(plugin,service);
                 service.IsRunningChanged += Service_IsRunningChanged;
+                service.OnForceStop += Service_OnForceStop;
                 await service.Start();
                 if (saveConf)
                 {
@@ -164,20 +166,30 @@ namespace MyToolBar.Services
         }
 
         /// <summary>
-        /// UserService自行退出时解除引用
+        /// UserService 强制停止时移除组件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void Service_OnForceStop(object? sender, EventArgs e)
+        {
+            if (sender is ServiceBase { } service &&
+                    UserServices.FirstOrDefault(p => p.Value == service).Key is IPlugin { } plugin)
+            {
+                service.IsRunningChanged -= Service_IsRunningChanged;
+                service.OnForceStop -= Service_OnForceStop;
+                await RemoveUserService(plugin);
+            }
+        }
+
+        /// <summary>
+        /// UserService 更新运行状态
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="isRunning"></param>
-        private async void Service_IsRunningChanged(object? sender, bool isRunning)
+        private void Service_IsRunningChanged(object? sender, bool isRunning)
         {
             Debug.WriteLine(sender + " IsRunning: " + isRunning);
-
-            if (!isRunning&& sender is ServiceBase { } service&&
-                UserServices.FirstOrDefault(p => p.Value == service).Key is IPlugin { } plugin)
-            {
-                service.IsRunningChanged -= Service_IsRunningChanged;
-                await RemoveUserService(plugin);
-            }
+            //TODO:通知SettingsPage和MainWindow更新UI ?
         }
 
         public async Task<bool> RemoveUserService(IPlugin plugin)

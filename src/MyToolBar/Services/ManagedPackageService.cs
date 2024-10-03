@@ -7,6 +7,7 @@ using System.Runtime.Loader;
 using MyToolBar.Common;
 using System.IO;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 /*
  TODO: Plugin 加载模式改为从文件夹中加载；
@@ -162,15 +163,9 @@ public class ManagedPackageService
         }
         //添加到托管包列表
         _managedPkg.Add(pkgObj.PackageName, new ManagedPackage(loadContext, pkgObj,isEnable));
-        if(pkgObj.Plugins!=null)
-        {
-            foreach (var plugin in pkgObj.Plugins)
-            {
-                //设置插件的包源
-                plugin.AcPackage = pkgObj;
-            }
-        }
-        if(!isEnable)
+        pkgObj.Plugins?.ForEach(o => o.AcPackage=pkgObj);
+        Console.WriteLine(pkgObj == null ? "Null" : "Not null");
+        if (!isEnable)
         {
             loadContext.Unload();
         }

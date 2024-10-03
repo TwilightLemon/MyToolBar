@@ -1,0 +1,31 @@
+﻿<Window x:Class="MyToolBar.Plugin.TabletUtils.PenPackages.SideLauncherWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ws="https://schemas.elecho.dev/wpfsuite"
+        mc:Ignorable="d"
+        Left="0"
+        Top="30"
+        Topmost="True"
+        Title="SideLauncherWindow"
+        Height="450"
+        Width="12"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        ShowInTaskbar="False"
+        ResizeMode="NoResize"
+        Background="#01000000">
+    <Canvas>
+        <Border x:Name="ClickBd"
+                Cursor="Hand"
+                Width="12"
+                Height="98"
+                Background="{DynamicResource WindowBackgroundColor}"
+                BorderBrush="{DynamicResource SystemThemeColor}"
+                BorderThickness="0 1.5 1.5 1.5"
+                CornerRadius="0 8 8 0"
+                Visibility="Collapsed"
+                d:Visibility="Visible" />
+    </Canvas>
+</Window>

@@ -6,7 +6,6 @@ using System.Windows.Media.Animation;
 using static MyToolBar.Common.GlobalService;
 using System.Timers;
 using MyToolBar.Common.WinAPI;
-using MyToolBar.PenPackages;
 using MyToolBar.Services;
 using MyToolBar.Common.UIBases;
 using MyToolBar.Plugin;
@@ -27,7 +26,6 @@ namespace MyToolBar.Views.Windows
     public partial class AppBarWindow : Window,INotificationReceiver
     {
         private OuterControlBase? _oc;
-        private PenControlWindow? _pcw;
         private IntPtr _activeWindowHook;
 
         private readonly UIResourceService _themeResourceService;
@@ -84,16 +82,6 @@ namespace MyToolBar.Views.Windows
             });
             //注册NotificationReceiver
             NotificationManager.RegisterReceiver(this);
-            #endregion
-
-            #region Pen Package
-            //存在触摸设备时才启动PenControlWindow
-            if (Tablet.TabletDevices.Count > 0)
-            {
-                _pcw = new PenControlWindow();
-                _pcw.Owner = this;//防止Appbar将其覆盖
-                _pcw.Show();
-            }
             #endregion
 
             #region Load Plugin
@@ -571,12 +559,6 @@ namespace MyToolBar.Views.Windows
                 t.Left = 0;
                 t.Show();
             }
-        }
-
-        private void TitleView_TouchDown(object sender, TouchEventArgs e)
-        {
-            //下滑显示任务视图
-            SendHotKey.ShowTaskView();
         }
         #endregion
     }

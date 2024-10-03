@@ -59,6 +59,7 @@ namespace MyToolBar.Services
                 //加载主窗口
                 var mainWindow = serviceProvider.GetRequiredService<AppBarWindow>();
                 mainWindow.Show();
+                App.Current.MainWindow = mainWindow;
             };
             appSettingsService.Load();
 

@@ -192,7 +192,7 @@
                        Cursor="Hand" CornerRadius="50" Width="50" Height="50" 
                        HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,96"
                        Background="#7FF72121" Click="PInfo_EndBtn_Click" PressedBackground="#B2F72121">
-                <Path Data="{StaticResource Icon_end}" Stretch="Uniform" Width="14" Height="14" Fill="{DynamicResource ForeColor}"/>
+                <Path Data="{StaticResource Icon_close}" Stretch="Uniform" Width="14" Height="14" Fill="{DynamicResource ForeColor}"/>
             </ws:Button>
             <ws:Button x:Name="PInfo_OpenBtn"
                        Cursor="Hand"

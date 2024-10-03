@@ -11,7 +11,7 @@ using MyToolBar.Common;
 using MyToolBar.Common.Behaviors;
 using MyToolBar.Common.WinAPI;
 
-namespace MyToolBar.PenPackages
+namespace MyToolBar.Plugin.TabletUtils.PenPackages
 {
     /// <summary>
     /// DrawboardWindow.xaml 的交互逻辑

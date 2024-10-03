@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MyToolBar.Common\MyToolBar.Common.csproj" />
+    <ProjectReference Include="..\MyToolBar.Plugin\MyToolBar.Plugin.csproj" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="LanguageRes\PluginLang.En-US.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+		</EmbeddedResource>
+		<EmbeddedResource Update="LanguageRes\PluginLang.Zh-CN.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+		</EmbeddedResource>
+	</ItemGroup>
+
+</Project>

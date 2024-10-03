@@ -1,0 +1,39 @@
+﻿<Window x:Class="MyToolBar.Plugin.TabletUtils.PenPackages.SideWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ws="https://schemas.elecho.dev/wpfsuite"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:mb="clr-namespace:MyToolBar.Common.Behaviors;assembly=MyToolBar.Common"
+        mc:Ignorable="d"
+        Title="SideWindow"
+        WindowStyle="None"
+        Background="Transparent"
+        Foreground="{DynamicResource ForeColor}"
+        ShowInTaskbar="False"
+        Topmost="True"
+        ResizeMode="NoResize"
+        ws:WindowOption.Corner="Round"
+        Height="450"
+        Width="500"
+        Top="36"
+        Left="0">
+    <i:Interaction.Behaviors>
+        <mb:BlurWindowBehavior Mode="MicaAlt"/>
+    </i:Interaction.Behaviors>
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary  Source="pack://application:,,,/MyToolBar.Common;component/Styles/UITemplate.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <ws:ScrollViewer  Style="{StaticResource SimpleVerticalScrollViewerStyle}">
+            <ws:StackPanel Spacing="8">
+            </ws:StackPanel>
+        </ws:ScrollViewer>
+
+    </Grid>
+</Window>

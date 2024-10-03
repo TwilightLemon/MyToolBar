@@ -1,0 +1,10 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=netstandard">
+    <!--Drawboard-->
+    <sys:String x:Key="Drawboard_Title">绘板</sys:String>
+    <sys:String x:Key="Drawboard_Tool_ClearAll">清除所有</sys:String>
+    <sys:String x:Key="Drawboard_Tool_Penetrate">穿透模式(双击绘板)</sys:String>
+    <sys:String x:Key="Drawboard_Tool_InsertFromClipboard">插入(双指轻点)</sys:String>
+    <sys:String x:Key="Drawboard_Tool_SwitchPen">切换画笔</sys:String>
+</ResourceDictionary>

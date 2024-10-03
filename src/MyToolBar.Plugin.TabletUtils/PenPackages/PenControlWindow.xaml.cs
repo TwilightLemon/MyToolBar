@@ -6,7 +6,7 @@ using MyToolBar.Common.WinAPI;
 using System.Windows.Media.Animation;
 using MyToolBar.Common;
 
-namespace MyToolBar.PenPackages
+namespace MyToolBar.Plugin.TabletUtils.PenPackages
 {
     /// <summary>
     /// PenControlWindow.xaml 的交互逻辑
