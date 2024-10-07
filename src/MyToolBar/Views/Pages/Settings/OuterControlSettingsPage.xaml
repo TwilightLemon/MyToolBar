@@ -35,7 +35,7 @@
                     <DataTemplate>
                         <Border Height="Auto" Padding="18" Background="Transparent">
                             <TextBlock >
-                                <Run Text="{Binding Name,Mode=OneWay}" FontSize="22" FontWeight="Bold"/>
+                                <Run Text="{Binding DisplayName,Mode=OneWay}" FontSize="22" FontWeight="Bold"/>
                                 <LineBreak/>
                                 <Run Text="{Binding Description,Mode=OneWay}"/>
                             </TextBlock>

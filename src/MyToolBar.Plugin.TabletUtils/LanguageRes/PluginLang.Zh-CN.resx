@@ -120,16 +120,19 @@
   <data name="PackageDesc" xml:space="preserve">
     <value>侧边栏和拓展笔菜单</value>
   </data>
+  <data name="PackageDisplayName" xml:space="preserve">
+    <value>平板设备工具包</value>
+  </data>
   <data name="PenMenuDesc" xml:space="preserve">
     <value>从屏幕右上角划过以显示菜单</value>
   </data>
-  <data name="PenMenuName" xml:space="preserve">
+  <data name="PenMenuDisplayName" xml:space="preserve">
     <value>笔菜单</value>
   </data>
   <data name="SideBarDesc" xml:space="preserve">
     <value>在屏幕右侧轻点(触摸)或鼠标停留以弹出侧边栏</value>
   </data>
-  <data name="SideBarName" xml:space="preserve">
+  <data name="SideBarDisplayName" xml:space="preserve">
     <value>侧边栏</value>
   </data>
 </root>

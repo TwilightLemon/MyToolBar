@@ -25,14 +25,13 @@ public static class LocalCulture
         };
     }
     public static event EventHandler<Language>? OnLanguageChanged;
-    public static Language Current { get; private set; }
+    public static Language Current { get; private set; }= Language.en_us;
 
     public static void SetGlobalLanguage(Language lang,bool invoke=true)
     {
         if (lang == Current) return;
         Current = lang;
         CultureInfo.DefaultThreadCurrentCulture = lang.ToCultureInfo();
-        if(invoke)
-        OnLanguageChanged?.Invoke(null, lang);
+        if(invoke) OnLanguageChanged?.Invoke(null, lang);
     }
 }

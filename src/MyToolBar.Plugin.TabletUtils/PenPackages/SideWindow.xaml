@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         Title="SideWindow"
         WindowStyle="None"
-        Background="Transparent"
+        Background="{DynamicResource WindowBackgroundColor}"
         Foreground="{DynamicResource ForeColor}"
         ShowInTaskbar="False"
         Topmost="True"
@@ -20,7 +20,7 @@
         Top="36"
         Left="0">
     <i:Interaction.Behaviors>
-        <mb:BlurWindowBehavior Mode="MicaAlt"/>
+        <mb:BlurWindowBehavior/>
     </i:Interaction.Behaviors>
     <Window.Resources>
         <ResourceDictionary>

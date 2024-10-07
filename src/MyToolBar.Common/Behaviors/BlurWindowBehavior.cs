@@ -21,8 +21,10 @@ public class BlurWindowBehavior : Behavior<Window>
 
     private static void GlobalService_OnEnergySaverModeChanged(bool isOn)
     {
-        foreach(var window in _allWindowMaterialManager.Keys)
+        foreach(var pair in _allWindowMaterialManager)
         {
+            //对于UseWindowCaompositonAPI的窗口有自己的颜色管理
+            if(pair.Value is { } material&&pair.Key is { }window&&!material.UseWindowComposition)
             window.SetResourceReference(Window.BackgroundProperty,
                 isOn?"BackgroundColor": "WindowBackgroundColor");
         }

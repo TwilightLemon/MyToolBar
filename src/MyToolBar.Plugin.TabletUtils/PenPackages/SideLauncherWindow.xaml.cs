@@ -15,14 +15,21 @@ namespace MyToolBar.Plugin.TabletUtils.PenPackages
     /// </summary>
     public partial class SideLauncherWindow : Window
     {
+        private bool _enableTablet = false;
         public SideLauncherWindow()
         {
             InitializeComponent();
             SourceInitialized += SideTaskViewWindow_SourceInitialized;
             Height = SystemParameters.WorkArea.Height - 30;
 
-            TouchDown += SideTaskViewWindow_TouchDown;
-            MouseEnter += SideTaskViewWindow_MouseEnter;
+            if (_enableTablet=Tablet.TabletDevices.Count > 0)
+            {
+                TouchDown += SideTaskViewWindow_TouchDown;
+            }
+            else
+            {
+                this.Width=2;
+            }
             MouseMove += SideLauncherWindow_MouseMove;
             MouseLeave += SideTaskViewWindow_MouseLeave;
 
@@ -32,20 +39,41 @@ namespace MyToolBar.Plugin.TabletUtils.PenPackages
 
         private void SideTaskViewWindow_MouseLeave(object sender, MouseEventArgs e)
         {
-            if (_shouldShowClickBd != null)
-            {
-                _shouldShowClickBd.Cancel();
-                _shouldShowClickBd = null;
-            }
+            CancelShowClickBd();
+            _isMouseIn = false;
         }
 
         void ShowSideWindow()
         {
             new SideWindow().Show();
         }
-
+        void CancelShowClickBd()
+        {
+            if (_shouldShowClickBd != null)
+            {
+                _shouldShowClickBd.Cancel();
+                _shouldShowClickBd = null;
+            }
+        }
+        async Task PrepareToShowClickBd()
+        {
+            _shouldShowClickBd = new();
+            try
+            {
+                await Task.Delay(400, _shouldShowClickBd.Token);
+            }
+            catch { return; }
+            double top = currentMousePoint.Y - ClickBd.Height / 2;
+            Canvas.SetTop(ClickBd, top);
+            ShowClickBd();
+            _shouldShowClickBd = null;
+        }
         void ShowClickBd()
         {
+            if (!_enableTablet)
+            {
+                Width = 12;
+            }
             var da = new DoubleAnimation(-12, 0, TimeSpan.FromMilliseconds(300));
             da.EasingFunction = new CircleEase();
             ClickBd.Visibility = Visibility.Visible;
@@ -57,12 +85,17 @@ namespace MyToolBar.Plugin.TabletUtils.PenPackages
             da.EasingFunction = new CircleEase();
             da.Completed += delegate {
                 ClickBd.Visibility = Visibility.Collapsed;
+                if (!_enableTablet)
+                {
+                    Width = 2;
+                }
             };
             ClickBd.BeginAnimation(Canvas.LeftProperty, da);
         }
 
         private void ClickBd_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (e.StylusDevice?.TabletDevice?.Type == TabletDeviceType.Touch) return;
             ShowSideWindow();
             HideClickBd();
         }
@@ -70,13 +103,30 @@ namespace MyToolBar.Plugin.TabletUtils.PenPackages
         private void ClickBd_MouseLeave(object sender, MouseEventArgs e)
         {
             HideClickBd();
+            _isMouseIn = false;
         }
         private CancellationTokenSource? _shouldShowClickBd = new();
         private const int MinMouseTargetWidth = 2;
         private Point currentMousePoint;
-        private void SideLauncherWindow_MouseMove(object sender, MouseEventArgs e)
+        private bool _isMouseIn = false;
+        private async void SideLauncherWindow_MouseMove(object sender, MouseEventArgs e)
         {
+            if (e.StylusDevice?.TabletDevice?.Type == TabletDeviceType.Touch)
+            {
+                _isMouseIn = false;
+                return;
+            }
             currentMousePoint = e.GetPosition(this);
+            if (currentMousePoint.X > MinMouseTargetWidth)
+            {
+                CancelShowClickBd();
+                _isMouseIn = false;
+            }
+            else if(!_isMouseIn)
+            {
+                _isMouseIn = true;
+                await PrepareToShowClickBd();
+            }
         }
         private async void SideTaskViewWindow_MouseEnter(object sender, MouseEventArgs e)
         {

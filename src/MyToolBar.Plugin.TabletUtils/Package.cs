@@ -13,8 +13,9 @@ public class Package : IPackage
     internal static CultureInfo? _cultureInfo { get => CultureInfo.DefaultThreadCurrentCulture; }
 
     public string PackageName => "MyToolBar.Plugin.TabletUtils";
+    public string DisplayName => _rm.GetString("PackageDisplayName", _cultureInfo) ?? "";
 
-    public string Description => _rm.GetString("PackageDesc", _cultureInfo) ?? "wRong!";
+    public string Description => _rm.GetString("PackageDesc", _cultureInfo) ?? "";
 
     public Version Version => new Version(1,0,0,0);
 
@@ -28,7 +29,8 @@ public class PenMenuPlugin : IPlugin
 {
     public IPackage? AcPackage { get; set; }
 
-    public string Name => _rm.GetString("PenMenuName", _cultureInfo) ?? "";
+    public string Name { get; }= "PenMenu";
+    public string DisplayName => _rm.GetString("PenMenuDisplayName", _cultureInfo) ?? "";
 
     public string Description => _rm.GetString("PenMenuDesc", _cultureInfo) ?? "";
 
@@ -46,7 +48,8 @@ public class SideBarPlugin : IPlugin
 {
     public IPackage? AcPackage { get; set; }
 
-    public string Name => _rm.GetString("SideBarName", _cultureInfo) ?? "";
+    public string Name { get; } = "SideBar";
+    public string DisplayName => _rm.GetString("SideBarDisplayName", _cultureInfo) ?? "";
 
     public string Description => _rm.GetString("SideBarDesc", _cultureInfo) ?? "";
 

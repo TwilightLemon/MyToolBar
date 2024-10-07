@@ -117,17 +117,32 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="DemoClockOutControlDisplayName" xml:space="preserve">
+    <value>一只简陋的时钟 Demo</value>
+  </data>
   <data name="DemoClockOutControlPluginDesc" xml:space="preserve">
     <value>时钟 支持自定义文本</value>
   </data>
+  <data name="HardwareMonitorCapDisplayName" xml:space="preserve">
+    <value>资源监视器</value>
+  </data>
   <data name="HardwareMonitorCapPluginDesc" xml:space="preserve">
     <value>硬件监控小组件</value>
+  </data>
+  <data name="LemonAppMusicOutControlDisplayName" xml:space="preserve">
+    <value>通用媒体控制器</value>
   </data>
   <data name="LemonAppMusicOutControlPluginDesc" xml:space="preserve">
     <value>通用媒体控制和Lemon App联动显示歌词与控制</value>
   </data>
   <data name="PackageDesc" xml:space="preserve">
     <value>MyToolBar官方基础插件包</value>
+  </data>
+  <data name="PackageDisplayName" xml:space="preserve">
+    <value>基础组件包</value>
+  </data>
+  <data name="WeatherCapDisplayName" xml:space="preserve">
+    <value>天气</value>
   </data>
   <data name="WeatherCapPluginDesc" xml:space="preserve">
     <value>天气小组件</value>

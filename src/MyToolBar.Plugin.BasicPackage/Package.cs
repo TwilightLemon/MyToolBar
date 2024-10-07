@@ -16,6 +16,7 @@ namespace MyToolBar.Plugin.BasicPackage
         internal static CultureInfo? _cultureInfo { get => CultureInfo.DefaultThreadCurrentCulture; }
         public string Description => _rm.GetString("PackageDesc", _cultureInfo)??"";
         public string PackageName { get; set; } = "MyToolBar.Plugin.BasicPackage";
+        public string DisplayName=>_rm.GetString("PackageDisplayName", _cultureInfo) ?? "";
         public Version Version { get; set; } = new Version(1,0,0,0);
         public List<IPlugin> Plugins { get; set; } = [ 
         new WeatherCapPlugin(),
@@ -30,6 +31,7 @@ namespace MyToolBar.Plugin.BasicPackage
         public IPackage? AcPackage { get; set; }
         internal static readonly string _name = "WeatherCap";
         public string Name { get; } = _name;
+        public string DisplayName => _rm.GetString("WeatherCapDisplayName", _cultureInfo) ?? "";
         public string Description => _rm.GetString("WeatherCapPluginDesc", _cultureInfo)??"";
         public List<string> SettingsSignKeys { get; } = [WeatherCap._settingsAPIKey];
         public PluginType Type { get; } = PluginType.Capsule;
@@ -44,6 +46,7 @@ namespace MyToolBar.Plugin.BasicPackage
        public IPackage? AcPackage { get; set; }
         internal static readonly string _name = "HardwareMonitorCap";
         public string Name { get; } = _name;
+        public string DisplayName => _rm.GetString("HardwareMonitorCapDisplayName", _cultureInfo) ?? "";
         public string Description => _rm.GetString("HardwareMonitorCapPluginDesc", _cultureInfo)??"";
         public List<string>? SettingsSignKeys { get; } = null;
         public PluginType Type { get; } = PluginType.Capsule;
@@ -56,6 +59,7 @@ namespace MyToolBar.Plugin.BasicPackage
     {
         public IPackage? AcPackage { get; set; }
         public string Name { get; } = "Media OutControl";
+        public string DisplayName => _rm.GetString("LemonAppMusicOutControlDisplayName", _cultureInfo) ?? "";
         public string Description=> _rm.GetString("LemonAppMusicOutControlPluginDesc", _cultureInfo)??"";
         public List<string>? SettingsSignKeys { get; } = null;
         public PluginType Type { get; } = PluginType.OuterControl;
@@ -69,6 +73,7 @@ namespace MyToolBar.Plugin.BasicPackage
         public static string _name="Demo Clock";
         public IPackage? AcPackage { get; set; }
         public string Name { get; } = _name;
+        public string DisplayName => _rm.GetString("DemoClockOutControlDisplayName", _cultureInfo) ?? "";
         public string Description =>_rm.GetString("DemoClockOutControlPluginDesc", _cultureInfo)??"";
         public List<string>? SettingsSignKeys { get; } = [
             DemoClock.SettingSign

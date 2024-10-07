@@ -114,10 +114,17 @@ namespace MyToolBar.Views.Windows
         {
             if (IsEnergySaverModeOn)
             {
-                MainBarGrid.SetResourceReference(BackgroundProperty, "BackgroundColor");
-                _themeResourceService.SetAppBarFontColor(!IsDarkMode);
+                if (CurrentAppBarBgStyle != AppBarBgStyleType.EnergySaving)
+                {
+                    MainBarGrid.SetResourceReference(BackgroundProperty, "BackgroundColor");
+                    _themeResourceService.SetAppBarFontColor(!IsDarkMode);
+                    CurrentAppBarBgStyle = AppBarBgStyleType.EnergySaving;
+                }
             }
-            else MainBarGrid.Background = null;
+            else if (CurrentAppBarBgStyle == AppBarBgStyleType.EnergySaving){
+                MainBarGrid.Background = null;
+                CurrentAppBarBgStyle = AppBarBgStyleType.Acrylic;
+            }
         }
 
         /// <summary>
@@ -394,7 +401,9 @@ namespace MyToolBar.Views.Windows
             UpdateBackground();
             Width = SystemParameters.WorkArea.Width;
         }
-        private bool IsImmerseMode = false;
+       
+        enum AppBarBgStyleType { EnergySaving,ImmerseMode, Acrylic };
+        private AppBarBgStyleType CurrentAppBarBgStyle { get; set; }
         /// <summary>
         /// 更新AppBar背景
         /// </summary>
@@ -406,7 +415,7 @@ namespace MyToolBar.Views.Windows
                     //存在最大化窗口
                     if (!IsEnergySaverModeOn){
                         ImmerseMode_UpdateBackground();
-                        IsImmerseMode = true;
+                        CurrentAppBarBgStyle = AppBarBgStyleType.ImmerseMode;
                     }
                     else UpdateEnergySaverMode();
 
@@ -423,26 +432,30 @@ namespace MyToolBar.Views.Windows
                         immerse = true;
                         ImmerseMode_UpdateBackground();
                     }
-                    else if (IsEnergySaverModeOn)
-                    {
+                    else{
                         UpdateEnergySaverMode();
                     }
-                    if((IsImmerseMode && !immerse))
+
+                    if((CurrentAppBarBgStyle==AppBarBgStyleType.ImmerseMode && !immerse))
                     {
+                        //退出沉浸模式
                         MainBarGrid.Background = null;
                         _lastEvaColor = null;
                         _themeResourceService.SetAppBarFontColor(!IsDarkMode);
+                        CurrentAppBarBgStyle = AppBarBgStyleType.Acrylic;
                     }
 
                     if (CurrentAppBarStyle == 1)
                     {
                         NormalWindowStyle();
                     }
-                    IsImmerseMode = immerse;
+                    if (immerse)
+                        CurrentAppBarBgStyle = AppBarBgStyleType.ImmerseMode;
                 }
             }).Find();
 
         }
+
         private Color? _lastEvaColor = null;
 
         /// <summary>
@@ -493,7 +506,6 @@ namespace MyToolBar.Views.Windows
 
             //判断颜色深浅
             var sel = themeColor.R * 0.299 + themeColor.G * 0.578 + themeColor.B * 0.114;
-            Debug.WriteLine(sel);
             if (sel > 150)
             {
                 //浅色
@@ -523,7 +535,7 @@ namespace MyToolBar.Views.Windows
             //更新AppBar颜色
             if (CurrentAppBarStyle == 0){
                 NormalWindowStyle();
-                if (!IsImmerseMode)
+                if (CurrentAppBarBgStyle!=AppBarBgStyleType.ImmerseMode)
                     _themeResourceService.SetAppBarFontColor(!isDarkMode);
             }
             else

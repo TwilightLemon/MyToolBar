@@ -117,17 +117,32 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="DemoClockOutControlDisplayName" xml:space="preserve">
+    <value>Simple Clock</value>
+  </data>
   <data name="DemoClockOutControlPluginDesc" xml:space="preserve">
     <value>Simple clock widget. Customization is supported.</value>
   </data>
+  <data name="HardwareMonitorCapDisplayName" xml:space="preserve">
+    <value>Hardware Monitor</value>
+  </data>
   <data name="HardwareMonitorCapPluginDesc" xml:space="preserve">
     <value>Hardware monitor and Progress Manager</value>
+  </data>
+  <data name="LemonAppMusicOutControlDisplayName" xml:space="preserve">
+    <value>SMTC Media Controller</value>
   </data>
   <data name="LemonAppMusicOutControlPluginDesc" xml:space="preserve">
     <value>SystemMedia Controller. Gesture is supported.</value>
   </data>
   <data name="PackageDesc" xml:space="preserve">
     <value>MyToolBar official basic plugin package</value>
+  </data>
+  <data name="PackageDisplayName" xml:space="preserve">
+    <value>Basic Package</value>
+  </data>
+  <data name="WeatherCapDisplayName" xml:space="preserve">
+    <value>Weather</value>
   </data>
   <data name="WeatherCapPluginDesc" xml:space="preserve">
     <value>Weather widget.</value>

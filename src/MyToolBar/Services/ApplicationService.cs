@@ -30,11 +30,9 @@ namespace MyToolBar.Services
         public Task StartAsync(CancellationToken cancellationToken)
         {
             //异常捕获+写日志
-#if !DEBUG
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             App.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
-#endif
             //注册Hyperlink的跳转事件
             EventManager.RegisterClassHandler(typeof(Hyperlink), Hyperlink.RequestNavigateEvent, new RequestNavigateEventHandler((sender, e) =>
             {
@@ -51,6 +49,7 @@ namespace MyToolBar.Services
                 //设置Http代理
                 UpdateDefaultProxy();
 
+                //设置语言
                 var lang = (LocalCulture.Language)appSettingsService.Settings.Language;
                 LocalCulture.SetGlobalLanguage(lang, false);
                 LocalCulture.OnLanguageChanged += LocalCulture_OnLanguageChanged;
@@ -87,6 +86,9 @@ namespace MyToolBar.Services
         private void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
             _logger.LogError(new EventId(-1), e.Exception, e.Exception.Message);
+#if !DEBUG
+            e.Handled = true;
+#endif
         }
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)

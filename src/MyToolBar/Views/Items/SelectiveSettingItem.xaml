@@ -12,7 +12,7 @@
     <Grid>
         <Border x:Name="EnabledMask" CornerRadius="15" Background="{DynamicResource MaskColor}" Visibility="{Binding PluginIsEnabled,Converter={StaticResource BooleanToVisibilityConverter}}"/>
         <TextBlock Margin="18">
-            <Run d:Text="Capsule Name" FontSize="22" Text="{Binding Plugin.Name,Mode=OneWay}"/>
+            <Run d:Text="Capsule Name" FontSize="22" Text="{Binding Plugin.DisplayName,Mode=OneWay}"/>
             <LineBreak/>
             <Run d:Text="Desc." Text="{Binding Plugin.Description,Mode=OneWay}"/>
         </TextBlock>

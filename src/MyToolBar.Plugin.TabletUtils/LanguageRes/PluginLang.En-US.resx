@@ -120,16 +120,19 @@
   <data name="PackageDesc" xml:space="preserve">
     <value>SideBar and extended Pen Menu</value>
   </data>
+  <data name="PackageDisplayName" xml:space="preserve">
+    <value>Tablet Utilities</value>
+  </data>
   <data name="PenMenuDesc" xml:space="preserve">
     <value>Swipe through the upper-right corner of the screen to display the menu</value>
   </data>
-  <data name="PenMenuName" xml:space="preserve">
+  <data name="PenMenuDisplayName" xml:space="preserve">
     <value>Pen Menu</value>
   </data>
   <data name="SideBarDesc" xml:space="preserve">
     <value>Tap (touch) on the right side of the screen or mouse over it to bring up the sidebar</value>
   </data>
-  <data name="SideBarName" xml:space="preserve">
+  <data name="SideBarDisplayName" xml:space="preserve">
     <value>SideBar</value>
   </data>
 </root>

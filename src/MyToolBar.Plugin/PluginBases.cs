@@ -26,9 +26,13 @@ public enum PluginType
 public interface IPackage
 {
     /// <summary>
-    /// 包名称
+    /// 包名称(作为唯一标识符)
     /// </summary>
     string PackageName { get; }
+    /// <summary>
+    /// 显示的包名称
+    /// </summary>
+    string DisplayName { get; }
     /// <summary>
     /// 描述
     /// </summary>
@@ -49,9 +53,13 @@ public interface IPlugin
     /// </summary>
     IPackage? AcPackage { get; set; }
     /// <summary>
-    /// 插件名称
+    /// 插件名称(作为唯一标识符)
     /// </summary>
     string Name { get; }
+    /// <summary>
+    /// 显示的插件名称
+    /// </summary>
+    string DisplayName { get; }
     /// <summary>
     /// 插件描述
     /// </summary>
