@@ -30,7 +30,7 @@ public class ModernStandbyPowerAPI
         public DeviceNotifyCallbackRoutine Callback;
         public IntPtr Context;
     }
-    static Dictionary<IntPtr, DEVICE_NOTIFY_SUBSCRIBE_PARAMETERS> _registeredHandle = [];
+    static Dictionary<IntPtr, GCHandle> _registeredHandle = [];
  
     [DllImport("Powrprof.dll", SetLastError = true)]
     static extern uint PowerRegisterSuspendResumeNotification(uint flags, ref DEVICE_NOTIFY_SUBSCRIBE_PARAMETERS receipient, ref IntPtr registrationHandle);
@@ -45,14 +45,21 @@ public class ModernStandbyPowerAPI
             Callback = callback,
             Context = IntPtr.Zero
         };
-        _registeredHandle.Add(handle, parameters);
+        var gcHandle = GCHandle.Alloc(parameters);
         uint result = PowerRegisterSuspendResumeNotification(DEVICE_NOTIFY_CALLBACK, ref parameters, ref handle);
+        _registeredHandle[handle] = gcHandle;
         return result == 0;
     }
     public static bool UnregisterNotification(IntPtr handle)
     {
         uint result = PowerUnregisterSuspendResumeNotification(handle);
-        _registeredHandle.Remove(handle);
-        return result == 0;
+        bool free = false;
+        if(_registeredHandle.TryGetValue(handle, out var gcHandle))
+        {
+            gcHandle.Free();
+            _registeredHandle.Remove(handle);
+            free = true;
+        }
+        return result == 0 && free;
     }
 }

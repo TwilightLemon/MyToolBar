@@ -30,7 +30,8 @@
     <Grid x:Name="MainBarGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1.2*"/>
-            <ColumnDefinition x:Name="OuterControlCol" Width="1.2*"  MaxWidth="680"/>
+            <!--Initial width is 0 , for no plugin is loaded.-->
+            <ColumnDefinition x:Name="OuterControlCol" Width="0*" d:Width="1.2*"  MaxWidth="680"/>
             <ColumnDefinition Width="1.2*"/>
         </Grid.ColumnDefinitions>
         <Border x:Name="BgImgEffector" Opacity="0" Grid.ColumnSpan="3"/>

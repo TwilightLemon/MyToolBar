@@ -23,15 +23,22 @@ namespace MyToolBar.Common.WinAPI
                                     EVENT_OBJECT_NAMECHANGE = 0x800C;
         private const uint WINEVENT_OUTOFCONTEXT = 0;
 
-
+        static readonly Dictionary<IntPtr,GCHandle> winEventDelegates = [];
         public static IntPtr RegisterActiveWindowHook(WinEventDelegate handler)
         {
-            GCHandle.Alloc(handler);
-            return SetWinEventHook(EVENT_OBJECT_NAMECHANGE, EVENT_OBJECT_NAMECHANGE, IntPtr.Zero, handler, 0, 0, WINEVENT_OUTOFCONTEXT);
+            var gcHandle = GCHandle.Alloc(handler);
+            IntPtr hook=SetWinEventHook(EVENT_OBJECT_NAMECHANGE, EVENT_OBJECT_NAMECHANGE, IntPtr.Zero, handler, 0, 0, WINEVENT_OUTOFCONTEXT);
+            winEventDelegates[hook]=gcHandle;
+            return hook;
         }
         public static void UnregisterActiveWindowHook(IntPtr hook)
         {
             UnhookWinEvent(hook);
+            if(winEventDelegates.TryGetValue(hook, out var handler))
+            {
+                handler.Free();
+                winEventDelegates.Remove(hook);
+            }
         }
 
         [DllImport("user32.dll", SetLastError = true)]
