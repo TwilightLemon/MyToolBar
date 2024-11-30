@@ -30,6 +30,13 @@
                 <x:Type TypeName="service:AppSettings+ProxyMode" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
+        <ObjectDataProvider x:Key="MainMenuIconEnumData"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="service:AppSettings+MenuIcon" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
         <DataTemplate x:Key="ComboBoxItemTemplate">
             <TextBlock Text="{Binding Converter={StaticResource EnumToTextConverter}}" />
         </DataTemplate>
@@ -47,8 +54,18 @@
                     <Border Background="{DynamicResource MaskColor}"
                             CornerRadius="12"
                             Height="48">
+                        <ToggleButton Name="UseImModeCb"
+                                      Style="{DynamicResource RoundToggleButtonStyle}"
+                                      Content="{DynamicResource AppSettings_Item_UseImmerseMode}"
+                                      IsChecked="{Binding UseImMode}"
+                                      Margin="12 0 12 0" />
+                    </Border>
+                    
+                    <Border Background="{DynamicResource MaskColor}"
+                            CornerRadius="12"
+                            Height="48">
                         <ToggleButton Name="AlwaysImModeCb"
-                                      Style="{StaticResource RoundToggleButtonStyle}"
+                                      Style="{DynamicResource RoundToggleButtonStyle}"
                                       Content="{DynamicResource AppSettings_Item_AlwaysUseImmerseMode}"
                                       IsChecked="{Binding AlwaysImMode}"
                                       Margin="12 0 12 0" />
@@ -62,7 +79,6 @@
                                        Text="{DynamicResource AppSettings_Item_Language}"
                                        HorizontalAlignment="Left" />
                             <ws:ComboBox x:Name="LanguageComboBox"
-                                         Width="72"
                                          Height="24"
                                          HorizontalAlignment="Right"
                                          Margin="0 0 48 0"
@@ -70,6 +86,25 @@
                                          ItemTemplate="{DynamicResource ComboBoxItemTemplate}"
                                          ItemsSource="{Binding Source={StaticResource LanguageEnumData}}"
                                          SelectedItem="{Binding AppLanguage}">
+                            </ws:ComboBox>
+                        </Grid>
+                    </Border>
+                    <Border Background="{DynamicResource MaskColor}"
+                            CornerRadius="12"
+                            Height="48">
+                        <Grid>
+                            <TextBlock VerticalAlignment="Center"
+                                       Margin="12"
+                                       Text="{DynamicResource AppSettings_Item_MainMenuIcon}"
+                                       HorizontalAlignment="Left" />
+                            <ws:ComboBox x:Name="MainMenuIconCombox"
+                                         Height="24"
+                                         HorizontalAlignment="Right"
+                                         Margin="0 0 48 0"
+                                         Style="{StaticResource SimpleComboBoxStyleForWs}"
+                                         ItemTemplate="{DynamicResource ComboBoxItemTemplate}"
+                                         ItemsSource="{Binding Source={StaticResource MainMenuIconEnumData}}"
+                                         SelectedItem="{Binding MainMenuIcon}">
                             </ws:ComboBox>
                         </Grid>
                     </Border>

@@ -47,7 +47,7 @@ namespace MyToolBar.Plugin.BasicPackage.API
             }
         }
 
-        public static bool IsResponding(this Process process)
+        public static bool IsResponding(this Process process,out bool frozen)
         {
             bool isResponding = false;
             try
@@ -56,15 +56,21 @@ namespace MyToolBar.Plugin.BasicPackage.API
                     process.Refresh();
                     isResponding = process.Responding; 
                 });
-                if (!task.Wait(TimeSpan.FromSeconds(1))) 
+                if (!task.Wait(TimeSpan.FromSeconds(0.3))) 
                 {
-                    // 等待1秒，如果进程在这个时间内没有响应，就认为它被挂起了
+                    // 等待0.3秒，如果进程在这个时间内没有响应，就认为它被挂起了
                     isResponding = false;
+                    frozen = true;
+                }
+                else
+                {
+                    frozen = false;
                 }
             }
             catch (AggregateException ae)
             {
                 isResponding = false;
+                frozen = false;
             }
             return isResponding;
         }

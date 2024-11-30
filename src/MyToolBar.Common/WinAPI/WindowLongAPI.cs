@@ -9,8 +9,6 @@ using System.Windows;
 
 namespace MyToolBar.Common.WinAPI;
 
-//TODO: 与ToolWindowAPI合并
-
 public static class WindowLongAPI
 {
     [Flags]

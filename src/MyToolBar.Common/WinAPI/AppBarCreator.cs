@@ -1,9 +1,12 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
+using System.Windows.Media;
 using System.Windows.Threading;
+using Windows.Security.Cryptography.Certificates;
 
 namespace MyToolBar.Common.WinAPI;
 public static class AppBarCreator
@@ -47,6 +50,7 @@ public class AppBar : DependencyObject
             _window = value;
             _window.Closing += _window_Closing;
             _window.LocationChanged += _window_LocationChanged;
+            _window.DpiChanged += _window_DpiChanged;
             //获取窗口句柄hWnd
             var handle = new WindowInteropHelper(value).Handle;
             if (handle == IntPtr.Zero)
@@ -59,6 +63,22 @@ public class AppBar : DependencyObject
                 _hWnd = handle;
                 CheckPending();
             }
+        }
+    }
+
+    private void _window_DpiChanged(object sender, DpiChangedEventArgs e)
+    {
+        UpdateDpiSettings();
+    }
+
+    public void UpdateDpiSettings()
+    {
+        //Update AppBar Position when dpi changed.
+        if (Location != AppBarLocation.None && Location != AppBarLocation.RegisterOnly)
+        {
+            var temp = Location;
+            Location = AppBarLocation.None;
+            Location = temp;
         }
     }
 
@@ -185,6 +205,11 @@ public class AppBar : DependencyObject
     private ResizeMode _originalResizeMode;
     private bool _originalTopmost;
     public Rect? DockedSize { get; set; } = null;
+
+    public const int WM_USER = 0x0400;
+    public const int WM_REFLECT = WM_USER + 0x1C00;
+    public const int WM_DISPLAYCHANGE = 0x007E;
+
     private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam,
                                     IntPtr lParam, ref bool handled)
     {
@@ -204,6 +229,11 @@ public class AppBar : DependencyObject
                     handled = true;
                     break;
             }
+        }else if(msg==WM_DISPLAYCHANGE)
+        {
+            Debug.WriteLine("WM_DISPLAYCHANGE ! " + _window.Title);
+            UpdateDpiSettings();
+            handled = true;
         }
         return IntPtr.Zero;
     }
@@ -275,19 +305,14 @@ public class AppBar : DependencyObject
         data.uCallbackMessage = _callbackId;
         Debug.WriteLine("\r\nWindow: " + _window.Title);
 
-        //获取WPF单位与像素的转换矩阵
-        var compositionTarget = PresentationSource.FromVisual(_window)?.CompositionTarget;
-        if (compositionTarget == null)
-            throw new Exception("居然获取不到CompositionTarget?!");
-        var toPixel = compositionTarget.TransformToDevice;
-        var toWpfUnit = compositionTarget.TransformFromDevice;
-
+        (double dpix,double dpiy)=ScreenAPI.GetDPI(_hWnd);
+        Debug.WriteLine($"DPIX:{dpix}  DPIY:{dpiy}");
         //窗口在屏幕的实际大小
         if (WindowSize == Size.Empty)
             WindowSize = new Size(_window.ActualWidth, _window.ActualHeight);
-        var actualSize = toPixel.Transform(new Vector(WindowSize.Width, WindowSize.Height));
+        var actualSize =(X: WindowSize.Width*dpix, Y: WindowSize.Height*dpiy);
         //屏幕的真实像素
-        var workArea = toPixel.Transform(new Vector(SystemParameters.PrimaryScreenWidth, SystemParameters.PrimaryScreenHeight));
+        var workArea = (X: SystemParameters.WorkArea.Width * dpix, Y: SystemParameters.WorkArea.Height * dpiy);
         Debug.WriteLine("WorkArea Width: {0}, Height: {1}", workArea.X, workArea.Y);
 
         if (Location is AppBarLocation.Left or AppBarLocation.Right)
@@ -343,10 +368,9 @@ public class AppBar : DependencyObject
         //调整完毕，设置为最终位置
         Interop.SHAppBarMessage((int)Interop.AppBarMsg.ABM_SETPOS, ref data);
         //应用到窗口
-        var location = toWpfUnit.Transform(new Point(data.rc.left, data.rc.top));
-        var dimension = toWpfUnit.Transform(new Vector(data.rc.right - data.rc.left,
-                                                                                    data.rc.bottom - data.rc.top));
-        var rect = new Rect(location, new Size(dimension.X, dimension.Y));
+        var location = new Point(data.rc.left/dpix, data.rc.top/dpiy);
+        var dimension = new Size((double)(data.rc.right  - data.rc.left )/ dpix, (double)(data.rc.bottom - data.rc.top) / dpiy);
+        var rect = new Rect(location, dimension);
         DockedSize = rect;
 
         _window.Dispatcher.Invoke(DispatcherPriority.ApplicationIdle, () => {

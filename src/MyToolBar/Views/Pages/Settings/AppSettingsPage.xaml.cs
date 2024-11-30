@@ -1,6 +1,7 @@
 ﻿using MyToolBar.Common;
 using MyToolBar.Services;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -15,25 +16,36 @@ namespace MyToolBar.Views.Pages.Settings
         private readonly ApplicationService _applicationService;
         public AppSettingsPage(AppSettingsService appSettingsService, ApplicationService applicationService)
         {
-            InitializeComponent();
-            DataContext = this;
-            Loaded += AppSettingsPage_Loaded;
-            Unloaded += AppSettingsPage_Unloaded;
             _appSettingsService = appSettingsService;
             _applicationService = applicationService;
+
+            _useImMode = _appSettingsService.Settings.UseImmerseMode;
+            _alwaysImMode = _appSettingsService.Settings.AlwaysUseImmerseMode;
+            _autoRunAtStartup = _appSettingsService.Settings.AutoRunAtStartup;
+            InitializeComponent();
+            DataContext = this;
+            Unloaded += AppSettingsPage_Unloaded;
         }
 
-        private void AppSettingsPage_Loaded(object sender, RoutedEventArgs e)
-        {
-            // Load settings
-            AlwaysImMode = _appSettingsService.Settings.AlwaysUseImmerseMode;
-            AutoRunAtStartup = _appSettingsService.Settings.AutoRunAtStartup;
-        }
         #region XAML Bindings
         public event PropertyChangedEventHandler? PropertyChanged;
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        private bool _useImMode = true;
+        public bool UseImMode
+        {
+            get => _useImMode;
+            set 
+            {
+                _useImMode = _appSettingsService.Settings.UseImmerseMode = value;
+                OnPropertyChanged(nameof(UseImMode));
+                if (!value)
+                {
+                    AlwaysImMode = false;
+                }
+            }
         }
         private bool _alwaysImMode = false;
         public bool AlwaysImMode 
@@ -43,6 +55,10 @@ namespace MyToolBar.Views.Pages.Settings
             {
                 _alwaysImMode=_appSettingsService.Settings.AlwaysUseImmerseMode = value;
                 OnPropertyChanged(nameof(AlwaysImMode));
+                if (value)
+                {
+                    UseImMode = true;
+                }
             }
         }
         private bool _autoRunAtStartup = false;
@@ -69,6 +85,7 @@ namespace MyToolBar.Views.Pages.Settings
                 }
             }
         }
+
         public AppSettings.ProxyMode ProxyMode
         {
             get => _appSettingsService.Settings.UserProxyMode;
@@ -77,6 +94,16 @@ namespace MyToolBar.Views.Pages.Settings
                 _appSettingsService.Settings.UserProxyMode = value;
                 OnPropertyChanged(nameof(ProxyMode));
                 _applicationService.UpdateDefaultProxy();
+            }
+        }
+
+        public AppSettings.MenuIcon MainMenuIcon
+        {
+            get => _appSettingsService.Settings.MainMenuIcon;
+            set 
+            {
+                _appSettingsService.Settings.SetMainMenuIcon(value);
+                OnPropertyChanged(nameof(MainMenuIcon));
             }
         }
 

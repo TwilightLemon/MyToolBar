@@ -22,9 +22,11 @@
     <sys:String x:Key="AppSettings_Group_Appearence">外观</sys:String>
     <sys:String x:Key="AppSettings_Group_Behavior">行为</sys:String>
 
+    <sys:String x:Key="AppSettings_Item_UseImmerseMode">启用沉浸模式</sys:String>
     <sys:String x:Key="AppSettings_Item_AlwaysUseImmerseMode">始终启用沉浸模式</sys:String>
     <sys:String x:Key="AppSettings_Item_AutoRunAtStartup">开机自启动</sys:String>
     <sys:String x:Key="AppSettings_Item_Language">语言</sys:String>
+    <sys:String x:Key="AppSettings_Item_MainMenuIcon">主菜单图标</sys:String>
 
     <sys:String x:Key="AppSettings_Item_WebProxy_ProxyMode">代理模式</sys:String>
     <sys:String x:Key="AppSettings_Item_WebProxy_ProxyAddress">地址</sys:String>
@@ -42,4 +44,9 @@
 
     <sys:String x:Key="AS_Language_English">English</sys:String>
     <sys:String x:Key="AS_Language_Chinese">中文</sys:String>
+
+    <sys:String x:Key="AS_MenuIcon_Round">圆圈</sys:String>
+    <sys:String x:Key="AS_MenuIcon_Apple">果子</sys:String>
+    <sys:String x:Key="AS_MenuIcon_WindowsXp">WindowsXp</sys:String>
+    <sys:String x:Key="AS_MenuIcon_Gatito">猫子</sys:String>
 </ResourceDictionary>

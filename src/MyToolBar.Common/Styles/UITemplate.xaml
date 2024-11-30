@@ -19,66 +19,82 @@
     <Style x:Key="RoundToggleButtonStyle" TargetType="{x:Type ToggleButton}">
         <Setter Property="Foreground" Value="{DynamicResource ForeColor}"/>
         <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ToggleButton}">
-                    <ControlTemplate.Resources>
-                        <Storyboard x:Key="OnChecked">
-                            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)"
-										  Storyboard.TargetName="ellipse">
-                                <EasingThicknessKeyFrame KeyTime="0:0:0.3" Value="26,0,0,0">
-                                    <EasingThicknessKeyFrame.EasingFunction>
-                                        <CircleEase EasingMode="EaseOut"/>
-                                    </EasingThicknessKeyFrame.EasingFunction>
-                                </EasingThicknessKeyFrame>
-                            </ThicknessAnimationUsingKeyFrames>
-                        </Storyboard>
-                        <Storyboard x:Key="OnUnchecked">
-                            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)"
-										  Storyboard.TargetName="ellipse">
-                                <EasingThicknessKeyFrame KeyTime="0:0:0.3" Value="6,0,0,0">
-                                    <EasingThicknessKeyFrame.EasingFunction>
-                                        <CircleEase EasingMode="EaseOut"/>
-                                    </EasingThicknessKeyFrame.EasingFunction>
-                                </EasingThicknessKeyFrame>
-                            </ThicknessAnimationUsingKeyFrames>
-                        </Storyboard>
-                    </ControlTemplate.Resources>
-                    <Grid Background="Transparent">
-                        <ContentPresenter x:Name="contentPresenter" 
-                                              Focusable="False" 
-                                              HorizontalAlignment="Left" 
-                                              Margin="{TemplateBinding Padding}"
-                                              RecognizesAccessKey="True"
-                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                              VerticalAlignment="Center"/>
-                        <Border x:Name="border" Background="Transparent" CornerRadius="12"
-                                    BorderThickness="1" BorderBrush="{DynamicResource FocusMaskColor}"
-                                    Width="48" Margin="0 0 20 0" Height="24"
-                                    HorizontalAlignment="Right">
-                            <Ellipse x:Name="ellipse" Width="16" Height="16" Fill="{DynamicResource ForeColor}"
-                                         HorizontalAlignment="Left" Opacity="0.8"
-                                         Margin="4 0 0 0">
-                            </Ellipse>
-                        </Border>
-                    </Grid>
-                    <ControlTemplate.Triggers>
-                        <EventTrigger  RoutedEvent="ToggleButton.Checked">
-                            <BeginStoryboard Storyboard="{StaticResource OnChecked}"/>
-                        </EventTrigger>
-                        <EventTrigger RoutedEvent="ToggleButton.Unchecked">
-                            <BeginStoryboard Storyboard="{StaticResource OnUnchecked}"/>
-                        </EventTrigger>
-                        <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="{DynamicResource SystemThemeColor}"/>
-                            <Setter TargetName="border" Property="BorderThickness" Value="0"/>
-                            <Setter TargetName="ellipse" Property="Fill" Value="{DynamicResource BackgroundColor}"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="Template"
+                Value="{DynamicResource RoundToggleButtonTemplate}"/>
     </Style>
+    <ControlTemplate x:Key="RoundToggleButtonTemplate" TargetType="{x:Type ToggleButton}">
+        <ControlTemplate.Resources>
+            <Storyboard x:Key="OnChecked">
+                <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)"
+                                                  Storyboard.TargetName="ellipse">
+                    <EasingThicknessKeyFrame KeyTime="0:0:0.3"
+                                             Value="26,0,0,0">
+                        <EasingThicknessKeyFrame.EasingFunction>
+                            <CircleEase EasingMode="EaseOut" />
+                        </EasingThicknessKeyFrame.EasingFunction>
+                    </EasingThicknessKeyFrame>
+                </ThicknessAnimationUsingKeyFrames>
+            </Storyboard>
+            <Storyboard x:Key="OnUnchecked">
+                <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)"
+                                                  Storyboard.TargetName="ellipse">
+                    <EasingThicknessKeyFrame KeyTime="0:0:0.3"
+                                             Value="6,0,0,0">
+                        <EasingThicknessKeyFrame.EasingFunction>
+                            <CircleEase EasingMode="EaseOut" />
+                        </EasingThicknessKeyFrame.EasingFunction>
+                    </EasingThicknessKeyFrame>
+                </ThicknessAnimationUsingKeyFrames>
+            </Storyboard>
+        </ControlTemplate.Resources>
+        <Grid Background="Transparent">
+            <ContentPresenter x:Name="contentPresenter"
+                              Focusable="False"
+                              HorizontalAlignment="Left"
+                              Margin="{TemplateBinding Padding}"
+                              RecognizesAccessKey="True"
+                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                              VerticalAlignment="Center" />
+            <Border x:Name="border"
+                    Background="Transparent"
+                    CornerRadius="12"
+                    BorderThickness="1"
+                    BorderBrush="{DynamicResource FocusMaskColor}"
+                    Width="48"
+                    Margin="0 0 20 0"
+                    Height="24"
+                    HorizontalAlignment="Right">
+                <Ellipse Name="ellipse"
+                         Width="16"
+                         Height="16"
+                         Fill="{DynamicResource ForeColor}"
+                         HorizontalAlignment="Left"
+                         Opacity="0.8"
+                         Margin="4 0 0 0">
+                </Ellipse>
+            </Border>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <EventTrigger  RoutedEvent="ToggleButton.Checked">
+                <BeginStoryboard Storyboard="{StaticResource OnChecked}" />
+            </EventTrigger>
+            <EventTrigger RoutedEvent="ToggleButton.Unchecked">
+                <BeginStoryboard Storyboard="{StaticResource OnUnchecked}" />
+            </EventTrigger>
+            <Trigger Property="IsChecked"
+                     Value="True">
+                <Setter TargetName="border"
+                        Property="Background"
+                        Value="{DynamicResource SystemThemeColor}" />
+                <Setter TargetName="border"
+                        Property="BorderThickness"
+                        Value="0" />
+                <Setter TargetName="ellipse"
+                        Property="Fill"
+                        Value="{DynamicResource BackgroundColor}" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
     <Style x:Key="SimpleCheckBoxStyle" TargetType="{x:Type CheckBox}">
         <Setter Property="Background" Value="{DynamicResource MaskColor}"/>
         <Setter Property="Foreground" Value="{DynamicResource ForeColor}"/>

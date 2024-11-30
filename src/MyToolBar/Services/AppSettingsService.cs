@@ -1,5 +1,6 @@
 ﻿using MyToolBar.Common;
 using System;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace MyToolBar.Services
@@ -30,14 +31,35 @@ namespace MyToolBar.Services
     public class AppSettings
     {
         /// <summary>
-        /// 总是使用"沉浸模式"
+        /// 返回桌面时使用"沉浸模式"
         /// </summary>
         public bool AlwaysUseImmerseMode {  get; set; }=false;
+
+        /// <summary>
+        /// 使用"沉浸模式"
+        /// </summary>
+        public bool UseImmerseMode { get; set; } = true;
 
         /// <summary>
         /// 开机自启动
         /// </summary>
         public bool AutoRunAtStartup { get; set; }=false;
+
+        public enum MenuIcon
+        {
+            Round,Apple,WindowsXp,Gatito
+        }
+        /// <summary>
+        /// 主菜单图标
+        /// </summary>
+        public MenuIcon MainMenuIcon { get; set; } = MenuIcon.Round;
+
+        public event Action? OnMainMenuIconChanged;
+        public void SetMainMenuIcon(MenuIcon icon)
+        {
+            MainMenuIcon = icon;
+            OnMainMenuIconChanged?.Invoke();
+        }
 
         /// <summary>
         /// App全局语言

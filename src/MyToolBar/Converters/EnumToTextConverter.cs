@@ -25,6 +25,9 @@ namespace MyToolBar.Converters
                     _ => throw new NotImplementedException()
                 }}"
                 );
+            }else if(value is AppSettings.MenuIcon icon)
+            {
+                return App.Current.FindResource($"AS_MenuIcon_{icon}");
             }
             return value;
         }

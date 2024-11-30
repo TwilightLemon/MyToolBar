@@ -11,69 +11,69 @@ namespace MyToolBar.Plugin;
 public enum PluginType
 {
     /// <summary>
-    /// Î»ÓÚToolBarÖÐ¼äÇøÓòµÄOuterControl
+    /// Î»ï¿½ï¿½ToolBarï¿½Ð¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½OuterControl
     /// </summary>
     OuterControl,
     /// <summary>
-    /// Î»ÓÚToolBarÓÒ²àµÄCapsule
+    /// Î»ï¿½ï¿½ToolBarï¿½Ò²ï¿½ï¿½Capsule
     /// </summary>
     Capsule,
     /// <summary>
-    /// È«¾Ö×Ô¶¨Òå·þÎñ
+    /// È«ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     UserService
 }
 public interface IPackage
 {
     /// <summary>
-    /// °üÃû³Æ(×÷ÎªÎ¨Ò»±êÊ¶·û)
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ÎªÎ¨Ò»ï¿½ï¿½Ê¶ï¿½ï¿½)
     /// </summary>
     string PackageName { get; }
     /// <summary>
-    /// ÏÔÊ¾µÄ°üÃû³Æ
+    /// ï¿½ï¿½Ê¾ï¿½Ä°ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     string DisplayName { get; }
     /// <summary>
-    /// ÃèÊö
+    /// ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     string Description { get; }
     /// <summary>
-    /// °ü°æ±¾
+    /// ï¿½ï¿½ï¿½æ±¾
     /// </summary>
     Version Version { get; }
     /// <summary>
-    /// °üº¬µÄ²å¼þ
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½Ä²ï¿½ï¿½
     /// </summary>
     List<IPlugin> Plugins { get; }
 }
 public interface IPlugin
 {
     /// <summary>
-    /// ËùÊôµÄ°ü ¸ÃÊôÐÔÓÉÖ÷³ÌÐòÉèÖÃ
+    /// ï¿½ï¿½ï¿½ï¿½Ä°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     IPackage? AcPackage { get; set; }
     /// <summary>
-    /// ²å¼þÃû³Æ(×÷ÎªÎ¨Ò»±êÊ¶·û)
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ÎªÎ¨Ò»ï¿½ï¿½Ê¶ï¿½ï¿½)
     /// </summary>
     string Name { get; }
     /// <summary>
-    /// ÏÔÊ¾µÄ²å¼þÃû³Æ
+    /// ï¿½ï¿½Ê¾ï¿½Ä²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     string DisplayName { get; }
     /// <summary>
-    /// ²å¼þÃèÊö
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     string Description { get; }
     /// <summary>
-    /// ÍÐ¹ÜµÄÉèÖÃSignKeys
+    /// ï¿½Ð¹Üµï¿½ï¿½ï¿½ï¿½ï¿½SignKeys
     /// </summary>
     List<string>? SettingsSignKeys { get; }
     /// <summary>
-    /// ²å¼þÀàÐÍ
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
     PluginType Type { get; }
     /// <summary>
-    /// ÏòÖ÷³ÌÐòÌá¹©µÄÖ÷ÒªUIElement
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½á¹©ï¿½ï¿½ï¿½ï¿½ÒªUIElement
     /// </summary>
     /// <returns></returns>
     virtual UIElement? GetMainElement() => null;

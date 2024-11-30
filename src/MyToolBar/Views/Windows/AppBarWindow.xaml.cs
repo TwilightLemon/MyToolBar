@@ -44,7 +44,18 @@ namespace MyToolBar.Views.Windows
             _powerOptimizeService = powerOptimizeService;
             _appSettingsService = appSettingsService;
 
+            _appSettingsService.Settings.OnMainMenuIconChanged += Settings_OnMainMenuIconChanged;
+
             InitializeComponent();
+        }
+
+        private void Settings_OnMainMenuIconChanged()
+        {
+            UpdateMainMenuIcon();
+        }
+        private void UpdateMainMenuIcon()
+        {
+            MainMenuIcon.Data = (Geometry)FindResource($"MenuIcon_{_appSettingsService.Settings.MainMenuIcon}");
         }
 
         #region Window Init & Service Events
@@ -56,6 +67,7 @@ namespace MyToolBar.Views.Windows
             //初始化AppBar背景样式
             UpdateBackground();
             UpdateColorMode();
+            UpdateMainMenuIcon();
             OnSystemColorChanged();
         }
 
@@ -414,8 +426,19 @@ namespace MyToolBar.Views.Windows
                 {
                     //存在最大化窗口
                     if (!IsEnergySaverModeOn){
-                        ImmerseMode_UpdateBackground();
-                        CurrentAppBarBgStyle = AppBarBgStyleType.ImmerseMode;
+                        if (_appSettingsService.Settings.UseImmerseMode)
+                        {
+                            ImmerseMode_UpdateBackground();
+                            CurrentAppBarBgStyle = AppBarBgStyleType.ImmerseMode;
+                        }
+                        else
+                        {
+                            //退出沉浸模式
+                            MainBarGrid.Background = null;
+                            _lastEvaColor = null;
+                            _themeResourceService.SetAppBarFontColor(!IsDarkMode);
+                            CurrentAppBarBgStyle = AppBarBgStyleType.Acrylic;
+                        }
                     }
                     else UpdateEnergySaverMode();
 

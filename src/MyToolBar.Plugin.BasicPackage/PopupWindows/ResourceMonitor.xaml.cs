@@ -76,7 +76,9 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
                     int count = 30;
                     if (ProcessList.Children.Count == 0)
                         InitProcessList(count);
-                    var processes = Process.GetProcesses().OrderByDescending(p => p.WorkingSet64).Take(count);
+                    var processes = Process.GetProcesses().OrderByDescending(p => p.WorkingSet64)
+                                                                               .Take(count- _frozenProc.Count).ToList();
+                    processes.AddRange(_frozenProc);
                     for (int i = 0; i < count; i++)
                     {
                         (ProcessList.Children[i] as ProcessItem).UpdateData(i < processes.Count() ? processes.ElementAt(i) : null);
@@ -127,7 +129,7 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
             PInfo_PID.Text = item._pro.Id.ToString();
             // PInfo_CPU.Text = item._pro.TotalProcessorTime.ToString();
             PInfo_MEM.Text = NetworkInfo.FormatSize(item._pro.WorkingSet64);
-            bool isResponding = item._pro.IsResponding();
+            bool isResponding = item._pro.IsResponding(out _);
 
             PInfo_STA.Text = FindResource(isResponding ? "Tip_Responding" : "Tip_Frozen").ToString();
 
@@ -149,13 +151,17 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
                 GlobalService.GlobalTimer.Elapsed -= RefreshPInfo;
                 return;
             }
-            bool isResponding = SelectedProcess.IsResponding();
+            var cur = SelectedProcess;
+            bool isResponding = cur.IsResponding(out _);
+            string mem= NetworkInfo.FormatSize(cur.WorkingSet64),
+                name= cur.MainWindowTitle,
+                proc= cur.ProcessName;
             Dispatcher.Invoke(() => { 
                 PInfo_STA.Text = FindResource(isResponding ? "Tip_Responding" : "Tip_Frozen").ToString();
-                PInfo_MEM.Text = NetworkInfo.FormatSize(SelectedProcess.WorkingSet64);
-                PInfo_Name.Text = SelectedProcess.MainWindowTitle;
+                PInfo_MEM.Text = mem;
+                PInfo_Name.Text = name;
                 if (string.IsNullOrWhiteSpace(PInfo_Name.Text))
-                    PInfo_Name.Text = SelectedProcess.ProcessName;
+                    PInfo_Name.Text = proc;
             });
         }
         private void ClosePInfoPage()
@@ -211,18 +217,25 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
         {
             Process.Start("taskmgr");
         }
+        private static List<Process> _frozenProc = [];
         private void PInfo_FreezeBtn_Click(object sender, RoutedEventArgs e)
         {
             if (!SelectedProcess_Accessible) return;
 
-            if (SelectedProcess.IsResponding())
+            if (SelectedProcess.IsResponding(out _))
             {
                 SelectedProcess.Freeze();
+                _frozenProc.Add(SelectedProcess);
                 //PInfo_STA.Text = FindResource("Tip_Frozen").ToString();
             }
             else
             {
                 SelectedProcess.Unfreeze();
+                if(_frozenProc.FirstOrDefault(p => p.Id == SelectedProcess.Id) is { } proc)
+                {
+                    _frozenProc.Remove(proc);
+                }
+                
                // PInfo_STA.Text = FindResource("Tip_Responding").ToString();
             }
         }
