@@ -23,6 +23,7 @@
     <sys:String x:Key="AppSettings_Group_Appearence">Appearence</sys:String>
     <sys:String x:Key="AppSettings_Group_Behavior">Behaviors</sys:String>
 
+    <sys:String x:Key="AppSettings_Item_EnableIsland">Display a fake island</sys:String>
     <sys:String x:Key="AppSettings_Item_UseImmerseMode">Enable immerse mode</sys:String>
     <sys:String x:Key="AppSettings_Item_AlwaysUseImmerseMode">Alway use immerse mode</sys:String>
     <sys:String x:Key="AppSettings_Item_AutoRunAtStartup">Auto run at startup</sys:String>

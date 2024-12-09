@@ -45,32 +45,45 @@ namespace MyToolBar.Views.Windows
             _appSettingsService = appSettingsService;
 
             _appSettingsService.Settings.OnMainMenuIconChanged += Settings_OnMainMenuIconChanged;
+            _appSettingsService.Settings.OnEnableIslandChanged += Settings_OnEnableIslandChanged;
 
             InitializeComponent();
+        }
+
+        private void Settings_OnEnableIslandChanged()
+        {
+            UpdateEnableIsland();
         }
 
         private void Settings_OnMainMenuIconChanged()
         {
             UpdateMainMenuIcon();
         }
+        private void UpdateEnableIsland()
+        {
+            Island.Visibility = _appSettingsService.Settings.EnableIsland ? Visibility.Visible : Visibility.Collapsed;
+        }
         private void UpdateMainMenuIcon()
         {
             MainMenuIcon.Data = (Geometry)FindResource($"MenuIcon_{_appSettingsService.Settings.MainMenuIcon}");
+            InvalidateVisual();
         }
 
         #region Window Init & Service Events
         private void Window_SourceInitialized(object sender, EventArgs e)
         {
+            _hwnd = new WindowInteropHelper(this).Handle;
             //标记WS_EX_TOOLWINDOW 窗口不在任务视图中显示
             WindowLongAPI.SetToolWindow(this);
             Width = SystemParameters.WorkArea.Width;
-            //初始化AppBar背景样式
+            //初始化AppBar样式
             UpdateBackground();
             UpdateColorMode();
             UpdateMainMenuIcon();
+            UpdateEnableIsland();
             OnSystemColorChanged();
         }
-
+        private IntPtr _hwnd;
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             #region GlobalTimer Init&Start
@@ -154,6 +167,11 @@ namespace MyToolBar.Views.Windows
         private void AppBar_OnFullScreenStateChanged(object sender, bool e)
         {
             Visibility = e && EnableHideWhenFullScreen ? Visibility.Collapsed : Visibility.Visible;
+            //?从全屏中恢复时不再绘制内容，强制刷新一下...
+/*            InvalidateVisual();  //没用？
+            UpdateLayout();*/
+            Width--;
+            Width++;
         }
 
         /// <summary>
@@ -416,6 +434,51 @@ namespace MyToolBar.Views.Windows
        
         enum AppBarBgStyleType { EnergySaving,ImmerseMode, Acrylic };
         private AppBarBgStyleType CurrentAppBarBgStyle { get; set; }
+        private void DisableImmerseMode()
+        {
+            //退出沉浸模式
+            MainBarGrid.Background = null;
+            _lastEvaColor = null;
+            SetForegroundColor();
+            CurrentAppBarBgStyle = AppBarBgStyleType.Acrylic;
+        }
+        /// <summary>
+        /// 在非沉浸模式下通过截图判断使用的前景色
+        /// </summary>
+        private void SetForegroundColor()
+        {
+            (double dpiX, double dpiY) = ScreenAPI.GetDPI(_hwnd);
+            var capHeight = 6;
+            using System.Drawing.Bitmap bmp = ScreenAPI.CaptureScreenArea(0, 0, (int)(ActualWidth * dpiY), capHeight);
+            if (bmp == null) return;
+            //取平均值
+            long _r = 0, _g = 0, _b = 0;
+            int total = 0;
+            for (int x = 0; x < ActualWidth; x += 20)
+            {
+                for (int y = 0; y < capHeight; y += 2)
+                {
+                    System.Drawing.Color c = bmp.GetPixel(x, y);
+                    _r += c.R;
+                    _g += c.G;
+                    _b += c.B;
+                    total++;
+                }
+            }
+            Color themeColor = Color.FromRgb((byte)(_r / total), (byte)(_g / total), (byte)(_b / total));
+            //判断颜色深浅
+            var sel = themeColor.R * 0.299 + themeColor.G * 0.578 + themeColor.B * 0.114;
+            if (sel > 150)
+            {
+                //浅色
+                _themeResourceService.SetAppBarFontColor(true);
+            }
+            else
+            {
+                //深色
+                _themeResourceService.SetAppBarFontColor(false);
+            }
+        }
         /// <summary>
         /// 更新AppBar背景
         /// </summary>
@@ -431,13 +494,13 @@ namespace MyToolBar.Views.Windows
                             ImmerseMode_UpdateBackground();
                             CurrentAppBarBgStyle = AppBarBgStyleType.ImmerseMode;
                         }
+                        else if(CurrentAppBarBgStyle == AppBarBgStyleType.ImmerseMode)
+                        {
+                            DisableImmerseMode();
+                        }
                         else
                         {
-                            //退出沉浸模式
-                            MainBarGrid.Background = null;
-                            _lastEvaColor = null;
-                            _themeResourceService.SetAppBarFontColor(!IsDarkMode);
-                            CurrentAppBarBgStyle = AppBarBgStyleType.Acrylic;
+                            SetForegroundColor();
                         }
                     }
                     else UpdateEnergySaverMode();
@@ -461,11 +524,7 @@ namespace MyToolBar.Views.Windows
 
                     if((CurrentAppBarBgStyle==AppBarBgStyleType.ImmerseMode && !immerse))
                     {
-                        //退出沉浸模式
-                        MainBarGrid.Background = null;
-                        _lastEvaColor = null;
-                        _themeResourceService.SetAppBarFontColor(!IsDarkMode);
-                        CurrentAppBarBgStyle = AppBarBgStyleType.Acrylic;
+                        DisableImmerseMode();
                     }
 
                     if (CurrentAppBarStyle == 1)
@@ -488,9 +547,7 @@ namespace MyToolBar.Views.Windows
         {
             //根据下方窗口调整AppBar背景
             //屏幕截图
-            using var source = new HwndSource(new HwndSourceParameters());
-            var dpiX = source.CompositionTarget.TransformToDevice.M11;
-            var dpiY = source.CompositionTarget.TransformToDevice.M22;
+            (double dpiX, double dpiY) = ScreenAPI.GetDPI(_hwnd);
             var capHeight = 6;
             using System.Drawing.Bitmap bmp = ScreenAPI.CaptureScreenArea(0, (int)(ActualHeight*dpiX), (int)(ActualWidth*dpiY), capHeight);
             if (bmp == null) return;
@@ -558,8 +615,8 @@ namespace MyToolBar.Views.Windows
             //更新AppBar颜色
             if (CurrentAppBarStyle == 0){
                 NormalWindowStyle();
-                if (CurrentAppBarBgStyle!=AppBarBgStyleType.ImmerseMode)
-                    _themeResourceService.SetAppBarFontColor(!isDarkMode);
+                if (CurrentAppBarBgStyle != AppBarBgStyleType.ImmerseMode)
+                    SetForegroundColor();
             }
             else
                 MaxWindowStyle();

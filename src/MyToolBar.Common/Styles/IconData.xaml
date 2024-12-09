@@ -62,4 +62,7 @@
     <PathGeometry x:Key="MenuIcon_Gatito">
         M250.4 117.3l90.9 309.4h341.3l91-309.3a17.1 17.1 0 0 1 32.6-0.4l149.1 466.1a21.3 21.3 0 0 1-7.4 23.5L512 938.7 75.9 606.5a21.3 21.3 0 0 1-7.3-23.5l149.1-466.1a17.1 17.1 0 0 1 32.6 0.4z
     </PathGeometry>
+    <PathGeometry x:Key="MenuIcon_Kali">
+        
+    </PathGeometry>
 </ResourceDictionary>

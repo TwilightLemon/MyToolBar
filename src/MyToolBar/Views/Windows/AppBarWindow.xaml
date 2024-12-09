@@ -55,7 +55,7 @@
             <Path x:Name="MainMenuIcon"
                   Data="{StaticResource MenuIcon_Apple}"
                   Stretch="Uniform"
-                  Fill="{DynamicResource ForeColor}"
+                  Fill="{DynamicResource AppBarFontColor}"
                   Width="15"
                   Height="15" />
         </Border>
@@ -67,8 +67,7 @@
                        TextWrapping="Wrap"
                        d:Text="Microsoft Visual Studio 2022"
                        VerticalAlignment="Center"
-                       HorizontalAlignment="Left"
-                       Foreground="{DynamicResource AppBarFontColor}" />
+                       HorizontalAlignment="Left" />
         </Grid>
         <Border x:Name="OuterFuncStatus"
                 Grid.Column="1"
@@ -80,6 +79,12 @@
             <Grid x:Name="OuterFunc"
                   Background="Transparent" />
         </Border>
+        <Border x:Name="Island"
+                Grid.ColumnSpan="3"
+                Background="Black"
+                Width="240"
+                Margin="0 0 0 2"
+                CornerRadius="0 0 12 12"/>
         <Border x:Name="NotificationBox"
                 CornerRadius="16"
                 Background="Black"

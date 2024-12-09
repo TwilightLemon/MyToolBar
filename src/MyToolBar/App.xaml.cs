@@ -34,6 +34,7 @@ namespace MyToolBar
                 // view models
                 services.AddTransient<SettingsViewModel>();
                 services.AddTransient<MainTitleMenuViewModel>();
+                services.AddTransient<AppSettingsPageViewModel>();
 
                 // settings pages
                 services.AddTransient<AppSettingsPage>();

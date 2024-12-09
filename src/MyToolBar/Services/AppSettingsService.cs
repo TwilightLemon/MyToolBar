@@ -31,6 +31,16 @@ namespace MyToolBar.Services
     public class AppSettings
     {
         /// <summary>
+        /// 假岛
+        /// </summary>
+        public bool EnableIsland { get; set; } = false;
+        public event Action? OnEnableIslandChanged;
+        public void SetEnableIsland(bool enable)
+        {
+            EnableIsland = enable;
+            OnEnableIslandChanged?.Invoke();
+        }
+        /// <summary>
         /// 返回桌面时使用"沉浸模式"
         /// </summary>
         public bool AlwaysUseImmerseMode {  get; set; }=false;
