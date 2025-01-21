@@ -5,7 +5,8 @@ using System.Net.Sockets;
 using System.Text;
 
 namespace MyToolBar.Plugin.BasicPackage.API;
-internal class LemonAppMusicServier
+//弃用
+internal class LemonAppMusicServer
 {
     private TcpListener _listener;
     private CancellationTokenSource _cancellationTokenSource;
@@ -15,7 +16,7 @@ internal class LemonAppMusicServier
     public event Action<string>? OnMsgReceived;
     public event Action? OnClientExited;
 
-    public LemonAppMusicServier()
+    public LemonAppMusicServer()
     {
         _listener = new TcpListener(IPAddress.Loopback,12587);
         InitMutex();

@@ -123,7 +123,7 @@ namespace MyToolBar.Plugin.BasicPackage.OuterControls
                 LyricTb.Text = info.Title + " - " + info.Artist;
             });
         }
-        private LemonAppMusicServier? _musicServier = null;
+        private LemonAppMusicServer? _musicServier = null;
         private async void BeginLemonAppLyric()
         {
             if (_musicServier == null)

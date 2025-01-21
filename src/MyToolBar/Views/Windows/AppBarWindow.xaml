@@ -64,7 +64,7 @@
               Margin="40 0 0 0"
               Background="#01000000">
             <TextBlock x:Name="TitleView"
-                       TextWrapping="Wrap"
+                       TextWrapping="NoWrap"
                        d:Text="Microsoft Visual Studio 2022"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Left" />
