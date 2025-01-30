@@ -54,8 +54,7 @@ namespace MyToolBar.ViewModels
         }
         partial void OnAutoRunAtStartupChanged(bool value)
         {
-            appSettingsService.Settings.AutoRunAtStartup = value;
-            applicationService.SetAutoRunAtStartup();//?
+            applicationService.SetAutoRunAtStartup(value);
         }
 
         partial void OnAppLanguageChanged(LocalCulture.Language value)

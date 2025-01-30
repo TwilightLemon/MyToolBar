@@ -1,3 +1,4 @@
+using MyToolBar.Plugin.TabletUtils.PenPackages;
 using MyToolBar.Plugin.TabletUtils.Services;
 using System.Globalization;
 using System.Reflection;
@@ -47,13 +48,13 @@ public class PenMenuPlugin : IPlugin
 public class SideBarPlugin : IPlugin
 {
     public IPackage? AcPackage { get; set; }
-
-    public string Name { get; } = "SideBar";
+    internal static readonly string _name = "SideBar";
+    public string Name { get; } = _name;
     public string DisplayName => _rm.GetString("SideBarDisplayName", _cultureInfo) ?? "";
 
     public string Description => _rm.GetString("SideBarDesc", _cultureInfo) ?? "";
 
-    public List<string>? SettingsSignKeys => null;
+    public List<string>? SettingsSignKeys => [SideWindow.DeepSeekConfigKey];
 
     public PluginType Type => PluginType.UserService;
 

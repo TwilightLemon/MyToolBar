@@ -6,8 +6,9 @@
         xmlns:ws="https://schemas.elecho.dev/wpfsuite"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:mb="clr-namespace:MyToolBar.Common.Behaviors;assembly=MyToolBar.Common"
+        xmlns:md="https://github.com/whistyun/MdXaml"
         mc:Ignorable="d"
-        Title="SideWindow"
+        Title="DeepSeek Assistant"
         WindowStyle="None"
         Background="{DynamicResource WindowBackgroundColor}"
         Foreground="{DynamicResource ForeColor}"
@@ -15,12 +16,12 @@
         Topmost="True"
         ResizeMode="NoResize"
         ws:WindowOption.Corner="Round"
-        Height="450"
+        Height="600"
         Width="500"
         Top="36"
         Left="0">
     <i:Interaction.Behaviors>
-        <mb:BlurWindowBehavior/>
+        <mb:BlurWindowBehavior Mode="Acrylic" IsToolWindow="True"/>
     </i:Interaction.Behaviors>
     <Window.Resources>
         <ResourceDictionary>
@@ -30,10 +31,63 @@
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
-        <ws:ScrollViewer  Style="{StaticResource SimpleVerticalScrollViewerStyle}">
-            <ws:StackPanel Spacing="8">
-            </ws:StackPanel>
-        </ws:ScrollViewer>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="36" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" MinHeight=" 120" MaxHeight="400"/>
+        </Grid.RowDefinitions>
+        <Grid Background="{DynamicResource MaskColor}">
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="12">
+                DeepSeek
+            </TextBlock>
+            <ws:ToggleButton x:Name="FixTb"
+                             HorizontalAlignment="Right"
+                             VerticalAlignment="Center"
+                             Padding="12 4"
+                             Margin="0 0 8 0"
+                             CornerRadius="12"
+                             BorderThickness="0"
+                             Background="{DynamicResource MaskColor}"
+                             CheckedBackground="{DynamicResource SystemThemeColor}"
+                             HoverBackground="{DynamicResource SystemThemeColor}"
+                             Foreground="{DynamicResource ForeColor}"
+                             HoverForeground="{DynamicResource ForeColor}"
+                             CheckedForeground="{DynamicResource ForeColor}">
+                Fix
+            </ws:ToggleButton>
+            <ws:Button x:Name="ClearBtn"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       Padding="12 4"
+                       Margin="8 0 0 0"
+                       CornerRadius="12"
+                       BorderThickness="0"
+                       Background="{DynamicResource MaskColor}"
+                       PressedBackground="{DynamicResource SystemThemeColor}"
+                       HoverBackground="{DynamicResource SystemThemeColor}"
+                       Foreground="{DynamicResource ForeColor}"
+                       HoverForeground="{DynamicResource ForeColor}"
+                       PressedForeground="{DynamicResource ForeColor}"
+                       Click="ClearBtn_Click">
+                Clear
+            </ws:Button>
+        </Grid>
+        <md:MarkdownScrollViewer x:Name="viewer"
+                                 Grid.Row="1"
+                                 ws:StylusTouchDevice.Simulate="True"
+                                 ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                                 Foreground="{DynamicResource ForeColor}"
+                                 MarkdownStyle="{x:Static md:MarkdownStyle.GithubLike}"
+                                 xml:space="preserve"
+                                 Padding="12">
+            hello
+            
+        </md:MarkdownScrollViewer>
+        <ws:TextBox x:Name="tb"
+                    Grid.Row="2"
+                    PreviewKeyDown="tb_PreviewKeyDown"
+                    Style="{StaticResource SimpleTextBoxStyleForWs}" 
+                    CornerRadius="0"
+                    Padding="8"/>
     </Grid>
 </Window>

@@ -43,9 +43,11 @@ namespace MyToolBar.Plugin.TabletUtils.PenPackages
             _isMouseIn = false;
         }
 
+        private SideWindow? sw;
         void ShowSideWindow()
         {
-            new SideWindow().Show();
+            sw ??= new();
+            sw.Show();
         }
         void CancelShowClickBd()
         {
@@ -103,7 +105,7 @@ namespace MyToolBar.Plugin.TabletUtils.PenPackages
         private void ClickBd_MouseLeave(object sender, MouseEventArgs e)
         {
             HideClickBd();
-            _isMouseIn = false;
+            //_isMouseIn = false;
         }
         private CancellationTokenSource? _shouldShowClickBd = new();
         private const int MinMouseTargetWidth = 2;

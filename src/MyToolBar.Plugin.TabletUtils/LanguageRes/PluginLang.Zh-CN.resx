@@ -133,6 +133,6 @@
     <value>在屏幕右侧轻点(触摸)或鼠标停留以弹出侧边栏</value>
   </data>
   <data name="SideBarDisplayName" xml:space="preserve">
-    <value>侧边栏</value>
+    <value>侧边栏(DeepSeek AI)</value>
   </data>
 </root>

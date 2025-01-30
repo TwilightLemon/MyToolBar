@@ -127,6 +127,16 @@ public class ManagedPackageService
     public void SyncFromFile(string file)
     {
         var loadContext = new AssemblyLoadContext(Guid.NewGuid().ToString(), true);
+        loadContext.Resolving += (context, assemblyName) =>
+        {
+            string dependencyPath = Path.Combine(_packageDir, $"{assemblyName.Name}.dll");
+            if (File.Exists(dependencyPath))
+            {
+                return context.LoadFromAssemblyPath(dependencyPath);
+            }
+            return null;
+        };
+
         var assembly = loadContext.LoadFromAssemblyPath(file);
         var package = assembly.GetTypes().FirstOrDefault(t => typeof(IPackage).IsAssignableFrom(t));
         if (package == null)

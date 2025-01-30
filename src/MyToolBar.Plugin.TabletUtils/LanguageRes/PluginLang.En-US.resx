@@ -133,6 +133,6 @@
     <value>Tap (touch) on the right side of the screen or mouse over it to bring up the sidebar</value>
   </data>
   <data name="SideBarDisplayName" xml:space="preserve">
-    <value>SideBar</value>
+    <value>SideBar (DeepSeek AI)</value>
   </data>
 </root>

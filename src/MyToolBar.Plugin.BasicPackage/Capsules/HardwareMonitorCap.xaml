@@ -54,9 +54,13 @@
                 <Path Width="13" Height="13" HorizontalAlignment="Left" Data="{StaticResource Icon_memory}" Stretch="Uniform" SnapsToDevicePixels="True" Fill="{Binding Foreground, ElementName=uc}"/>
                 <TextBlock x:Name="Meo_text" Margin="16,0,0,0" d:Text="100%" TextAlignment="Center" VerticalAlignment="Center"/>
             </Grid>
-            <Grid x:Name="CPUViewer" Width="90" Height="30" Margin="8,0,0,0">
+            <Grid x:Name="CPUViewer" Width="52" Height="30" Margin="8,0,0,0">
                 <TextBlock x:Name="Cpu_text" d:Text="100%"  Margin="18,0,0,0" HorizontalAlignment="Left" TextWrapping="NoWrap" TextTrimming="None" VerticalAlignment="Center"/>
+                
+                <!--  需要管理员权限才能获取，而且此API不准，先暂时不显示
                 <TextBlock x:Name="Cpu_temp" d:Text="36℃" TextWrapping="NoWrap" Margin="0 0 6 0" HorizontalAlignment="Right" TextTrimming="None" VerticalAlignment="Center"/>
+                -->
+                
                 <Path Width="13" Height="13" Data="{StaticResource Icon_CPU}" HorizontalAlignment="Left" Fill="{Binding Foreground, ElementName=uc}" Stretch="Uniform" SnapsToDevicePixels="True" Margin="0,5,0,5"/>
             </Grid>
             <Grid x:Name="NetworkViewer" Width="95" Height="30" Margin="8,0,0,0">

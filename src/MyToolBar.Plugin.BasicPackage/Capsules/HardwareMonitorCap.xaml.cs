@@ -83,7 +83,7 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
                 return;
             Meo_text.Text = (int)MemoryInfo.GetUsedPercent() + "%";
             Cpu_text.Text = ci.GetCPUUsedPercent();
-            Cpu_temp.Text = ci.GetCPUTemperature() + "℃";
+            //Cpu_temp.Text = ci.GetCPUTemperature() + "℃";
             var data = ni.GetNetworkSpeed();
             Network_text.Text = $"↑ {data[1]}/s\r\n↓ {data[0]}/s";
 

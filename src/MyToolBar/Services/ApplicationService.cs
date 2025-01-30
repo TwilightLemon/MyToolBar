@@ -127,13 +127,16 @@ namespace MyToolBar.Services
             Debug.WriteLine(HttpClient.DefaultProxy);
         }
 
-        public void SetAutoRunAtStartup()
+        public void SetAutoRunAtStartup(bool autoRun)
         {
-            //Not working...?
-/*            bool autoRun = appSettingsService.Settings.AutoRunAtStartup;
+            if (appSettingsService.Settings.AutoRunAtStartup == autoRun) return;
+            appSettingsService.Settings.AutoRunAtStartup = autoRun;
             string exePath = $"\"{Process.GetCurrentProcess().MainModule.FileName}\"";
             using RegistryKey RKey = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
-            RKey.SetValue("MyToolBar", autoRun ? exePath : "");*/
+            if(autoRun)
+                RKey.SetValue("MyToolBar", exePath);
+            else
+                RKey.DeleteValue("MyToolBar", false);
         }
     }
 }
