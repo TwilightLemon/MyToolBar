@@ -6,7 +6,8 @@
         xmlns:ws="https://schemas.elecho.dev/wpfsuite"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:mb="clr-namespace:MyToolBar.Common.Behaviors;assembly=MyToolBar.Common"
-        xmlns:md="https://github.com/whistyun/MdXaml"
+        xmlns:md="http://schemas.lepo.co/wpfui/2022/xaml/markdown"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         mc:Ignorable="d"
         Title="DeepSeek Assistant"
         WindowStyle="None"
@@ -26,7 +27,8 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary  Source="pack://application:,,,/MyToolBar.Common;component/Styles/UITemplate.xaml" />
+                <md:ControlsDictionary />
+                <ui:ControlsDictionary />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -37,7 +39,9 @@
             <RowDefinition Height="Auto" MinHeight=" 120" MaxHeight="400"/>
         </Grid.RowDefinitions>
         <Grid Background="{DynamicResource MaskColor}">
-            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="12">
+            <TextBlock VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       FontSize="12">
                 DeepSeek
             </TextBlock>
             <ws:ToggleButton x:Name="FixTb"
@@ -72,17 +76,9 @@
                 Clear
             </ws:Button>
         </Grid>
-        <md:MarkdownScrollViewer x:Name="viewer"
-                                 Grid.Row="1"
-                                 ws:StylusTouchDevice.Simulate="True"
-                                 ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                                 Foreground="{DynamicResource ForeColor}"
-                                 MarkdownStyle="{x:Static md:MarkdownStyle.GithubLike}"
-                                 xml:space="preserve"
-                                 Padding="12">
-            hello
-            
-        </md:MarkdownScrollViewer>
+        <md:MarkdownViewer x:Name="viewer"
+                           Grid.Row="1">
+        </md:MarkdownViewer>
         <ws:TextBox x:Name="tb"
                     Grid.Row="2"
                     PreviewKeyDown="tb_PreviewKeyDown"

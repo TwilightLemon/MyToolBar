@@ -8,9 +8,11 @@
 	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="MdXaml" Version="1.27.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="ColorCode.Core" Version="2.0.15" />
+		<PackageReference Include="Markdig" Version="0.40.0" />
+		<PackageReference Include="WPF-UI" Version="3.0.5" />
+	</ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MyToolBar.Common\MyToolBar.Common.csproj" />
@@ -21,6 +23,9 @@
     <Reference Include="DeepSeek.Core">
       <HintPath>Lib\DeepSeek.Core.dll</HintPath>
     </Reference>
+	  <Reference Include="Wpf.Ui.Markdown">
+		  <HintPath>Lib\Wpf.Ui.Markdown.dll</HintPath>
+	  </Reference>
   </ItemGroup>
 
 	<ItemGroup>

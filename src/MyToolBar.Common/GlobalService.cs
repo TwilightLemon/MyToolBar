@@ -20,10 +20,20 @@ namespace MyToolBar.Common
         /// 有窗口进入全屏时是否隐藏AppBar
         /// </summary>
         public static bool EnableHideWhenFullScreen { get; set; } = true;
+        private static bool _isDarkMode = true;
+        public static event Action<bool>? OnIsDarkModeChanged;
         /// <summary>
         /// 全局主题模式
         /// </summary>
-        public static bool IsDarkMode { get; set; } = true;
+        public static bool IsDarkMode
+        {
+            get => _isDarkMode;
+            set
+            {
+                _isDarkMode = value;
+                OnIsDarkModeChanged?.Invoke(value);
+            }
+        }
         /// <summary>
         /// 公共Timer
         /// </summary>

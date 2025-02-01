@@ -1,5 +1,4 @@
-﻿using DeepSeek;
-using DeepSeek.Core;
+﻿using DeepSeek.Core;
 using DeepSeek.Core.Models;
 using MyToolBar.Common;
 using MyToolBar.Plugin.TabletUtils.Configs;
@@ -16,44 +15,65 @@ namespace MyToolBar.Plugin.TabletUtils.PenPackages
     /// </summary>
     public partial class SideWindow : Window
     {
+        #region Deepseek config
         internal static string DeepSeekConfigKey = "MyToolBar.Plugin.TabletUtils.DeepSeek";
-        SettingsMgr<DeepSeekConfig> mgr = new(DeepSeekConfigKey, SideBarPlugin._name);
-        DeepSeekClient? client = null;
-        const string model = "deepseek-reasoner";
-        readonly List<Message> history = [
-                    //Message.NewSystemMessage("You are a professional computer programmer.")
-        ];
-        readonly ChatRequest request = new()
+        private static SettingsMgr<DeepSeekConfig> config = new(DeepSeekConfigKey, SideBarPlugin._name);
+        private static DeepSeekClient? client = null;
+        static SideWindow()
         {
-            Model = model
-        };
+            Init();
+            config.OnDataChanged += Mgr_OnDataChanged;
+        }
+        private static void Mgr_OnDataChanged()
+        {
+            Init();
+        }
+        private static async void Init()
+        {
+            await config.Load();
+            if (!string.IsNullOrEmpty(config.Data?.APIKey))
+            {
+                client = new DeepSeekClient(config.Data.APIKey);
+            }
+        }
+
+        private readonly List<Message> history = [];
+        private readonly ChatRequest request = new();
+        #endregion
         public SideWindow()
         {
             InitializeComponent();
             Height = SystemParameters.WorkArea.Height-12;
             Deactivated += SideWindow_Deactivated;
             Activated += SideWindow_Activated;
-            mgr.OnDataChanged += Mgr_OnDataChanged;
-            Init();         
+            GlobalService.OnIsDarkModeChanged += GlobalService_OnIsDarkModeChanged;
         }
 
-        private void Mgr_OnDataChanged()
+        private void GlobalService_OnIsDarkModeChanged(bool isDarkMode)
         {
-            Init();
+            ApplyThemeForMdViewer(isDarkMode);
         }
 
-         async void Init()
+        private void ApplyThemeForMdViewer(bool isDarkMode)
         {
-            await mgr.Load();
-            if (!string.IsNullOrEmpty(mgr.Data?.APIKey))
-            {
-                client = new DeepSeekClient(mgr.Data.APIKey);
-            }
+            viewer.Resources.MergedDictionaries.Clear();
+            var theme = isDarkMode ? Wpf.Ui.Appearance.ApplicationTheme.Dark : Wpf.Ui.Appearance.ApplicationTheme.Light;
+            viewer.Resources.MergedDictionaries.Add(new Wpf.Ui.Markup.ThemesDictionary() { Theme = theme });
+            viewer.Resources.MergedDictionaries.Add(new Wpf.Ui.Markdown.Markup.ThemesDictionary() { Theme = theme });
+            Wpf.Ui.Markdown.Appearance.ThemeManager.IsDarkMode = isDarkMode;
         }
 
         private void SideWindow_Activated(object? sender, EventArgs e)
         {
             if (FixTb.IsChecked == true) return;
+
+            ApplyThemeForMdViewer(GlobalService.IsDarkMode);
+            viewer.Markdown="""
+                nihao
+                ```bash
+                sudo apt install zip
+                ```
+                """;
             var da = new DoubleAnimation(0, 20, TimeSpan.FromMilliseconds(300));
             da.EasingFunction = new CircleEase();
             this.BeginAnimation(LeftProperty, da);
@@ -62,10 +82,13 @@ namespace MyToolBar.Plugin.TabletUtils.PenPackages
         private void SideWindow_Deactivated(object? sender, EventArgs e)
         {
             if (FixTb.IsChecked == true) return;
+
+
             var da = new DoubleAnimation(-ActualWidth, TimeSpan.FromMilliseconds(300));
             da.EasingFunction = new CircleEase();
             da.Completed += delegate {
                 Hide();
+                GlobalService.OnIsDarkModeChanged -= GlobalService_OnIsDarkModeChanged;
             };
             this.BeginAnimation(LeftProperty, da);
         }
