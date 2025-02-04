@@ -47,26 +47,17 @@ public class ManagedPackageService
     {
         _watcher = new FileSystemWatcher(_packageDir)
         {
-            Filter = "*.dll",
-            NotifyFilter = NotifyFilters.LastWrite,
+            NotifyFilter = NotifyFilters.DirectoryName,
             EnableRaisingEvents = true
         };
         _watcher.Changed += _watcher_Created;
         _watcher.Created += _watcher_Created;
-        _watcher.Deleted += _watcher_Deleted;
     }
     private DateTime _lastTime=DateTime.MinValue;
-    private void _watcher_Deleted(object sender, FileSystemEventArgs e) {
-        if(DateTime.Now-_lastTime<TimeSpan.FromSeconds(1)) return;
-        _lastTime = DateTime.Now;
-        var m=_managedPkgConfs.Data.FirstOrDefault(kv => kv.Value.FilePath == e.FullPath);
-        UnloadFromRegistered(m.Key);
-    }
-
     private void _watcher_Created(object sender, FileSystemEventArgs e) {
         if (DateTime.Now - _lastTime < TimeSpan.FromSeconds(1)) return;
         _lastTime = DateTime.Now;
-        SyncFromFile(e.FullPath);
+        SyncFromPackagePath(e.FullPath);
     }
 
     private void CreateDir()
@@ -100,11 +91,11 @@ public class ManagedPackageService
     {
         //先读取预先的配置
         await _managedPkgConfs.Load();
-        //遍历目录下的所有dll文件
-        string[] files = Directory.GetFiles(_packageDir, "*.dll");
-        foreach (var file in files)
+        //
+        string[] dirs = Directory.GetDirectories(_packageDir);
+        foreach (var dir in dirs)
         {
-            SyncFromFile(file);
+            SyncFromPackagePath(dir);
         }
         //保存配置文件
         await _managedPkgConfs.Save();
@@ -123,21 +114,27 @@ public class ManagedPackageService
     /// <summary>
     /// 有新的托管包文件时同步
     /// </summary>
-    /// <param name="file"></param>
-    public void SyncFromFile(string file)
+    /// <param name="path"></param>
+    public void SyncFromPackagePath(string path)
     {
+        //check if it is a valid package
+        string packageName = new DirectoryInfo(path).Name;
+        string mainFile = Path.Combine(path, packageName+".dll");
+        if (!File.Exists(mainFile)) return;
+
         var loadContext = new AssemblyLoadContext(Guid.NewGuid().ToString(), true);
+        var resolver = new AssemblyDependencyResolver(mainFile);
         loadContext.Resolving += (context, assemblyName) =>
         {
-            string dependencyPath = Path.Combine(_packageDir, $"{assemblyName.Name}.dll");
-            if (File.Exists(dependencyPath))
+            string? dependencyPath = resolver.ResolveAssemblyToPath(assemblyName);
+            if (dependencyPath != null)
             {
                 return context.LoadFromAssemblyPath(dependencyPath);
             }
             return null;
         };
-
-        var assembly = loadContext.LoadFromAssemblyPath(file);
+        //load from mainFile
+        var assembly = loadContext.LoadFromStream(File.OpenRead(mainFile));
         var package = assembly.GetTypes().FirstOrDefault(t => typeof(IPackage).IsAssignableFrom(t));
         if (package == null)
         {
@@ -169,12 +166,11 @@ public class ManagedPackageService
         else
         {
             //写入配置文件
-            _managedPkgConfs.Data.Add(pkgObj.PackageName, new ManagedPkgConf { PackageName = pkgObj.PackageName, IsEnabled = true,FilePath=file });
+            _managedPkgConfs.Data.Add(pkgObj.PackageName, new ManagedPkgConf { PackageName = pkgObj.PackageName, IsEnabled = true,FilePath=mainFile });
         }
         //添加到托管包列表
         _managedPkg.Add(pkgObj.PackageName, new ManagedPackage(loadContext, pkgObj,isEnable));
         pkgObj.Plugins?.ForEach(o => o.AcPackage=pkgObj);
-        Console.WriteLine(pkgObj == null ? "Null" : "Not null");
         if (!isEnable)
         {
             loadContext.Unload();

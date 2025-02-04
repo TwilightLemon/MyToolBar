@@ -1,4 +1,5 @@
 ﻿using MyToolBar.Common.WinAPI;
+using MyToolBar.Plugin.TabletUtils.DeepSeek;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -43,7 +44,7 @@ namespace MyToolBar.Plugin.TabletUtils.PenPackages
             _isMouseIn = false;
         }
 
-        private SideWindow? sw;
+        private DeepSeekChatWindow? sw;
         void ShowSideWindow()
         {
             sw ??= new();

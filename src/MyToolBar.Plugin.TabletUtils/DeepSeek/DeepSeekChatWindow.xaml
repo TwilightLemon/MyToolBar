@@ -1,0 +1,139 @@
+﻿<Window x:Class="MyToolBar.Plugin.TabletUtils.DeepSeek.DeepSeekChatWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ws="https://schemas.elecho.dev/wpfsuite"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:mb="clr-namespace:MyToolBar.Common.Behaviors;assembly=MyToolBar.Common"
+        mc:Ignorable="d"
+        Title="DeepSeek Assistant"
+        WindowStyle="None"
+        Background="{DynamicResource WindowBackgroundColor}"
+        Foreground="{DynamicResource ForeColor}"
+        ShowInTaskbar="False"
+        Topmost="True"
+        ResizeMode="NoResize"
+        ws:WindowOption.Corner="Round"
+        Height="600"
+        Width="500"
+        Top="36"
+        Left="0">
+    <i:Interaction.Behaviors>
+        <mb:BlurWindowBehavior Mode="Acrylic" IsToolWindow="True"/>
+    </i:Interaction.Behaviors>
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/MyToolBar.Plugin.TabletUtils;component/IconData.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MyToolBar.Common;component/Styles/UITemplate.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" MinHeight=" 160" MaxHeight="400"/>
+        </Grid.RowDefinitions>
+        <Grid Background="Transparent">
+            <TextBlock VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       FontSize="12">
+                DeepSeek
+            </TextBlock>
+            <ws:ToggleButton x:Name="FixTb"
+                             HorizontalAlignment="Right"
+                             VerticalAlignment="Center"
+                             Padding="12 4"
+                             Margin="0 0 12 0"
+                             CornerRadius="12"
+                             BorderThickness="0"
+                             Background="{DynamicResource MaskColor}"
+                             CheckedBackground="{DynamicResource SystemThemeColor}"
+                             HoverBackground="{DynamicResource SystemThemeColor}"
+                             Foreground="{DynamicResource ForeColor}"
+                             HoverForeground="{DynamicResource ForeColor}"
+                             CheckedForeground="{DynamicResource ForeColor}">
+                Fix
+            </ws:ToggleButton>
+            <ws:Button x:Name="ClearBtn"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       Padding="12 4"
+                       Margin="12 0 0 0"
+                       CornerRadius="12"
+                       BorderThickness="0"
+                       Background="{DynamicResource MaskColor}"
+                       PressedBackground="{DynamicResource SystemThemeColor}"
+                       HoverBackground="{DynamicResource SystemThemeColor}"
+                       Foreground="{DynamicResource ForeColor}"
+                       HoverForeground="{DynamicResource ForeColor}"
+                       PressedForeground="{DynamicResource ForeColor}"
+                       Click="ClearBtn_Click">
+                Clear
+            </ws:Button>
+        </Grid>
+        <Grid Grid.Row="1">
+            <ws:ScrollViewer Style="{StaticResource SimpleVerticalScrollViewerStyle}">
+                <ws:StackPanel x:Name="MsgContainer" Spacing="12" Margin="12 0">
+                    
+                </ws:StackPanel>
+            </ws:ScrollViewer>
+        </Grid>
+        <Border Grid.Row="2"
+                Margin="12"
+                Background="{DynamicResource MaskColor}"
+                CornerRadius="12">
+            <Grid>
+                <ws:TextBox x:Name="tb"
+                            PreviewKeyDown="tb_PreviewKeyDown"
+                            Style="{StaticResource SimpleTextBoxStyleForWs}"
+                            Background="Transparent"
+                            Placeholder="Message DeepSeek"
+                            HoverBackground="Transparent"
+                            FocusedBackground="Transparent"
+                            CornerRadius="0"
+                            Padding="8" 
+                            Margin="4 4 4 48"/>
+                <ws:ToggleButton x:Name="SwitchModelTb"
+                                 HorizontalAlignment="Left"
+                                 VerticalAlignment="Bottom"
+                                 Cursor="Hand"
+                                 Click="SwitchModelTb_Click"
+                                 Padding="12 4"
+                                 Margin="18"
+                                 Height="28"
+                                 CornerRadius="14"
+                                 BorderThickness="0"
+                                 Background="{DynamicResource MaskColor}"
+                                 CheckedBackground="{DynamicResource SystemThemeColor}"
+                                 HoverBackground="{DynamicResource SystemThemeColor}"
+                                 Foreground="{DynamicResource ForeColor}"
+                                 HoverForeground="{DynamicResource ForeColor}"
+                                 CheckedForeground="{DynamicResource ForeColor}">
+                    DeepSeek R1
+                </ws:ToggleButton>
+                <ws:Button x:Name="SendBtn"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Bottom"
+                           Padding="12 4"
+                           Margin="0,0,12,12"
+                           Cursor="Hand"
+                           Width="42"
+                           Height="42"
+                           CornerRadius="21"
+                           BorderThickness="0"
+                           Background="{DynamicResource SystemThemeColor}"
+                           PressedBackground="{DynamicResource SystemThemeColor}"
+                           HoverBackground="{DynamicResource SystemThemeColor}"
+                           Foreground="{DynamicResource ForeColor}"
+                           HoverForeground="{DynamicResource ForeColor}"
+                           PressedForeground="{DynamicResource ForeColor}"
+                           Click="SendBtn_Click">
+                    <Path x:Name="SendingStatus" Data="{StaticResource SendIcon}" Fill="{DynamicResource ForeColor}" Stretch="Uniform" Margin="2"/>
+                </ws:Button>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

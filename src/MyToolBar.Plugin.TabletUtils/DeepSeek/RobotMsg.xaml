@@ -1,0 +1,71 @@
+﻿<UserControl x:Class="MyToolBar.Plugin.TabletUtils.DeepSeek.RobotMsg"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MyToolBar.Plugin.TabletUtils.PenPackages"
+             xmlns:md="clr-namespace:EleCho.MdViewer;assembly=EleCho.MdViewer"
+             xmlns:mu="clr-namespace:EleCho.MdViewer.Markup;assembly=EleCho.MdViewer"
+             xmlns:ws="https://schemas.elecho.dev/wpfsuite"
+             mc:Ignorable="d"
+             MouseDoubleClick="UserControl_MouseDoubleClick"
+             d:DesignHeight="269.244"
+             d:DesignWidth="278.63">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <mu:ControlsDictionary />
+                <mu:ThemeDictionary ColorMode="Dark" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <TextBlock Text="Deepseek: " FontSize="10" Opacity="0.6"/>
+        <ws:StackPanel Margin="0 16 0 0" Spacing="4">
+            <Grid x:Name="DeepThinking" Visibility="Collapsed" d:Visibility="Visible">
+                <ws:ToggleButton x:Name="OpenThoughtBtn"
+                                 HorizontalAlignment="Left"
+                                 VerticalAlignment="Top"
+                                 Cursor="Hand"
+                                 Padding="12 4"
+                                 IsChecked="True"
+                                 Click="OpenThoughtBtn_Click"
+                                 Margin="6"
+                                 Height="28"
+                                 CornerRadius="14"
+                                 BorderThickness="0"
+                                 Background="{DynamicResource MaskColor}"
+                                 CheckedBackground="{DynamicResource SystemThemeColor}"
+                                 HoverBackground="{DynamicResource SystemThemeColor}"
+                                 Foreground="{DynamicResource ForeColor}"
+                                 HoverForeground="{DynamicResource ForeColor}"
+                                 CheckedForeground="{DynamicResource ForeColor}">
+                    Thinking...
+                </ws:ToggleButton>
+                <Border x:Name="ThoughtBd" 
+                        Margin="12 42 12 8"
+                        Padding="8 0"
+                        BorderBrush="{DynamicResource SystemThemeColor}"
+                        BorderThickness="4 0 0 0" CornerRadius="2">
+                    <TextBlock x:Name="ThoughtTb"
+                               Opacity="0.7"
+                               TextWrapping="Wrap">
+
+                    </TextBlock>
+                </Border>
+            </Grid>
+            <ws:ConditionalControl x:Name="cc">
+                <ws:ConditionalControl.ContentWhenTrue>
+                    <ws:TextBox x:Name="tb"
+                                Style="{DynamicResource SimpleTextBoxStyleForWs}"
+                                TextWrapping="Wrap"
+                                AcceptsReturn="True"
+                                AcceptsTab="True" />
+                </ws:ConditionalControl.ContentWhenTrue>
+                <ws:ConditionalControl.ContentWhenFalse>
+                    <md:MarkdownViewer x:Name="viewer" />
+                </ws:ConditionalControl.ContentWhenFalse>
+            </ws:ConditionalControl>
+        </ws:StackPanel>
+    </Grid>
+</UserControl>

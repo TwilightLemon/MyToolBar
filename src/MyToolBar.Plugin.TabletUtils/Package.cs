@@ -1,4 +1,4 @@
-using MyToolBar.Plugin.TabletUtils.PenPackages;
+using MyToolBar.Plugin.TabletUtils.DeepSeek;
 using MyToolBar.Plugin.TabletUtils.Services;
 using System.Globalization;
 using System.Reflection;
@@ -54,7 +54,7 @@ public class SideBarPlugin : IPlugin
 
     public string Description => _rm.GetString("SideBarDesc", _cultureInfo) ?? "";
 
-    public List<string>? SettingsSignKeys => [SideWindow.DeepSeekConfigKey];
+    public List<string>? SettingsSignKeys => [DeepSeekChatWindow.DeepSeekConfigKey];
 
     public PluginType Type => PluginType.UserService;
 
