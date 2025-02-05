@@ -22,24 +22,19 @@ public partial class DeepSeekChatWindow : Window
 {
     #region Deepseek config
     internal static string DeepSeekConfigKey = "MyToolBar.Plugin.TabletUtils.DeepSeek";
-    private static SettingsMgr<DeepSeekConfig> config = new(DeepSeekConfigKey, SideBarPlugin._name);
-    private static DeepSeekClient? client = null;
-    static DeepSeekChatWindow()
+    private SettingsMgr<DeepSeekConfig> config = new(DeepSeekConfigKey, SideBarPlugin._name);
+    private DeepSeekClient? client = null;
+    private void Mgr_OnDataChanged()
     {
-        Init();
-        config.OnDataChanged += Mgr_OnDataChanged;
+        _=Init();
     }
-    private static void Mgr_OnDataChanged()
-    {
-        Init();
-    }
-    private static async void Init()
+    private async Task Init()
     {
         await config.Load();
         if (!string.IsNullOrEmpty(config.Data?.APIKey))
         {
             client = new DeepSeekClient(config.Data.APIKey);
-            client.SetTimeout(5000);
+            client.SetTimeout(5);
             request.Model = config.Data!.Model;
         }
     }
@@ -53,10 +48,18 @@ public partial class DeepSeekChatWindow : Window
     {
         InitializeComponent();
         Height = SystemParameters.WorkArea.Height-12;
+        config.OnDataChanged += Mgr_OnDataChanged;
         Deactivated += SideWindow_Deactivated;
         Activated += SideWindow_Activated;
+        Loaded += DeepSeekChatWindow_Loaded;
         Closed += SideWindow_Closed;
         GlobalService.OnIsDarkModeChanged += GlobalService_OnIsDarkModeChanged;
+    }
+
+    private async void DeepSeekChatWindow_Loaded(object sender, RoutedEventArgs e)
+    {
+        await Init();
+        SwitchModelTb.IsChecked = config.Data.Model == DeepSeekModels.ReasonerModel;
     }
 
     private void SideWindow_Closed(object? sender, EventArgs e)
@@ -86,7 +89,6 @@ public partial class DeepSeekChatWindow : Window
         if (FixTb.IsChecked == true) return;
 
         ApplyThemeForMdViewer(GlobalService.IsDarkMode);
-        SwitchModelTb.IsChecked = request.Model == DeepSeekModels.ReasonerModel;
 
         var da = new DoubleAnimation(0, 20, TimeSpan.FromMilliseconds(300));
         da.EasingFunction = new CircleEase();

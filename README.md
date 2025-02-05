@@ -1,22 +1,20 @@
-# MyToolBar (Beta)
+# MyToolBar (Preview)
 [![LICENSE](https://img.shields.io/badge/license-GPL%20v3.0-blue.svg?style=flat-square)](https://github.com/TwilightLemon/MyToolBar/blob/master/LICENSE)  
 ### Platform
-Run on Windows 10 1803~11  
+Run on Windows10 1803~ Windows11  
 Powered by .NET 8 on WPF  
-
-目前此App处于测试阶段，功能可能不稳定，作者正在努力提高可定制性。
+现已进入预发布阶段，欢迎体验和反馈！  
 ## 简介
   这是一个为提升Surface等Windows平板设备体验的全局顶部栏工具，目标是：  
--  实时了解和控制设备运行状态
--  提供常用功能适用于平板的快捷方式
--  提升平板触控和笔的操作体验
+-  实时了解和控制设备运行状态：硬件状态监控和快速进程管理，现由插件`MyToolBar.Plugin.BasicPackage`提供
+-  提供常用功能常驻平台、提升平板触控和笔的操作体验: 拓展触控笔菜单、侧边栏、顶部栏手势等交互方式，现由插件`MyToolBar.Plugin.TabletUtils`提供
 -  与WindowsUI融为一体
 -  轻量级和低功耗  
 -  高拓展性和可定制性
 
 当然，此app不仅适配平板，也同样适用于用鼠标操作的桌面设备。
   
-  ![Main](https://github.com/TwilightLemon/Data/blob/master/50c4d49f1bd71f44cd3bec9e4fdf5fd8.jpg?raw=true)
+  ![Main](https://raw.githubusercontent.com/TwilightLemon/Data/refs/heads/master/MTB_Settings_Main.jpg)
 ## 功能
 ### 通过AppBar固定的顶部栏
 了解什么是AppBar(Win32 API): [WPF使用AppBar实现窗口停靠，适配缩放、全屏响应和多窗口并列](https://blog.twlmgatito.cn/posts/use-appbar-in-wpf/)
@@ -29,18 +27,20 @@ Powered by .NET 8 on WPF
 
 - 右部: "胶囊(Capsules)"交互信息显示区，并可以下滑（或单击）弹出详细信息(PopupWindow)。  
     目前在`MyToolBar.Plugin.BasicPackage`中提供了以下功能：  
-   - 硬件监测: 电池、CPU占有率、温度、内存占用、网络状态；PopupWindow为进程管理器提供`Administrator`级别的进程查看和结束、`NT Kernel`级别的进程冻结和压缩功能。
+   - 硬件监测: 电池、CPU占有率、内存占用、网络状态；PopupWindow为进程管理器提供进程查看和结束、`NT Kernel`级别的进程冻结和压缩功能。
    - 天气: (我移除了windows小部件 但很需要一个地方来显示天气) 通过GPS定位城市，有搜索、收藏功能，长按(鼠标右键点击)可设置为默认显示城市
 
 上面的Outer Control和Capsules都是由插件提供的，可以自行在设置页面中启用和调整。
+![Plugin](https://raw.githubusercontent.com/TwilightLemon/Data/refs/heads/master/MTB_Settings_Plugin.jpg)
 
 ### 平板设备拓展工具 (由`MyToolBar.Plugin.TabletUtils`提供)
 现有功能：
 - 适用于触摸和笔的菜单：  
 在屏幕右上角滑动打开菜单，目前提供截图和屏幕绘制功能。
 - 左侧侧边栏：
-触摸屏幕左侧边缘（鼠标靠近停留）打开侧边栏，功能待拓展。
+触摸屏幕左侧边缘（鼠标靠近停留）打开侧边栏，现接入DeepSeek AI Chat
 
+![Tablet](https://raw.githubusercontent.com/TwilightLemon/Data/refs/heads/master/MTB_Settings_Services.jpg)
 ### 保持与Windows高度融合
 - 支持Dark/Light Mode 跟随系统
 - 全局亚克力/云母材质特效
@@ -48,9 +48,22 @@ Powered by .NET 8 on WPF
 
 ### More...
 
-## 如何使用(Beta)
-（尚未发布Release版之前，暂无打包好的插件包可用，未来将制作成独立文件并支持直接导入）  
-编译整个解决方案，选择你需要的插件，在生成目录将主文件(例如`MyToolBar.Plugin.BasicPackage.dll`)和资源文件夹复制到主程序目录/Plugins目录下；之后在设置页启用即可。
+## 如何使用(Preview)
+1. 自行编译：  
+    - 编译整个项目
+    - 将`MyToolBar.Plugin.BasicPackage`和`MyToolBar.Plugin.TabletUtils`的dll文件及其依赖文件放入同名文件夹下，再放入`Plugins`文件夹  
+      插件文件结构如下：
+      ```
+      /MyToolBar.exe运行目录/Plugins/
+           MyToolBar.Plugin.BasicPackage/
+                MyToolBar.Plugin.BasicPackage.dll 主文件
+                MyToolBar.Plugin.BasicPackage.deps.json 依赖文件
+                ...其他依赖dll
+                /Zh-CN/xxxresource.dll 资源文件
+                ...
+      ```
+2. 到Release页面下载最新版本，解压到任意目录，运行MyToolBar.exe
+3. 计划上架Microsoft Store和WinGet
 
 ## 版权声明
 本应用由 [TwilightLemon (https://blog.twlmgatito.cn) (QQ:2728578956)](https://twlm.space) 开发，Fork请保留原仓库地址和版权信息

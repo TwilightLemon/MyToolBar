@@ -181,6 +181,8 @@
         <Setter Property="Background" Value="{DynamicResource MaskColor}"/>
         <Setter Property="Foreground" Value="{DynamicResource ForeColor}"/>
         <Setter Property="CaretBrush" Value="{DynamicResource ForeColor}"/>
+        <Setter Property="SelectionBrush"
+                Value="{DynamicResource SystemThemeColor}" />
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="CornerRadius" Value="10"/>
     </Style>

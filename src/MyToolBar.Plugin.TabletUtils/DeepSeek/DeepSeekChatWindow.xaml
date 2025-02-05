@@ -52,6 +52,7 @@
                              Background="{DynamicResource MaskColor}"
                              CheckedBackground="{DynamicResource SystemThemeColor}"
                              HoverBackground="{DynamicResource SystemThemeColor}"
+                             PressedBackground="{DynamicResource SystemThemeColor}"
                              Foreground="{DynamicResource ForeColor}"
                              HoverForeground="{DynamicResource ForeColor}"
                              CheckedForeground="{DynamicResource ForeColor}">
@@ -109,6 +110,7 @@
                                  Background="{DynamicResource MaskColor}"
                                  CheckedBackground="{DynamicResource SystemThemeColor}"
                                  HoverBackground="{DynamicResource SystemThemeColor}"
+                                 PressedBackground="{DynamicResource SystemThemeColor}"
                                  Foreground="{DynamicResource ForeColor}"
                                  HoverForeground="{DynamicResource ForeColor}"
                                  CheckedForeground="{DynamicResource ForeColor}">

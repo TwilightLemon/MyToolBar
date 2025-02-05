@@ -1,31 +1,32 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <UseWPF>true</UseWPF>
-    <ImplicitUsings>enable</ImplicitUsings>
-	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<UseWPF>true</UseWPF>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<AssemblyVersion>1.0.0.2</AssemblyVersion>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="ColorCode.Core" Version="2.0.15" />
 		<PackageReference Include="Markdig" Version="0.40.0" />
 	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\MyToolBar.Common\MyToolBar.Common.csproj" />
-    <ProjectReference Include="..\MyToolBar.Plugin\MyToolBar.Plugin.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\MyToolBar.Common\MyToolBar.Common.csproj" />
+		<ProjectReference Include="..\MyToolBar.Plugin\MyToolBar.Plugin.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="DeepSeek.Core">
-      <HintPath>Lib\DeepSeek.Core.dll</HintPath>
-    </Reference>
-	  <Reference Include="EleCho.MdViewer">
-		  <HintPath>Lib\EleCho.MdViewer.dll</HintPath>
-	  </Reference>
-  </ItemGroup>
+	<ItemGroup>
+		<Reference Include="DeepSeek.Core">
+			<HintPath>Lib\DeepSeek.Core.dll</HintPath>
+		</Reference>
+		<Reference Include="EleCho.MdViewer">
+			<HintPath>Lib\EleCho.MdViewer.dll</HintPath>
+		</Reference>
+	</ItemGroup>
 
 	<ItemGroup>
 		<EmbeddedResource Update="LanguageRes\PluginLang.En-US.resx">
