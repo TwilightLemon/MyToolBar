@@ -1,16 +1,16 @@
-﻿using System.Diagnostics.Tracing;
+﻿using MyToolBar.Common.WinAPI;
+using System.Diagnostics.Tracing;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
 namespace MyToolBar.Plugin.BasicPackage.API;
-//弃用
+
 internal class LemonAppMusicServer
 {
-    private TcpListener _listener;
-    private CancellationTokenSource _cancellationTokenSource;
-    private Mutex _mutex;
+    private readonly TcpListener _listener;
+    private CancellationTokenSource? _cancellationTokenSource;
     private bool _isRunning = false;
 
     public event Action<string>? OnMsgReceived;
@@ -19,12 +19,18 @@ internal class LemonAppMusicServer
     public LemonAppMusicServer()
     {
         _listener = new TcpListener(IPAddress.Loopback,12587);
-        InitMutex();
     }
-    private void InitMutex()
+
+    private const string INTERACT_MTB_SYNC = "INTERACT_MTB_SYNC";
+    public static void CallExistingInstance()
     {
-        _mutex = new Mutex(false, "MyToolBar.Plugin.BasicPackage//LemonAppMusicServier",out _);
+        var hwnd = MsgHelper.FindWindow(null, "Lemon App");
+        if (hwnd != IntPtr.Zero)
+        {
+            MsgHelper.SendMsg(INTERACT_MTB_SYNC, hwnd.ToInt32());
+        }
     }
+
     public async Task StartAsync()
     {
         if (_isRunning) return;
@@ -71,8 +77,7 @@ internal class LemonAppMusicServer
     }
     public void Stop()
     {
-        _cancellationTokenSource.Cancel();
-        _mutex.Dispose();
+        _cancellationTokenSource?.Cancel();
         _listener.Stop();
         _isRunning = false;
     }

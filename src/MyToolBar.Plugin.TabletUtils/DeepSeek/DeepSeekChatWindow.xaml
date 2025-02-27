@@ -34,7 +34,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="48" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" MinHeight=" 160" MaxHeight="400"/>
+            <RowDefinition Height="Auto" MinHeight="160"/>
         </Grid.RowDefinitions>
         <Grid Background="Transparent">
             <TextBlock VerticalAlignment="Center"
@@ -88,7 +88,11 @@
                 CornerRadius="12">
             <Grid>
                 <ws:TextBox x:Name="tb"
+                            AcceptsReturn="True"
+                            AcceptsTab="True"
+                            MaxHeight="400"
                             PreviewKeyDown="tb_PreviewKeyDown"
+                            TextWrapping="Wrap"
                             Style="{StaticResource SimpleTextBoxStyleForWs}"
                             Background="Transparent"
                             Placeholder="Message DeepSeek"

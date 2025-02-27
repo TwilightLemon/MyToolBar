@@ -115,9 +115,10 @@ public partial class DeepSeekChatWindow : Window
             await NewMessage();
             e.Handled = true;
         }
-        else if (e.Key == Key.Enter && Keyboard.Modifiers == ModifierKeys.Control)
+        else if (e.Key == Key.Enter &&( Keyboard.Modifiers == ModifierKeys.Control ||
+             Keyboard.Modifiers == ModifierKeys.Shift))
         {
-            // 处理Ctrl+Enter换行的逻辑
+            // 处理Ctrl(or Shift) + Enter换行的逻辑
             tb.AppendText(Environment.NewLine);
             tb.CaretIndex = tb.Text.Length;
             e.Handled = true;

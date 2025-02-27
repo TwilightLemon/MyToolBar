@@ -124,14 +124,15 @@ namespace MyToolBar.Plugin.BasicPackage.OuterControls
             });
         }
         private LemonAppMusicServer? _musicServier = null;
-        private async void BeginLemonAppLyric()
+        private void BeginLemonAppLyric()
         {
             if (_musicServier == null)
             {
                 _musicServier = new();
                 _musicServier.OnMsgReceived += _musicServier_OnMsgReceived;
                 _musicServier.OnClientExited += _musicServier_OnClientExited;
-                await _musicServier.StartAsync();
+                _=_musicServier.StartAsync();
+                LemonAppMusicServer.CallExistingInstance();
             }
         }
 
