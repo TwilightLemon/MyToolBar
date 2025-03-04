@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ClockCapDisplayName" xml:space="preserve">
+    <value>Clock Capsule</value>
+  </data>
+  <data name="ClockCapDesc" xml:space="preserve">
+    <value>Simple clock caspsule widget. Customization is supported.</value>
+  </data>
   <data name="DemoClockOutControlDisplayName" xml:space="preserve">
     <value>Simple Clock</value>
   </data>

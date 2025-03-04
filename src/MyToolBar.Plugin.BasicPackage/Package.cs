@@ -20,6 +20,7 @@ namespace MyToolBar.Plugin.BasicPackage
         public Version Version { get; set; } = new Version(1,0,0,0);
         public List<IPlugin> Plugins { get; set; } = [ 
         new WeatherCapPlugin(),
+        new ClockCapPlugin(),
         new LemonAppMusicOutControlPlugin(),
         new DemoClockOutControlPlugin(),
         new HardwareMonitorCapPlugin()
@@ -68,9 +69,23 @@ namespace MyToolBar.Plugin.BasicPackage
             return new LemonAppMusic();
         }
     }
+    public class ClockCapPlugin : IPlugin
+    {
+        public static readonly string _name = "ClockCap";
+        public IPackage? AcPackage { get; set; }
+        public string Name => _name;
+
+        public string DisplayName => _rm.GetString("ClockCapDisplayName", _cultureInfo) ?? "";
+        public string Description=> _rm.GetString("ClockCapDesc", _cultureInfo)??"";
+
+        public List<string>? SettingsSignKeys => [ClockCap.SettingSign];
+
+        public PluginType Type => PluginType.Capsule;
+        public UIElement GetMainElement() => new ClockCap();
+    }
     public class DemoClockOutControlPlugin : IPlugin
     {
-        public static string _name="Demo Clock";
+        public static readonly string _name="Demo Clock";
         public IPackage? AcPackage { get; set; }
         public string Name { get; } = _name;
         public string DisplayName => _rm.GetString("DemoClockOutControlDisplayName", _cultureInfo) ?? "";

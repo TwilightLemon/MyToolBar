@@ -55,7 +55,7 @@
                 <TextBlock x:Name="Meo_text" Margin="16,0,0,0" d:Text="100%" TextAlignment="Center" VerticalAlignment="Center"/>
             </Grid>
             <Grid x:Name="CPUViewer" Width="52" Height="30" Margin="8,0,0,0">
-                <TextBlock x:Name="Cpu_text" d:Text="100%"  Margin="18,0,0,0" HorizontalAlignment="Left" TextWrapping="NoWrap" TextTrimming="None" VerticalAlignment="Center"/>
+                <TextBlock x:Name="Cpu_text" d:Text="100%"  Margin="16,0,0,0" TextAlignment="Center" TextWrapping="NoWrap" TextTrimming="None" VerticalAlignment="Center"/>
                 
                 <!--  需要管理员权限才能获取，而且此API不准，先暂时不显示
                 <TextBlock x:Name="Cpu_temp" d:Text="36℃" TextWrapping="NoWrap" Margin="0 0 6 0" HorizontalAlignment="Right" TextTrimming="None" VerticalAlignment="Center"/>
