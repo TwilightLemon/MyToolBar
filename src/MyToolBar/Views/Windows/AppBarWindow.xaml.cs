@@ -17,6 +17,7 @@ using System.Windows.Threading;
 using System.Threading.Tasks;
 using MyToolBar.Common;
 using Microsoft.Extensions.DependencyInjection;
+using EleCho.WpfSuite;
 
 namespace MyToolBar.Views.Windows
 {
@@ -46,8 +47,14 @@ namespace MyToolBar.Views.Windows
 
             _appSettingsService.Settings.OnMainMenuIconChanged += Settings_OnMainMenuIconChanged;
             _appSettingsService.Settings.OnEnableIslandChanged += Settings_OnEnableIslandChanged;
+            _appSettingsService.Settings.OnEnableNewStyleChanged += Settings_OnEnableNewStyleChanged;
 
             InitializeComponent();
+        }
+
+        private void Settings_OnEnableNewStyleChanged()
+        {
+            UpdateEnableNewStyle();
         }
 
         private void Settings_OnEnableIslandChanged()
@@ -69,6 +76,19 @@ namespace MyToolBar.Views.Windows
             InvalidateVisual();
         }
 
+        private void UpdateEnableNewStyle()
+        {
+            AppBar_OnWindowLocationApplied();
+            if (_appSettingsService.Settings.EnableNewStyle)
+            {
+                WindowOption.SetCorner(this, WindowCorner.RoundSmall);
+            }
+            else
+            {
+                WindowOption.SetCorner(this, WindowCorner.DoNotRound);
+            }
+        }
+
         #region Window Init & Service Events
         private void Window_SourceInitialized(object sender, EventArgs e)
         {
@@ -80,6 +100,7 @@ namespace MyToolBar.Views.Windows
             UpdateBackground();
             UpdateColorMode();
             UpdateMainMenuIcon();
+            UpdateEnableNewStyle();
             UpdateEnableIsland();
             OnSystemColorChanged();
         }
@@ -378,6 +399,17 @@ namespace MyToolBar.Views.Windows
         #endregion
 
         #region OuterFuncStatus & Window Style
+        private void AppBar_OnWindowLocationApplied()
+        {
+            if (_appSettingsService.Settings.EnableNewStyle)
+            {
+                Top = 4; Left = 8;
+            }
+            else
+            {
+                Top = Left = 0;
+            }
+        }
 
         /// <summary>
         /// 存在窗口最大化时的AppBar样式
@@ -429,7 +461,7 @@ namespace MyToolBar.Views.Windows
         private void TimerTask()
         {
             UpdateBackground();
-            Width = SystemParameters.WorkArea.Width;
+            Width = SystemParameters.WorkArea.Width-Left*2;
         }
        
         enum AppBarBgStyleType { EnergySaving,ImmerseMode, Acrylic };
@@ -468,7 +500,7 @@ namespace MyToolBar.Views.Windows
             Color themeColor = Color.FromRgb((byte)(_r / total), (byte)(_g / total), (byte)(_b / total));
             //判断颜色深浅
             var sel = themeColor.R * 0.299 + themeColor.G * 0.578 + themeColor.B * 0.114;
-            if (sel > 150)
+            if (sel > 120)
             {
                 //浅色
                 _themeResourceService.SetAppBarFontColor(true);
@@ -549,7 +581,7 @@ namespace MyToolBar.Views.Windows
             //屏幕截图
             (double dpiX, double dpiY) = ScreenAPI.GetDPI(_hwnd);
             var capHeight = 6;
-            using System.Drawing.Bitmap bmp = ScreenAPI.CaptureScreenArea(0, (int)(ActualHeight*dpiX), (int)(ActualWidth*dpiY), capHeight);
+            using System.Drawing.Bitmap bmp = ScreenAPI.CaptureScreenArea((int)(Left*dpiY), (int)((ActualHeight+Top)*dpiX), (int)(ActualWidth*dpiY), capHeight);
             if (bmp == null) return;
             //取平均值
             long _r = 0, _g = 0, _b = 0;
@@ -653,5 +685,6 @@ namespace MyToolBar.Views.Windows
             }
         }
         #endregion
+
     }
 }

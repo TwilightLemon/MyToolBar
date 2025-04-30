@@ -41,6 +41,16 @@ namespace MyToolBar.Services
             OnEnableIslandChanged?.Invoke();
         }
         /// <summary>
+        /// 启用新样式
+        /// </summary>
+        public bool EnableNewStyle { get; set; } = false;
+        public event Action? OnEnableNewStyleChanged;
+        public void SetEnableNewStyle(bool enable)
+        {
+            EnableNewStyle = enable;
+            OnEnableNewStyleChanged?.Invoke();
+        }
+        /// <summary>
         /// 返回桌面时使用"沉浸模式"
         /// </summary>
         public bool AlwaysUseImmerseMode {  get; set; }=false;

@@ -57,6 +57,15 @@
                             CornerRadius="12"
                             Height="48">
                         <ToggleButton  Style="{DynamicResource RoundToggleButtonStyle}"
+                                       Content="{DynamicResource AppSettings_Item_EnableNewStyle}"
+                                       IsChecked="{Binding EnableNewStyle}"
+                                       Margin="12 0 12 0" />
+                    </Border>
+
+                    <Border Background="{DynamicResource MaskColor}"
+                            CornerRadius="12"
+                            Height="48">
+                        <ToggleButton  Style="{DynamicResource RoundToggleButtonStyle}"
                                        Content="{DynamicResource AppSettings_Item_EnableIsland}"
                                        IsChecked="{Binding EnableIsland}"
                                        Margin="12 0 12 0" />

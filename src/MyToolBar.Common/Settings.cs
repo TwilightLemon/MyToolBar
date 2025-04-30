@@ -134,20 +134,20 @@ public static class Settings
             await JsonSerializer.SerializeAsync<T>(fs, Data, _optionsSer);
             fs.Close();
         }
-        catch
-        {
-
-        }
+        catch { }
     }
     public static async Task<T?> Load<T>(string Sign, sType t) where T : class
     {
-        string path = GetPathBySign(Sign, t);
-        if (!File.Exists(path))
-            return null;
-        var fs = File.OpenRead(path);
-        var data = await JsonSerializer.DeserializeAsync<T>(fs,_optionsDes);
-        fs.Close();
-        return data;
-
+        try
+        {
+            string path = GetPathBySign(Sign, t);
+            if (!File.Exists(path))
+                return null;
+            var fs = File.OpenRead(path);
+            var data = await JsonSerializer.DeserializeAsync<T>(fs, _optionsDes);
+            fs.Close();
+            return data;
+        }
+        catch { return null; }
     }
 }

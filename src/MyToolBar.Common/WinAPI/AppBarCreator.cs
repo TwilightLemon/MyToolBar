@@ -195,6 +195,23 @@ public class AppBar : DependencyObject
         appBar.LoadAppBar((AppBarLocation)e.NewValue, (AppBarLocation)e.OldValue);
     }
 
+
+
+    public double ForcedHeight
+    {
+        get { return (double)GetValue(ForcedHeightProperty); }
+        set { SetValue(ForcedHeightProperty, value); }
+    }
+
+    public static readonly DependencyProperty ForcedHeightProperty =
+        DependencyProperty.Register("ForcedHeight", 
+            typeof(double), typeof(AppBar), 
+            new PropertyMetadata(double.NaN));
+
+    public event Action? OnWindowLocationApplied;
+
+
+
     private int _callbackId = 0;
     private bool _isRegistered = false;
     private Window _window = null;
@@ -309,7 +326,7 @@ public class AppBar : DependencyObject
         Debug.WriteLine($"DPIX:{dpix}  DPIY:{dpiy}");
         //窗口在屏幕的实际大小
         if (WindowSize == Size.Empty)
-            WindowSize = new Size(_window.ActualWidth, _window.ActualHeight);
+            WindowSize = new Size(_window.ActualWidth, double.IsNaN(ForcedHeight) ? _window.ActualHeight:ForcedHeight);
         var actualSize =(X: WindowSize.Width*dpix, Y: WindowSize.Height*dpiy);
         //屏幕的真实像素
         var workArea = (X: SystemParameters.WorkArea.Width * dpix, Y: SystemParameters.WorkArea.Height * dpiy);
@@ -378,6 +395,7 @@ public class AppBar : DependencyObject
             _window.Top = rect.Top;
             _window.Width = rect.Width;
             _window.Height = rect.Height;
+            OnWindowLocationApplied?.Invoke();
         });
 
         Debug.WriteLine("Set {0} Left: {1} ,Top: {2}, Width: {3}, Height: {4}", _window.Title, _window.Left, _window.Top, _window.Width, _window.Height);

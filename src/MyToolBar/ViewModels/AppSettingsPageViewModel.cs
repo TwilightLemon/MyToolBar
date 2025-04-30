@@ -11,6 +11,8 @@ namespace MyToolBar.ViewModels
         ): ObservableObject
     {
         [ObservableProperty]
+        private bool _enableNewStyle;
+        [ObservableProperty]
         private bool _enableIsland;
         [ObservableProperty]
         private bool _useImmerseMode;
@@ -29,10 +31,15 @@ namespace MyToolBar.ViewModels
 
         public void LoadData()
         {
+            EnableNewStyle = appSettingsService.Settings.EnableNewStyle;
             EnableIsland = appSettingsService.Settings.EnableIsland;
             UseImmerseMode = appSettingsService.Settings.UseImmerseMode;
             AlwaysUseImmerseMode = appSettingsService.Settings.AlwaysUseImmerseMode;
             AutoRunAtStartup = appSettingsService.Settings.AutoRunAtStartup;
+        }
+        partial void OnEnableNewStyleChanged(bool value)
+        {
+            appSettingsService.Settings.SetEnableNewStyle(value);
         }
         partial void OnEnableIslandChanged(bool value)
         {

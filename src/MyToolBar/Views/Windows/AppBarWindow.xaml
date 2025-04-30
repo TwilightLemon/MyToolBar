@@ -11,24 +11,32 @@
         mc:Ignorable="d"
         Title="MyToolBar"
         Height="32"
+        Top="4"
+        Left="8"
         Width="1480"
+        WindowStyle="None"
         Background="Transparent"
         Foreground="{DynamicResource AppBarFontColor}"
         ResizeMode="NoResize"
-        WindowStyle="None"
         ShowInTaskbar="False"
         Topmost="True"
         FontWeight="DemiBold"
         Loaded="Window_Loaded"
         Closing="Window_Closing"
+        ws:WindowOption.Corner="RoundSmall"
         SourceInitialized="Window_SourceInitialized">
+    <Window.Resources>
+        <WindowChrome x:Key="windowChrome" CaptionHeight="0"/>
+    </Window.Resources>
     <api:AppBarCreator.AppBar>
         <api:AppBar Location="Top"
+                    ForcedHeight="32" OnWindowLocationApplied="AppBar_OnWindowLocationApplied"
                     OnFullScreenStateChanged="AppBar_OnFullScreenStateChanged" />
     </api:AppBarCreator.AppBar>
 
     <i:Interaction.Behaviors>
-        <mb:BlurWindowBehavior IsToolWindow="True" />
+        <mb:BlurWindowBehavior IsToolWindow="True" 
+                               WindowChromeEx="{StaticResource windowChrome}"/>
     </i:Interaction.Behaviors>
 
     <Grid x:Name="MainBarGrid">

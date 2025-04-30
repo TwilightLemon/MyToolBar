@@ -215,7 +215,14 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
 
         private void OpenTaskMonitorBtn_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("taskmgr");
+            try
+            {
+                var info = new ProcessStartInfo("taskmgr") { 
+                    UseShellExecute = true
+                };
+                Process.Start(info);
+            }
+            catch { }
         }
         private static List<Process> _frozenProc = [];
         private void PInfo_FreezeBtn_Click(object sender, RoutedEventArgs e)

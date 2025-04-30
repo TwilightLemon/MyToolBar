@@ -22,6 +22,7 @@
     <sys:String x:Key="AppSettings_Group_Appearence">外观</sys:String>
     <sys:String x:Key="AppSettings_Group_Behavior">行为</sys:String>
 
+    <sys:String x:Key="AppSettings_Item_EnableNewStyle">启用新样式（实验性）</sys:String>
     <sys:String x:Key="AppSettings_Item_EnableIsland">显示一个假的额头</sys:String>
     <sys:String x:Key="AppSettings_Item_UseImmerseMode">启用沉浸模式</sys:String>
     <sys:String x:Key="AppSettings_Item_AlwaysUseImmerseMode">始终启用沉浸模式</sys:String>
