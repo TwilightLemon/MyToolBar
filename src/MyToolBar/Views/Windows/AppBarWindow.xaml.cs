@@ -139,6 +139,22 @@ namespace MyToolBar.Views.Windows
             #endregion
         }
 
+        private void Window_Activated(object sender, EventArgs e)
+        {
+            if (_appSettingsService.Settings.EnableNewStyle)
+            {
+                WindowOption.SetCorner(this, WindowCorner.Round);
+            }
+        }
+
+        private void Window_Deactivated(object sender, EventArgs e)
+        {
+            if (_appSettingsService.Settings.EnableNewStyle)
+            {
+                WindowOption.SetCorner(this, WindowCorner.RoundSmall);
+            }
+        }
+
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             ActiveWindow.UnregisterActiveWindowHook(_activeWindowHook);
@@ -481,7 +497,7 @@ namespace MyToolBar.Views.Windows
         {
             (double dpiX, double dpiY) = ScreenAPI.GetDPI(_hwnd);
             var capHeight = 6;
-            using System.Drawing.Bitmap bmp = ScreenAPI.CaptureScreenArea(0, 0, (int)(ActualWidth * dpiY), capHeight);
+            using System.Drawing.Bitmap bmp = ScreenAPI.CaptureScreenArea((int)(Left*dpiX), (int)(Top*dpiY), (int)(ActualWidth * dpiX), capHeight);
             if (bmp == null) return;
             //取平均值
             long _r = 0, _g = 0, _b = 0;
@@ -500,7 +516,7 @@ namespace MyToolBar.Views.Windows
             Color themeColor = Color.FromRgb((byte)(_r / total), (byte)(_g / total), (byte)(_b / total));
             //判断颜色深浅
             var sel = themeColor.R * 0.299 + themeColor.G * 0.578 + themeColor.B * 0.114;
-            if (sel > 120)
+            if (sel > 130)
             {
                 //浅色
                 _themeResourceService.SetAppBarFontColor(true);
@@ -581,7 +597,7 @@ namespace MyToolBar.Views.Windows
             //屏幕截图
             (double dpiX, double dpiY) = ScreenAPI.GetDPI(_hwnd);
             var capHeight = 6;
-            using System.Drawing.Bitmap bmp = ScreenAPI.CaptureScreenArea((int)(Left*dpiY), (int)((ActualHeight+Top)*dpiX), (int)(ActualWidth*dpiY), capHeight);
+            using System.Drawing.Bitmap bmp = ScreenAPI.CaptureScreenArea((int)(Left*dpiX), (int)((ActualHeight+Top)*dpiY), (int)(ActualWidth*dpiX), capHeight);
             if (bmp == null) return;
             //取平均值
             long _r = 0, _g = 0, _b = 0;
@@ -685,6 +701,5 @@ namespace MyToolBar.Views.Windows
             }
         }
         #endregion
-
     }
 }

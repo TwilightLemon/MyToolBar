@@ -203,6 +203,14 @@
                                       IsChecked="{Binding AutoRunAtStartup}"
                                       Margin="12 0 12 0" />
                     </Border>
+                    <Border Background="{DynamicResource MaskColor}"
+                            CornerRadius="12"
+                            Height="48">
+                        <ToggleButton Style="{DynamicResource RoundToggleButtonStyle}"
+                                      Content="{DynamicResource AppSettings_Item_EnableHideWhenFullScreen}"
+                                      IsChecked="{Binding HideWhenFullScreen}"
+                                      Margin="12 0 12 0" />
+                    </Border>
                 </ws:StackPanel>
             </ws:StackPanel>
         </ws:ScrollViewer>

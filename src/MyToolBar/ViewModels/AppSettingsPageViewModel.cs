@@ -21,6 +21,8 @@ namespace MyToolBar.ViewModels
         [ObservableProperty]
         private bool _autoRunAtStartup;
         [ObservableProperty]
+        private bool _hideWhenFullScreen;
+        [ObservableProperty]
         private LocalCulture.Language _appLanguage = (LocalCulture.Language)appSettingsService.Settings.Language;
         [ObservableProperty]
         private AppSettings.ProxyMode _proxyMode = appSettingsService.Settings.UserProxyMode;
@@ -36,6 +38,11 @@ namespace MyToolBar.ViewModels
             UseImmerseMode = appSettingsService.Settings.UseImmerseMode;
             AlwaysUseImmerseMode = appSettingsService.Settings.AlwaysUseImmerseMode;
             AutoRunAtStartup = appSettingsService.Settings.AutoRunAtStartup;
+            HideWhenFullScreen = GlobalService.EnableHideWhenFullScreen;
+        }
+        partial void OnHideWhenFullScreenChanged(bool value)
+        {
+            GlobalService.EnableHideWhenFullScreen = value;
         }
         partial void OnEnableNewStyleChanged(bool value)
         {
