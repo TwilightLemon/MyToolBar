@@ -229,6 +229,9 @@
         <Setter Property="PressedForeground" Value="{DynamicResource ForeColor}"/>
     </Style>
 
+    <FontFamily x:Key="SegoeFluentIcon">
+        pack://application:,,,/MyToolBar.Common;component/Resources/Segoe Fluent Icons.ttf#Segoe Fluent Icons
+    </FontFamily>
     <Style x:Key="FluentWindowStyle"
            TargetType="{x:Type Window}">
         <Setter Property="Background"
@@ -246,7 +249,7 @@
                                           Width="48"
                                           Height="48"
                                           Content="&#xE8BB;"
-                                          FontFamily="Segoe Fluent Icons"
+                                          FontFamily="{StaticResource SegoeFluentIcon}"
                                           FontSize="10"
                                           HorizontalAlignment="Right"
                                           VerticalAlignment="Top"
@@ -262,7 +265,7 @@
                                        Width="48"
                                        Height="48"
                                        Margin="0 0 48 0"
-                                       FontFamily="Segoe Fluent Icons"
+                                       FontFamily="{StaticResource SegoeFluentIcon}"
                                        FontSize="10"
                                        Cursor="Hand"
                                        WindowChrome.IsHitTestVisibleInChrome="True"
@@ -290,7 +293,7 @@
                                        Height="48"
                                        Margin="0 0 96 0"
                                        Content="&#xE921;"
-                                       FontFamily="Segoe Fluent Icons"
+                                       FontFamily="{StaticResource SegoeFluentIcon}"
                                        FontSize="10"
                                        Background="Transparent"
                                        Cursor="Hand"

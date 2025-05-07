@@ -19,7 +19,7 @@ namespace MyToolBar.Common.WinAPI
         [DllImport("user32.dll")]
         static extern bool UnhookWinEvent(IntPtr hWinEventHook);
 
-        private const uint EVENT_SYSTEM_FOREGROUND = 3,
+        private const uint EVENT_SYSTEM_FOREGROUND = 0x0003,
                                     EVENT_OBJECT_NAMECHANGE = 0x800C;
         private const uint WINEVENT_OUTOFCONTEXT = 0;
 

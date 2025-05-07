@@ -1,8 +1,4 @@
-﻿using Microsoft.Win32;
-using System.Collections.Generic;
-using System.Timers;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows;
 using System.Windows.Media;
 
 namespace MyToolBar.Common

@@ -104,7 +104,11 @@ namespace MyToolBar.Views.Windows
             UpdateEnableIsland();
             OnSystemColorChanged();
         }
+        /// <summary>
+        /// Hwnd for this window
+        /// </summary>
         private IntPtr _hwnd;
+        private volatile IntPtr _activeObjHandle;
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             #region GlobalTimer Init&Start
@@ -124,7 +128,12 @@ namespace MyToolBar.Views.Windows
             //注册ActiveWindowHook
             _activeWindowHook = ActiveWindow.RegisterActiveWindowHook((hWinEventHook, eventType, hwnd, idObject, idChild, dwEventThread, dwmsEventTime) =>
             {
-                Dispatcher.Invoke(OnActiveWindowUpdated);
+                if (hwnd != 0&& _activeObjHandle!=hwnd)
+                {
+                    Debug.WriteLine("Active Hwnd: " + hwnd+"\t Title: "+hwnd.GetWindowTitle());
+                    Dispatcher.Invoke(OnActiveWindowUpdated);
+                    _activeObjHandle = hwnd;
+                }
             });
             //注册NotificationReceiver
             NotificationManager.RegisterReceiver(this);
@@ -238,6 +247,7 @@ namespace MyToolBar.Views.Windows
         private async void _pluginReactiveService_OuterControlChanged(OuterControlBase obj) {
             if (_oc != null)
             {
+                //先隐藏旧的OuterControl
                 ShowOuter(false);
                 _oc.Dispose();
                 _oc = null;
@@ -253,7 +263,7 @@ namespace MyToolBar.Views.Windows
         /// OuterControl组件移除
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
-        private async void _pluginReactiveService_OuterControlRemoved()
+        private  void _pluginReactiveService_OuterControlRemoved()
         {
             if(_oc != null)
             {
@@ -261,8 +271,6 @@ namespace MyToolBar.Views.Windows
                 _oc.Dispose();
                 _oc = null;
                 OuterFunc.Children.Clear();
-                await Task.Delay(1200);
-                OuterControlCol.Width = new GridLength(0, GridUnitType.Star);
             }
         }
         #endregion
@@ -384,6 +392,7 @@ namespace MyToolBar.Views.Windows
             {
                 //open
                 OuterFuncStatus.Visibility = Visibility.Visible;
+                OuterControlCol.Width = new GridLength(1.2, GridUnitType.Star);
                 double hWidth = OuterFuncStatus.ActualWidth / 2;
 
                 de = new(new Thickness(hWidth, 0, hWidth, 0), new Thickness(0), TimeSpan.FromSeconds(0.4));
@@ -411,6 +420,8 @@ namespace MyToolBar.Views.Windows
             OuterFuncStatus.Visibility = isOuterShow ? Visibility.Visible : Visibility.Hidden;
             OuterFuncStatus.BeginAnimation(MarginProperty, null);
             OuterFunc.BeginAnimation(OpacityProperty, null);
+            //OuterControl不显示时不再占用空间
+            OuterControlCol.Width = new GridLength(0, GridUnitType.Star);
         }
         #endregion
 
@@ -477,7 +488,8 @@ namespace MyToolBar.Views.Windows
         private void TimerTask()
         {
             UpdateBackground();
-            Width = SystemParameters.WorkArea.Width-Left*2;
+            Width = ScreenAPI.GetMonitorSizeForHwnd(_hwnd).Width
+                                            /ScreenAPI.GetDPI(_hwnd).X - Left*2;
         }
        
         enum AppBarBgStyleType { EnergySaving,ImmerseMode, Acrylic };
@@ -581,6 +593,7 @@ namespace MyToolBar.Views.Windows
                     }
                     if (immerse)
                         CurrentAppBarBgStyle = AppBarBgStyleType.ImmerseMode;
+                    else SetForegroundColor();
                 }
             }).Find();
 

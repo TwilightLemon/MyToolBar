@@ -328,8 +328,8 @@ public class AppBar : DependencyObject
         if (WindowSize == Size.Empty)
             WindowSize = new Size(_window.ActualWidth, double.IsNaN(ForcedHeight) ? _window.ActualHeight:ForcedHeight);
         var actualSize =(X: WindowSize.Width*dpix, Y: WindowSize.Height*dpiy);
-        //屏幕的真实像素
-        var workArea = (X: SystemParameters.WorkArea.Width * dpix, Y: SystemParameters.WorkArea.Height * dpiy);
+        var size= ScreenAPI.GetMonitorSizeForHwnd(_hWnd);
+        var workArea = (X: size.Width, Y: size.Height);
         Debug.WriteLine("WorkArea Width: {0}, Height: {1}", workArea.X, workArea.Y);
 
         if (Location is AppBarLocation.Left or AppBarLocation.Right)
@@ -395,6 +395,7 @@ public class AppBar : DependencyObject
             _window.Top = rect.Top;
             _window.Width = rect.Width;
             _window.Height = rect.Height;
+            //回调AppBarWindow允许其自适应大小
             OnWindowLocationApplied?.Invoke();
         });
 

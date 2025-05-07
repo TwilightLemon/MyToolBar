@@ -69,7 +69,7 @@ public class BlurWindowBehavior : Behavior<Window>
             _windowMaterial.WindowChromeEx = WindowChromeEx;
     }
 
-    private static void UpdateWindowBlurMode(WindowMaterial wac, bool isDarkMode, float opacity = 0)
+    private static void UpdateWindowBlurMode(WindowMaterial wac, bool isDarkMode, float opacity = 0.2f)
     {
         wac.IsDarkMode = isDarkMode;
         wac.CompositonColor = isDarkMode ?
