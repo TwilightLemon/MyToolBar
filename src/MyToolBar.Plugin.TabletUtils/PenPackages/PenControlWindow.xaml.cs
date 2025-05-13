@@ -5,6 +5,7 @@ using System.Windows.Media;
 using MyToolBar.Common.WinAPI;
 using System.Windows.Media.Animation;
 using MyToolBar.Common;
+using System.Windows.Interop;
 
 namespace MyToolBar.Plugin.TabletUtils.PenPackages
 {
@@ -71,9 +72,11 @@ namespace MyToolBar.Plugin.TabletUtils.PenPackages
 
         private Storyboard _openAni,_closeAni;
         private bool _isOpen = false;
+        private IntPtr _hwnd;
         private void PenControlWindow_Loaded(object sender, RoutedEventArgs e)
         {
             ResetWindowLocation();
+            _hwnd= new WindowInteropHelper(this).Handle;
             WindowLongAPI.SetToolWindow(this);
         }
 
@@ -103,8 +106,8 @@ namespace MyToolBar.Plugin.TabletUtils.PenPackages
         }
         private void ResetWindowLocation()
         {
-
-           this.Left = SystemParameters.WorkArea.Width - ActualHeight;
+            if (_hwnd == IntPtr.Zero) return;
+           this.Left = ScreenAPI.GetScreenArea(_hwnd).Width - ActualHeight;
             this.Top = 0;
         }
 

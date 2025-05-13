@@ -22,16 +22,28 @@ namespace MyToolBar.Common.WinAPI
             }
         }
 
-        public static (double X,double Y) GetDPI(IntPtr hwnd)
+        public static Size GetScreenArea(IntPtr hwnd)
+        {
+            IntPtr hmonitor = GetHmonitorForHwnd(hwnd);
+            var screen = GetMonitorSize(hmonitor);
+            var (dpiX, dpiY) = GetDPI(hmonitor);
+            return new Size((int)(screen.Width / dpiX), (int)(screen.Height /dpiY));
+        }
+
+        public static IntPtr GetHmonitorForHwnd(IntPtr hwnd)
         {
             var hmonitor = MonitorFromWindow(hwnd, MonitorDefaultTo.MONITOR_DEFAULTTONEAREST);
+            return hmonitor;
+        }
+
+        public static (double X,double Y) GetDPI(IntPtr hmonitor)
+        {
             GetDpiForMonitor(hmonitor, DpiType.Effective, out uint dpiX, out uint dpiY);
             return (X:(double)dpiX/96, Y:(double)dpiY/96);
         }
 
-        public static Size GetMonitorSizeForHwnd(IntPtr hwnd)
+        public static Size GetMonitorSize(IntPtr hmonitor)
         {
-            var hmonitor = MonitorFromWindow(hwnd, MonitorDefaultTo.MONITOR_DEFAULTTONEAREST);
             MONITORINFOEX info = new MONITORINFOEX();
             if (GetMonitorInfo(new HandleRef(null, hmonitor), info))
             {

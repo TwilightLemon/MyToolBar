@@ -3,6 +3,7 @@ using DeepSeek.Core.Models;
 using EleCho.MdViewer.ColorModes;
 using EleCho.MdViewer.Markup;
 using MyToolBar.Common;
+using MyToolBar.Common.WinAPI;
 using MyToolBar.Plugin.TabletUtils.Configs;
 using System.Diagnostics;
 using System.Text;
@@ -10,6 +11,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
@@ -56,9 +58,11 @@ public partial class DeepSeekChatWindow : Window
         GlobalService.OnIsDarkModeChanged += GlobalService_OnIsDarkModeChanged;
     }
 
+    private IntPtr hwnd;
     private async void DeepSeekChatWindow_Loaded(object sender, RoutedEventArgs e)
     {
         await Init();
+        hwnd = new WindowInteropHelper(this).Handle;
         SwitchModelTb.IsChecked = config.Data.Model == DeepSeekModels.ReasonerModel;
     }
 
@@ -89,6 +93,7 @@ public partial class DeepSeekChatWindow : Window
         if (FixTb.IsChecked == true) return;
 
         ApplyThemeForMdViewer(GlobalService.IsDarkMode);
+        Height = ScreenAPI.GetScreenArea(hwnd).Height - 64; //?? 
 
         var da = new DoubleAnimation(0, 20, TimeSpan.FromMilliseconds(300));
         da.EasingFunction = new CircleEase();

@@ -436,6 +436,7 @@ namespace MyToolBar.Views.Windows
             {
                 Top = Left = 0;
             }
+            Width = ScreenAPI.GetScreenArea(_hwnd).Width - Left * 2;
         }
 
         /// <summary>
@@ -488,8 +489,7 @@ namespace MyToolBar.Views.Windows
         private void TimerTask()
         {
             UpdateBackground();
-            Width = ScreenAPI.GetMonitorSizeForHwnd(_hwnd).Width
-                                            /ScreenAPI.GetDPI(_hwnd).X - Left*2;
+            Width = ScreenAPI.GetScreenArea(_hwnd).Width - Left * 2;
         }
        
         enum AppBarBgStyleType { EnergySaving,ImmerseMode, Acrylic };
@@ -507,7 +507,7 @@ namespace MyToolBar.Views.Windows
         /// </summary>
         private void SetForegroundColor()
         {
-            (double dpiX, double dpiY) = ScreenAPI.GetDPI(_hwnd);
+            (double dpiX, double dpiY) = ScreenAPI.GetDPI(ScreenAPI.GetHmonitorForHwnd(_hwnd));
             var capHeight = 6;
             using System.Drawing.Bitmap bmp = ScreenAPI.CaptureScreenArea((int)(Left*dpiX), (int)(Top*dpiY), (int)(ActualWidth * dpiX), capHeight);
             if (bmp == null) return;
@@ -608,7 +608,7 @@ namespace MyToolBar.Views.Windows
         {
             //根据下方窗口调整AppBar背景
             //屏幕截图
-            (double dpiX, double dpiY) = ScreenAPI.GetDPI(_hwnd);
+            (double dpiX, double dpiY) = ScreenAPI.GetDPI(ScreenAPI.GetHmonitorForHwnd(_hwnd));
             var capHeight = 6;
             using System.Drawing.Bitmap bmp = ScreenAPI.CaptureScreenArea((int)(Left*dpiX), (int)((ActualHeight+Top)*dpiY), (int)(ActualWidth*dpiX), capHeight);
             if (bmp == null) return;

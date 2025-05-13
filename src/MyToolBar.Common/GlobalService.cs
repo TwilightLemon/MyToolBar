@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using MyToolBar.Common.WinAPI;
+using System.Windows;
+using System.Windows.Interop;
 using System.Windows.Media;
 
 namespace MyToolBar.Common
@@ -58,7 +60,8 @@ namespace MyToolBar.Common
             //计算PopupWindow的左边界
             double left=rel+capsule.ActualWidth/2 - popupWindow.Width/2;
             //防止超出屏幕
-            double max=SystemParameters.WorkArea.Width- popupWindow.Width;
+            IntPtr hwnd = new WindowInteropHelper(popupWindow).Handle;
+            double max=ScreenAPI.GetScreenArea(hwnd).Width- popupWindow.Width;
             if(left < 0) left = 0;
             else if(left > max) left = max;
             return left;

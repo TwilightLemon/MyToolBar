@@ -313,6 +313,7 @@ public class AppBar : DependencyObject
         //成为AppBar窗口之后(或已经是)只需要注册并移动窗口位置即可
         SetAppBarPosition(_originalSize);
     }
+    private DateTime _lastSetTime= DateTime.MinValue;
     public void SetAppBarPosition(Size WindowSize)
     {
         var data = new Interop.APPBARDATA();
@@ -322,13 +323,13 @@ public class AppBar : DependencyObject
         data.uCallbackMessage = _callbackId;
         Debug.WriteLine("\r\nWindow: " + _window.Title);
 
-        (double dpix,double dpiy)=ScreenAPI.GetDPI(_hWnd);
+        (double dpix,double dpiy)=ScreenAPI.GetDPI(ScreenAPI.GetHmonitorForHwnd(_hWnd));
         Debug.WriteLine($"DPIX:{dpix}  DPIY:{dpiy}");
         //窗口在屏幕的实际大小
         if (WindowSize == Size.Empty)
             WindowSize = new Size(_window.ActualWidth, double.IsNaN(ForcedHeight) ? _window.ActualHeight:ForcedHeight);
         var actualSize =(X: WindowSize.Width*dpix, Y: WindowSize.Height*dpiy);
-        var size= ScreenAPI.GetMonitorSizeForHwnd(_hWnd);
+        var size= ScreenAPI.GetMonitorSize(ScreenAPI.GetHmonitorForHwnd(_hWnd));
         var workArea = (X: size.Width, Y: size.Height);
         Debug.WriteLine("WorkArea Width: {0}, Height: {1}", workArea.X, workArea.Y);
 
@@ -391,8 +392,8 @@ public class AppBar : DependencyObject
         DockedSize = rect;
 
         _window.Dispatcher.Invoke(DispatcherPriority.ApplicationIdle, () => {
-            _window.Left = rect.Left;
-            _window.Top = rect.Top;
+            //_window.Left = rect.Left;         //在OnWindowLocationApplied中接管Left和Top，这里设置会导致闪烁....
+            //_window.Top = rect.Top;
             _window.Width = rect.Width;
             _window.Height = rect.Height;
             //回调AppBarWindow允许其自适应大小
