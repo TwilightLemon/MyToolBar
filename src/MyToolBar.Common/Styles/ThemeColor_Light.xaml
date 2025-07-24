@@ -1,15 +1,15 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <!--LightMode-->
-    <SolidColorBrush x:Key="SystemThemeColor" Color="#69F"/>
-    <!--For AppBar-->
-    <SolidColorBrush x:Key="AppBarFontColor" Color="#0E0E0E"/>
-    <SolidColorBrush x:Key="WindowBackgroundColor" Color="#CCFFFFFF"/>
-    <SolidColorBrush x:Key="TabMaskColor" Color="#4CFFFFFF"/>
-    <!--For Others-->
-    <SolidColorBrush x:Key="ForeColor" Color="#0E0E0E"/>
-    <SolidColorBrush x:Key="MaskColor" Color="#0C000000"/>
-    <SolidColorBrush x:Key="FocusMaskColor" Color="#19000000"/>
-    <SolidColorBrush x:Key="HighlightColor" Color="#0C000000"/>
-    <SolidColorBrush x:Key="BackgroundColor" Color="#FFF"/>
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--  LightMode  -->
+    <SolidColorBrush x:Key="SystemThemeColor" Color="#69F" />
+    <!--  For AppBar  -->
+    <SolidColorBrush x:Key="AppBarForegroundLeft" Color="#0E0E0E" />
+    <SolidColorBrush x:Key="AppBarForegroundCenter" Color="#0E0E0E" />
+    <SolidColorBrush x:Key="AppBarForegroundRight" Color="#0E0E0E" />
+    <SolidColorBrush x:Key="WindowBackgroundColor" Color="#CCFFFFFF" />
+    <SolidColorBrush x:Key="TabMaskColor" Color="#4CFFFFFF" />
+    <!--  For Others  -->
+    <SolidColorBrush x:Key="ForeColor" Color="#0E0E0E" />
+    <SolidColorBrush x:Key="MaskColor" Color="#0C000000" />
+    <SolidColorBrush x:Key="FocusMaskColor" Color="#19000000" />
+    <SolidColorBrush x:Key="BackgroundColor" Color="#FFF" />
 </ResourceDictionary>

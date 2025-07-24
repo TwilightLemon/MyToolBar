@@ -20,7 +20,6 @@ namespace MyToolBar.Plugin.BasicPackage.OuterControls
         public DemoClock()
         {
             InitializeComponent();
-            MaxStyleAct = maxStyleAct;
             settingsMgr = new(SettingSign, DemoClockOutControlPlugin._name);
             settingsMgr.OnDataChanged += SettingsMgr_OnDataChanged;
             Loaded += DemoClock_Loaded;
@@ -41,12 +40,6 @@ namespace MyToolBar.Plugin.BasicPackage.OuterControls
             RefreshTime(null, null);
             IsShown = true;
             GlobalService.GlobalTimer.Elapsed += RefreshTime;
-        }
-        private void maxStyleAct(bool max, Brush? foreColor)
-        {
-            if (foreColor != null)
-                TimeTb.Foreground = foreColor;
-            else TimeTb.SetResourceReference(ForegroundProperty, "AppBarFontColor");
         }
         private void RefreshTime(object? sender, System.Timers.ElapsedEventArgs e)
         {

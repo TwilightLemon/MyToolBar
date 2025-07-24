@@ -26,9 +26,6 @@ namespace MyToolBar.Views.Windows
     /// </summary>
     public partial class AppBarWindow : Window,INotificationReceiver
     {
-        private OuterControlBase? _oc;
-        private IntPtr _activeWindowHook;
-
         private readonly UIResourceService _themeResourceService;
         private readonly PluginReactiveService _pluginReactiveService;
         private readonly PowerOptimizeService _powerOptimizeService;
@@ -102,12 +99,14 @@ namespace MyToolBar.Views.Windows
             UpdateMainMenuIcon();
             UpdateEnableNewStyle();
             UpdateEnableIsland();
+            UpdateAppBarForeground();
             OnSystemColorChanged();
         }
         /// <summary>
         /// Hwnd for this window
         /// </summary>
         private IntPtr _hwnd;
+        private IntPtr _activeWindowHook;
         private volatile IntPtr _activeObjHandle;
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -363,7 +362,6 @@ namespace MyToolBar.Views.Windows
         private Action? _notificationCallback;
         public void OnNotificationReceived(Notification notification,Action? callback)
         {
-            //TODO: Notification权限校验
             Dispatcher.Invoke(async() =>
             {
                 await ShowNotificationBox(notification,callback);
@@ -372,6 +370,8 @@ namespace MyToolBar.Views.Windows
         #endregion
 
         #region OuterControl
+
+        private OuterControlBase? _oc;
         /// <summary>
         /// OuterFuncStatus是否开启
         /// </summary>
@@ -425,7 +425,7 @@ namespace MyToolBar.Views.Windows
         }
         #endregion
 
-        #region OuterFuncStatus & Window Style
+        #region Window Style
         private void AppBar_OnWindowLocationApplied()
         {
             if (_appSettingsService.Settings.EnableNewStyle)
@@ -438,43 +438,6 @@ namespace MyToolBar.Views.Windows
             }
             Width = ScreenAPI.GetScreenArea(_hwnd).Width - Left * 2;
             Height = 32;
-        }
-
-        /// <summary>
-        /// 存在窗口最大化时的AppBar样式
-        /// </summary>
-        private void MaxWindowStyle()
-        {
-            CurrentAppBarStyle = 1;
-            if (IsDarkMode)
-            {
-                OuterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(20, 255, 255, 255));
-            }
-            else
-            {
-                OuterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(20, 0, 0, 0));
-            }
-            _oc?.MaxStyleAct?.Invoke(true, null);
-        }
-
-        /// <summary>
-        /// 无最大化窗口时的AppBar样式
-        /// </summary>
-        private void NormalWindowStyle()
-        {
-            CurrentAppBarStyle = 0;
-            Brush? foreground = null;
-            if (IsDarkMode)
-            {
-                OuterFuncStatus.Background = new SolidColorBrush(Color.FromArgb(120, 255, 255, 255));
-                foreground = OuterControlNormalDarkModeForeColor;
-            }
-            else
-            {
-                OuterFuncStatus.SetResourceReference(BackgroundProperty, "MaskColor");
-            }
-
-            _oc?.MaxStyleAct?.Invoke(false, foreground);
         }
 
         /// <summary>
@@ -501,46 +464,9 @@ namespace MyToolBar.Views.Windows
             //退出沉浸模式
             MainBarGrid.Background = null;
             _lastEvaColor = null;
-            SetForegroundColor();
             CurrentAppBarBgStyle = AppBarBgStyleType.Acrylic;
         }
-        /// <summary>
-        /// 在非沉浸模式下通过截图判断使用的前景色
-        /// </summary>
-        private void SetForegroundColor()
-        {
-            (double dpiX, double dpiY) = ScreenAPI.GetDPI(ScreenAPI.GetHmonitorForHwnd(_hwnd));
-            var capHeight = 6;
-            using System.Drawing.Bitmap bmp = ScreenAPI.CaptureScreenArea((int)(Left*dpiX), (int)(Top*dpiY), (int)(ActualWidth * dpiX), capHeight);
-            if (bmp == null) return;
-            //取平均值
-            long _r = 0, _g = 0, _b = 0;
-            int total = 0;
-            for (int x = 0; x < ActualWidth; x += 20)
-            {
-                for (int y = 0; y < capHeight; y += 2)
-                {
-                    System.Drawing.Color c = bmp.GetPixel(x, y);
-                    _r += c.R;
-                    _g += c.G;
-                    _b += c.B;
-                    total++;
-                }
-            }
-            Color themeColor = Color.FromRgb((byte)(_r / total), (byte)(_g / total), (byte)(_b / total));
-            //判断颜色深浅
-            var sel = themeColor.R * 0.299 + themeColor.G * 0.578 + themeColor.B * 0.114;
-            if (sel > 130)
-            {
-                //浅色
-                _themeResourceService.SetAppBarFontColor(true);
-            }
-            else
-            {
-                //深色
-                _themeResourceService.SetAppBarFontColor(false);
-            }
-        }
+
         /// <summary>
         /// 更新AppBar背景
         /// </summary>
@@ -550,7 +476,8 @@ namespace MyToolBar.Views.Windows
                 if (found)
                 {
                     //存在最大化窗口
-                    if (!IsEnergySaverModeOn){
+                    if (!IsEnergySaverModeOn)
+                    {
                         if (_appSettingsService.Settings.UseImmerseMode)
                         {
                             ImmerseMode_UpdateBackground();
@@ -560,15 +487,9 @@ namespace MyToolBar.Views.Windows
                         {
                             DisableImmerseMode();
                         }
-                        else
-                        {
-                            SetForegroundColor();
-                        }
+                        UpdateAppBarForeground();
                     }
                     else UpdateEnergySaverMode();
-
-                    if (CurrentAppBarStyle == 0)
-                        MaxWindowStyle();
                 }
                 else
                 {
@@ -578,24 +499,19 @@ namespace MyToolBar.Views.Windows
                     {
                         //始终启用沉浸模式
                         immerse = true;
+                        CurrentAppBarBgStyle = AppBarBgStyleType.ImmerseMode;
                         ImmerseMode_UpdateBackground();
+                        UpdateAppBarForeground();
                     }
-                    else{
+                    else
+                    {
                         UpdateEnergySaverMode();
                     }
 
-                    if((CurrentAppBarBgStyle==AppBarBgStyleType.ImmerseMode && !immerse))
+                    if(CurrentAppBarBgStyle==AppBarBgStyleType.ImmerseMode && !immerse)
                     {
                         DisableImmerseMode();
                     }
-
-                    if (CurrentAppBarStyle == 1)
-                    {
-                        NormalWindowStyle();
-                    }
-                    if (immerse)
-                        CurrentAppBarBgStyle = AppBarBgStyleType.ImmerseMode;
-                    else SetForegroundColor();
                 }
             }).Find();
 
@@ -646,23 +562,46 @@ namespace MyToolBar.Views.Windows
                 BgImgEffector.Visibility = Visibility.Collapsed;
             };
             BgImgEffector.BeginAnimation(OpacityProperty, ani);
+        }
 
-            //判断颜色深浅
-            var sel = themeColor.R * 0.299 + themeColor.G * 0.578 + themeColor.B * 0.114;
-            if (sel > 150)
+        /// <summary>
+        /// 分块更新AppBar字体颜色
+        /// </summary>
+        private void UpdateAppBarForeground()
+        {
+            //截取AppBar所在位置的真实图像
+            (double dpiX, double dpiY) = ScreenAPI.GetDPI(ScreenAPI.GetHmonitorForHwnd(_hwnd));
+            var capHeight = 6;
+            using System.Drawing.Bitmap bmp = ScreenAPI.CaptureScreenArea((int)(Left*dpiX), (int)(Top*dpiY), (int)(ActualWidth * dpiX), capHeight);
+            if (bmp == null) return;
+            //由OuterControlCol划分为三个部分，单独计算颜色值
+            double outerWidth = OuterControlCol.ActualWidth * dpiX;
+            double edgeWidth = (ActualWidth * dpiX - outerWidth) / 2.0d;
+            
+            bool checkColor(int begin,int end) // true: black text
             {
-                //浅色
-                _themeResourceService.SetAppBarFontColor(true);
+                if (begin >= end) return false;
+                int r=0, g = 0, b = 0;
+                int count = 0;
+                for(int x=begin; x < end; x+=10)
+                {
+                    for(int y=0; y < capHeight; y+=2)
+                    {
+                        var  c = bmp.GetPixel(x, y);
+                        r += c.R;
+                        g += c.G;
+                        b += c.B;
+                        count++;
+                    }
+                }
+                r/= count;g/= count;b /= count;
+                //判断颜色深浅
+                return ImageHelper.WSAGColorCheck(r, g, b);
             }
-            else
-            {
-                //深色
-                _themeResourceService.SetAppBarFontColor(false);
-            }
-
-            /*  纯色
-            MainBarGrid.Background = new SolidColorBrush(themeColor);
-            */
+            bool left= checkColor(0, (int)edgeWidth);
+            bool center=checkColor((int)edgeWidth, (int)(edgeWidth + outerWidth));
+            bool right=checkColor((int)(edgeWidth + outerWidth), (int)(ActualWidth * dpiX));
+            _themeResourceService.SetAppBarFontColor(left, center, right);
         }
 
         /// <summary>
@@ -675,14 +614,6 @@ namespace MyToolBar.Views.Windows
             BlurWindowBehavior.SetDarkMode(isDarkMode);
             //更新主题
             _themeResourceService.SetThemeMode(isDarkMode);
-            //更新AppBar颜色
-            if (CurrentAppBarStyle == 0){
-                NormalWindowStyle();
-                if (CurrentAppBarBgStyle != AppBarBgStyleType.ImmerseMode)
-                    SetForegroundColor();
-            }
-            else
-                MaxWindowStyle();
         }
         
         private DateTime _lastSystemEvent = DateTime.MinValue;

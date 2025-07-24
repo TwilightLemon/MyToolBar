@@ -11,10 +11,6 @@ namespace MyToolBar.Common
     public static class GlobalService
     {
         /// <summary>
-        /// 指示当前AppBar状态，0为正常，1为最大化
-        /// </summary>
-        public static int CurrentAppBarStyle { get; set; } = 0;
-        /// <summary>
         /// 有窗口进入全屏时是否隐藏AppBar
         /// </summary>
         public static bool EnableHideWhenFullScreen { get; set; } = true;
@@ -46,7 +42,6 @@ namespace MyToolBar.Common
             OnEnergySaverModeChanged?.Invoke(isOn);
         }
 
-        public static Brush OuterControlNormalDarkModeForeColor= new SolidColorBrush(Color.FromArgb(250, 3, 3, 3));
         /// <summary>
         /// 获取PopupWindow相对于capsule弹出时的Left值
         /// </summary>

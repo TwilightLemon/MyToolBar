@@ -21,7 +21,6 @@ namespace MyToolBar.Plugin.BasicPackage.OuterControls
         public LemonAppMusic()
         {
             InitializeComponent();
-            MaxStyleAct = maxStyleAct;
             Loaded += LemonAppMusic_Loaded;
             this.StylusSystemGesture += LemonAppMusic_StylusSystemGesture;
             this.StylusDown += LemonAppMusic_StylusDown;
@@ -147,20 +146,6 @@ namespace MyToolBar.Plugin.BasicPackage.OuterControls
             Dispatcher.Invoke(() => {
                 LyricTb.Text = str;
             });
-        }
-
-        private void maxStyleAct(bool max,Brush? foreColor) {
-            if(foreColor!=null)
-                Foreground = foreColor;
-            else SetResourceReference(ForegroundProperty, "AppBarFontColor");
-            if (max)
-            {
-                FontWeight = FontWeights.Normal;
-            }
-            else
-            {
-                FontWeight = FontWeights.Bold;
-            }
         }
 
         bool _popShown = false;

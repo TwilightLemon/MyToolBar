@@ -7,7 +7,7 @@
 		<UseWPF>true</UseWPF>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<StartupObject>MyToolBar.EntryPoint</StartupObject>
-		<AssemblyVersion>1.0.0.2</AssemblyVersion>
+		<AssemblyVersion>1.0.0.4</AssemblyVersion>
 		<ApplicationIcon>Resources\icon.ico</ApplicationIcon>
 	</PropertyGroup>
 

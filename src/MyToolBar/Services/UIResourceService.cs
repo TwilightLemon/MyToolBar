@@ -43,12 +43,29 @@ namespace MyToolBar.Services
         /// <summary>
         /// 单独为AppBar配置前景色
         /// </summary>
-        /// <param name="IsDark"></param>
-        public void SetAppBarFontColor(bool IsDark)
+        public void SetAppBarFontColor(bool left,bool center,bool right)
         {
-            App.Current.Resources["AppBarFontColor"] = new SolidColorBrush(
-                IsDark?Color.FromRgb(0x0E, 0x0E, 0x0E) : Color.FromRgb(0xFE, 0xFE, 0xFE)
-                );
+            void set(string pos,bool isDark)
+            {
+                App.Current.Resources["AppBarForeground"+pos] = new SolidColorBrush(
+                    isDark ? Color.FromRgb(0x0E, 0x0E, 0x0E) : Color.FromRgb(0xFE, 0xFE, 0xFE)
+                    );
+            }
+            set("Left", left);
+            set("Center", center);
+            set("Right", right);
+        }
+        public void SetAppBarFontColor(bool isDark)
+        {
+            void set(string pos)
+            {
+                App.Current.Resources["AppBarForeground" + pos] = new SolidColorBrush(
+                    isDark ? Color.FromRgb(0x0E, 0x0E, 0x0E) : Color.FromRgb(0xFE, 0xFE, 0xFE)
+                    );
+            }
+            set("Left");
+            set("Center");
+            set("Right");
         }
 
         /// <summary>

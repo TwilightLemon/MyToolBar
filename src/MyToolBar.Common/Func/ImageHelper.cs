@@ -11,7 +11,7 @@ using System.Windows.Media.Imaging;
 namespace MyToolBar.Common.Func;
 public static class ImageHelper
 {
-    #region ImageÀà»¥×ªµÄÍØÕ¹·½·¨
+    #region Imageï¿½à»¥×ªï¿½ï¿½ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½
 
     [DllImport("gdi32.dll", SetLastError = true)]
     private static extern bool DeleteObject(IntPtr hObject);
@@ -33,7 +33,7 @@ public static class ImageHelper
     {
         BitmapSource m = (BitmapSource)imageSource;
 
-        Bitmap bmp = new Bitmap(m.PixelWidth, m.PixelHeight, System.Drawing.Imaging.PixelFormat.Format32bppPArgb); // ¿Óµã£ºÑ¡Format32bppRgb½«²»´øÍ¸Ã÷¶È
+        Bitmap bmp = new Bitmap(m.PixelWidth, m.PixelHeight, System.Drawing.Imaging.PixelFormat.Format32bppPArgb); // ï¿½Óµã£ºÑ¡Format32bppRgbï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ï¿½
 
         BitmapData data = bmp.LockBits(
         new Rectangle(System.Drawing.Point.Empty, bmp.Size), ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
@@ -72,17 +72,17 @@ public static class ImageHelper
         }
     }
     #endregion
-    #region ´¦ÀíÄ£ºýÍ¼Ïñ
+    #region ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½Í¼ï¿½ï¿½
     [DllImport("gdiplus.dll", SetLastError = true, ExactSpelling = true, CharSet = CharSet.Unicode)]
     private static extern int GdipBitmapApplyEffect(IntPtr bitmap, IntPtr effect, ref Rectangle rectOfInterest, bool useAuxData, IntPtr auxData, int auxDataSize);
     /// <summary>
-    /// »ñÈ¡¶ÔÏóµÄË½ÓÐ×Ö¶ÎµÄÖµ£¬¸ÐÐ»Aaron Lee Murgatroyd
+    /// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½Ë½ï¿½ï¿½ï¿½Ö¶Îµï¿½Öµï¿½ï¿½ï¿½ï¿½Ð»Aaron Lee Murgatroyd
     /// </summary>
-    /// <typeparam name="TResult">×Ö¶ÎµÄÀàÐÍ</typeparam>
-    /// <param name="obj">Òª´ÓÆäÖÐ»ñÈ¡×Ö¶ÎÖµµÄ¶ÔÏó</param>
-    /// <param name="fieldName">×Ö¶ÎµÄÃû³Æ.</param>
-    /// <returns>×Ö¶ÎµÄÖµ</returns>
-    /// <exception cref="System.InvalidOperationException">ÎÞ·¨ÕÒµ½¸Ã×Ö¶Î.</exception>
+    /// <typeparam name="TResult">ï¿½Ö¶Îµï¿½ï¿½ï¿½ï¿½ï¿½</typeparam>
+    /// <param name="obj">Òªï¿½ï¿½ï¿½ï¿½ï¿½Ð»ï¿½È¡ï¿½Ö¶ï¿½Öµï¿½Ä¶ï¿½ï¿½ï¿½</param>
+    /// <param name="fieldName">ï¿½Ö¶Îµï¿½ï¿½ï¿½ï¿½ï¿½.</param>
+    /// <returns>ï¿½Ö¶Îµï¿½Öµ</returns>
+    /// <exception cref="System.InvalidOperationException">ï¿½Þ·ï¿½ï¿½Òµï¿½ï¿½ï¿½ï¿½Ö¶ï¿½.</exception>
     /// 
     internal static TResult GetPrivateField<TResult>(this object obj, string fieldName)
     {
@@ -108,8 +108,8 @@ public static class ImageHelper
     private static extern int GdipSetEffectParameters(IntPtr effect, IntPtr parameters, uint size);
     public static IntPtr NativeHandle(this Bitmap Bmp)
     {
-        // Í¨¹ý·´Éä»ñÈ¡BitmapµÄË½ÓÐ×Ö¶ÎnativeImageµÄÖµ£¬¸ÃÖµÎªGDI+µÄÄÚ²¿Í¼Ïñ¾ä±ú
-        //ÐÂ°æDrawingµÄNuget°üÖÐ×Ö¶ÎÓÉ nativeImage±ä¸üÎª_nativeImage
+        // Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡Bitmapï¿½ï¿½Ë½ï¿½ï¿½ï¿½Ö¶ï¿½nativeImageï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ÖµÎªGDI+ï¿½ï¿½ï¿½Ú²ï¿½Í¼ï¿½ï¿½ï¿½ï¿½
+        //ï¿½Â°ï¿½Drawingï¿½ï¿½Nugetï¿½ï¿½ï¿½ï¿½ï¿½Ö¶ï¿½ï¿½ï¿½ nativeImageï¿½ï¿½ï¿½Îª_nativeImage
         return Bmp.GetPrivateField<IntPtr>("_nativeImage");
     }
     [DllImport("gdiplus.dll", SetLastError = true, ExactSpelling = true, CharSet = CharSet.Unicode)]
@@ -121,7 +121,7 @@ public static class ImageHelper
         BlurParameters BlurPara;
         if ((Radius < 0) || (Radius > 255))
         {
-            throw new ArgumentOutOfRangeException("°ë¾¶±ØÐëÔÚ[0,255]·¶Î§ÄÚ");
+            throw new ArgumentOutOfRangeException("ï¿½ë¾¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½[0,255]ï¿½ï¿½Î§ï¿½ï¿½");
         }
         BlurPara.Radius = Radius;
         BlurPara.ExpandEdges = ExpandEdge;
@@ -132,14 +132,32 @@ public static class ImageHelper
             Marshal.StructureToPtr(BlurPara, Handle, true);
             GdipSetEffectParameters(BlurEffect, Handle, (uint)Marshal.SizeOf(BlurPara));
             GdipBitmapApplyEffect(Bmp.NativeHandle(), BlurEffect, ref Rect, false, IntPtr.Zero, 0);
-            // Ê¹ÓÃGdipBitmapCreateApplyEffectº¯Êý¿ÉÒÔ²»¸Ä±äÔ­Ê¼µÄÍ¼Ïñ£¬¶ø°ÑÄ£ºýµÄ½á¹ûÐ´Èëµ½Ò»¸öÐÂµÄÍ¼ÏñÖÐ
+            // Ê¹ï¿½ï¿½GdipBitmapCreateApplyEffectï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô²ï¿½ï¿½Ä±ï¿½Ô­Ê¼ï¿½ï¿½Í¼ï¿½ñ£¬¶ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½Ä½ï¿½ï¿½Ð´ï¿½ëµ½Ò»ï¿½ï¿½ï¿½Âµï¿½Í¼ï¿½ï¿½ï¿½ï¿½
             GdipDeleteEffect(BlurEffect);
             Marshal.FreeHGlobal(Handle);
         }
         else
         {
-            throw new ExternalException("²»Ö§³ÖµÄGDI+°æ±¾£¬±ØÐëÎªGDI+1.1¼°ÒÔÉÏ°æ±¾£¬ÇÒ²Ù×÷ÏµÍ³ÒªÇóÎªWin Vista¼°Ö®ºó°æ±¾.");
+            throw new ExternalException("ï¿½ï¿½Ö§ï¿½Öµï¿½GDI+ï¿½æ±¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎªGDI+1.1ï¿½ï¿½ï¿½ï¿½ï¿½Ï°æ±¾ï¿½ï¿½ï¿½Ò²ï¿½ï¿½ï¿½ÏµÍ³Òªï¿½ï¿½ÎªWin Vistaï¿½ï¿½Ö®ï¿½ï¿½æ±¾.");
         }
+    }
+
+    static double SrgbToLinear(double c) => c <= 0.03928 ? c / 12.92 : Math.Pow((c + 0.055) / 1.055, 2.4);
+    static double GetRelativeLuminance(int R,int G,int B)
+    {
+        double r = SrgbToLinear(R / 255.0);
+        double g = SrgbToLinear(G / 255.0);
+        double b = SrgbToLinear(B / 255.0);
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    }
+    public static bool WSAGColorCheck(int R, int G, int B)
+    {
+        double bgLum = GetRelativeLuminance(R,G,B);
+
+        double contrastWithWhite = (1.05) / (bgLum + 0.05);
+        double contrastWithBlack = (bgLum + 0.05) / 0.05;
+
+        return contrastWithWhite < contrastWithBlack;// TRUE:black text
     }
     #endregion
 }

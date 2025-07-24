@@ -1,125 +1,125 @@
 ﻿<Window x:Class="MyToolBar.Views.Windows.AppBarWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MyToolBar.Views.Windows"
-        xmlns:ws="https://schemas.elecho.dev/wpfsuite"
-        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-        xmlns:mb="clr-namespace:MyToolBar.Common.Behaviors;assembly=MyToolBar.Common"
         xmlns:api="clr-namespace:MyToolBar.Common.WinAPI;assembly=MyToolBar.Common"
-        mc:Ignorable="d"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:local="clr-namespace:MyToolBar.Views.Windows"
+        xmlns:mb="clr-namespace:MyToolBar.Common.Behaviors;assembly=MyToolBar.Common"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ws="https://schemas.elecho.dev/wpfsuite"
         Title="MyToolBar"
-        Height="32"
-        Top="4"
-        Left="8"
         Width="1480"
-        WindowStyle="None"
+        Height="32"
+        ws:WindowOption.Corner="RoundSmall"
+        Activated="Window_Activated"
         Background="Transparent"
-        Foreground="{DynamicResource AppBarFontColor}"
+        Closing="Window_Closing"
+        Deactivated="Window_Deactivated"
+        FontFamily=".PingFang SC,Segoe UI"
+        FontWeight="SemiBold"
+        Foreground="{DynamicResource AppBarForegroundRight}"
+        Left="8"
+        Loaded="Window_Loaded"
+        RenderOptions.BitmapScalingMode="HighQuality"
         ResizeMode="NoResize"
         ShowInTaskbar="False"
-        Topmost="True"
-        RenderOptions.BitmapScalingMode="HighQuality"
-        FontWeight="SemiBold"
-        FontFamily=".PingFang SC,Segoe UI"
-        Loaded="Window_Loaded"
-        Closing="Window_Closing"
-        ws:WindowOption.Corner="RoundSmall"
         SourceInitialized="Window_SourceInitialized"
-        Activated="Window_Activated"
-        Deactivated="Window_Deactivated">
+        Top="4"
+        Topmost="True"
+        WindowStyle="None"
+        mc:Ignorable="d">
     <Window.Resources>
-        <WindowChrome x:Key="windowChrome" CaptionHeight="0" ResizeBorderThickness="0"/>
+        <WindowChrome x:Key="windowChrome"
+                      CaptionHeight="0"
+                      ResizeBorderThickness="0" />
     </Window.Resources>
     <api:AppBarCreator.AppBar>
-        <api:AppBar Location="Top"
-                    ForcedHeight="32" OnWindowLocationApplied="AppBar_OnWindowLocationApplied"
-                    OnFullScreenStateChanged="AppBar_OnFullScreenStateChanged" />
+        <api:AppBar ForcedHeight="32"
+                    Location="Top"
+                    OnFullScreenStateChanged="AppBar_OnFullScreenStateChanged"
+                    OnWindowLocationApplied="AppBar_OnWindowLocationApplied" />
     </api:AppBarCreator.AppBar>
 
     <i:Interaction.Behaviors>
-        <mb:BlurWindowBehavior IsToolWindow="True" 
-                               WindowChromeEx="{StaticResource windowChrome}"/>
+        <mb:BlurWindowBehavior IsToolWindow="True" WindowChromeEx="{StaticResource windowChrome}" />
     </i:Interaction.Behaviors>
 
     <Grid x:Name="MainBarGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1.2*" />
-            <!--Initial width is 0 , for no plugin is loaded.-->
+            <!--  Initial width is 0 , for no plugin is loaded.  -->
             <ColumnDefinition x:Name="OuterControlCol"
                               Width="0*"
-                              d:Width="1.2*"
-                              MaxWidth="680" />
+                              MaxWidth="680"
+                              d:Width="1.2*" />
             <ColumnDefinition Width="1.2*" />
         </Grid.ColumnDefinitions>
         <Border x:Name="BgImgEffector"
-                Opacity="0"
-                Grid.ColumnSpan="3" />
+                Grid.ColumnSpan="3"
+                Opacity="0" />
         <Border x:Name="MainMenuButton"
-                Cursor="Hand"
-                HorizontalAlignment="Left"
-                Height="32"
                 Width="32"
+                Height="32"
+                Margin="6,0,0,0"
+                HorizontalAlignment="Left"
                 Background="#01000000"
-                MouseDown="MainMenuButton_MouseDown"
-                Margin="6,0,0,0">
+                Cursor="Hand"
+                MouseDown="MainMenuButton_MouseDown">
             <Path x:Name="MainMenuIcon"
-                  Data="{StaticResource MenuIcon_Apple}"
-                  Stretch="Uniform"
-                  Fill="{DynamicResource AppBarFontColor}"
                   Width="15"
-                  Height="15" />
+                  Height="15"
+                  Data="{StaticResource MenuIcon_Apple}"
+                  Fill="{DynamicResource AppBarForegroundLeft}"
+                  Stretch="Uniform" />
         </Border>
         <Grid x:Name="TittleViewer"
-              ClipToBounds="True"
-              Margin="40 0 0 0"
-              Background="#01000000">
+              Margin="40,0,0,0"
+              Background="#01000000"
+              ClipToBounds="True">
             <TextBlock x:Name="TitleView"
-                       TextWrapping="NoWrap"
-                       d:Text="Microsoft Visual Studio 2022"
+                       HorizontalAlignment="Left"
                        VerticalAlignment="Center"
-                       HorizontalAlignment="Left" />
+                       d:Text="Microsoft Visual Studio 2022"
+                       Foreground="{DynamicResource AppBarForegroundLeft}"
+                       TextWrapping="NoWrap" />
         </Grid>
         <Border x:Name="OuterFuncStatus"
                 Grid.Column="1"
-                Background="{DynamicResource HighlightColor}"
-                CornerRadius="16"
-                Visibility="Hidden"
+                Margin="0,0,0,0"
                 d:Visibility="Visible"
-                Margin="0 0 0 0">
-            <Grid x:Name="OuterFunc"
-                  Background="Transparent" />
+                Background="{DynamicResource MaskColor}"
+                CornerRadius="16"
+                Visibility="Hidden">
+            <Grid x:Name="OuterFunc" Background="Transparent" />
         </Border>
         <Border x:Name="Island"
                 Grid.ColumnSpan="3"
-                Background="Black"
                 Width="240"
-                Margin="0 0 0 2"
-                CornerRadius="0 0 12 12"/>
-        <Border x:Name="NotificationBox"
-                CornerRadius="16"
+                Margin="0,0,0,2"
                 Background="Black"
+                CornerRadius="0 0 12 12" />
+        <Border x:Name="NotificationBox"
                 Grid.ColumnSpan="3"
-                Visibility="Collapsed"
+                HorizontalAlignment="Center"
+                Background="Black"
+                CornerRadius="16"
                 MouseDown="NotificationBox_MouseDown"
-                HorizontalAlignment="Center">
+                Visibility="Collapsed">
             <Grid>
                 <TextBlock x:Name="NotificationContent"
+                           Margin="10,0,10,0"
                            VerticalAlignment="Center"
+                           d:Text="Notification"
                            Foreground="White"
-                           TextAlignment="Center"
-                           Margin="10 0 10 0"
-                           d:Text="Notification">
-
-                </TextBlock>
+                           TextAlignment="Center" />
             </Grid>
         </Border>
         <WrapPanel x:Name="CapsulePanel"
-                   HorizontalAlignment="Right"
-                   Orientation="Vertical"
+                   Grid.Column="2"
                    Margin="10,0,10,0"
-                   Grid.Column="2" />
+                   HorizontalAlignment="Right"
+                   Orientation="Vertical" />
 
     </Grid>
 </Window>

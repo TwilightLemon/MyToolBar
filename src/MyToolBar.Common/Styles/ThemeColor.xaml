@@ -3,13 +3,14 @@
     <!--  系统主题色 此字典值由UIResourceService负责实时更新  -->
     <SolidColorBrush x:Key="SystemThemeColor" Color="#69F" />
     <!--  For AppBar  -->
-    <SolidColorBrush x:Key="AppBarFontColor" Color="#FEFEFE" />
+    <SolidColorBrush x:Key="AppBarForegroundLeft" Color="#FEFEFE" />
+    <SolidColorBrush x:Key="AppBarForegroundCenter" Color="#FEFEFE" />
+    <SolidColorBrush x:Key="AppBarForegroundRight" Color="#FEFEFE" />
     <SolidColorBrush x:Key="WindowBackgroundColor" Color="#CC000000" />
     <SolidColorBrush x:Key="TabMaskColor" Color="#4C000000" />
     <!--  For Others  -->
     <SolidColorBrush x:Key="ForeColor" Color="#FEFEFE" />
     <SolidColorBrush x:Key="MaskColor" Color="#19ffffff" />
     <SolidColorBrush x:Key="FocusMaskColor" Color="#33FFFFFF" />
-    <SolidColorBrush x:Key="HighlightColor" Color="#78FFFFFF" />
     <SolidColorBrush x:Key="BackgroundColor" Color="#000" />
 </ResourceDictionary>
