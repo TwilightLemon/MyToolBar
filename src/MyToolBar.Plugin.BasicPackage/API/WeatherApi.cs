@@ -264,7 +264,8 @@ namespace MyToolBar.Plugin.BasicPackage.API
             3 => Color.FromArgb(255, 255, 126, 0),
             4 => Color.FromArgb(255, 255, 0, 0),
             5 => Color.FromArgb(255, 153, 0, 76),
-            6 => Color.FromArgb(255, 126, 0, 35)
+            6 => Color.FromArgb(255, 126, 0, 35),
+            _=>Colors.Transparent
         };
         public static async Task<List<WeatherDay>> GetForecastAsync(this City city)
         {

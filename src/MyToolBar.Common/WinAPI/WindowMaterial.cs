@@ -1,9 +1,11 @@
-﻿using System;
+﻿using EleCho.WpfSuite;
+using System;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Shell;
+using static MyToolBar.Common.WinAPI.MaterialApis;
 
 namespace MyToolBar.Common.WinAPI;
 
@@ -39,7 +41,7 @@ public class WindowMaterial : DependencyObject
     private void AttachedWindow_SourceInitialized(object? sender, EventArgs e)
     {
         InitWindow();
-        _window.SourceInitialized -= AttachedWindow_SourceInitialized;
+        _window!.SourceInitialized -= AttachedWindow_SourceInitialized;
     }
 
     /// <summary>
@@ -228,7 +230,7 @@ public class WindowMaterial : DependencyObject
     private int _blurColor;
     private void SetCompositionColor(Color value)
     {
-        _blurColor = value.R << 0 | value.G << 8 | value.B << 16 | value.A << 24;
+        _blurColor = value.ToHexColor();
     }
     private void SetDarkMode(bool isDarkMode)
     {
@@ -250,21 +252,9 @@ public class WindowMaterial : DependencyObject
     private void SetWindowProperty(bool isLagcy = false)
     {
         if (_hWnd == IntPtr.Zero) return;
-        // 设置窗口背景透明
         var hwndSource = (HwndSource)PresentationSource.FromVisual(_window);
-        hwndSource.CompositionTarget.BackgroundColor = Colors.Transparent;
-
-        int margin = isLagcy ? 0 : -1;
-        // 设置边框
-        var margins = new MaterialApis.Margins()
-        {
-            LeftWidth = margin,
-            TopHeight = margin,
-            RightWidth = margin,
-            BottomHeight = margin
-        };
-
-        MaterialApis.DwmExtendFrameIntoClientArea(hwndSource.Handle, ref margins);
+        int margin = isLagcy ? 1 : -1;
+        MaterialApis.SetWindowProperties(hwndSource, margin);
     }
 }
 
@@ -279,8 +269,27 @@ public enum MaterialType
     MicaAlt = 4
 }
 
-internal static class MaterialApis
+public static class MaterialApis
 {
+    public static int ToHexColor(this Color value)
+    {
+        return value.R << 0 | value.G << 8 | value.B << 16 | value.A << 24;
+    }
+    public static void SetWindowProperties(HwndSource hwndSource, int margin)
+    {
+        if (hwndSource == null) return;
+        hwndSource.CompositionTarget.BackgroundColor = Colors.Transparent;
+        var margins = new Margins()
+        {
+            LeftWidth = margin,
+            TopHeight = margin,
+            RightWidth = margin,
+            BottomHeight = margin
+        };
+
+        DwmExtendFrameIntoClientArea(hwndSource.Handle, ref margins);
+    }
+
 
     [DllImport("DWMAPI")]
     public static extern nint DwmExtendFrameIntoClientArea(nint hwnd, ref Margins margins);
@@ -340,7 +349,19 @@ internal static class MaterialApis
     public enum DWMWINDOWATTRIBUTE
     {
         DWMWA_USE_IMMERSIVE_DARK_MODE = 20,
-        DWMWA_SYSTEMBACKDROP_TYPE = 38
+        DWMWA_SYSTEMBACKDROP_TYPE = 38,
+        WINDOW_CORNER_PREFERENCE = 33
+    }
+    public enum WindowCorner
+    {
+        Default = 0,
+        DoNotRound = 1,
+        Round = 2,
+        RoundSmall = 3
+    }
+    public static void SetWindowCorner(IntPtr handle, WindowCorner corner)
+    {
+        SetWindowAttribute(handle, DWMWINDOWATTRIBUTE.WINDOW_CORNER_PREFERENCE, (int)corner);
     }
 
     public static void SetWindowComposition(IntPtr handle, bool enable, int? hexColor = null)

@@ -30,7 +30,7 @@
         Activated="Window_Activated"
         Deactivated="Window_Deactivated">
     <Window.Resources>
-        <WindowChrome x:Key="windowChrome" CaptionHeight="0"/>
+        <WindowChrome x:Key="windowChrome" CaptionHeight="0" ResizeBorderThickness="0"/>
     </Window.Resources>
     <api:AppBarCreator.AppBar>
         <api:AppBar Location="Top"

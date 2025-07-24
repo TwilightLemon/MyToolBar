@@ -1,10 +1,22 @@
+<div align=center>
+
 # MyToolBar (Preview)
-[![LICENSE](https://img.shields.io/badge/license-GPL%20v3.0-blue.svg?style=flat-square)](https://github.com/TwilightLemon/MyToolBar/blob/master/LICENSE)  
-### Platform
-Run on Windows10 1803~ Windows11  
-Powered by .NET 8 on WPF  
-现已进入预发布阶段，欢迎体验和反馈！  
-## 简介
+<img src="https://raw.githubusercontent.com/TwilightLemon/MyToolBar/master/Resources/icon.ico" width="128" height="128"/>
+
+✨ *为Surface Pro而生的顶部工具栏 支持触控和笔快捷方式* ✨
+
+[![LICENSE](https://img.shields.io/badge/license-GPL%20v3.0-blue.svg?style=flat-square)](https://github.com/TwilightLemon/MyToolBar/blob/master/LICENSE)
+![C#](https://img.shields.io/badge/lang-C%23-orange)
+![WPF](https://img.shields.io/badge/UI-WPF-b33bb3)
+[![GitHub Repo stars](https://img.shields.io/github/stars/TwilightLemon/MyToolBar)](https://github.com/TwilightLemon/MyToolBar/stargazers)
+</div>
+
+## 🚀平台
+运行于 Windows10 1803~ Windows11  
+基于 .NET 8 和 WPF 开发  
+现已进入预发布阶段，欢迎体验和反馈！ 
+ 
+## 📝 简介
   这是一个为提升Surface等Windows平板设备体验的全局顶部栏工具，目标是：  
 -  实时了解和控制设备运行状态：硬件状态监控和快速进程管理，现由插件`MyToolBar.Plugin.BasicPackage`提供
 -  提供常用功能常驻平台、提升平板触控和笔的操作体验: 拓展触控笔菜单、侧边栏、顶部栏手势等交互方式，现由插件`MyToolBar.Plugin.TabletUtils`提供
@@ -15,7 +27,7 @@ Powered by .NET 8 on WPF
 当然，此app不仅适配平板，也同样适用于用鼠标操作的桌面设备。
   
   ![Main](https://raw.githubusercontent.com/TwilightLemon/Data/refs/heads/master/MTB_Settings_Main.jpg)
-## 功能
+## 😺 功能
 ### 通过AppBar固定的顶部栏
 了解什么是AppBar(Win32 API): [WPF使用AppBar实现窗口停靠，适配缩放、全屏响应和多窗口并列](https://blog.twlmgatito.cn/posts/use-appbar-in-wpf/)
 - 左侧:   
@@ -27,8 +39,9 @@ Powered by .NET 8 on WPF
 
 - 右部: "胶囊(Capsules)"交互信息显示区，并可以下滑（或单击）弹出详细信息(PopupWindow)。  
     目前在`MyToolBar.Plugin.BasicPackage`中提供了以下功能：  
-   - 硬件监测: 电池、CPU占有率、内存占用、网络状态；PopupWindow为进程管理器提供进程查看和结束、`NT Kernel`级别的进程冻结和压缩功能。
-   - 天气: (我移除了windows小部件 但很需要一个地方来显示天气) 通过GPS定位城市，有搜索、收藏功能，长按(鼠标右键点击)可设置为默认显示城市
+   - 硬件监测: 电池、CPU占有率、内存占用、网络状态；PopupWindow为进程管理器提供进程查看和结束、`NT Kernel`级别的进程冻结和压缩功能，终结模式下可以查找挂起进程和焦点窗口进程，以便快速终结。
+   - 天气: (我移除了windows小部件 但很需要一个地方来显示天气) 通过GPS定位城市，有搜索、收藏功能，长按(鼠标右键点击)可设置为默认显示城市。
+   - 简易时钟显示。
 
 上面的Outer Control和Capsules都是由插件提供的，可以自行在设置页面中启用和调整。
 ![Plugin](https://raw.githubusercontent.com/TwilightLemon/Data/refs/heads/master/MTB_Settings_Plugin.jpg)
@@ -36,19 +49,20 @@ Powered by .NET 8 on WPF
 ### 平板设备拓展工具 (由`MyToolBar.Plugin.TabletUtils`提供)
 现有功能：
 - 适用于触摸和笔的菜单：  
-在屏幕右上角滑动打开菜单，目前提供截图和屏幕绘制功能。
-- 左侧侧边栏：
+在屏幕右上角滑动打开菜单，目前提供截图（调用系统截图工具）和屏幕绘制功能。屏幕绘制功能支持使用触控笔在屏幕上绘制，支持撤销和清除操作，可以使用笔进行书写，使用手指圈画以选择，双指点击以清除或粘贴内容(图像和文本)。
+- 左侧侧边栏：  
 触摸屏幕左侧边缘（鼠标靠近停留）打开侧边栏，现接入DeepSeek AI Chat
 
 ![Tablet](https://raw.githubusercontent.com/TwilightLemon/Data/refs/heads/master/MTB_Settings_Services.jpg)
 ### 保持与Windows高度融合
+- 沉浸模式与全屏应用融为一体
 - 支持Dark/Light Mode 跟随系统
 - 全局亚克力/云母材质特效
 - 支持Modern Standby待机模式和电源优化
 
 ### More...
 
-## 如何使用(Preview)
+## 📦 如何使用(Preview)
 1. 自行编译：  
     - 编译整个项目
     - 将`MyToolBar.Plugin.BasicPackage`和`MyToolBar.Plugin.TabletUtils`的dll文件及其依赖文件放入同名文件夹下，再放入`Plugins`文件夹  

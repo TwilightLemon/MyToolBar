@@ -8,7 +8,12 @@
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<StartupObject>MyToolBar.EntryPoint</StartupObject>
 		<AssemblyVersion>1.0.0.2</AssemblyVersion>
+		<ApplicationIcon>Resources\icon.ico</ApplicationIcon>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <Resource Include="Resources\icon.ico" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
@@ -25,6 +30,21 @@
 	<ItemGroup>
 		<ProjectReference Include="..\MyToolBar.Common\MyToolBar.Common.csproj" />
 		<ProjectReference Include="..\MyToolBar.Plugin\MyToolBar.Plugin.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Properties\Resources.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Resources.resx</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Update="Properties\Resources.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
 	</ItemGroup>
 
 	<ItemGroup>

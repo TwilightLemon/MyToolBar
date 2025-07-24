@@ -313,7 +313,7 @@ public class AppBar : DependencyObject
         //成为AppBar窗口之后(或已经是)只需要注册并移动窗口位置即可
         SetAppBarPosition(_originalSize);
     }
-    private DateTime _lastSetTime= DateTime.MinValue;
+
     public void SetAppBarPosition(Size WindowSize)
     {
         var data = new Interop.APPBARDATA();
@@ -396,6 +396,7 @@ public class AppBar : DependencyObject
             //_window.Top = rect.Top;
             _window.Width = rect.Width;
             _window.Height = rect.Height;
+            Debug.WriteLine(rect.Height);
             //回调AppBarWindow允许其自适应大小
             OnWindowLocationApplied?.Invoke();
         });

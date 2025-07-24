@@ -13,6 +13,7 @@
                        WindowStyle="None"
                        Height="550"
                        Width="850"
+                       Icon="/Resources/icon.ico"
                        Title="{DynamicResource SettingsWindow_Title}">
     <DockPanel>
         <DockPanel DockPanel.Dock="Left"

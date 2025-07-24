@@ -437,6 +437,7 @@ namespace MyToolBar.Views.Windows
                 Top = Left = 0;
             }
             Width = ScreenAPI.GetScreenArea(_hwnd).Width - Left * 2;
+            Height = 32;
         }
 
         /// <summary>
@@ -490,6 +491,7 @@ namespace MyToolBar.Views.Windows
         {
             UpdateBackground();
             Width = ScreenAPI.GetScreenArea(_hwnd).Width - Left * 2;
+            Height = 32;
         }
        
         enum AppBarBgStyleType { EnergySaving,ImmerseMode, Acrylic };
