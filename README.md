@@ -1,7 +1,7 @@
 <div align=center>
 
 # MyToolBar (Preview)
-<img src="https://raw.githubusercontent.com/TwilightLemon/MyToolBar/master/Resources/icon.ico" width="128" height="128"/>
+<img src="https://raw.githubusercontent.com/TwilightLemon/MyToolBar/refs/heads/master/src/MyToolBar/Resources/icon.ico" width="128" height="128"/>
 
 ✨ *为Surface Pro而生的顶部工具栏 支持触控和笔快捷方式* ✨
 
