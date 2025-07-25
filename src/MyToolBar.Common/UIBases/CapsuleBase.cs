@@ -1,31 +1,37 @@
-﻿using System.Diagnostics;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace MyToolBar.Common.UIBases
 {
     /// <summary>
-    /// 为Capsule提供基类
+    /// Capsule基类，提供Install, Uninstall方法和PopupWindow响应
     /// </summary>
     public class CapsuleBase : ItemBase
     {
         public virtual void Install() { }
         public virtual void Uninstall() { }
 
-        public Type? PopupWindowType { get; set; }
-        public bool IsPopupWindowOpen { get; set; } = false;
-        public WeakReference<PopupWindowBase>? PopupWindowInstance { get; set; }
+        /// <summary>
+        /// 获取或设置Capsule的弹出窗口类型，CapsuleBase会自动创建并在用户请求时唤出窗口
+        /// </summary>
+        protected Type? PopupWindowType { get; set; }
+        protected bool IsPopupWindowOpen { get; set; } = false;
+        protected WeakReference<PopupWindowBase>? PopupWindowInstance { get; set; }
 
+        /// <summary>
+        /// 创建PopupWindow实例后，设置其必要属性
+        /// </summary>
         protected virtual void SetPopupProperty()
         {
-            if(PopupWindowInstance!=null&&PopupWindowInstance.TryGetTarget(out var window))
+            if(PopupWindowInstance?.TryGetTarget(out var window) is true)
             {
                 window.Closed += delegate { IsPopupWindowOpen = false; };
                 window.Left = GlobalService.GetPopupWindowLeft(this, window);
             }
         }
+        /// <summary>
+        /// 请求创建PopupWindow
+        /// </summary>
         protected virtual void RequestPopup()
         {
             if (IsPopupWindowOpen|| PopupWindowType==null ||

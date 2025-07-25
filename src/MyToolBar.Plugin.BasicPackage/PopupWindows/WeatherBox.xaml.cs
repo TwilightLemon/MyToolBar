@@ -227,15 +227,26 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
                 }
             }
         }
+        private void FavorBtn_Click(object sender, RoutedEventArgs e)
+        {
+            _AtSearchPage = true;
+            (Resources["PageToSearch"] as Storyboard).Begin();
+        }
 
-        private async void LocateBtn_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void BackBtn_Click(object sender, RoutedEventArgs e)
+        {
+            _AtSearchPage = false;
+            (Resources["PageBack"] as Storyboard).Begin();
+        }
+
+        private async void LocateBtn_Click(object sender, RoutedEventArgs e)
         {
             SetLoadingStatus(true);
             try
             {
                 SearchCity_Result.Children.Clear();
                 var city = await WeatherApi.GetCityByPositionAsync();
-                if (city!=null)
+                if (city != null)
                 {
                     var item = new WeatherCityItem()
                     {
@@ -252,18 +263,6 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
             {
                 SetLoadingStatus(false);
             }
-        }
-
-        private void FavorBtn_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            _AtSearchPage = true;
-            (Resources["PageToSearch"] as Storyboard).Begin();
-        }
-
-        private void BackBtn_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            _AtSearchPage = false;
-            (Resources["PageBack"] as Storyboard).Begin();
         }
     }
 }

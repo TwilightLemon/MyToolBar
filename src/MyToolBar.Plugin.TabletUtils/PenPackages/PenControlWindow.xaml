@@ -3,18 +3,19 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d"
-        Topmost="True"
-        ShowInTaskbar="False"
+        xmlns:ws="https://schemas.elecho.dev/wpfsuite"
         Title="PenControlWindow"
-        Height="40"
         Width="40"
-        d:Width="200"
+        Height="40"
         d:Height="200"
-        WindowStyle="None"
-        ResizeMode="NoResize"
+        d:Width="200"
         Background="Transparent"
-        PreviewStylusDown="Window_PreviewStylusDown">
+        PreviewStylusDown="Window_PreviewStylusDown"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        Topmost="True"
+        WindowStyle="None"
+        mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -22,35 +23,24 @@
                 <ResourceDictionary Source="pack://application:,,,/MyToolBar.Common;component/Styles/IconData.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Storyboard x:Key="OpenAni">
-                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FunctionPanel"
-                                               Storyboard.TargetProperty="(UIElement.Visibility)">
-                    <DiscreteObjectKeyFrame KeyTime="00:00:00"
-                                            Value="{x:Static Visibility.Visible}" />
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FunctionPanel" Storyboard.TargetProperty="(UIElement.Visibility)">
+                    <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}" />
                 </ObjectAnimationUsingKeyFrames>
-                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="FunctionPanel"
-                                               Storyboard.TargetProperty="(UIElement.Opacity)">
-                    <EasingDoubleKeyFrame KeyTime="00:00:00"
-                                          Value="0" />
-                    <EasingDoubleKeyFrame KeyTime="00:00:00.2000000"
-                                          Value="1" />
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="FunctionPanel" Storyboard.TargetProperty="(UIElement.Opacity)">
+                    <EasingDoubleKeyFrame KeyTime="00:00:00" Value="0" />
+                    <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="1" />
                 </DoubleAnimationUsingKeyFrames>
-                <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="PrtScrBtn"
-                                                  Storyboard.TargetProperty="(FrameworkElement.Margin)">
-                    <EasingThicknessKeyFrame KeyTime="00:00:00"
-                                             Value="180,-30,0,0" />
-                    <EasingThicknessKeyFrame KeyTime="00:00:00.2000000"
-                                             Value="25,25,0,0">
+                <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="PrtScrBtn" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                    <EasingThicknessKeyFrame KeyTime="00:00:00" Value="180,-30,0,0" />
+                    <EasingThicknessKeyFrame KeyTime="00:00:00.2000000" Value="25,25,0,0">
                         <EasingThicknessKeyFrame.EasingFunction>
                             <CubicEase EasingMode="EaseOut" />
                         </EasingThicknessKeyFrame.EasingFunction>
                     </EasingThicknessKeyFrame>
                 </ThicknessAnimationUsingKeyFrames>
-                <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="DrawBtn"
-                                                  Storyboard.TargetProperty="(FrameworkElement.Margin)">
-                    <EasingThicknessKeyFrame KeyTime="00:00:00"
-                                             Value="180,-25,0,0" />
-                    <EasingThicknessKeyFrame KeyTime="00:00:00.2000000"
-                                             Value="115,115,0,0">
+                <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="DrawBtn" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                    <EasingThicknessKeyFrame KeyTime="00:00:00" Value="180,-25,0,0" />
+                    <EasingThicknessKeyFrame KeyTime="00:00:00.2000000" Value="115,115,0,0">
                         <EasingThicknessKeyFrame.EasingFunction>
                             <CubicEase EasingMode="EaseOut" />
                         </EasingThicknessKeyFrame.EasingFunction>
@@ -58,98 +48,87 @@
                 </ThicknessAnimationUsingKeyFrames>
             </Storyboard>
             <Storyboard x:Key="CloseAni">
-                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="FunctionPanel"
-                                               Storyboard.TargetProperty="(UIElement.Opacity)">
-                    <SplineDoubleKeyFrame KeyTime="00:00:00"
-                                          Value="1" />
-                    <SplineDoubleKeyFrame KeyTime="00:00:00.2000000"
-                                          Value="0" />
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetName="FunctionPanel" Storyboard.TargetProperty="(UIElement.Opacity)">
+                    <SplineDoubleKeyFrame KeyTime="00:00:00" Value="1" />
+                    <SplineDoubleKeyFrame KeyTime="00:00:00.2000000" Value="0" />
                 </DoubleAnimationUsingKeyFrames>
-                <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="PrtScrBtn"
-                                                  Storyboard.TargetProperty="(FrameworkElement.Margin)">
-                    <EasingThicknessKeyFrame KeyTime="00:00:00"
-                                             Value="25,25,0,0" />
-                    <EasingThicknessKeyFrame KeyTime="00:00:00.2000000"
-                                             Value="180,-30,0,0">
+                <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="PrtScrBtn" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                    <EasingThicknessKeyFrame KeyTime="00:00:00" Value="25,25,0,0" />
+                    <EasingThicknessKeyFrame KeyTime="00:00:00.2000000" Value="180,-30,0,0">
                         <EasingThicknessKeyFrame.EasingFunction>
                             <CubicEase EasingMode="EaseOut" />
                         </EasingThicknessKeyFrame.EasingFunction>
                     </EasingThicknessKeyFrame>
                 </ThicknessAnimationUsingKeyFrames>
-                <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="DrawBtn"
-                                                  Storyboard.TargetProperty="(FrameworkElement.Margin)">
-                    <EasingThicknessKeyFrame KeyTime="00:00:00"
-                                             Value="115,115,0,0" />
-                    <EasingThicknessKeyFrame KeyTime="00:00:00.2000000"
-                                             Value="180,-25,0,0">
+                <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="DrawBtn" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                    <EasingThicknessKeyFrame KeyTime="00:00:00" Value="115,115,0,0" />
+                    <EasingThicknessKeyFrame KeyTime="00:00:00.2000000" Value="180,-25,0,0">
                         <EasingThicknessKeyFrame.EasingFunction>
                             <CubicEase EasingMode="EaseOut" />
                         </EasingThicknessKeyFrame.EasingFunction>
                     </EasingThicknessKeyFrame>
                 </ThicknessAnimationUsingKeyFrames>
-                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FunctionPanel"
-                                               Storyboard.TargetProperty="(UIElement.Visibility)">
-                    <DiscreteObjectKeyFrame KeyTime="00:00:00.2000000"
-                                            Value="{x:Static Visibility.Collapsed}" />
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FunctionPanel" Storyboard.TargetProperty="(UIElement.Visibility)">
+                    <DiscreteObjectKeyFrame KeyTime="00:00:00.2000000" Value="{x:Static Visibility.Collapsed}" />
                 </ObjectAnimationUsingKeyFrames>
             </Storyboard>
+            <Style TargetType="ws:Button">
+                <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="HoverBackground" Value="{DynamicResource BackgroundColor}" />
+                <Setter Property="PressedBackground" Value="{DynamicResource BackgroundColor}" />
+                <Setter Property="CornerRadius" Value="40" />
+            </Style>
         </ResourceDictionary>
     </Window.Resources>
     <WindowChrome.WindowChrome>
-        <WindowChrome GlassFrameThickness="-1"
-                      CaptionHeight="0" />
+        <WindowChrome CaptionHeight="0" GlassFrameThickness="-1" />
     </WindowChrome.WindowChrome>
     <Grid x:Name="FunctionPanel"
-          Visibility="Collapsed"
-          d:Visibility="Visible">
-        <Border x:Name="statusBtn"
-                HorizontalAlignment="Right"
-                Width="80"
-                Height="80"
-                VerticalAlignment="Top"
-                Background="{DynamicResource BackgroundColor}"
-                Margin="0,-40,-40,0"
-                CornerRadius="40,40,40,40"
-                StylusButtonUp="statusBtn_StylusButtonUp">
-            <Path Data="{StaticResource Icon_close}"
-                  Stretch="Uniform"
-                  Width="10"
+          d:Visibility="Visible"
+          Visibility="Collapsed">
+        <ws:Button x:Name="CloseBtn"
+                   Width="80"
+                   Height="80"
+                   Margin="0,-40,-40,0"
+                   HorizontalAlignment="Right"
+                   VerticalAlignment="Top"
+                   VerticalContentAlignment="Bottom"
+                   HorizontalContentAlignment="Left"
+                   Click="CloseBtn_Click">
+            <Path Width="10"
                   Height="10"
+                  Margin="20,20,20,20"
+                  Data="{StaticResource Icon_close}"
                   Fill="{DynamicResource ForeColor}"
-                  HorizontalAlignment="Left"
-                  VerticalAlignment="Bottom"
-                  Margin="20,20,20,20" />
-        </Border>
-        <Border x:Name="PrtScrBtn"
-                HorizontalAlignment="Left"
-                Width="60"
-                Height="60"
-                VerticalAlignment="Top"
-                Background="{DynamicResource BackgroundColor}"
-                Margin="25,25,0,0"
-                CornerRadius="30,30,30,30"
-                StylusButtonUp="PrtScrBtn_StylusButtonUp">
-            <Path Data="{StaticResource Icon_PrtScr}"
-                  Stretch="Uniform"
-                  Width="20"
+                  Stretch="Uniform" />
+        </ws:Button>
+        <ws:Button x:Name="PrtScrBtn"
+                   Width="60"
+                   Height="60"
+                   Margin="25,25,0,0"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Top"
+                   Click="PrtScrBtn_Click">
+            <Path Width="20"
                   Height="20"
-                  Fill="{DynamicResource ForeColor}" />
-        </Border>
-        <Border x:Name="DrawBtn"
-                HorizontalAlignment="Left"
-                Width="60"
-                Height="60"
-                VerticalAlignment="Top"
-                Background="{DynamicResource BackgroundColor}"
-                Margin="115,115,0,0"
-                CornerRadius="30,30,30,30"
-                StylusButtonUp="DrawBtn_StylusButtonUp">
-            <Path Data="{StaticResource Icon_Draw}"
-                  Stretch="Uniform"
-                  Width="20"
+                  Data="{StaticResource Icon_PrtScr}"
+                  Fill="{DynamicResource ForeColor}"
+                  Stretch="Uniform" />
+        </ws:Button>
+        <ws:Button x:Name="DrawBtn"
+                   Width="60"
+                   Height="60"
+                   Margin="115,115,0,0"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Top"
+                   Click="DrawBtn_Click">
+            <Path Width="20"
                   Height="20"
-                  Fill="{DynamicResource ForeColor}" />
-        </Border>
+                  Data="{StaticResource Icon_Draw}"
+                  Fill="{DynamicResource ForeColor}"
+                  Stretch="Uniform" />
+        </ws:Button>
 
     </Grid>
 </Window>

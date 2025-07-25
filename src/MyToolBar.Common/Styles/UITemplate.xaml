@@ -232,6 +232,15 @@
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Cursor" Value="Hand" />
     </Style>
+    <Style x:Key="IconButtonStyleForWs" TargetType="ws:Button">
+        <Setter Property="Foreground" Value="{DynamicResource ForeColor}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="HoverBackground" Value="{DynamicResource FocusMaskColor}" />
+        <Setter Property="PressedBackground" Value="{DynamicResource FocusMaskColor}" />
+        <Setter Property="CornerRadius" Value="14" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Cursor" Value="Hand" />
+    </Style>
     <Style x:Key="SimpleComboBoxStyleForWs" TargetType="ws:ComboBox">
         <Setter Property="Background" Value="{DynamicResource MaskColor}" />
         <Setter Property="BorderBrush" Value="{DynamicResource FocusMaskColor}" />

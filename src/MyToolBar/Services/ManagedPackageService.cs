@@ -13,8 +13,6 @@ using System.Diagnostics;
  TODO: Plugin 加载模式改为从文件夹中加载；
              新增方法：解包和验证
  */
-
-
 namespace MyToolBar.Services;
 /// <summary>
 /// 托管的插件包管理服务 包括插件加载与设置Sign托管
@@ -171,10 +169,11 @@ public class ManagedPackageService
         //添加到托管包列表
         _managedPkg.Add(pkgObj.PackageName, new ManagedPackage(loadContext, pkgObj,isEnable));
         pkgObj.Plugins?.ForEach(o => o.AcPackage=pkgObj);
-        if (!isEnable)
-        {
+
+        /*if (!isEnable)
+        {//unload之后无法读取基本信息..? 
             loadContext.Unload();
-        }
+        }*/
     }
     
     public async void EnableInRegistered(string packageName)

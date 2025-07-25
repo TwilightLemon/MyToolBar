@@ -1,7 +1,5 @@
-﻿using System.Diagnostics;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
 using MyToolBar.Common.WinAPI;
 using System.Windows.Media.Animation;
 using MyToolBar.Common;
@@ -33,23 +31,17 @@ namespace MyToolBar.Plugin.TabletUtils.PenPackages
 
 
             _openAni = Resources["OpenAni"] as Storyboard;
-            _openAni.Completed += delegate {
-                this.IsEnabled = true;
-            };
             _closeAni = Resources["CloseAni"] as Storyboard;
             _closeAni.Completed += delegate {
                 Width = 40;
                 Height = 40;
-                this.IsEnabled = true;
                 _isOpen = false;
             };
         }
 
         private void GlobalTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
-            Dispatcher.Invoke(() => {
-                ResetWindowLocation();
-            });
+            Dispatcher.Invoke(ResetWindowLocation);
         }
 
         private void PenControlWindow_Deactivated(object? sender, System.EventArgs e)
@@ -90,7 +82,6 @@ namespace MyToolBar.Plugin.TabletUtils.PenPackages
             if (!_isOpen)
             {
                 _isOpen = true;
-                this.IsEnabled=false;//防止执行动画时误触按钮
                 this.Width = 200;
                 this.Height = 200;
                 _openAni.Begin();
@@ -100,7 +91,6 @@ namespace MyToolBar.Plugin.TabletUtils.PenPackages
         {
             if (_isOpen)
             {
-                this.IsEnabled = false;//防止执行动画时误触按钮
                 _closeAni.Begin();
             }
         }
@@ -111,11 +101,6 @@ namespace MyToolBar.Plugin.TabletUtils.PenPackages
             this.Top = 0;
         }
 
-        private void statusBtn_StylusButtonUp(object sender, StylusButtonEventArgs e)
-        {
-            ClosePanel();
-        }
-
         private Point _startPosition;
         private void Window_PreviewStylusDown(object sender, StylusDownEventArgs e)
         {
@@ -123,16 +108,20 @@ namespace MyToolBar.Plugin.TabletUtils.PenPackages
                 _startPosition = e.GetPosition(this);
         }
 
-        private void PrtScrBtn_StylusButtonUp(object sender, StylusButtonEventArgs e)
+        private void CloseBtn_Click(object sender, RoutedEventArgs e)
         {
             ClosePanel();
-            //TODO: add sth
+        }
+
+        private void PrtScrBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ClosePanel();
             SendHotKey.ScreenShot();
         }
 
-        private void DrawBtn_StylusButtonUp(object sender, StylusButtonEventArgs e)
+        private void DrawBtn_Click(object sender, RoutedEventArgs e)
         {
-            ClosePanel();
+             ClosePanel();
             new DrawboardWindow().Show();
         }
     }

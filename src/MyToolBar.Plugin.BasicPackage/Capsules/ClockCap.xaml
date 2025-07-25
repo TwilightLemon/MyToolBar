@@ -1,15 +1,16 @@
 ﻿<base:CapsuleBase x:Class="MyToolBar.Plugin.BasicPackage.Capsules.ClockCap"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:MyToolBar.Plugin.BasicPackage.Capsules"
-             xmlns:base="clr-namespace:MyToolBar.Common.UIBases;assembly=MyToolBar.Common"
-             mc:Ignorable="d"  Height="30">
+                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:base="clr-namespace:MyToolBar.Common.UIBases;assembly=MyToolBar.Common"
+                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                  xmlns:local="clr-namespace:MyToolBar.Plugin.BasicPackage.Capsules"
+                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                  Height="30"
+                  mc:Ignorable="d">
     <Grid>
         <TextBlock x:Name="TimeTb"
-                   Margin="8 0"
-                   FontWeight="Bold"
-                   VerticalAlignment="Center" />
+                   Margin="8,0"
+                   VerticalAlignment="Center"
+                   FontWeight="Bold" />
     </Grid>
 </base:CapsuleBase>

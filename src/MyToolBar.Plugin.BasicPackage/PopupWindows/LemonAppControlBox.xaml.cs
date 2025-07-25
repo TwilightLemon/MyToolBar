@@ -33,16 +33,12 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
 
         private void Smtc_MediaPropertiesChanged(object? sender, EventArgs e)
         {
-            Dispatcher.Invoke(() => {
-                UpdateMediaInfo();
-            });
+            Dispatcher.Invoke(UpdateMediaInfo);
         }
 
         private void Smtc_PlaybackInfoChanged(object? sender, EventArgs e)
         {
-            Dispatcher.Invoke(() => {
-                UpdateStatus();
-            });
+            Dispatcher.Invoke(UpdateStatus);
         }
         private Windows.Media.Control.GlobalSystemMediaTransportControlsSessionMediaProperties? _info = null;
         private async void UpdateMediaInfo()
@@ -90,19 +86,20 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
                 PlayBtnIcon.SetResourceReference(Path.DataProperty, "Icon_Play");
             }
         }
-        private async void PlayLastBtn_MouseUp(object sender, MouseButtonEventArgs e)
+
+        private void PlayLastBtn_Click(object sender, RoutedEventArgs e)
         {
-            await LemonAppMusic.Smtc.Previous();
+            _= LemonAppMusic.Smtc.Previous();
         }
 
-        private async void PlayBtn_MouseUp(object sender, MouseButtonEventArgs e)
+        private void PlayBtn_Click(object sender, RoutedEventArgs e)
         {
-            await LemonAppMusic.Smtc.PlayOrPause();
+            _= LemonAppMusic.Smtc.PlayOrPause();
         }
 
-        private async void PlayNextBtn_MouseUp(object sender, MouseButtonEventArgs e)
+        private void PlayNextBtn_Click(object sender, RoutedEventArgs e)
         {
-            await LemonAppMusic.Smtc.Next();
+            _= LemonAppMusic.Smtc.Next();
         }
     }
 }

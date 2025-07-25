@@ -17,9 +17,9 @@ public class SettingsMgr<T> where T : class
 {
     public string Sign { get; set; }
     public string PackageName { get; set; }
-    public T? Data { get; set; }
+    public T Data { get; set; } = null;
     [JsonIgnore]
-    private FileSystemWatcher? _watcher;
+    private readonly FileSystemWatcher? _watcher;
     /// <summary>
     /// 监测到配置文件改变时触发，之前不会自动更新数据
     /// </summary>

@@ -22,13 +22,20 @@ namespace MyToolBar.Common.UIBases
             WindowStyle = WindowStyle.None;
             ResizeMode = ResizeMode.NoResize;
             WindowOption.SetCorner(this, WindowCorner.Round);
+            BehaviorCollection behaviors = Interaction.GetBehaviors(this);
+            behaviors.Add(new BlurWindowBehavior());
             ShowInTaskbar = false;
             Topmost = true;
             Activate();
             Deactivated += PopWindowBase_Deactivated;
+            this.SourceInitialized += PopupWindowBase_SourceInitialized;
             this.Initialized += PopWindowBase_Initialized;
-            this.Loaded += PopWindowBase_Loaded;
             this.ContentRendered += PopWindowBase_ContentRendered;
+        }
+
+        private void PopupWindowBase_SourceInitialized(object? sender, EventArgs e)
+        {
+            WindowLongAPI.SetToolWindow(this);
         }
 
         /// <summary>
@@ -48,11 +55,15 @@ namespace MyToolBar.Common.UIBases
 
         private void PopWindowBase_Initialized(object? sender, EventArgs e)
         {
-            //remove local resource dic, reflect ThemeConf to main Appdomain
-            if (Resources.MergedDictionaries.FirstOrDefault(d => d.Source.ToString().Contains("ThemeColor.xaml"))
-                is ResourceDictionary defResDic)
+            //remove local resource dic, reflect ThemeConf to main AppDomain
+            while (true)
             {
-                Resources.MergedDictionaries.Remove(defResDic);
+                if (Resources.MergedDictionaries.FirstOrDefault(d => d.Source.ToString().Contains("pack://application:,,,/MyToolBar.Common;component/Styles/"))
+                    is ResourceDictionary defResDic)
+                {
+                    Resources.MergedDictionaries.Remove(defResDic);
+                }
+                else break;
             }
         }
 
@@ -62,13 +73,6 @@ namespace MyToolBar.Common.UIBases
             da.EasingFunction = new CubicEase();
             BeginAnimation(TopProperty, da);
             this.ContentRendered -= PopWindowBase_ContentRendered;
-        }
-
-        private void PopWindowBase_Loaded(object sender, RoutedEventArgs e)
-        {
-            WindowLongAPI.SetToolWindow(this);
-            BehaviorCollection behaviors = Interaction.GetBehaviors(this);
-            behaviors.Add(new BlurWindowBehavior());
         }
 
         private void PopWindowBase_Deactivated(object? sender, EventArgs e)
