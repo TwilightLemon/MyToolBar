@@ -29,6 +29,17 @@ namespace MyToolBar.Common.WinAPI
 
             return true; // 默认为浅色模式
         }
+
+        static Windows.UI.ViewManagement.UISettings? _uiSettings = null;
+        public static System.Windows.Media.Color GetSystemAccentColor(bool isDarkMode, bool focus = false)
+        {
+            _uiSettings ??= new();
+
+            var color = !focus ? _uiSettings.GetColorValue(isDarkMode ? Windows.UI.ViewManagement.UIColorType.AccentLight2 : Windows.UI.ViewManagement.UIColorType.AccentDark1)
+                            : _uiSettings.GetColorValue(isDarkMode ? Windows.UI.ViewManagement.UIColorType.AccentLight3 : Windows.UI.ViewManagement.UIColorType.AccentDark2);
+            return System.Windows.Media.Color.FromArgb(color.A, color.R, color.G, color.B);
+        }
+
         public const int WM_SETTINGCHANGE = 0x001A;
         public const int WM_DWMCOLORIZATIONCOLORCHANGED = 0x0320;
         static Action? _onThemeChanged = null;

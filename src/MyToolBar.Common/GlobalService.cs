@@ -16,6 +16,11 @@ namespace MyToolBar.Common
         public static bool EnableHideWhenFullScreen { get; set; } = true;
         private static bool _isDarkMode = true;
         public static event Action<bool>? OnIsDarkModeChanged;
+        public static event Action? OnThemeColorChanged;
+        public static void NotifyThemeColorChanged()
+        {
+            OnThemeColorChanged?.Invoke();
+        }
         /// <summary>
         /// 全局主题模式
         /// </summary>

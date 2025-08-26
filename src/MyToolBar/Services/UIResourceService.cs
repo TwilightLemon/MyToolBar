@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using MyToolBar.Common;
+using MyToolBar.Common.WinAPI;
 
 namespace MyToolBar.Services
 {
@@ -37,7 +38,8 @@ namespace MyToolBar.Services
 
         public void UpdateDwmColor()
         {
-            App.Current.Resources["SystemThemeColor"] = new SolidColorBrush(SystemParameters.WindowGlassColor);
+            App.Current.Resources["SystemThemeColor"] = new SolidColorBrush(SystemThemeAPI.GetSystemAccentColor(GlobalService.IsDarkMode));
+            GlobalService.NotifyThemeColorChanged();
         }
 
         /// <summary>

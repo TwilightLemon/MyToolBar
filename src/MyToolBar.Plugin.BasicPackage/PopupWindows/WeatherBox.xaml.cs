@@ -102,6 +102,7 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
             Days.Children.Clear();
             int averageTemp = 0;
             var data= wdata.DailyForecast;
+            int dayCount = data.Count;
             var airData = wdata.DailyAirForecast;
             //找出temp_max和temp_min的最大值和最小值
             int max = int.MinValue, min =int.MaxValue;
@@ -110,12 +111,12 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
                 if (item.temp_max > max) max = item.temp_max;
                 if (item.temp_min < min) min = item.temp_min;
             }
-            for(int i=0;i<5;i++)
+            for(int i=0;i< dayCount; i++)
             {
                 averageTemp += (data[i].temp_max+data[i].temp_min)/2;
-                Days.Children.Add(new WeatherDayItem(data[i], airData[i]));
+                Days.Children.Add(new WeatherDayItem(data[i], airData.Count>i?airData[i]:null));
             }
-            averageTemp /= 5;
+            averageTemp /= dayCount;
             double offset_max = 25.0 / (max-averageTemp+1),
                 offset_min=25.0/(averageTemp-min+1);
             DateTime date= DateTime.Now;

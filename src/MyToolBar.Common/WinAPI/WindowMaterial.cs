@@ -253,7 +253,7 @@ public class WindowMaterial : DependencyObject
     {
         if (_hWnd == IntPtr.Zero) return;
         var hwndSource = (HwndSource)PresentationSource.FromVisual(_window);
-        int margin = isLagcy ? 1 : -1;
+        int margin = isLagcy ? 0 : -1;
         MaterialApis.SetWindowProperties(hwndSource, margin);
     }
 }
