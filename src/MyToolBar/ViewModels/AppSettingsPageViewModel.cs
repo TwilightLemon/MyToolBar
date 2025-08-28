@@ -30,6 +30,8 @@ namespace MyToolBar.ViewModels
         private AppSettings.ProxyConf? _proxyConf = appSettingsService.Settings.Proxy;
         [ObservableProperty]
         private AppSettings.MenuIcon _mainMenuIcon= appSettingsService.Settings.MainMenuIcon;
+        [ObservableProperty]
+        private string? _appFont = App.Current.FindResource("AppDefaultFontFamilly").ToString();
 
         public void LoadData()
         {

@@ -31,6 +31,10 @@ namespace MyToolBar.Services
     public class AppSettings
     {
         /// <summary>
+        /// 全局字体
+        /// </summary>
+        public string? FontFamily { get; set; }
+        /// <summary>
         /// 假岛
         /// </summary>
         public bool EnableIsland { get; set; } = false;

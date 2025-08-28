@@ -39,12 +39,20 @@ namespace MyToolBar.Services
                 Process.Start("explorer.exe", e.Uri.AbsoluteUri);
                 e.Handled = true;
             }));
+            //override default style for Pages
+            FrameworkElement.StyleProperty.OverrideMetadata(typeof(System.Windows.Controls.Page), new FrameworkPropertyMetadata
+            {
+                DefaultValue = App.Current.FindResource(typeof(System.Windows.Controls.Page))
+            });
             //加载插件包管理器
             serviceProvider.GetRequiredService<ManagedPackageService>().Load();
             //加载配置
             appSettingsService.Loaded += delegate
             {
                 if (appSettingsService.Settings == null) return;
+
+                //设置字体
+                UIResourceService.SetAppFontFamilly(appSettingsService.Settings.FontFamily);
 
                 //设置Http代理
                 UpdateDefaultProxy();

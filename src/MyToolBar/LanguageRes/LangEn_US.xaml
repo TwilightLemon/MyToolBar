@@ -31,6 +31,8 @@
     <sys:String x:Key="AppSettings_Item_AutoRunAtStartup">Auto run at startup</sys:String>
     <sys:String x:Key="AppSettings_Item_Language">Language</sys:String>
     <sys:String x:Key="AppSettings_Item_MainMenuIcon">Main Menu Icon</sys:String>
+    <sys:String x:Key="AppSettings_Item_Font">Default font familly</sys:String>
+    <sys:String x:Key="AppSettings_Item_FontTbHint">Enter to apply</sys:String>
 
     <sys:String x:Key="AppSettings_Item_WebProxy_ProxyMode">Proxy Mode</sys:String>
     <sys:String x:Key="AppSettings_Item_WebProxy_ProxyAddress">Proxy Address</sys:String>

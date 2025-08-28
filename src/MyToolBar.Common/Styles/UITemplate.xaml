@@ -258,13 +258,16 @@
         <Setter Property="PressedGlyphBrush" Value="{DynamicResource ForeColor}" />
         <Setter Property="PressedForeground" Value="{DynamicResource ForeColor}" />
     </Style>
-
+    <FontFamily x:Key="AppDefaultFontFamilly">
+        .PingFang SC,Segoe UI
+    </FontFamily>
     <FontFamily x:Key="SegoeFluentIcon">
         pack://application:,,,/MyToolBar.Common;component/Resources/Segoe Fluent Icons.ttf#Segoe Fluent Icons
     </FontFamily>
     <Style x:Key="FluentWindowStyle" TargetType="{x:Type Window}">
         <Setter Property="Background" Value="{DynamicResource WindowBackgroundColor}" />
         <Setter Property="Foreground" Value="{DynamicResource ForeColor}" />
+        <Setter Property="FontFamily" Value="{DynamicResource AppDefaultFontFamilly}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">

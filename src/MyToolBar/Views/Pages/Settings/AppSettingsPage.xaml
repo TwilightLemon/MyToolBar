@@ -1,21 +1,21 @@
 ﻿<Page x:Class="MyToolBar.Views.Pages.Settings.AppSettingsPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:common="clr-namespace:MyToolBar.Common;assembly=MyToolBar.Common"
+      xmlns:converter="clr-namespace:MyToolBar.Converters"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:MyToolBar.Views.Pages.Settings"
-      xmlns:sys="clr-namespace:System;assembly=netstandard"
-      xmlns:common="clr-namespace:MyToolBar.Common;assembly=MyToolBar.Common"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:service="clr-namespace:MyToolBar.Services"
-      xmlns:converter="clr-namespace:MyToolBar.Converters"
-      xmlns:ws="https://schemas.elecho.dev/wpfsuite"
+      xmlns:sys="clr-namespace:System;assembly=netstandard"
       xmlns:vm="clr-namespace:MyToolBar.ViewModels"
-      mc:Ignorable="d"
-      Foreground="{DynamicResource ForeColor}"
+      xmlns:ws="https://schemas.elecho.dev/wpfsuite"
+      Title="AppSettingsPage"
       d:DataContext="{d:DesignInstance Type=vm:AppSettingsPageViewModel}"
       d:DesignHeight="600"
       d:DesignWidth="800"
-      Title="AppSettingsPage">
+      Foreground="{DynamicResource ForeColor}"
+      mc:Ignorable="d">
     <Page.Resources>
         <converter:EnumToTextConverter x:Key="EnumToTextConverter" />
         <ObjectDataProvider x:Key="LanguageEnumData"
@@ -44,172 +44,184 @@
         </DataTemplate>
     </Page.Resources>
     <Grid>
-        <ws:ScrollViewer Style="{DynamicResource SimpleVerticalScrollViewerStyle}"
-                         Margin="28 12 28 28">
-            <ws:StackPanel x:Name="SettingsList"
-                           Spacing="8">
-                <!--Appearence settings-->
+        <ws:ScrollViewer Margin="28,12,28,28" Style="{DynamicResource SimpleVerticalScrollViewerStyle}">
+            <ws:StackPanel x:Name="SettingsList" Spacing="8">
+                <!--  Appearence settings  -->
                 <ws:StackPanel Spacing="8">
-                    <TextBlock FontSize="22"
-                               Text="{DynamicResource AppSettings_Group_Appearence}" />
+                    <TextBlock FontSize="22" Text="{DynamicResource AppSettings_Group_Appearence}" />
 
-                    <Border Background="{DynamicResource MaskColor}"
-                            CornerRadius="12"
-                            Height="48">
-                        <ToggleButton  Style="{DynamicResource RoundToggleButtonStyle}"
-                                       Content="{DynamicResource AppSettings_Item_EnableNewStyle}"
-                                       IsChecked="{Binding EnableNewStyle}"
-                                       Margin="12 0 12 0" />
+                    <Border Height="48"
+                            Background="{DynamicResource MaskColor}"
+                            CornerRadius="12">
+                        <ToggleButton Margin="12,0,12,0"
+                                      Content="{DynamicResource AppSettings_Item_EnableNewStyle}"
+                                      IsChecked="{Binding EnableNewStyle}"
+                                      Style="{DynamicResource RoundToggleButtonStyle}" />
                     </Border>
 
-                    <Border Background="{DynamicResource MaskColor}"
-                            CornerRadius="12"
-                            Height="48">
-                        <ToggleButton  Style="{DynamicResource RoundToggleButtonStyle}"
-                                       Content="{DynamicResource AppSettings_Item_EnableIsland}"
-                                       IsChecked="{Binding EnableIsland}"
-                                       Margin="12 0 12 0" />
+                    <Border Height="48"
+                            Background="{DynamicResource MaskColor}"
+                            CornerRadius="12">
+                        <ToggleButton Margin="12,0,12,0"
+                                      Content="{DynamicResource AppSettings_Item_EnableIsland}"
+                                      IsChecked="{Binding EnableIsland}"
+                                      Style="{DynamicResource RoundToggleButtonStyle}" />
                     </Border>
 
-                    <Border Background="{DynamicResource MaskColor}"
-                            CornerRadius="12"
-                            Height="48">
+                    <Border Height="48"
+                            Background="{DynamicResource MaskColor}"
+                            CornerRadius="12">
                         <ToggleButton Name="UseImModeCb"
-                                      Style="{DynamicResource RoundToggleButtonStyle}"
+                                      Margin="12,0,12,0"
                                       Content="{DynamicResource AppSettings_Item_UseImmerseMode}"
                                       IsChecked="{Binding UseImmerseMode}"
-                                      Margin="12 0 12 0" />
+                                      Style="{DynamicResource RoundToggleButtonStyle}" />
                     </Border>
-                    
-                    <Border Background="{DynamicResource MaskColor}"
-                            CornerRadius="12"
-                            Height="48">
+
+                    <Border Height="48"
+                            Background="{DynamicResource MaskColor}"
+                            CornerRadius="12">
                         <ToggleButton Name="AlwaysImModeCb"
-                                      Style="{DynamicResource RoundToggleButtonStyle}"
+                                      Margin="12,0,12,0"
                                       Content="{DynamicResource AppSettings_Item_AlwaysUseImmerseMode}"
                                       IsChecked="{Binding AlwaysUseImmerseMode}"
-                                      Margin="12 0 12 0" />
+                                      Style="{DynamicResource RoundToggleButtonStyle}" />
                     </Border>
-                    <Border Background="{DynamicResource MaskColor}"
-                            CornerRadius="12"
-                            Height="48">
+                    <Border Height="48"
+                            Background="{DynamicResource MaskColor}"
+                            CornerRadius="12">
                         <Grid>
-                            <TextBlock VerticalAlignment="Center"
-                                       Margin="12"
-                                       Text="{DynamicResource AppSettings_Item_Language}"
-                                       HorizontalAlignment="Left" />
+                            <TextBlock Margin="12"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"
+                                       Text="{DynamicResource AppSettings_Item_Language}" />
                             <ws:ComboBox x:Name="LanguageComboBox"
                                          Height="24"
+                                         Margin="0,0,48,0"
                                          HorizontalAlignment="Right"
-                                         Margin="0 0 48 0"
-                                         Style="{StaticResource SimpleComboBoxStyleForWs}"
                                          ItemTemplate="{DynamicResource ComboBoxItemTemplate}"
                                          ItemsSource="{Binding Source={StaticResource LanguageEnumData}}"
-                                         SelectedItem="{Binding AppLanguage}">
-                            </ws:ComboBox>
+                                         SelectedItem="{Binding AppLanguage}"
+                                         Style="{StaticResource SimpleComboBoxStyleForWs}" />
                         </Grid>
                     </Border>
-                    <Border Background="{DynamicResource MaskColor}"
-                            CornerRadius="12"
-                            Height="48">
+                    <Border Height="48"
+                            Background="{DynamicResource MaskColor}"
+                            CornerRadius="12">
                         <Grid>
-                            <TextBlock VerticalAlignment="Center"
-                                       Margin="12"
-                                       Text="{DynamicResource AppSettings_Item_MainMenuIcon}"
-                                       HorizontalAlignment="Left" />
+                            <TextBlock Margin="12"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"
+                                       Text="{DynamicResource AppSettings_Item_MainMenuIcon}" />
                             <ws:ComboBox x:Name="MainMenuIconCombox"
                                          Height="24"
+                                         Margin="0,0,48,0"
                                          HorizontalAlignment="Right"
-                                         Margin="0 0 48 0"
-                                         Style="{StaticResource SimpleComboBoxStyleForWs}"
                                          ItemTemplate="{DynamicResource ComboBoxItemTemplate}"
                                          ItemsSource="{Binding Source={StaticResource MainMenuIconEnumData}}"
-                                         SelectedItem="{Binding MainMenuIcon}">
-                            </ws:ComboBox>
+                                         SelectedItem="{Binding MainMenuIcon}"
+                                         Style="{StaticResource SimpleComboBoxStyleForWs}" />
+                        </Grid>
+                    </Border>
+                    <Border Height="48"
+                            Background="{DynamicResource MaskColor}"
+                            CornerRadius="12">
+                        <Grid>
+                            <TextBlock Margin="12"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"
+                                       Text="{DynamicResource AppSettings_Item_Font}" />
+                            <ws:TextBox x:Name="AppFontTB"
+                                        Height="30"
+                                        MinWidth="220"
+                                        Margin="0,0,48,0"
+                                        Padding="8,0"
+                                        HorizontalAlignment="Right"
+                                        VerticalContentAlignment="Center"
+                                        PreviewKeyDown="AppFontTB_PreviewKeyDown"
+                                        Style="{StaticResource SimpleTextBoxStyleForWs}"
+                                        Text="{Binding AppFont}"
+                                        ToolTip="{DynamicResource AppSettings_Item_FontTbHint}" />
                         </Grid>
                     </Border>
                 </ws:StackPanel>
-                <!--Behaviors settings-->
-                <ws:StackPanel Spacing="8"
-                               Margin="0 10 0 0">
-                    <TextBlock FontSize="22"
-                               Text="{DynamicResource AppSettings_Group_Behavior}" />
-                    <Border Background="{DynamicResource MaskColor}"
-                            CornerRadius="12">
+                <!--  Behaviors settings  -->
+                <ws:StackPanel Margin="0,10,0,0" Spacing="8">
+                    <TextBlock FontSize="22" Text="{DynamicResource AppSettings_Group_Behavior}" />
+                    <Border Background="{DynamicResource MaskColor}" CornerRadius="12">
                         <Grid>
-                            <TextBlock Text="{DynamicResource AppSettings_Item_WebProxy_ProxyMode}"
+                            <TextBlock Margin="12,18,0,0"
+                                       HorizontalAlignment="Left"
                                        VerticalAlignment="top"
-                                       Margin="12 18 0 0"
-                                       HorizontalAlignment="Left" />
+                                       Text="{DynamicResource AppSettings_Item_WebProxy_ProxyMode}" />
                             <ws:ComboBox x:Name="ProxyModeComboBox"
                                          Width="98"
                                          Height="24"
+                                         Margin="0,12,48,0"
+                                         HorizontalAlignment="Right"
                                          VerticalAlignment="Top"
                                          ItemTemplate="{DynamicResource ComboBoxItemTemplate}"
                                          ItemsSource="{Binding Source={StaticResource ProxyModeEnumData}}"
                                          SelectedItem="{Binding ProxyMode}"
-                                         HorizontalAlignment="Right"
-                                         Margin="0 12 48 0"
-                                         Style="{StaticResource SimpleComboBoxStyleForWs}">
-                            </ws:ComboBox>
+                                         Style="{StaticResource SimpleComboBoxStyleForWs}" />
                             <ws:TextBox x:Name="ProxyAddressTextBox"
                                         Width="160"
                                         Height="30"
-                                        Style="{StaticResource SimpleTextBoxStyleForWs}"
-                                        VerticalAlignment="Top"
-                                        Padding="6 6 0 0"
-                                        Text="{Binding ProxyConf.Address}"
-                                        Placeholder="{DynamicResource AppSettings_Item_WebProxy_ProxyAddress}"
+                                        Margin="12,48,48,0"
+                                        Padding="6,6,0,0"
                                         HorizontalAlignment="Left"
-                                        Margin="12 48 48 0" />
+                                        VerticalAlignment="Top"
+                                        Placeholder="{DynamicResource AppSettings_Item_WebProxy_ProxyAddress}"
+                                        Style="{StaticResource SimpleTextBoxStyleForWs}"
+                                        Text="{Binding ProxyConf.Address}" />
                             <ws:TextBox x:Name="ProxyPortTextBox"
                                         Width="72"
                                         Height="30"
-                                        VerticalAlignment="Top"
-                                        Text="{Binding ProxyConf.Port}"
-                                        Style="{StaticResource SimpleTextBoxStyleForWs}"
-                                        Placeholder="{DynamicResource AppSettings_Item_WebProxy_ProxyPort}"
+                                        Margin="180,48,48,0"
+                                        Padding="6,6,0,0"
                                         HorizontalAlignment="Left"
-                                        Margin="180 48 48 0"
-                                        Padding="6,6,0,0" />
+                                        VerticalAlignment="Top"
+                                        Placeholder="{DynamicResource AppSettings_Item_WebProxy_ProxyPort}"
+                                        Style="{StaticResource SimpleTextBoxStyleForWs}"
+                                        Text="{Binding ProxyConf.Port}" />
                             <ws:TextBox x:Name="ProxyUsernameTextBox"
                                         Width="160"
                                         Height="30"
-                                        VerticalAlignment="Top"
-                                        Text="{Binding ProxyConf.UserName}"
-                                        Style="{StaticResource SimpleTextBoxStyleForWs}"
-                                        Placeholder="{DynamicResource AppSettings_Item_WebProxy_ProxyUsername}"
+                                        Margin="12,84,48,12"
+                                        Padding="6,6,0,0"
                                         HorizontalAlignment="Left"
-                                        Margin="12 84 48 12"
-                                        Padding="6,6,0,0" />
+                                        VerticalAlignment="Top"
+                                        Placeholder="{DynamicResource AppSettings_Item_WebProxy_ProxyUsername}"
+                                        Style="{StaticResource SimpleTextBoxStyleForWs}"
+                                        Text="{Binding ProxyConf.UserName}" />
                             <ws:PasswordBox x:Name="ProxyPasswordBox"
                                             Width="160"
                                             Height="30"
+                                            Margin="180,84,48,12"
+                                            Padding="6,6,0,0"
+                                            HorizontalAlignment="Left"
                                             VerticalAlignment="Top"
                                             Password="{Binding ProxyConf.Pwd}"
-                                            Style="{StaticResource  SimplePasswordBoxStyleForWs}"
                                             Placeholder="{DynamicResource AppSettings_Item_WebProxy_ProxyPassword}"
-                                            HorizontalAlignment="Left"
-                                            Margin="180 84 48 12"
-                                            Padding="6,6,0,0" />
+                                            Style="{StaticResource SimplePasswordBoxStyleForWs}" />
                         </Grid>
                     </Border>
-                    <Border Background="{DynamicResource MaskColor}"
-                            CornerRadius="12"
-                            Height="48">
+                    <Border Height="48"
+                            Background="{DynamicResource MaskColor}"
+                            CornerRadius="12">
                         <ToggleButton x:Name="AutoRunCb"
-                                      Style="{DynamicResource RoundToggleButtonStyle}"
+                                      Margin="12,0,12,0"
                                       Content="{DynamicResource AppSettings_Item_AutoRunAtStartup}"
                                       IsChecked="{Binding AutoRunAtStartup}"
-                                      Margin="12 0 12 0" />
+                                      Style="{DynamicResource RoundToggleButtonStyle}" />
                     </Border>
-                    <Border Background="{DynamicResource MaskColor}"
-                            CornerRadius="12"
-                            Height="48">
-                        <ToggleButton Style="{DynamicResource RoundToggleButtonStyle}"
+                    <Border Height="48"
+                            Background="{DynamicResource MaskColor}"
+                            CornerRadius="12">
+                        <ToggleButton Margin="12,0,12,0"
                                       Content="{DynamicResource AppSettings_Item_EnableHideWhenFullScreen}"
                                       IsChecked="{Binding HideWhenFullScreen}"
-                                      Margin="12 0 12 0" />
+                                      Style="{DynamicResource RoundToggleButtonStyle}" />
                     </Border>
                 </ws:StackPanel>
             </ws:StackPanel>

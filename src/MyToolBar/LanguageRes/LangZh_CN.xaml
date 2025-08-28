@@ -1,12 +1,12 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=netstandard">
-    <!--TODO: 多语言支持-->
-    <!--MainTitleMenu-->
+    <!--  TODO: 多语言支持  -->
+    <!--  MainTitleMenu  -->
     <sys:String x:Key="MenuWindow_Title">主菜单</sys:String>
     <sys:String x:Key="MenuItem_Settings">设置</sys:String>
     <sys:String x:Key="MenuItem_Exit">退出</sys:String>
-    <!--SettingsWindow-->
+    <!--  SettingsWindow  -->
     <sys:String x:Key="SettingsWindow_Title">设置</sys:String>
     <sys:String x:Key="SettingsWindow_Tab_About">关于</sys:String>
     <sys:String x:Key="SettingsWindow_Tab_Capsules">胶囊</sys:String>
@@ -18,7 +18,7 @@
     <sys:String x:Key="SettingsWindow_Version">版本</sys:String>
     <sys:String x:Key="SettingsWindow_Enable">启用</sys:String>
     <sys:String x:Key="SettingsWindow_PluginSettings">插件设置项</sys:String>
-    <!--App Settings-->
+    <!--  App Settings  -->
     <sys:String x:Key="AppSettings_Group_Appearence">外观</sys:String>
     <sys:String x:Key="AppSettings_Group_Behavior">行为</sys:String>
 
@@ -30,6 +30,8 @@
     <sys:String x:Key="AppSettings_Item_AutoRunAtStartup">开机自启动</sys:String>
     <sys:String x:Key="AppSettings_Item_Language">语言</sys:String>
     <sys:String x:Key="AppSettings_Item_MainMenuIcon">主菜单图标</sys:String>
+    <sys:String x:Key="AppSettings_Item_Font">默认字体</sys:String>
+    <sys:String x:Key="AppSettings_Item_FontTbHint">回车以应用</sys:String>
 
     <sys:String x:Key="AppSettings_Item_WebProxy_ProxyMode">代理模式</sys:String>
     <sys:String x:Key="AppSettings_Item_WebProxy_ProxyAddress">地址</sys:String>
@@ -37,10 +39,10 @@
     <sys:String x:Key="AppSettings_Item_WebProxy_ProxyUsername">用户名</sys:String>
     <sys:String x:Key="AppSettings_Item_WebProxy_ProxyPassword">密码</sys:String>
 
-    <!--OuterControl Settings Page-->
+    <!--  OuterControl Settings Page  -->
     <sys:String x:Key="OuterControlSettings_Remove">移除外部控制（部分会自动隐藏）</sys:String>
 
-    <!--Converter Texts-->
+    <!--  Converter Texts  -->
     <sys:String x:Key="AS_Proxy_None">不使用代理</sys:String>
     <sys:String x:Key="AS_Proxy_Global">跟随系统</sys:String>
     <sys:String x:Key="AS_Proxy_Custom">自定义</sys:String>

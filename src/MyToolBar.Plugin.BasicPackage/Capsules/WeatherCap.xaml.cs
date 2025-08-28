@@ -49,6 +49,7 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
         public bool isEmpty => DataCache.Count == 0;
         public async Task<WeatherData> RequstCache(WeatherApi.City city)
         {
+            if (city == null || city.Id == null) return new();
             if (DataCache.ContainsKey(city.Id))
             {
                 if (DateTime.Now - DataCache[city.Id].UpdateTime <= TimeSpan.FromMinutes(10))
@@ -178,7 +179,8 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
         private void GlobalTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
             //update weather data every t minutes
-            if (cache==null||DateTime.Now - cache.DataCache[cache.DefaultCity.Id].UpdateTime >= TimeSpan.FromMinutes(10))
+            if (cache.DefaultCity == null) return;
+            if (DateTime.Now - cache.DataCache[cache.DefaultCity.Id].UpdateTime >= TimeSpan.FromMinutes(10))
             {
                 Dispatcher.Invoke(async () => await LoadWeatherData());
             }

@@ -19,6 +19,7 @@ namespace MyToolBar.Common.UIBases
             //Set basic style for popup window
             SetResourceReference(BackgroundProperty, "WindowBackgroundColor");
             SetResourceReference(ForegroundProperty, "ForeColor");
+            SetResourceReference(FontFamilyProperty, "AppDefaultFontFamilly");
             WindowStyle = WindowStyle.None;
             ResizeMode = ResizeMode.NoResize;
             WindowOption.SetCorner(this, WindowCorner.Round);

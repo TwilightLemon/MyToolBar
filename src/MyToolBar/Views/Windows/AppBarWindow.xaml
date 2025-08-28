@@ -16,7 +16,7 @@
         Background="Transparent"
         Closing="Window_Closing"
         Deactivated="Window_Deactivated"
-        FontFamily=".PingFang SC,Segoe UI"
+        FontFamily="{DynamicResource AppDefaultFontFamilly}"
         FontWeight="SemiBold"
         Foreground="{DynamicResource AppBarForegroundRight}"
         Left="8"

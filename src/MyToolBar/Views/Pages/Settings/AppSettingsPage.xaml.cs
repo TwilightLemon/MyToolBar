@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace MyToolBar.Views.Pages.Settings
 {
@@ -33,6 +34,14 @@ namespace MyToolBar.Views.Pages.Settings
                 ProxyAddressTextBox.Text, ProxyPortTextBox.Text,
                 ProxyUsernameTextBox.Text, ProxyPasswordBox.Password);
             await vm.SaveProxyConfAsync(conf);
+        }
+
+        private void AppFontTB_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                UIResourceService.SetAppFontFamilly(AppFontTB.Text);
+            }
         }
     }
 }

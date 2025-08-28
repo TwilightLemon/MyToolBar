@@ -21,10 +21,14 @@
             <!--  全局ToolTip样式  -->
             <Style TargetType="{x:Type ToolTip}">
                 <Style.Setters>
+                    <Setter Property="FontFamily" Value="{DynamicResource AppDefaultFontFamilly}" />
                     <Setter Property="base:FluentTooltip.UseFluentStyle" Value="True" />
                     <Setter Property="Background" Value="{DynamicResource WindowBackgroundColor}" />
                     <Setter Property="Foreground" Value="{DynamicResource ForeColor}" />
                 </Style.Setters>
+            </Style>
+            <Style TargetType="{x:Type Page}">
+                <Setter Property="FontFamily" Value="{DynamicResource AppDefaultFontFamilly}" />
             </Style>
         </ResourceDictionary>
     </Application.Resources>

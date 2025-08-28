@@ -91,5 +91,15 @@ namespace MyToolBar.Services
             // 添加新的语言资源字典
             App.Current.Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = new Uri(uri, UriKind.Relative) });
         }
+
+        public static void SetAppFontFamilly(string? font)
+        {
+            if (string.IsNullOrEmpty(font)) return;
+
+            if(App.Current.Resources.MergedDictionaries.FirstOrDefault(d => d.Source.OriginalString.Contains("Styles/UITemplate.xaml")) is { } dic)
+            {
+                dic["AppDefaultFontFamilly"] = new FontFamily(font);
+            }
+        }
     }
 }
