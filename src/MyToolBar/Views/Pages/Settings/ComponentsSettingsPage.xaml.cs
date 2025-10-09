@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Microsoft.Win32;
 using MyToolBar.Services;
 using MyToolBar.Views.Items;
 
@@ -32,11 +21,28 @@ namespace MyToolBar.Views.Pages.Settings
 
         private void ComponentsSettingsPage_Loaded(object sender, RoutedEventArgs e)
         {
-            foreach(var pkg in _managedPackage.ManagedPkg.Values)
+            LoadPage();
+            Loaded -= ComponentsSettingsPage_Loaded;
+        }
+
+        private void LoadPage()
+        {
+            PackagesPanel.Children.Clear();
+            foreach (var pkg in _managedPackage.ManagedPkg.Values)
             {
                 PackagesPanel.Children.Add(new ComponentSettingItem(_managedPackage, pkg.Package));
             }
-            Loaded -= ComponentsSettingsPage_Loaded;
+        }
+
+        private void AddPluginBtn_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new OpenFolderDialog();
+            dialog.DefaultDirectory = ManagedPackageService.PackageDirectory;
+            if(dialog.ShowDialog() is true && dialog.FolderName is {Length:>0} path)
+            {
+                _managedPackage.SyncFromPackagePath(path);
+                LoadPage();
+            }
         }
     }
 }

@@ -93,8 +93,8 @@
                    Margin="0,-40,-40,0"
                    HorizontalAlignment="Right"
                    VerticalAlignment="Top"
-                   VerticalContentAlignment="Bottom"
                    HorizontalContentAlignment="Left"
+                   VerticalContentAlignment="Bottom"
                    Click="CloseBtn_Click">
             <Path Width="10"
                   Height="10"

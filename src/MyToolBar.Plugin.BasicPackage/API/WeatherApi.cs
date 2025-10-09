@@ -13,9 +13,6 @@ using System.Text.Json.Serialization;
  see as : https://dev.qweather.com/docs/
  */
 
-#pragma warning disable CS8601 // 引用类型赋值可能为 null。
-#pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。
-#pragma warning disable CS8602 // 解引用可能出现空引用。
 namespace MyToolBar.Plugin.BasicPackage.API
 {
     public static class WeatherApi
@@ -38,44 +35,37 @@ namespace MyToolBar.Plugin.BasicPackage.API
         }
         public record City(string Province, string CityName, string Area, string Id);
 
-        public class WeatherNow
+        public record WeatherNow(
+            string status,
+            string link,
+            string feel,
+            string windDir,
+            string windScale,
+            string humidity,
+            string vis,
+            int code,
+            int temp)
         {
-            public string status { get; set; }
-            public string link { get; set; }
-            public string feel { get; set; }
-            public string windDir { get; set; }
-            public string windScale { get; set; }
-            public string humidity { get; set; }
-            public string vis { get; set; }
-            public int code { get; set; }
-            public int temp { get; set; }
-            //...more
+            public WeatherNow() : this("", "", "", "", "", "", "", 0, 0) { }
         }
-        public class WeatherDay
-        {
-            public string status_day { get; set; }
-            public string status_night { get; set; }
-            public int code_day { get; set; }
-            public int code_night { get; set; }
-            public int temp_max { get; set; }
-            public int temp_min { get; set; }
-        }
-        public class AirData
-        {
-            public int aqi { get; set; }
-            public int level { get; set; }
-            public string desc { get; set; }
-            public string sug { get; set; }
-        }
-        public class Warning
-        {
-            public string sender { get; set; }
-            public string level { get; set; }
-            public string severity { get; set; }
-            public string typeName { get; set; }
-            public string text { get; set; }
-            public DateTime endTime { get; set; }
-        }
+
+        public record WeatherDay(
+            string status_day,
+            string status_night,
+            int code_day,
+            int code_night,
+            int temp_max,
+            int temp_min);
+
+        public record AirData(int aqi, int level, string desc, string sug);
+
+        public record Warning(
+            string sender,
+            string level,
+            string severity,
+            string typeName,
+            string text,
+            DateTime endTime);
         #endregion
 
         public static void SetProperty(Property p)
@@ -166,37 +156,20 @@ namespace MyToolBar.Plugin.BasicPackage.API
             if (obj != null & obj["code"].ToString() == "200")
             {
                 var now = obj["now"];
-                return new WeatherNow()
-                {
-                    temp = int.Parse(now["temp"].ToString()),
-                    code = int.Parse(now["icon"].ToString()),
-                    status = now["text"].ToString(),
-                    link = obj["fxLink"].ToString(),
-                    feel = now["feelsLike"].ToString(),
-                    humidity = now["humidity"].ToString(),
-                    windDir = now["windDir"].ToString(),
-                    windScale = now["windScale"].ToString(),
-                    vis = now["vis"].ToString()
-                };
+                return new WeatherNow(now["text"].ToString(), obj["fxLink"].ToString(), now["feelsLike"].ToString(), now["windDir"].ToString(), now["windScale"].ToString(), now["humidity"].ToString(), now["vis"].ToString(), int.Parse(now["icon"].ToString()), int.Parse(now["temp"].ToString()));
             }
             return null;
         }
-        public static async Task<AirData> GetCurrentAQIAsync(this City city)
+        public static async Task<AirData?> GetCurrentAQIAsync(this City city)
         {
             string url = $"https://{host}/airquality/v1/now/{city.Id}?key={key}&lang={lang}";
             string data = await HttpHelper.Get(url);
-            if (string.IsNullOrEmpty(data)) return new();
+            if (string.IsNullOrEmpty(data)) return null;
             var obj = JsonNode.Parse(data);
             if (obj != null & obj["code"].ToString() == "200")
             {
                 var aqi = obj["aqi"][0];
-                return new AirData()
-                {
-                    aqi = int.Parse(aqi["value"].ToString()),
-                    level = int.Parse(aqi["level"].ToString()),
-                    desc = aqi["category"].ToString(),
-                    sug = aqi["health"]["effect"].ToString()
-                };
+                return new AirData(int.Parse(aqi["value"].ToString()), int.Parse(aqi["level"].ToString()), aqi["category"].ToString(), aqi["health"]["effect"].ToString());
             }
             return null;
         }
@@ -216,12 +189,7 @@ namespace MyToolBar.Plugin.BasicPackage.API
                 var daily = obj["daily"].AsArray();
                 foreach (var i in daily)
                 {
-                    list.Add(new AirData()
-                    {
-                        aqi = int.Parse(i["aqi"].ToString()),
-                        level = int.Parse(i["level"].ToString()),
-                        desc = i["category"].ToString()
-                    });
+                    list.Add(new AirData(int.Parse(i["aqi"].ToString()), int.Parse(i["level"].ToString()), i["category"].ToString(), default));
                 }
                 return list;
             }
@@ -249,15 +217,7 @@ namespace MyToolBar.Plugin.BasicPackage.API
                 var daily = obj["daily"].AsArray();
                 foreach (var i in daily)
                 {
-                    list.Add(new WeatherDay()
-                    {
-                        status_day = i["textDay"].ToString(),
-                        status_night = i["textNight"].ToString(),
-                        code_day = int.Parse(i["iconDay"].ToString()),
-                        code_night = int.Parse(i["iconNight"].ToString()),
-                        temp_max = int.Parse(i["tempMax"].ToString()),
-                        temp_min = int.Parse(i["tempMin"].ToString()),
-                    });
+                    list.Add(new WeatherDay(i["textDay"].ToString(), i["textNight"].ToString(), int.Parse(i["iconDay"].ToString()), int.Parse(i["iconNight"].ToString()), int.Parse(i["tempMax"].ToString()), int.Parse(i["tempMin"].ToString())));
                 }
                 return list;
             }
@@ -287,15 +247,7 @@ namespace MyToolBar.Plugin.BasicPackage.API
                 var warning = obj["warning"].AsArray();
                 foreach( var i in warning)
                 {
-                    var a = new Warning()
-                    {
-                        sender = i["sender"].ToString(),
-                        level = i["severityColor"].ToString(),
-                        severity = i["level"].ToString(),
-                        typeName = i["typeName"].ToString(),
-                        text = i["text"].ToString(),
-                        endTime= DateTime.Parse(i["endTime"].ToString())
-                    };
+                    var a = new Warning(i["sender"].ToString(), i["severityColor"].ToString(), i["level"].ToString(), i["typeName"].ToString(), i["text"].ToString(), DateTime.Parse(i["endTime"].ToString()));
                     list.Add(a);
                 }
             }
@@ -304,6 +256,3 @@ namespace MyToolBar.Plugin.BasicPackage.API
     }
 }
 
-#pragma warning restore CS8602 // 解引用可能出现空引用。
-#pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。
-#pragma warning restore CS8601 // 引用类型赋值可能为 null。

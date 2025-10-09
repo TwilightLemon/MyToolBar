@@ -104,7 +104,7 @@
                                FontSize="16"
                                FontWeight="Bold"
                                MouseLeftButtonUp="Now_Location_MouseLeftButtonUp"
-                               Text="where where"
+                               d:Text="where where"
                                TextWrapping="Wrap" />
                     <TextBlock Margin="0,0,20,0"
                                HorizontalAlignment="Right"
@@ -141,7 +141,7 @@
                                            VerticalAlignment="Top"
                                            FontSize="14"
                                            FontWeight="Bold"
-                                           Text="42℃"
+                                           d:Text="42℃"
                                            TextWrapping="Wrap" />
                                 <TextBlock Margin="0,40,0,0"
                                            HorizontalAlignment="Center"
@@ -184,7 +184,7 @@
                                            VerticalAlignment="Top"
                                            FontSize="14"
                                            FontWeight="Bold"
-                                           Text="40%"
+                                           d:Text="40%"
                                            TextWrapping="Wrap" />
                                 <TextBlock Margin="0,40,0,0"
                                            HorizontalAlignment="Center"
@@ -205,7 +205,7 @@
                                            VerticalAlignment="Top"
                                            FontSize="14"
                                            FontWeight="Bold"
-                                           Text="220km"
+                                           d:Text="220km"
                                            TextWrapping="Wrap" />
                                 <TextBlock Margin="0,40,0,0"
                                            HorizontalAlignment="Center"
@@ -227,7 +227,7 @@
                                HorizontalAlignment="Left"
                                VerticalAlignment="Top"
                                FontSize="36"
-                               Text="24℃"
+                               d:Text="24℃"
                                TextWrapping="Wrap" />
                     <TextBlock x:Name="Now_desc"
                                Height="36"
@@ -235,7 +235,7 @@
                                HorizontalAlignment="Left"
                                VerticalAlignment="Top"
                                FontSize="18"
-                               Text="Sunny"
+                               d:Text="Sunny"
                                TextWrapping="Wrap" />
                     <Border x:Name="AQI_Viewer"
                             Height="20"
@@ -251,7 +251,7 @@
                                    FontSize="12"
                                    FontWeight="Bold"
                                    Foreground="#0C0C0C"
-                                   Text="AQI 51" />
+                                   d:Text="AQI 51" />
                     </Border>
                 </Grid>
                 <Border Width="330"
