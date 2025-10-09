@@ -29,15 +29,15 @@ namespace MyToolBar.Plugin.BasicPackage.API
             public string? key { get; set; }
             [JsonIgnore]
             public string? lang { get; set; } = "en";
+            /// <summary>
+            /// The default host will be expired at 2026-1-1
+            /// see as: https://blog.qweather.com/announce/public-api-domain-change-to-api-host/
+            /// </summary>
             public string? host { get; set; } = "devapi.qweather.com";
+            public string? personalHost { get; set; } = null;
         }
-        public class City
-        {
-            public string? Province { get; set; }
-            public string? CityName { get; set; }
-            public string? Area { get; set; }
-            public string? Id { get; set; }
-        }
+        public record City(string Province, string CityName, string Area, string Id);
+
         public class WeatherNow
         {
             public string status { get; set; }
@@ -93,25 +93,6 @@ namespace MyToolBar.Plugin.BasicPackage.API
             return await HttpHelper.Test("https://dev.qweather.com/");
         }
 
-        [Obsolete]
-        public static async Task<City?> GetPositionByIpAsync()
-        {
-            string data = await HttpHelper.Get("https://www.useragentinfo.com", false);
-            if(string.IsNullOrEmpty(data)) return null;
-            string str = HttpHelper.FindByAB(data, "位置信息</th>", "</td>") + "</td>";
-            Match m = Regex.Match(str, "<td class=\"col-auto fw-light\">(.*?) (.*?) (.*?) (.*?)</td>");
-            if (m.Success)
-            {
-                Debug.WriteLine(m.Groups[0].Value);
-                return new City()
-                {
-                    Province = m.Groups[2].Value,
-                    CityName = m.Groups[3].Value,
-                    Area = m.Groups[4].Value
-                };
-            }
-            return null;
-        }
         public static async Task<(double x, double y)?> GetPosition()
         {
             try
@@ -130,7 +111,6 @@ namespace MyToolBar.Plugin.BasicPackage.API
         {
             if (await GetPosition() is (double x, double y))
             {
-
                 string url = $"https://geoapi.qweather.com/v2/city/lookup?location={Math.Round(y, 2)},{Math.Round(x, 2)}&key={key}&lang={lang}";
                 var result = await CityLookUpAsync(url);
                 if (result.Count > 0)
@@ -150,11 +130,7 @@ namespace MyToolBar.Plugin.BasicPackage.API
             var result = await CityLookUpAsync(url);
             if (result.Count > 0)
             {
-                var c = result.First();
-                city.Id = c.Id;
-                city.Area = c.Area;
-                city.CityName = c.CityName;
-                city.Province = c.Province;
+                city = result.First();
                 return true;
             }
             return false;
@@ -175,13 +151,7 @@ namespace MyToolBar.Plugin.BasicPackage.API
                 JsonArray cities = obj["location"].AsArray();
                 foreach (var ci in cities)
                 {
-                    list.Add(new City()
-                    {
-                        Area = ci["name"].ToString(),
-                        CityName = ci["adm2"].ToString(),
-                        Province = ci["adm1"].ToString(),
-                        Id = ci["id"].ToString()
-                    });
+                    list.Add(new City(ci["adm1"].ToString(), ci["adm2"].ToString(), ci["name"].ToString(), ci["id"].ToString()));
                 }
             }
             return list;

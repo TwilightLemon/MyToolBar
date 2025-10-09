@@ -11,16 +11,14 @@ using MyToolBar.Plugin.BasicPackage.PopupWindows;
 
 namespace MyToolBar.Plugin.BasicPackage.Capsules
 {
-    public class WeatherData
-    {
-        public DateTime UpdateTime { get; set; }
-        public City City { get; set; }
-        public AirData CurrentAir { get; set; }
-        public List<Warning> Warnings { get; set; }
-        public WeatherNow CurrentWeather { get; set; }
-        public List<WeatherDay> DailyForecast { get; set; }
-        public List<AirData> DailyAirForecast { get; set; }
-    }
+    public record WeatherData(DateTime UpdateTime,
+                              City City,
+                              AirData CurrentAir,
+                              List<Warning> Warnings,
+                              WeatherNow CurrentWeather,
+                              List<WeatherDay> DailyForecast,
+                              List<AirData> DailyAirForecast);
+
     /// <summary>
     /// 为天气数据提供缓存、请求和保存
     /// </summary>
@@ -29,15 +27,15 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
         /// <summary>
         /// 对应城市ID的天气缓存数据
         /// </summary>
-        public Dictionary<string, WeatherData> DataCache { get; set; } = new();
+        public Dictionary<string, WeatherData> DataCache { get; set; } = [];
         /// <summary>
         /// Capsule上显示的默认城市
         /// </summary>
-        public WeatherApi.City DefaultCity { get; set; } = new();
+        public WeatherApi.City? DefaultCity { get; set; } = null;
         /// <summary>
         /// 收藏的城市列表
         /// </summary>
-        public List<WeatherApi.City> FavorCities { get; set; } = new();
+        public List<WeatherApi.City> FavorCities { get; set; } = [];
         /// <summary>
         /// 上一次更新定位的时间
         /// </summary>
@@ -46,10 +44,10 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
         public bool UsingLocatingAsDefault { get; set; } = true;
         private static string SettingSign = "WeatherCache";
         [JsonIgnore]
-        public bool isEmpty => DataCache.Count == 0;
-        public async Task<WeatherData> RequstCache(WeatherApi.City city)
+        public bool IsEmpty => DataCache.Count == 0;
+        public async Task<WeatherData?> RequstCache(WeatherApi.City city)
         {
-            if (city == null || city.Id == null) return new();
+            if (city == null || city.Id == null) return null;
             if (DataCache.ContainsKey(city.Id))
             {
                 if (DateTime.Now - DataCache[city.Id].UpdateTime <= TimeSpan.FromMinutes(10))
@@ -58,16 +56,7 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
                     return DataCache[city.Id];
                 }
             }
-            var data = new WeatherData
-            {
-                City = city,
-                CurrentWeather = await city.GetCurrentWeather(),
-                DailyAirForecast = await city.GetAirForecastAsync(),
-                CurrentAir = await city.GetCurrentAQIAsync(),
-                DailyForecast = await city.GetForecastAsync(),
-                Warnings = await city.GetWarningAsync(),
-                UpdateTime = DateTime.Now
-            };
+            var data = new WeatherData(DateTime.Now, city, await city.GetCurrentAQIAsync(), await city.GetWarningAsync(), await city.GetCurrentWeather(), await city.GetForecastAsync(), await city.GetAirForecastAsync());
             DataCache[city.Id] = data;
             SaveCache();
             return data;
@@ -92,7 +81,7 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
         public WeatherCap()
         {
             InitializeComponent();
-            PopupWindowType = typeof(WeatherBox);
+            PopupWindowType = null;
             InitLangRes();
         }
         private void InitLangRes()
@@ -112,7 +101,7 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
             GlobalService.GlobalTimer.Elapsed -= GlobalTimer_Elapsed;
         }
 
-        private WeatherCache cache = null;
+        private WeatherCache cache = null!;
         private async Task LoadWeatherData()
         {
             //测试网络环境
@@ -124,12 +113,12 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
             cache ??= await WeatherCache.LoadCache();
 
             //初次使用或默认定位城市
-            if (cache.isEmpty || cache.UsingLocatingAsDefault)
+            if (cache.IsEmpty || cache.UsingLocatingAsDefault)
             {
                 if (cache.LocatingDate == null || DateTime.Now - cache.LocatingDate >= TimeSpan.FromHours(6))
                 {
                     Weather_info.Text = FindResource("Tip_Locating").ToString();
-                    cache.DefaultCity = await WeatherApi.GetCityByPositionAsync();
+                    cache.DefaultCity =  await WeatherApi.GetCityByPositionAsync();
                     cache.LocatingDate = DateTime.Now;
                 }
             }
@@ -137,14 +126,24 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
             if (cache.DefaultCity != null)
             {
                 Weather_info.Text= FindResource("Tip_Loading").ToString();
-                var data = await cache.RequstCache(cache.DefaultCity);
-                var wdata = data.CurrentWeather;
-                Weather_info.Text = wdata.temp + "℃  " + wdata.status;
-                Weather_Icon.Background = new ImageBrush(new BitmapImage(new Uri(WeatherApi.GetIcon(wdata.code))));
-                var aqi = data.CurrentAir;
-                AirLevel.Background = new SolidColorBrush(WeatherApi.GetAirLevelColor(aqi.level));
-                data.UpdateTime = DateTime.Now;
+                if (await cache.RequstCache(cache.DefaultCity) is { } data)
+                {
+                    var wdata = data.CurrentWeather;
+                    Weather_info.Text = wdata.temp + "℃  " + wdata.status;
+                    Weather_Icon.Background = new ImageBrush(new BitmapImage(new Uri(WeatherApi.GetIcon(wdata.code))));
+                    var aqi = data.CurrentAir;
+                    AirLevel.Background = new SolidColorBrush(WeatherApi.GetAirLevelColor(aqi.level));
+                }
+                else
+                {
+                    Weather_info.Text = FindResource("Tip_Failed").ToString();
+                }
             }
+            else
+            {
+                Weather_info.Text = FindResource("Tip_Failed").ToString();
+            }
+            PopupWindowType = typeof(WeatherBox);
         }
         private SettingsMgr<WeatherApi.Property> KeyMgr;
         public override async void Install()
@@ -200,14 +199,16 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
             base.SetPopupProperty();
             if (PopupWindowInstance != null && PopupWindowInstance.TryGetTarget(out var window) && window is WeatherBox wb)
             {
-                await wb.LoadData(cache.DefaultCity, cache);
+                wb.SetCache(cache);
+                if (cache.DefaultCity != null)
+                    await wb.LoadData(cache.DefaultCity);
                 wb.DefaultCityChanged += Wb_DefaultCityChanged;
             }
         }
 
         private async void Wb_DefaultCityChanged(object? sender, WeatherApi.City e)
         {
-            cache.UsingLocatingAsDefault = cache.DefaultCity.Id == e.Id;
+            cache.UsingLocatingAsDefault = cache.DefaultCity?.Id == e.Id;
             cache.DefaultCity = e;
             cache.SaveCache();
             await LoadWeatherData();

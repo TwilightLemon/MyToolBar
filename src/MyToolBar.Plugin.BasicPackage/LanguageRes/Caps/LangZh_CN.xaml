@@ -3,7 +3,7 @@
                     xmlns:sys="clr-namespace:System;assembly=netstandard">
     <sys:String x:Key="Tip_Locating">定位中...</sys:String>
     <sys:String x:Key="Tip_Loading">加载中...</sys:String>
-
+    <sys:String x:Key="Tip_Failed">Failed</sys:String>
     <sys:String x:Key="Notify_BatteryLow">充电！！！ 谢谢喵</sys:String>
 
 </ResourceDictionary>

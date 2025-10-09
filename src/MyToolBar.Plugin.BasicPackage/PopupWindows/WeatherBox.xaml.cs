@@ -67,12 +67,15 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
         }
 
 
-        private WeatherCache cache = null;
-        public async Task LoadData(WeatherApi.City city,WeatherCache dat=null)
+        private WeatherCache cache = null!;
+        public void SetCache(WeatherCache c)
+        {
+            cache ??= c;
+        }
+        public async Task LoadData(WeatherApi.City city)
         {
             //Now Weather:
-            cache ??= dat;
-            var wdata = await dat.RequstCache(city);
+            var wdata = await cache.RequstCache(city);
 
             Now_Location.Tag = wdata.CurrentWeather.link;
             Now_Location.Text = wdata.City.Area+" "+wdata.City.CityName;
@@ -136,16 +139,19 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
         private async void LoadFavorListAsync()
         {
             //Default City
-            DefaultPosition.Children.Clear();
-            var cur = new WeatherCityItem()
+            if (cache.DefaultCity != null)
             {
-                city = cache.DefaultCity,
-                IsFavor = cache.FavorCities.Exists((c) => c.Id == cache.DefaultCity.Id)
-            };
-            cur.CitySelected += CityItem_CitySelected;
-            cur.AddFavorCity += CityItem_AddFavorCity;
-            cur.SetAsDefaultCity += CityItem_SetAsDefaultCity;
-            DefaultPosition.Children.Add(cur);
+                DefaultPosition.Children.Clear();
+                var cur = new WeatherCityItem()
+                {
+                    city = cache.DefaultCity,
+                    IsFavor = cache.FavorCities.Exists((c) => c.Id == cache.DefaultCity.Id)
+                };
+                cur.CitySelected += CityItem_CitySelected;
+                cur.AddFavorCity += CityItem_AddFavorCity;
+                cur.SetAsDefaultCity += CityItem_SetAsDefaultCity;
+                DefaultPosition.Children.Add(cur);
+            }
 
             //Favorite Cities
             FavorCity.Children.Clear();
@@ -162,7 +168,7 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
             }
         }
 
-        public event EventHandler<WeatherApi.City> DefaultCityChanged;
+        public event EventHandler<WeatherApi.City> DefaultCityChanged=delegate { };
         private void CityItem_SetAsDefaultCity(object? sender, WeatherApi.City e)
         {
             DefaultPosition.Children.Clear();
@@ -196,7 +202,7 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
         private async void CityItem_CitySelected(object? sender, WeatherApi.City e)
         {
             SetLoadingStatus(true);
-            await LoadData(e,cache);
+            await LoadData(e);
             _AtSearchPage= false;
             (Resources["PageBack"] as Storyboard).Begin();
             cache.SaveCache();
