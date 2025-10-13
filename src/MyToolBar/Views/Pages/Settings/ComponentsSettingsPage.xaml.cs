@@ -34,13 +34,14 @@ namespace MyToolBar.Views.Pages.Settings
             }
         }
 
-        private void AddPluginBtn_Click(object sender, RoutedEventArgs e)
+        private async void AddPluginBtn_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new OpenFolderDialog();
             dialog.DefaultDirectory = ManagedPackageService.PackageDirectory;
             if(dialog.ShowDialog() is true && dialog.FolderName is {Length:>0} path)
             {
                 _managedPackage.SyncFromPackagePath(path);
+                await _managedPackage.SaveManagedPkgConf();
                 LoadPage();
             }
         }
