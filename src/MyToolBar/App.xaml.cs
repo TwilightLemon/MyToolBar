@@ -17,7 +17,7 @@ namespace MyToolBar
         public static IHost Host { get; private set; }
         public static new AppBarWindow MainWindow=>Host!.Services.GetRequiredService<AppBarWindow>();
 
-        private void BuildHost()
+        private static void BuildHost()
         {
             var builder = new HostBuilder();
             Host=builder.ConfigureServices(services =>

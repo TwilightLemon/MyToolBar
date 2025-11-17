@@ -1,8 +1,9 @@
-﻿<Application x:Class="MyToolBar.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:base="clr-namespace:MyToolBar.Common.UIBases;assembly=MyToolBar.Common"
-             xmlns:local="clr-namespace:MyToolBar">
+﻿<Application
+    x:Class="MyToolBar.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:base="clr-namespace:MyToolBar.Common.UIBases;assembly=MyToolBar.Common"
+    xmlns:local="clr-namespace:MyToolBar">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

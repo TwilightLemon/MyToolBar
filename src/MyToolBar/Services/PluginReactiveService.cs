@@ -80,32 +80,6 @@ namespace MyToolBar.Services
             }
         }
 
-
-        private async Task LoadAllForTest(PluginType type)
-        {
-            foreach (var pkg in _managedPackageService.ManagedPkg)
-            {
-                if (pkg.Value.IsEnabled)
-                {
-                    foreach (var plugin in pkg.Value.Package.Plugins)
-                    {
-                        if(type==plugin.Type) switch (plugin.Type)
-                        {
-                            case PluginType.OuterControl:
-                                await SetOuterControl(plugin, false);
-                                break;
-                            case PluginType.Capsule:
-                                await AddCapsule(plugin, false);
-                                break;
-                            case PluginType.UserService:
-                                await AddUserService(plugin, false);
-                                break;
-                        }
-                    }
-                }
-            }
-        }
-
         /// <summary>
         /// 为主窗口设置OuterControl
         /// </summary>

@@ -88,8 +88,6 @@ public class ManagedPackageService
     {
         while (!_isLoaded) await Task.Delay(10);
     }
-    public ManagedPkgConf GetManagedPkgConf(string PackageName) =>_managedPkgConfs.Data[PackageName];
-    public Task SaveManagedPkgConf() => _managedPkgConfs.Save();
     /// <summary>
     /// 有新的托管包文件时同步
     /// </summary>
