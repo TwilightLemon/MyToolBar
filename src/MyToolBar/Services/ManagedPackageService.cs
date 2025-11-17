@@ -10,8 +10,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 
 /*
- TODO: Plugin 加载模式改为从文件夹中加载；
-             新增方法：解包和验证
+ TODO:  新增方法：解包和验证
  */
 namespace MyToolBar.Services;
 /// <summary>
@@ -24,41 +23,23 @@ public class ManagedPackageService
     private static readonly string _packageDir=Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"Plugins");
     private readonly SettingsMgr< Dictionary<string,ManagedPkgConf>> _managedPkgConfs=new(_packageSettingsSign,_packageSettingsName);
     private readonly Dictionary<string,ManagedPackage> _managedPkg=[];
-    private FileSystemWatcher? _watcher;
     private bool _isLoaded=false;
     public Dictionary<string,ManagedPackage> ManagedPkg=>_managedPkg;
+    public static string PackageDirectory=>_packageDir;
 
     public ManagedPackageService()
     {
         CreateDir();
-        InitWatcher();
     }
     ~ManagedPackageService()
     {
-        _watcher?.Dispose();
         foreach (var managedPkg in _managedPkg)
         {
             managedPkg.Value.LoadContext.Unload();
         }
     }
-    private void InitWatcher()
-    {
-        _watcher = new FileSystemWatcher(_packageDir)
-        {
-            NotifyFilter = NotifyFilters.DirectoryName,
-            EnableRaisingEvents = true
-        };
-        _watcher.Changed += _watcher_Created;
-        _watcher.Created += _watcher_Created;
-    }
-    private DateTime _lastTime=DateTime.MinValue;
-    private void _watcher_Created(object sender, FileSystemEventArgs e) {
-        if (DateTime.Now - _lastTime < TimeSpan.FromSeconds(1)) return;
-        _lastTime = DateTime.Now;
-        SyncFromPackagePath(e.FullPath);
-    }
 
-    private void CreateDir()
+    private static void CreateDir()
     {
         if(!Directory.Exists(_packageDir))
         {

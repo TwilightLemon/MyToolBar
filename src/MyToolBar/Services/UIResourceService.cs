@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Resources;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using MyToolBar.Common;
@@ -39,6 +35,8 @@ namespace MyToolBar.Services
         public void UpdateDwmColor()
         {
             App.Current.Resources["SystemThemeColor"] = new SolidColorBrush(SystemThemeAPI.GetSystemAccentColor(GlobalService.IsDarkMode));
+            App.Current.Resources["FocusAccentColor"] = new SolidColorBrush(SystemThemeAPI.GetSystemAccentColor(GlobalService.IsDarkMode,true));
+
             GlobalService.NotifyThemeColorChanged();
         }
 

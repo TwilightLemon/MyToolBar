@@ -11,13 +11,14 @@ using MyToolBar.Plugin.BasicPackage.PopupWindows;
 
 namespace MyToolBar.Plugin.BasicPackage.Capsules
 {
-    public record WeatherData(DateTime UpdateTime,
-                              City City,
-                              AirData CurrentAir,
-                              List<Warning> Warnings,
-                              WeatherNow CurrentWeather,
-                              List<WeatherDay> DailyForecast,
-                              List<AirData> DailyAirForecast);
+    public record WeatherData(
+        DateTime UpdateTime,
+        City City,
+        AirData? CurrentAir,
+        List<Warning> Warnings,
+        WeatherNow CurrentWeather,
+        List<WeatherDay> DailyForecast,
+        List<AirData> DailyAirForecast);
 
     /// <summary>
     /// 为天气数据提供缓存、请求和保存
@@ -131,8 +132,8 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
                     var wdata = data.CurrentWeather;
                     Weather_info.Text = wdata.temp + "℃  " + wdata.status;
                     Weather_Icon.Background = new ImageBrush(new BitmapImage(new Uri(WeatherApi.GetIcon(wdata.code))));
-                    var aqi = data.CurrentAir;
-                    AirLevel.Background = new SolidColorBrush(WeatherApi.GetAirLevelColor(aqi.level));
+                    AirLevel.Background = data.CurrentAir is { } aqi ?
+                                            new SolidColorBrush(WeatherApi.GetAirLevelColor(aqi.level)) : null;
                 }
                 else
                 {

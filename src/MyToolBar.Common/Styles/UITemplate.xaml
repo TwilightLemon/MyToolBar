@@ -253,6 +253,14 @@
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Cursor" Value="Hand" />
     </Style>
+    <Style x:Key="AccentButtonStyleForWs" TargetType="ws:Button">
+        <Setter Property="Foreground" Value="{DynamicResource ForeColor}" />
+        <Setter Property="Background" Value="{DynamicResource SystemThemeColor}" />
+        <Setter Property="HoverBackground" Value="{DynamicResource FocusAccentColor}" />
+        <Setter Property="PressedBackground" Value="{DynamicResource FocusAccentColor}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Cursor" Value="Hand" />
+    </Style>
     <Style x:Key="SimpleComboBoxStyleForWs" TargetType="ws:ComboBox">
         <Setter Property="Background" Value="{DynamicResource MaskColor}" />
         <Setter Property="BorderBrush" Value="{DynamicResource FocusMaskColor}" />

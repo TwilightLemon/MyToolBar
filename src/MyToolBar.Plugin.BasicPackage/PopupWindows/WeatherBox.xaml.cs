@@ -90,9 +90,16 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
             FeelsLike.Text = wdata.CurrentWeather.feel+"℃";
             UpdateTime.Text=wdata.UpdateTime.ToString("HH:mm");
 
-            AQI_text.Text="AQI "+wdata.CurrentAir.aqi;
-            AQI_text.ToolTip = wdata.CurrentAir.sug;
-            AQI_Viewer.Background = new SolidColorBrush(WeatherApi.GetAirLevelColor(wdata.CurrentAir.level));
+            if (wdata.CurrentAir is { } air)
+            {
+                AQI_text.Text = "AQI " + air.aqi;
+                AQI_text.ToolTip = air.sug;
+                AQI_Viewer.Background = new SolidColorBrush(WeatherApi.GetAirLevelColor(air.level));
+            }
+            else
+            {
+                AQI_Viewer.Visibility=Visibility.Collapsed;
+            }
 
             Warnings.Children.Clear();
             foreach (var i in wdata.Warnings)

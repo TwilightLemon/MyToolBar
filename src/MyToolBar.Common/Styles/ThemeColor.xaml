@@ -2,6 +2,7 @@
     <!--  DarkMode  -->
     <!--  系统主题色 此字典值由UIResourceService负责实时更新  -->
     <SolidColorBrush x:Key="SystemThemeColor" Color="#69F" />
+    <SolidColorBrush x:Key="FocusAccentColor" Color="#69F" />
     <!--  For AppBar  -->
     <SolidColorBrush x:Key="AppBarForegroundLeft" Color="#FEFEFE" />
     <SolidColorBrush x:Key="AppBarForegroundCenter" Color="#FEFEFE" />
