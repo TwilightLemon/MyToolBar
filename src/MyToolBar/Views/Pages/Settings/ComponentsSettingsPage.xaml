@@ -5,20 +5,21 @@
       xmlns:local="clr-namespace:MyToolBar.Views.Pages.Settings"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:ws="https://schemas.elecho.dev/wpfsuite"
+      xmlns:base="clr-namespace:MyToolBar.Common.UIBases;assembly=MyToolBar.Common"
       Title="ComponentsSettingsPage"
       d:DesignHeight="450"
       d:DesignWidth="800"
       Foreground="{DynamicResource ForeColor}"
       mc:Ignorable="d">
     <ws:BoxPanel>
-        <ws:ScrollViewer Style="{StaticResource SimpleVerticalScrollViewerStyle}">
+        <base:ScrollViewer Style="{StaticResource SimpleVerticalScrollViewerStyle}">
             <StackPanel x:Name="PackagesPanel">
                 <TextBlock Margin="20,20,0,0"
                            FontSize="22"
                            FontWeight="Bold"
                            Text="{DynamicResource SettingsWindow_Tab_Components}" />
             </StackPanel>
-        </ws:ScrollViewer>
+        </base:ScrollViewer>
         <Grid>
             <ws:Button x:Name="AddPluginBtn"
                        Width="48"

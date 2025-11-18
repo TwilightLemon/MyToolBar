@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:MyToolBar.Views.Pages.Settings"
+      xmlns:base="clr-namespace:MyToolBar.Common.UIBases;assembly=MyToolBar.Common"
       xmlns:ws="https://schemas.elecho.dev/wpfsuite"
       mc:Ignorable="d"  Foreground="{DynamicResource ForeColor}"
       d:DesignHeight="450" d:DesignWidth="800"
@@ -12,10 +13,10 @@
     <Grid>
         <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" 
                    Margin="20,20,0,0" Text="{DynamicResource SettingsWindow_Tab_Capsules}" FontSize="20" FontWeight="Bold"/>
-        <ws:ScrollViewer Style="{DynamicResource SimpleVerticalScrollViewerStyle}">
+        <base:ScrollViewer Style="{DynamicResource SimpleVerticalScrollViewerStyle}">
             <StackPanel x:Name="CapsuleList" Margin="0 60 0 0">
                
             </StackPanel>
-        </ws:ScrollViewer>
+        </base:ScrollViewer>
     </Grid>
 </Page>

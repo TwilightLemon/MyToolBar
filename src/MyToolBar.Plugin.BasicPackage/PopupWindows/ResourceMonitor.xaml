@@ -215,9 +215,9 @@
                 Margin="10,70,10,10"
                 Background="{DynamicResource MaskColor}"
                 CornerRadius="15">
-            <ws:ScrollViewer Style="{StaticResource SimpleVerticalScrollViewerStyle}">
+            <base:ScrollViewer Style="{StaticResource SimpleVerticalScrollViewerStyle}">
                 <WrapPanel x:Name="ProcessList" ItemWidth="330" />
-            </ws:ScrollViewer>
+            </base:ScrollViewer>
         </Border>
         <Grid x:Name="ProcessInfoPage"
               Margin="10,60,10,10"
