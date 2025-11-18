@@ -1,10 +1,7 @@
-
-using System.Timers;
 using System.Windows;
-using System.Windows.Media;
 /*
  *Basic info of Plugins
- *Assembly->Package->Plugs
+ *Assembly->Package->Plugins
  *One Package for single assembly, including several plug-ins.
  */
 namespace MyToolBar.Plugin;
@@ -49,10 +46,6 @@ public interface IPackage
 public interface IPlugin
 {
     /// <summary>
-    /// 关联的包，此项由主程序设置
-    /// </summary>
-    IPackage? AcPackage { get; set; }
-    /// <summary>
     /// 插件名称(id)
     /// </summary>
     string Name { get; }
@@ -81,5 +74,5 @@ public interface IPlugin
     /// 获取服务实体
     /// </summary>
     /// <returns></returns>
-    virtual ServiceBase? GetServiceHost() => null;
+    virtual IUserService? GetServiceHost() => null;
 }

@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace MyToolBar.Plugin.TabletUtils.Services
 {
-    public class PenMenuService : ServiceBase
+    public class PenMenuService : IUserService
     {
         private bool _isRunning = false;
         private WeakReference<PenControlWindow>? _pcw = null;
@@ -22,14 +22,6 @@ namespace MyToolBar.Plugin.TabletUtils.Services
         }
         public event EventHandler<bool>? IsRunningChanged;
         public event EventHandler? OnForceStop;
-
-        public void Dispose()
-        {
-            if (IsRunning && _pcw != null && _pcw.TryGetTarget(out var window))
-            {
-                window.Close();
-            }
-        }
 
         public Task Start()
         {
@@ -60,7 +52,10 @@ namespace MyToolBar.Plugin.TabletUtils.Services
 
         public Task Stop()
         {
-            Dispose();
+            if (IsRunning && _pcw != null && _pcw.TryGetTarget(out var window))
+            {
+                window.Close();
+            }
             return Task.CompletedTask;
         }
     }

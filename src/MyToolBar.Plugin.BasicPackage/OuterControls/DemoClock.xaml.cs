@@ -31,12 +31,12 @@ namespace MyToolBar.Plugin.BasicPackage.OuterControls
         }
 
         private async void SettingsMgr_OnDataChanged() {
-            await settingsMgr.Load();
+            await settingsMgr.LoadAsync();
         }
 
         private async void DemoClock_Loaded(object sender, RoutedEventArgs e)
         {
-            await settingsMgr.Load();
+            await settingsMgr.LoadAsync();
             RefreshTime(null, null);
             IsShown = true;
             GlobalService.GlobalTimer.Elapsed += RefreshTime;

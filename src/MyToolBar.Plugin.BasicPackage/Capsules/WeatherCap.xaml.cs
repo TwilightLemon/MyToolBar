@@ -64,11 +64,11 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
         }
         public async void SaveCache()
         {
-            await Settings.Save(this, SettingSign, Settings.sType.Cache);
+            await Settings.SaveAsync(this, SettingSign, Settings.sType.Cache);
         }
         public static async Task<WeatherCache> LoadCache()
         {
-            var wc = await Settings.Load<WeatherCache>(SettingSign, Settings.sType.Cache);
+            var wc = await Settings.LoadAsync<WeatherCache>(SettingSign, Settings.sType.Cache);
             return wc ?? new WeatherCache();
         }
     }
@@ -152,10 +152,10 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
             if (KeyMgr == null)
             {
                 KeyMgr = new(_settingsAPIKey, WeatherCapPlugin._name);
-                await KeyMgr.Load();
+                await KeyMgr.LoadAsync();
                 KeyMgr.OnDataChanged += async delegate
                 {
-                    await KeyMgr.Load();
+                    await KeyMgr.LoadAsync();
                     Dispatcher.Invoke(() => Install());
                 };
             }

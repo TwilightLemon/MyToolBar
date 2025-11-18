@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace MyToolBar.Plugin.TabletUtils.Services
 {
-    public class SideBarService : ServiceBase
+    public class SideBarService : IUserService
     {
         private bool _isRunning = false;
         private WeakReference<SideLauncherWindow>? _slw = null;
@@ -22,14 +22,6 @@ namespace MyToolBar.Plugin.TabletUtils.Services
         }
         public event EventHandler<bool>? IsRunningChanged;
         public event EventHandler? OnForceStop;
-
-        public void Dispose()
-        {
-            if (IsRunning && _slw != null && _slw.TryGetTarget(out var window))
-            {
-                window.Close();
-            }
-        }
 
         public Task Start()
         {
@@ -51,7 +43,10 @@ namespace MyToolBar.Plugin.TabletUtils.Services
 
         public Task Stop()
         {
-            Dispose();
+            if (IsRunning && _slw != null && _slw.TryGetTarget(out var window))
+            {
+                window.Close();
+            }
             return Task.CompletedTask;
         }
     }

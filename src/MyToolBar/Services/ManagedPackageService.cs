@@ -1,17 +1,16 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using MyToolBar.Common;
 using MyToolBar.Plugin;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
-using MyToolBar.Common;
-using System.IO;
 using System.Threading.Tasks;
-using System.Diagnostics;
+using static MyToolBar.Common.GlobalService;
 
-/*
- TODO:  新增方法：解包和验证
- */
 namespace MyToolBar.Services;
 /// <summary>
 /// 托管的插件包管理服务 包括插件加载与设置Sign托管
@@ -23,20 +22,14 @@ public class ManagedPackageService
     private static readonly string _packageDir=Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"Plugins");
     private readonly SettingsMgr< Dictionary<string,ManagedPkgConf>> _managedPkgConfs=new(_packageSettingsSign,_packageSettingsName);
     private readonly Dictionary<string,ManagedPackage> _managedPkg=[];
-    private bool _isLoaded=false;
+    private readonly Dictionary<IPlugin, ManagedPackage> _plugins = [];
     public Dictionary<string,ManagedPackage> ManagedPkg=>_managedPkg;
+    public Dictionary<IPlugin,ManagedPackage> Plugins=>_plugins;
     public static string PackageDirectory=>_packageDir;
 
     public ManagedPackageService()
     {
         CreateDir();
-    }
-    ~ManagedPackageService()
-    {
-        foreach (var managedPkg in _managedPkg)
-        {
-            managedPkg.Value.LoadContext.Unload();
-        }
     }
 
     private static void CreateDir()
@@ -66,10 +59,10 @@ public class ManagedPackageService
     /// <summary>
     /// 加载所有启用的托管包(App启动时调用)
     /// </summary>
-    public async void Load()
+    public async Task Load()
     {
         //先读取预先的配置
-        await _managedPkgConfs.Load();
+        await _managedPkgConfs.LoadAsync();
         //
         string[] dirs = Directory.GetDirectories(_packageDir);
         foreach (var dir in dirs)
@@ -77,17 +70,11 @@ public class ManagedPackageService
             SyncFromPackagePath(dir);
         }
         //保存配置文件
-        await _managedPkgConfs.Save();
-        _isLoaded=true;
+        await _managedPkgConfs.SaveAsync();
     }
-    /// <summary>
-    /// 等待托管包加载完成
-    /// </summary>
-    /// <returns></returns>
-    public async Task WaitForLoading()
-    {
-        while (!_isLoaded) await Task.Delay(10);
-    }
+    public ManagedPkgConf GetManagedPkgConf(string PackageName) => _managedPkgConfs.Data[PackageName];
+    public Task SaveManagedPkgConf() => _managedPkgConfs.SaveAsync();
+
     /// <summary>
     /// 有新的托管包文件时同步
     /// </summary>
@@ -139,15 +126,19 @@ public class ManagedPackageService
                 //不启用
                 isEnable=false;
             }
+            conf.PackageDirectory ??= path;
         }
         else
         {
             //写入配置文件
-            _managedPkgConfs.Data.Add(pkgObj.PackageName, new ManagedPkgConf { PackageName = pkgObj.PackageName, IsEnabled = true,FilePath=mainFile });
+            _managedPkgConfs.Data.Add(pkgObj.PackageName, new ManagedPkgConf { PackageName = pkgObj.PackageName, IsEnabled = true, PackageDirectory = path });
         }
         //添加到托管包列表
-        _managedPkg.Add(pkgObj.PackageName, new ManagedPackage(loadContext, pkgObj,isEnable));
-        pkgObj.Plugins?.ForEach(o => o.AcPackage=pkgObj);
+        var loaded = new ManagedPackage(loadContext, pkgObj, isEnable);
+        _managedPkg.Add(pkgObj.PackageName, loaded);
+
+        //建立plugin->package的映射关系
+        pkgObj.Plugins.ForEach(p => _plugins.Add(p, loaded));
 
         /*if (!isEnable)
         {//unload之后无法读取基本信息..? 
@@ -155,17 +146,18 @@ public class ManagedPackageService
         }*/
     }
     
-    public async void EnableInRegistered(string packageName)
+    public void EnableInRegistered(string packageName)
     {
         if(_managedPkgConfs.Data.TryGetValue(packageName,out var conf))
         {
             conf.IsEnabled=true;
-            if(_managedPkg.TryGetValue(packageName,out var managedPkg))
+            if(_managedPkg.TryGetValue(packageName,out var pkg))
             {
-                managedPkg.IsEnabled=true;
-                _managedPkg[packageName]=managedPkg;
-                await _managedPkgConfs.Save();
+                //已经加载，只是没有启用
+                pkg.IsEnabled = true;
+                _=SaveManagedPkgConf();
             }
+            else SyncFromPackagePath(conf.PackageDirectory);
         }
     }
     /// <summary>
@@ -176,11 +168,13 @@ public class ManagedPackageService
     {
         if (_managedPkg.TryGetValue(packageName, out var managedPkg))
         {
+            //移出UI组件，然后卸载程序集
+            await App.Host.Services.GetRequiredService<PluginReactiveService>().UnloadFromPackage(managedPkg.Package);
             managedPkg.LoadContext.Unload();
-            managedPkg.IsEnabled= false;
-            _managedPkg[packageName] = managedPkg;
+            //从托管包列表中移除
+            _managedPkg.Remove(packageName);
             _managedPkgConfs.Data[packageName].IsEnabled = false;
-            await _managedPkgConfs.Save();
+            await _managedPkgConfs.SaveAsync();
         }
     }
 }
@@ -200,6 +194,6 @@ public class ManagedPackage(AssemblyLoadContext loadContext, IPackage package,bo
 public class ManagedPkgConf
 {
     public string PackageName { get; set; }
-    public string FilePath { get; set; }
+    public string PackageDirectory { get; set; }
     public bool IsEnabled { get; set; } = true;
 }

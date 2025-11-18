@@ -44,8 +44,6 @@ namespace MyToolBar.Services
             {
                 DefaultValue = App.Current.FindResource(typeof(System.Windows.Controls.Page))
             });
-            //加载插件包管理器
-            serviceProvider.GetRequiredService<ManagedPackageService>().Load();
             //加载配置
             appSettingsService.Loaded += delegate
             {
@@ -79,11 +77,11 @@ namespace MyToolBar.Services
             resourceService.SetLanguage(e);
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
+        public async Task StopAsync(CancellationToken cancellationToken)
         {
-            App.Current.Shutdown();
-
-            return Task.CompletedTask;
+            GlobalService.GlobalTimer.Stop();
+            serviceProvider.GetRequiredService<PluginReactiveService>().Unload();
+            await serviceProvider.GetRequiredService<ManagedPackageService>().SaveManagedPkgConf();
         }
 
         private void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
