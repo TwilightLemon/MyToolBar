@@ -28,8 +28,6 @@ public class Package : IPackage
 
 public class PenMenuPlugin : IPlugin
 {
-    public IPackage? AcPackage { get; set; }
-
     public string Name { get; }= "PenMenu";
     public string DisplayName => _rm.GetString("PenMenuDisplayName", _cultureInfo) ?? "";
 
@@ -47,7 +45,6 @@ public class PenMenuPlugin : IPlugin
 
 public class SideBarPlugin : IPlugin
 {
-    public IPackage? AcPackage { get; set; }
     internal static readonly string _name = "SideBar";
     public string Name { get; } = _name;
     public string DisplayName => _rm.GetString("SideBarDisplayName", _cultureInfo) ?? "";

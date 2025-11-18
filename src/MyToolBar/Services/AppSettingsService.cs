@@ -18,13 +18,13 @@ namespace MyToolBar.Services
         
         public async void Load()
         {
-            bool success=await settingsMgr.Load();
+            bool success=await settingsMgr.LoadAsync();
             Loaded?.Invoke(success);
         }
 
         public Task Save()
         {
-            return settingsMgr.Save();
+            return settingsMgr.SaveAsync();
         }
     }
 

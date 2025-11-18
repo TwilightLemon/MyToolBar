@@ -29,7 +29,6 @@ namespace MyToolBar.Plugin.BasicPackage
 
     public class WeatherCapPlugin:IPlugin
     {
-        public IPackage? AcPackage { get; set; }
         internal static readonly string _name = "WeatherCap";
         public string Name { get; } = _name;
         public string DisplayName => _rm.GetString("WeatherCapDisplayName", _cultureInfo) ?? "";
@@ -43,8 +42,6 @@ namespace MyToolBar.Plugin.BasicPackage
     }
     public class HardwareMonitorCapPlugin : IPlugin
     {
-
-       public IPackage? AcPackage { get; set; }
         internal static readonly string _name = "HardwareMonitorCap";
         public string Name { get; } = _name;
         public string DisplayName => _rm.GetString("HardwareMonitorCapDisplayName", _cultureInfo) ?? "";
@@ -58,7 +55,6 @@ namespace MyToolBar.Plugin.BasicPackage
     }
     public class LemonAppMusicOutControlPlugin : IPlugin
     {
-        public IPackage? AcPackage { get; set; }
         public string Name { get; } = "Media OutControl";
         public string DisplayName => _rm.GetString("LemonAppMusicOutControlDisplayName", _cultureInfo) ?? "";
         public string Description=> _rm.GetString("LemonAppMusicOutControlPluginDesc", _cultureInfo)??"";
@@ -72,7 +68,6 @@ namespace MyToolBar.Plugin.BasicPackage
     public class ClockCapPlugin : IPlugin
     {
         public static readonly string _name = "ClockCap";
-        public IPackage? AcPackage { get; set; }
         public string Name => _name;
 
         public string DisplayName => _rm.GetString("ClockCapDisplayName", _cultureInfo) ?? "";
@@ -86,7 +81,6 @@ namespace MyToolBar.Plugin.BasicPackage
     public class DemoClockOutControlPlugin : IPlugin
     {
         public static readonly string _name="Demo Clock";
-        public IPackage? AcPackage { get; set; }
         public string Name { get; } = _name;
         public string DisplayName => _rm.GetString("DemoClockOutControlDisplayName", _cultureInfo) ?? "";
         public string Description =>_rm.GetString("DemoClockOutControlPluginDesc", _cultureInfo)??"";

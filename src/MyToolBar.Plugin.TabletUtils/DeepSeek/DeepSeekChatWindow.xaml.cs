@@ -32,7 +32,7 @@ public partial class DeepSeekChatWindow : Window
     }
     private async Task Init()
     {
-        await config.Load();
+        await config.LoadAsync();
         if (!string.IsNullOrEmpty(config.Data?.APIKey))
         {
             client = new DeepSeekClient(config.Data.APIKey);
@@ -69,7 +69,7 @@ public partial class DeepSeekChatWindow : Window
     private void SideWindow_Closed(object? sender, EventArgs e)
     {
         GlobalService.OnIsDarkModeChanged -= GlobalService_OnIsDarkModeChanged;
-        _ = config.Save();
+        _ = config.SaveAsync();
     }
 
     private void GlobalService_OnIsDarkModeChanged(bool isDarkMode)
@@ -239,6 +239,6 @@ public partial class DeepSeekChatWindow : Window
     private void SwitchModelTb_Click(object sender, RoutedEventArgs e)
     {
         config.Data!.Model=request.Model = SwitchModelTb.IsChecked == true ? DeepSeekModels.ReasonerModel : DeepSeekModels.ChatModel;
-        _ = config.Save();
+        _ = config.SaveAsync();
     }
 }

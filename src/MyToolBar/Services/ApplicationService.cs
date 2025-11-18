@@ -44,8 +44,6 @@ namespace MyToolBar.Services
             {
                 DefaultValue = App.Current.FindResource(typeof(System.Windows.Controls.Page))
             });
-            //加载插件包管理器
-            serviceProvider.GetRequiredService<ManagedPackageService>().Load();
             //加载配置
             appSettingsService.Loaded += delegate
             {
@@ -81,8 +79,8 @@ namespace MyToolBar.Services
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
+            serviceProvider.GetRequiredService<ManagedPackageService>().SaveManagedSettings();
             App.Current.Shutdown();
-
             return Task.CompletedTask;
         }
 

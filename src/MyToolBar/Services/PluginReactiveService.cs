@@ -33,8 +33,8 @@ namespace MyToolBar.Services
 
         public async Task Load()
         {
-            await _managedPackageService.WaitForLoading();
-            await _installedConf.Load();
+            await _managedPackageService.Load();
+            await _installedConf.LoadAsync();
             //加载OuterControl
             if(_installedConf.Data.OutterControl is { } conf)
             {
@@ -80,6 +80,34 @@ namespace MyToolBar.Services
             }
         }
 
+        public async Task UnloadFromPackage(IPackage pkg)
+        {
+            foreach(var plugin in pkg.Plugins)
+            {
+                switch (plugin.Type)
+                {
+                    case PluginType.OuterControl:
+                        if(OuterControl==plugin)
+                        {
+                            await RemoveOuterControl();
+                        }
+                        break;
+                    case PluginType.Capsule:
+                        if(Capsules.Keys.FirstOrDefault(p=>p==plugin) is { } capPlugin)
+                        {
+                            await RemoveCapsule(capPlugin);
+                        }
+                        break;
+                    case PluginType.UserService:
+                        if(UserServices.Keys.FirstOrDefault(p=>p==plugin) is { } servicePlugin)
+                        {
+                            await RemoveUserService(servicePlugin);
+                        }
+                        break;
+                }
+            }
+        }
+
         /// <summary>
         /// 为主窗口设置OuterControl
         /// </summary>
@@ -90,15 +118,15 @@ namespace MyToolBar.Services
             //不是OuterControl or 已存在
             if (plugin.Type != PluginType.OuterControl||plugin.Name==OuterControl?.Name)
                 return false;
-            if (plugin.GetMainElement() is OuterControlBase{ } oc)
+            if (_managedPackageService.Plugins.TryGetValue(plugin,out var pkg) &&
+                    plugin.GetMainElement() is OuterControlBase{ } oc)
             {
-                Debug.Assert(plugin.AcPackage != null);
                 OuterControl = plugin;
                 OuterControlChanged?.Invoke(oc);
                 if (saveConf)
                 {
-                    _installedConf.Data.OutterControl = new(plugin.AcPackage.PackageName, plugin.Name);
-                    await _installedConf.Save();
+                    _installedConf.Data.OutterControl = new(pkg.PackageName, plugin.Name);
+                    await _installedConf.SaveAsync();
                 }
             }
             return true;
@@ -110,7 +138,7 @@ namespace MyToolBar.Services
                 OuterControl= null;
                 OuterControlRemoved?.Invoke();
                 _installedConf.Data.OutterControl = null;
-                await _installedConf.Save();
+                await _installedConf.SaveAsync();
                 return true;
             }
             return false;
@@ -122,17 +150,17 @@ namespace MyToolBar.Services
             if (plugin.Type != PluginType.UserService || UserServices.Any(p => p.Key.Name == plugin.Name))
                 return false;
 
-            if (plugin.GetServiceHost() is ServiceBase { } service)
+            if (_managedPackageService.Plugins.TryGetValue(plugin, out var pkg) && 
+                    plugin.GetServiceHost() is ServiceBase { } service)
             {
-                Debug.Assert(plugin.AcPackage != null);
                 UserServices.Add(plugin,service);
                 service.IsRunningChanged += Service_IsRunningChanged;
                 service.OnForceStop += Service_OnForceStop;
                 await service.Start();
                 if (saveConf)
                 {
-                    _installedConf.Data.UserServices.Add(new(plugin.AcPackage.PackageName, plugin.Name));
-                    await _installedConf.Save();
+                    _installedConf.Data.UserServices.Add(new(pkg.PackageName, plugin.Name));
+                    await _installedConf.SaveAsync();
                 }
                 return true;
             }
@@ -171,9 +199,10 @@ namespace MyToolBar.Services
             if (plugin.Type!= PluginType.UserService)
                 return false;
 
-            if(UserServices.FirstOrDefault(p=>p.Key.Name==plugin.Name) is { } service &&
+            if(UserServices.FirstOrDefault(p=>p.Key==plugin) is { } service &&
+                _managedPackageService.Plugins.TryGetValue(plugin, out var pkg) &&
                  _installedConf.Data.UserServices.FirstOrDefault(
-                     p => p.PluginName == plugin.Name && p.PackageName==plugin.AcPackage.PackageName) is { } conf)
+                     p => p.PluginName == plugin.Name && p.PackageName==pkg.PackageName) is { } conf)
             {
                 _installedConf.Data.UserServices.Remove(conf);
                 UserServices.Remove(service.Key);
@@ -182,7 +211,7 @@ namespace MyToolBar.Services
                     await w.Stop();
                     w.Dispose();
                 }
-                await _installedConf.Save();
+                await _installedConf.SaveAsync();
                 return true;
             }
             return false;
@@ -192,15 +221,16 @@ namespace MyToolBar.Services
             if (plugin.Type != PluginType.Capsule || Capsules.Any(p => p.Key.Name == plugin.Name))
                 return false;
 
-            if (plugin.GetMainElement() is CapsuleBase{ } cap)
+            if (_managedPackageService.Plugins.TryGetValue(plugin, out var pkg) && 
+                    plugin.GetMainElement() is CapsuleBase{ } cap)
             {
                 cap.Install();
                 Capsules.Add(plugin, cap);
                 CapsuleAdded?.Invoke(cap);
                 if (saveConf)
                 {
-                    _installedConf.Data.Capsules.Add(new(plugin.AcPackage.PackageName, plugin.Name));
-                    await _installedConf.Save();
+                    _installedConf.Data.Capsules.Add(new(pkg.PackageName, plugin.Name));
+                    await _installedConf.SaveAsync();
                 }
                 return true;
             }
@@ -211,14 +241,15 @@ namespace MyToolBar.Services
             if (plugin.Type != PluginType.Capsule)
                 return false;
 
-            if(Capsules.FirstOrDefault(p => p.Key.Name == plugin.Name) is var cap &&
+            if(Capsules.FirstOrDefault(p => p.Key == plugin) is var cap &&
+                _managedPackageService.Plugins.TryGetValue(plugin, out var pkg) &&
                 _installedConf.Data.Capsules.FirstOrDefault(p=>
-                p.PluginName==plugin.Name&&p.PackageName==plugin.AcPackage.PackageName) is var conf)
+                p.PluginName==plugin.Name&&p.PackageName==pkg.PackageName) is var conf)
             {
                 _installedConf.Data.Capsules.Remove(conf);
                 CapsuleRemoved?.Invoke(cap.Key);
                 Capsules.Remove(cap.Key);
-                await _installedConf.Save();
+                await _installedConf.SaveAsync();
                 return true;
             }
             return false;

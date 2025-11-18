@@ -1,19 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace MyToolBar.Common;
+public interface ISettingsMgr
+{
+    Task<bool> LoadAsync();
+    Task SaveAsync();
+    void Save();
+}
 /// <summary>
 /// 统一的缓存和配置服务
 /// </summary>
 /// <typeparam name="T">数据类型</typeparam>
-public class SettingsMgr<T> where T : class
+public class SettingsMgr<T> : ISettingsMgr where T : class
 {
     public string Sign { get; set; }
     public string PackageName { get; set; }
@@ -48,28 +49,28 @@ public class SettingsMgr<T> where T : class
     {
         _watcher?.Dispose();
     }
-    public async Task<bool> Load()
+    public async Task<bool> LoadAsync()
     {
         try
         {
-            Debug.WriteLine(Sign + "   Load!!");
-            var dt = await Settings.Load<SettingsMgr<T>>(Sign, Settings.sType.Settings);
+            Debug.WriteLine(Sign + "   LoadAsync!!");
+            var dt = await Settings.LoadAsync<SettingsMgr<T>>(Sign, Settings.sType.Settings);
             if (dt != null)
                 Data = dt.Data;
             else
             {
                 Data = Activator.CreateInstance<T>();
-                await Save();
+                await SaveAsync();
             }
             return true;
         }
         catch { return false; }
     }
-    public async Task Save()
+    public async Task SaveAsync()
     {
         Debug.WriteLine(Sign + "   SAVE!!");
         _watcher.EnableRaisingEvents = false;
-        await Settings.Save(this, Sign, Settings.sType.Settings);
+        await Settings.SaveAsync(this, Sign, Settings.sType.Settings);
         _watcher.EnableRaisingEvents = true;
     }
     private DateTime _lastUpdateTime = DateTime.MinValue;
@@ -85,6 +86,14 @@ public class SettingsMgr<T> where T : class
         {
             Debug.WriteLine(Sign + "   Change canceled!!");
         }
+    }
+
+    public void Save()
+    {
+        Debug.WriteLine(Sign + "   SAVE!!");
+        _watcher.EnableRaisingEvents = false;
+        Settings.Save(this, Sign, Settings.sType.Settings);
+        _watcher.EnableRaisingEvents = true;
     }
 }
 public static class Settings
@@ -123,9 +132,10 @@ public static class Settings
     public static string GetPathBySign(string Sign, sType type) => Path.Combine(type switch
     {
         sType.Cache => CachePath,
-        sType.Settings => SettingsPath
+        sType.Settings => SettingsPath,
+        _ => throw new NotImplementedException()
     }, Sign + ".json");
-    public static async Task Save<T>(T Data, string Sign, sType type) where T : class
+    public static async Task SaveAsync<T>(T Data, string Sign, sType type) where T : class
     {
         try
         {
@@ -136,7 +146,18 @@ public static class Settings
         }
         catch { }
     }
-    public static async Task<T?> Load<T>(string Sign, sType t) where T : class
+    public static void Save<T>(T Data, string Sign, sType type) where T : class
+    {
+        try
+        {
+            string path = GetPathBySign(Sign, type);
+            var fs = File.Create(path);
+            JsonSerializer.Serialize(fs, Data, _optionsSer);
+            fs.Close();
+        }
+        catch { }
+    }
+    public static async Task<T?> LoadAsync<T>(string Sign, sType t) where T : class
     {
         try
         {

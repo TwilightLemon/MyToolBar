@@ -29,12 +29,12 @@ namespace MyToolBar.Plugin.BasicPackage.Capsules
 
         private async void SettingsMgr_OnDataChanged()
         {
-            await settingsMgr.Load();
+            await settingsMgr.LoadAsync();
         }
 
         private async void ClockCap_Loaded(object sender, RoutedEventArgs e)
         {
-            await settingsMgr.Load();
+            await settingsMgr.LoadAsync();
             Refresh();
             GlobalService.GlobalTimer.Elapsed += GlobalTimer_Elapsed;
         }
