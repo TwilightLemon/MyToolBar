@@ -15,7 +15,7 @@ namespace MyToolBar.Services;
 /// <summary>
 /// 托管的插件包管理服务 包括插件加载与设置Sign托管
 /// </summary>
-public class ManagedPackageService : IManagedSettingsSaver
+public class ManagedPackageService
 {
     private static readonly string _packageSettingsSign="ManagedPackageConf",
                                        _packageSettingsName=typeof(ManagedPackageService).FullName;
@@ -23,7 +23,6 @@ public class ManagedPackageService : IManagedSettingsSaver
     private readonly SettingsMgr< Dictionary<string,ManagedPkgConf>> _managedPkgConfs=new(_packageSettingsSign,_packageSettingsName);
     private readonly Dictionary<string,ManagedPackage> _managedPkg=[];
     private readonly Dictionary<IPlugin, ManagedPackage> _plugins = [];
-    private readonly List<ISettingsMgr> _settingsMgrs = [];
     public Dictionary<string,ManagedPackage> ManagedPkg=>_managedPkg;
     public Dictionary<IPlugin,ManagedPackage> Plugins=>_plugins;
     public static string PackageDirectory=>_packageDir;
@@ -31,13 +30,6 @@ public class ManagedPackageService : IManagedSettingsSaver
     public ManagedPackageService()
     {
         CreateDir();
-    }
-    ~ManagedPackageService()
-    {
-        foreach (var managedPkg in _managedPkg)
-        {
-            managedPkg.Value.LoadContext.Unload();
-        }
     }
 
     private static void CreateDir()
@@ -183,20 +175,6 @@ public class ManagedPackageService : IManagedSettingsSaver
             _managedPkg.Remove(packageName);
             _managedPkgConfs.Data[packageName].IsEnabled = false;
             await _managedPkgConfs.SaveAsync();
-        }
-    }
-
-    public bool AddSettingsMgr<T>(ISettingsMgr settingsMgr)
-    {
-        _settingsMgrs.Add(settingsMgr);
-        return true;//?
-    }
-
-    public void SaveManagedSettings()
-    {
-        foreach (var item in _settingsMgrs)
-        {
-            item.Save();
         }
     }
 }

@@ -24,7 +24,7 @@ namespace MyToolBar.Services
 
         public IPlugin? OuterControl { get;private set; }
         public Dictionary<IPlugin,CapsuleBase> Capsules { get; } = [];
-        public Dictionary<IPlugin, ServiceBase> UserServices { get; } = [];
+        public Dictionary<IPlugin, IUserService> UserServices { get; } = [];
 
         public event Action<OuterControlBase>? OuterControlChanged;
         public event Action? OuterControlRemoved;
@@ -108,6 +108,15 @@ namespace MyToolBar.Services
             }
         }
 
+        public void Unload()
+        {
+            OuterControl=null;
+            Capsules.Clear();
+            foreach(var service in UserServices.Values) {
+                service.Stop();
+            }
+        }
+
         /// <summary>
         /// 为主窗口设置OuterControl
         /// </summary>
@@ -151,7 +160,7 @@ namespace MyToolBar.Services
                 return false;
 
             if (_managedPackageService.Plugins.TryGetValue(plugin, out var pkg) && 
-                    plugin.GetServiceHost() is ServiceBase { } service)
+                    plugin.GetServiceHost() is IUserService { } service)
             {
                 UserServices.Add(plugin,service);
                 service.IsRunningChanged += Service_IsRunningChanged;
@@ -174,7 +183,7 @@ namespace MyToolBar.Services
         /// <param name="e"></param>
         private async void Service_OnForceStop(object? sender, EventArgs e)
         {
-            if (sender is ServiceBase { } service &&
+            if (sender is IUserService { } service &&
                     UserServices.FirstOrDefault(p => p.Value == service).Key is IPlugin { } plugin)
             {
                 service.IsRunningChanged -= Service_IsRunningChanged;
@@ -209,7 +218,6 @@ namespace MyToolBar.Services
                 if(service.Value is {IsRunning:true} w)
                 {
                     await w.Stop();
-                    w.Dispose();
                 }
                 await _installedConf.SaveAsync();
                 return true;

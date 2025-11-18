@@ -5,6 +5,7 @@ using MyToolBar.Common;
 using MyToolBar.Views.Windows;
 using System;
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Media;
 
 namespace MyToolBar.ViewModels
@@ -62,8 +63,7 @@ namespace MyToolBar.ViewModels
         }
         private void MenuItem_Exit()
         {
-            GlobalService.GlobalTimer.Stop();
-            _ = App.Host.StopAsync();
+            Application.Current.Shutdown();
         }
     }
 }

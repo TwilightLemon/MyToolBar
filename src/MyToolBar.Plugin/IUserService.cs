@@ -3,7 +3,7 @@
 /// <summary>
 /// PluginType.UserService实体基类
 /// </summary>
-public interface ServiceBase : IDisposable {
+public interface IUserService {
     /// <summary>
     /// 服务是否正在运行
     /// </summary>

@@ -74,5 +74,5 @@ public interface IPlugin
     /// 获取服务实体
     /// </summary>
     /// <returns></returns>
-    virtual ServiceBase? GetServiceHost() => null;
+    virtual IUserService? GetServiceHost() => null;
 }

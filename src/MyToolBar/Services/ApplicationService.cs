@@ -77,11 +77,11 @@ namespace MyToolBar.Services
             resourceService.SetLanguage(e);
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
+        public async Task StopAsync(CancellationToken cancellationToken)
         {
-            serviceProvider.GetRequiredService<ManagedPackageService>().SaveManagedSettings();
-            App.Current.Shutdown();
-            return Task.CompletedTask;
+            GlobalService.GlobalTimer.Stop();
+            serviceProvider.GetRequiredService<PluginReactiveService>().Unload();
+            await serviceProvider.GetRequiredService<ManagedPackageService>().SaveManagedPkgConf();
         }
 
         private void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)

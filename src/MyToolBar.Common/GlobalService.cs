@@ -66,11 +66,5 @@ namespace MyToolBar.Common
             else if(left > max) left = max;
             return left;
         }
-        public static IManagedSettingsSaver ManagedSettingsSaver { get; set; } = null!;
-
-        public interface IManagedSettingsSaver
-        {
-            bool AddSettingsMgr<T>(ISettingsMgr settingsMgr);
-        }
     }
 }

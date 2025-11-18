@@ -37,7 +37,7 @@ public class PenMenuPlugin : IPlugin
 
     public PluginType Type => PluginType.UserService;
 
-    public ServiceBase GetServiceHost()
+    public IUserService GetServiceHost()
     {
         return new PenMenuService();
     }
@@ -55,7 +55,7 @@ public class SideBarPlugin : IPlugin
 
     public PluginType Type => PluginType.UserService;
 
-    public ServiceBase GetServiceHost()
+    public IUserService GetServiceHost()
     {
         return new SideBarService();
     }
