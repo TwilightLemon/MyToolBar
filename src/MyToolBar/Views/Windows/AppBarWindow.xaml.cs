@@ -213,7 +213,7 @@ namespace MyToolBar.Views.Windows
         {
             Visibility = e && EnableHideWhenFullScreen ? Visibility.Collapsed : Visibility.Visible;
             //?从全屏中恢复时不再绘制内容，强制刷新一下...
-/*            InvalidateVisual();  //没用？
+/*            InvalidateVisual();  //没用?
             UpdateLayout();*/
             Width--;
             Width++;

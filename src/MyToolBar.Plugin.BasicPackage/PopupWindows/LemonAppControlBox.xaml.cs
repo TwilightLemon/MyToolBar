@@ -56,9 +56,16 @@ namespace MyToolBar.Plugin.BasicPackage.PopupWindows
             {
                 try
                 {
+                    using var streamRef = await info.Thumbnail.OpenReadAsync();
+                    using var stream = streamRef.AsStreamForRead();
+                    using var ms = new MemoryStream();
+                    await stream.CopyToAsync(ms);
+                    ms.Position = 0;
+
                     var img = new BitmapImage();
                     img.BeginInit();
-                    img.StreamSource = (await info.Thumbnail.OpenReadAsync()).AsStream();
+                    img.CacheOption = BitmapCacheOption.OnLoad;
+                    img.StreamSource = ms;
                     img.EndInit();
                     ThumbnailImg.Background = new ImageBrush(img);
                     InfoTb.Margin = new Thickness(20, 20, 100, 0);
