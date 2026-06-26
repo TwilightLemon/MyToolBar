@@ -34,6 +34,42 @@ namespace MyToolBar.Services
         /// 全局字体
         /// </summary>
         public string? FontFamily { get; set; }
+
+        /// <summary>
+        /// 窗口模式
+        /// </summary>
+        public enum WindowMode
+        {
+            /// <summary>嵌入模式（贴边）</summary>
+            Embedded,
+            /// <summary>悬浮模式（圆角悬浮）</summary>
+            Floating
+        }
+
+        /// <summary>
+        /// 背景模式
+        /// </summary>
+        public enum BackgroundMode
+        {
+            /// <summary>透明背景</summary>
+            Transparent,
+            /// <summary>模糊背景（默认）</summary>
+            Acrylic
+        }
+
+        /// <summary>
+        /// 沉浸模式
+        /// </summary>
+        public enum ImmerseMode
+        {
+            /// <summary>关闭沉浸模式</summary>
+            Off,
+            /// <summary>自动：有最大化窗口时启用沉浸，否则使用所选背景</summary>
+            Auto,
+            /// <summary>始终开启沉浸模式</summary>
+            Always
+        }
+
         /// <summary>
         /// 假岛
         /// </summary>
@@ -44,25 +80,39 @@ namespace MyToolBar.Services
             EnableIsland = enable;
             OnEnableIslandChanged?.Invoke();
         }
-        /// <summary>
-        /// 启用新样式
-        /// </summary>
-        public bool EnableNewStyle { get; set; } = false;
-        public event Action? OnEnableNewStyleChanged;
-        public void SetEnableNewStyle(bool enable)
-        {
-            EnableNewStyle = enable;
-            OnEnableNewStyleChanged?.Invoke();
-        }
-        /// <summary>
-        /// 返回桌面时使用"沉浸模式"
-        /// </summary>
-        public bool AlwaysUseImmerseMode {  get; set; }=false;
 
         /// <summary>
-        /// 使用"沉浸模式"
+        /// 当前窗口模式
         /// </summary>
-        public bool UseImmerseMode { get; set; } = true;
+        public WindowMode CurrentWindowMode { get; set; } = WindowMode.Embedded;
+        public event Action? OnWindowModeChanged;
+        public void SetWindowMode(WindowMode mode)
+        {
+            CurrentWindowMode = mode;
+            OnWindowModeChanged?.Invoke();
+        }
+
+        /// <summary>
+        /// 当前背景模式
+        /// </summary>
+        public BackgroundMode CurrentBackgroundMode { get; set; } = BackgroundMode.Acrylic;
+        public event Action? OnBackgroundModeChanged;
+        public void SetBackgroundMode(BackgroundMode mode)
+        {
+            CurrentBackgroundMode = mode;
+            OnBackgroundModeChanged?.Invoke();
+        }
+
+        /// <summary>
+        /// 沉浸模式：关闭/自动/始终开启
+        /// </summary>
+        public ImmerseMode CurrentImmerseMode { get; set; } = ImmerseMode.Auto;
+        public event Action? OnImmerseModeChanged;
+        public void SetImmerseMode(ImmerseMode mode)
+        {
+            CurrentImmerseMode = mode;
+            OnImmerseModeChanged?.Invoke();
+        }
 
         /// <summary>
         /// 开机自启动

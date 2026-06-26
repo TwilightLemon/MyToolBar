@@ -62,7 +62,7 @@ public class WindowMaterial : DependencyObject
     {
         if (_window == null | _hWnd == IntPtr.Zero) return;
 
-        bool enable = MaterialMode != MaterialType.None || UseWindowComposition;
+        bool enable = MaterialMode != MaterialType.None;
         if (enable)
         {
             //操作系统判定，如果是window10 即使使用MaterialMode也调用CompositionAPI
@@ -72,8 +72,16 @@ public class WindowMaterial : DependencyObject
             //强制使用或仅支持CompositionAPI的系统
             if (UseWindowComposition || (osVersion >= windows10_1809 && osVersion < windows11))
             {
-                SetWindowProperty(true);
-                SetWindowCompositon(true);
+                if (MaterialMode == MaterialType.Transparent)
+                {
+                    SetWindowCompositon(false);
+                    SetWindowProperty(false);
+                }
+                else
+                {
+                    SetWindowProperty(true);
+                    SetWindowCompositon(true);
+                }
             }
             else
             {
@@ -266,7 +274,8 @@ public enum MaterialType
     None = 1,
     Acrylic = 3,
     Mica = 2,
-    MicaAlt = 4
+    MicaAlt = 4,
+    Transparent=5
 }
 
 public static class MaterialApis

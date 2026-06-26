@@ -23,10 +23,10 @@
     <sys:String x:Key="AppSettings_Group_Behavior">行为</sys:String>
 
     <sys:String x:Key="AppSettings_Item_EnableHideWhenFullScreen">全屏时隐藏</sys:String>
-    <sys:String x:Key="AppSettings_Item_EnableNewStyle">启用新样式（实验性）</sys:String>
+    <sys:String x:Key="AppSettings_Item_WindowMode">窗口模式</sys:String>
+    <sys:String x:Key="AppSettings_Item_BackgroundMode">背景</sys:String>
+    <sys:String x:Key="AppSettings_Item_ImmerseMode">沉浸模式</sys:String>
     <sys:String x:Key="AppSettings_Item_EnableIsland">显示一个假的额头</sys:String>
-    <sys:String x:Key="AppSettings_Item_UseImmerseMode">启用沉浸模式</sys:String>
-    <sys:String x:Key="AppSettings_Item_AlwaysUseImmerseMode">始终启用沉浸模式</sys:String>
     <sys:String x:Key="AppSettings_Item_AutoRunAtStartup">开机自启动</sys:String>
     <sys:String x:Key="AppSettings_Item_Language">语言</sys:String>
     <sys:String x:Key="AppSettings_Item_MainMenuIcon">主菜单图标</sys:String>
@@ -54,4 +54,14 @@
     <sys:String x:Key="AS_MenuIcon_Apple">果子</sys:String>
     <sys:String x:Key="AS_MenuIcon_WindowsXp">WindowsXp</sys:String>
     <sys:String x:Key="AS_MenuIcon_Gatito">猫子</sys:String>
+
+    <sys:String x:Key="AS_WindowMode_Embedded">嵌入</sys:String>
+    <sys:String x:Key="AS_WindowMode_Floating">悬浮</sys:String>
+
+    <sys:String x:Key="AS_BackgroundMode_Transparent">透明</sys:String>
+    <sys:String x:Key="AS_BackgroundMode_Acrylic">模糊</sys:String>
+
+    <sys:String x:Key="AS_ImmerseMode_Off">关闭</sys:String>
+    <sys:String x:Key="AS_ImmerseMode_Auto">自动</sys:String>
+    <sys:String x:Key="AS_ImmerseMode_Always">始终开启</sys:String>
 </ResourceDictionary>

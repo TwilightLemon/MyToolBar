@@ -32,6 +32,27 @@
                 <x:Type TypeName="service:AppSettings+ProxyMode" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
+        <ObjectDataProvider x:Key="WindowModeEnumData"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="service:AppSettings+WindowMode" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="BackgroundModeEnumData"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="service:AppSettings+BackgroundMode" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="ImmerseModeEnumData"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="service:AppSettings+ImmerseMode" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
         <ObjectDataProvider x:Key="MainMenuIconEnumData"
                             MethodName="GetValues"
                             ObjectType="{x:Type sys:Enum}">
@@ -53,10 +74,58 @@
                     <Border Height="48"
                             Background="{DynamicResource MaskColor}"
                             CornerRadius="12">
-                        <ToggleButton Margin="12,0,12,0"
-                                      Content="{DynamicResource AppSettings_Item_EnableNewStyle}"
-                                      IsChecked="{Binding EnableNewStyle}"
-                                      Style="{DynamicResource RoundToggleButtonStyle}" />
+                        <Grid>
+                            <TextBlock Margin="12"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"
+                                       Text="{DynamicResource AppSettings_Item_WindowMode}" />
+                            <ws:ComboBox x:Name="WindowModeComboBox"
+                                         Height="24"
+                                         Margin="0,0,48,0"
+                                         HorizontalAlignment="Right"
+                                         ItemTemplate="{DynamicResource ComboBoxItemTemplate}"
+                                         ItemsSource="{Binding Source={StaticResource WindowModeEnumData}}"
+                                         SelectedItem="{Binding WindowMode}"
+                                         Style="{StaticResource SimpleComboBoxStyleForWs}" />
+                        </Grid>
+                    </Border>
+
+                    <Border Height="48"
+                            Background="{DynamicResource MaskColor}"
+                            CornerRadius="12">
+                        <Grid>
+                            <TextBlock Margin="12"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"
+                                       Text="{DynamicResource AppSettings_Item_BackgroundMode}" />
+                            <ws:ComboBox x:Name="BackgroundModeComboBox"
+                                         Height="24"
+                                         Margin="0,0,48,0"
+                                         HorizontalAlignment="Right"
+                                         ItemTemplate="{DynamicResource ComboBoxItemTemplate}"
+                                         ItemsSource="{Binding Source={StaticResource BackgroundModeEnumData}}"
+                                         SelectedItem="{Binding BackgroundMode}"
+                                         Style="{StaticResource SimpleComboBoxStyleForWs}" />
+                        </Grid>
+                    </Border>
+
+                    <Border Height="48"
+                            Background="{DynamicResource MaskColor}"
+                            CornerRadius="12">
+                        <Grid>
+                            <TextBlock Margin="12"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"
+                                       Text="{DynamicResource AppSettings_Item_ImmerseMode}" />
+                            <ws:ComboBox x:Name="ImmerseModeComboBox"
+                                         Height="24"
+                                         Margin="0,0,48,0"
+                                         HorizontalAlignment="Right"
+                                         ItemTemplate="{DynamicResource ComboBoxItemTemplate}"
+                                         ItemsSource="{Binding Source={StaticResource ImmerseModeEnumData}}"
+                                         SelectedItem="{Binding ImmerseMode}"
+                                         Style="{StaticResource SimpleComboBoxStyleForWs}" />
+                        </Grid>
                     </Border>
 
                     <Border Height="48"
@@ -65,26 +134,6 @@
                         <ToggleButton Margin="12,0,12,0"
                                       Content="{DynamicResource AppSettings_Item_EnableIsland}"
                                       IsChecked="{Binding EnableIsland}"
-                                      Style="{DynamicResource RoundToggleButtonStyle}" />
-                    </Border>
-
-                    <Border Height="48"
-                            Background="{DynamicResource MaskColor}"
-                            CornerRadius="12">
-                        <ToggleButton Name="UseImModeCb"
-                                      Margin="12,0,12,0"
-                                      Content="{DynamicResource AppSettings_Item_UseImmerseMode}"
-                                      IsChecked="{Binding UseImmerseMode}"
-                                      Style="{DynamicResource RoundToggleButtonStyle}" />
-                    </Border>
-
-                    <Border Height="48"
-                            Background="{DynamicResource MaskColor}"
-                            CornerRadius="12">
-                        <ToggleButton Name="AlwaysImModeCb"
-                                      Margin="12,0,12,0"
-                                      Content="{DynamicResource AppSettings_Item_AlwaysUseImmerseMode}"
-                                      IsChecked="{Binding AlwaysUseImmerseMode}"
                                       Style="{DynamicResource RoundToggleButtonStyle}" />
                     </Border>
                     <Border Height="48"

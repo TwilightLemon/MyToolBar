@@ -11,13 +11,13 @@ namespace MyToolBar.ViewModels
         ): ObservableObject
     {
         [ObservableProperty]
-        private bool _enableNewStyle;
+        private AppSettings.WindowMode _windowMode;
+        [ObservableProperty]
+        private AppSettings.BackgroundMode _backgroundMode;
+        [ObservableProperty]
+        private AppSettings.ImmerseMode _immerseMode;
         [ObservableProperty]
         private bool _enableIsland;
-        [ObservableProperty]
-        private bool _useImmerseMode;
-        [ObservableProperty]
-        private bool _alwaysUseImmerseMode;
         [ObservableProperty]
         private bool _autoRunAtStartup;
         [ObservableProperty]
@@ -35,10 +35,10 @@ namespace MyToolBar.ViewModels
 
         public void LoadData()
         {
-            EnableNewStyle = appSettingsService.Settings.EnableNewStyle;
+            WindowMode = appSettingsService.Settings.CurrentWindowMode;
+            BackgroundMode = appSettingsService.Settings.CurrentBackgroundMode;
+            ImmerseMode = appSettingsService.Settings.CurrentImmerseMode;
             EnableIsland = appSettingsService.Settings.EnableIsland;
-            UseImmerseMode = appSettingsService.Settings.UseImmerseMode;
-            AlwaysUseImmerseMode = appSettingsService.Settings.AlwaysUseImmerseMode;
             AutoRunAtStartup = appSettingsService.Settings.AutoRunAtStartup;
             HideWhenFullScreen = GlobalService.EnableHideWhenFullScreen;
         }
@@ -46,27 +46,21 @@ namespace MyToolBar.ViewModels
         {
             GlobalService.EnableHideWhenFullScreen = value;
         }
-        partial void OnEnableNewStyleChanged(bool value)
+        partial void OnWindowModeChanged(AppSettings.WindowMode value)
         {
-            appSettingsService.Settings.SetEnableNewStyle(value);
+            appSettingsService.Settings.SetWindowMode(value);
+        }
+        partial void OnBackgroundModeChanged(AppSettings.BackgroundMode value)
+        {
+            appSettingsService.Settings.SetBackgroundMode(value);
+        }
+        partial void OnImmerseModeChanged(AppSettings.ImmerseMode value)
+        {
+            appSettingsService.Settings.SetImmerseMode(value);
         }
         partial void OnEnableIslandChanged(bool value)
         {
             appSettingsService.Settings.SetEnableIsland(value);
-        }
-        partial void OnUseImmerseModeChanged(bool value)
-        {
-            appSettingsService.Settings.UseImmerseMode = value;
-            if (!value)
-            {
-                AlwaysUseImmerseMode = false;
-            }
-        }
-        partial void OnAlwaysUseImmerseModeChanged(bool value)
-        {
-            appSettingsService.Settings.AlwaysUseImmerseMode = value;
-            if (value)
-                UseImmerseMode = true;
         }
         partial void OnAutoRunAtStartupChanged(bool value)
         {

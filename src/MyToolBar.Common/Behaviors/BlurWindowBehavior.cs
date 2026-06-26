@@ -81,14 +81,19 @@ public class BlurWindowBehavior : Behavior<Window>
     {
         base.OnAttached();
         AssociatedObject.Closing += AssociatedObject_Closing;
-        if (AssociatedObject.IsLoaded)
+        if (AssociatedObject.IsInitialized)
         {
             InitializeBehavior();
         }
         else
         {
-            AssociatedObject.Loaded += AssociatedObject_Loaded;
+            AssociatedObject.Initialized += AssociatedObject_Initialized;
         }
+    }
+
+    private void AssociatedObject_Initialized(object? sender, EventArgs e)
+    {
+        InitializeBehavior();
     }
 
     private void AssociatedObject_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
@@ -102,7 +107,7 @@ public class BlurWindowBehavior : Behavior<Window>
         base.OnDetaching();
 
         // unregister event
-        AssociatedObject.Loaded -= AssociatedObject_Loaded;
+        AssociatedObject.Initialized -= AssociatedObject_Initialized;
 
         // remove and disable wac
         if (_allWindowMaterialManager.TryGetValue(AssociatedObject, out var acc))
@@ -138,10 +143,6 @@ public class BlurWindowBehavior : Behavior<Window>
         return wac;
     }
 
-    private void AssociatedObject_Loaded(object sender, RoutedEventArgs e)
-    {
-        InitializeBehavior();
-    }
     public WindowMaterial WindowMaterial => _windowMaterial;
 
 

@@ -29,6 +29,18 @@ namespace MyToolBar.Converters
             {
                 return App.Current.FindResource($"AS_MenuIcon_{icon}");
             }
+            else if(value is AppSettings.WindowMode windowMode)
+            {
+                return App.Current.FindResource($"AS_WindowMode_{windowMode}");
+            }
+            else if (value is AppSettings.BackgroundMode backgroundMode)
+            {
+                return App.Current.FindResource($"AS_BackgroundMode_{backgroundMode}");
+            }
+            else if (value is AppSettings.ImmerseMode immerseMode)
+            {
+                return App.Current.FindResource($"AS_ImmerseMode_{immerseMode}");
+            }
             return value;
         }
 

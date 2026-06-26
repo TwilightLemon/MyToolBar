@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using MyToolBar.Common;
 using Microsoft.Extensions.DependencyInjection;
 using EleCho.WpfSuite;
+using System.Linq;
 
 namespace MyToolBar.Views.Windows
 {
@@ -44,14 +45,31 @@ namespace MyToolBar.Views.Windows
 
             _appSettingsService.Settings.OnMainMenuIconChanged += Settings_OnMainMenuIconChanged;
             _appSettingsService.Settings.OnEnableIslandChanged += Settings_OnEnableIslandChanged;
-            _appSettingsService.Settings.OnEnableNewStyleChanged += Settings_OnEnableNewStyleChanged;
+            _appSettingsService.Settings.OnWindowModeChanged += Settings_OnWindowModeChanged;
+            _appSettingsService.Settings.OnBackgroundModeChanged += Settings_OnBackgroundModeChanged;
+            _appSettingsService.Settings.OnImmerseModeChanged += Settings_OnImmerseModeChanged;
 
             InitializeComponent();
         }
 
-        private void Settings_OnEnableNewStyleChanged()
+        private BlurWindowBehavior? _blurWindowBehavior;
+
+        private void Settings_OnWindowModeChanged()
         {
-            UpdateEnableNewStyle();
+            UpdateWindowMode();
+        }
+
+        private void Settings_OnBackgroundModeChanged()
+        {
+            UpdateBackgroundMode();
+            // 背景模式变更后立即刷新背景
+            UpdateBackground();
+        }
+
+        private void Settings_OnImmerseModeChanged()
+        {
+            // 沉浸模式变更后立即刷新背景
+            UpdateBackground();
         }
 
         private void Settings_OnEnableIslandChanged()
@@ -73,10 +91,11 @@ namespace MyToolBar.Views.Windows
             InvalidateVisual();
         }
 
-        private void UpdateEnableNewStyle()
+        private void UpdateWindowMode()
         {
             AppBar_OnWindowLocationApplied();
-            if (_appSettingsService.Settings.EnableNewStyle)
+            var isFloating = _appSettingsService.Settings.CurrentWindowMode == AppSettings.WindowMode.Floating;
+            if (isFloating)
             {
                 WindowOption.SetCorner(this, WindowCorner.RoundSmall);
             }
@@ -86,18 +105,48 @@ namespace MyToolBar.Views.Windows
             }
         }
 
+        /// <summary>
+        /// 根据当前背景模式更新 BlurWindowBehavior 的 Mode 和窗口 Background
+        /// </summary>
+        private void UpdateBackgroundMode()
+        {
+            if (_blurWindowBehavior == null) return;
+
+            // 清除可能残留的沉浸模式背景
+            MainBarGrid.Background = null;
+            _lastEvaColor = null;
+
+            switch (_appSettingsService.Settings.CurrentBackgroundMode)
+            {
+                case AppSettings.BackgroundMode.Transparent:
+                    _blurWindowBehavior.Mode = MaterialType.Transparent;
+                    CurrentAppBarBgStyle = AppBarBgStyleType.Transparent;
+                    break;
+
+                case AppSettings.BackgroundMode.Acrylic:
+                default:
+                    _blurWindowBehavior.Mode = MaterialType.Acrylic;
+                    CurrentAppBarBgStyle = AppBarBgStyleType.Acrylic;
+                    break;
+            }
+        }
+
         #region Window Init & Service Events
         private void Window_SourceInitialized(object sender, EventArgs e)
         {
             _hwnd = new WindowInteropHelper(this).Handle;
             //标记WS_EX_TOOLWINDOW 窗口不在任务视图中显示
             WindowLongAPI.SetToolWindow(this);
+            // 获取 BlurWindowBehavior 引用
+            _blurWindowBehavior = Microsoft.Xaml.Behaviors.Interaction.GetBehaviors(this)
+                .OfType<BlurWindowBehavior>().FirstOrDefault();
             Width = SystemParameters.WorkArea.Width;
             //初始化AppBar样式
+            UpdateBackgroundMode();
             UpdateBackground();
             UpdateColorMode();
             UpdateMainMenuIcon();
-            UpdateEnableNewStyle();
+            UpdateWindowMode();
             UpdateEnableIsland();
             UpdateAppBarForeground();
             OnSystemColorChanged();
@@ -149,7 +198,7 @@ namespace MyToolBar.Views.Windows
 
         private void Window_Activated(object sender, EventArgs e)
         {
-            if (_appSettingsService.Settings.EnableNewStyle)
+            if (_appSettingsService.Settings.CurrentWindowMode == AppSettings.WindowMode.Floating)
             {
                 WindowOption.SetCorner(this, WindowCorner.Round);
             }
@@ -157,7 +206,7 @@ namespace MyToolBar.Views.Windows
 
         private void Window_Deactivated(object sender, EventArgs e)
         {
-            if (_appSettingsService.Settings.EnableNewStyle)
+            if (_appSettingsService.Settings.CurrentWindowMode == AppSettings.WindowMode.Floating)
             {
                 WindowOption.SetCorner(this, WindowCorner.RoundSmall);
             }
@@ -193,7 +242,8 @@ namespace MyToolBar.Views.Windows
             }
             else if (CurrentAppBarBgStyle == AppBarBgStyleType.EnergySaving){
                 MainBarGrid.Background = null;
-                CurrentAppBarBgStyle = AppBarBgStyleType.Acrylic;
+                // 恢复用户选择的背景模式
+                UpdateBackgroundMode();
             }
         }
 
@@ -428,7 +478,7 @@ namespace MyToolBar.Views.Windows
         #region Window Style
         private void AppBar_OnWindowLocationApplied()
         {
-            if (_appSettingsService.Settings.EnableNewStyle)
+            if (_appSettingsService.Settings.CurrentWindowMode == AppSettings.WindowMode.Floating)
             {
                 Top = 4; Left = 8;
             }
@@ -457,14 +507,14 @@ namespace MyToolBar.Views.Windows
             Height = 32;
         }
        
-        enum AppBarBgStyleType { EnergySaving,ImmerseMode, Acrylic };
+        enum AppBarBgStyleType { EnergySaving, ImmerseMode, Acrylic, Transparent };
         private AppBarBgStyleType CurrentAppBarBgStyle { get; set; }
         private void DisableImmerseMode()
         {
-            //退出沉浸模式
+            //退出沉浸模式，恢复用户选择的背景
             MainBarGrid.Background = null;
             _lastEvaColor = null;
-            CurrentAppBarBgStyle = AppBarBgStyleType.Acrylic;
+            UpdateBackgroundMode();
         }
 
         /// <summary>
@@ -472,49 +522,50 @@ namespace MyToolBar.Views.Windows
         /// </summary>
         private void UpdateBackground()
         {
-            new MaxedWindowAPI((found) => {
-                if (found)
-                {
-                    //存在最大化窗口
-                    if (!IsEnergySaverModeOn)
-                    {
-                        if (_appSettingsService.Settings.UseImmerseMode)
-                        {
-                            ImmerseMode_UpdateBackground();
-                            CurrentAppBarBgStyle = AppBarBgStyleType.ImmerseMode;
-                        }
-                        else if(CurrentAppBarBgStyle == AppBarBgStyleType.ImmerseMode)
-                        {
-                            DisableImmerseMode();
-                        }
-                        UpdateAppBarForeground();
-                    }
-                    else UpdateEnergySaverMode();
-                }
-                else
-                {
-                    //不存在最大化窗口
-                    bool immerse = false;
-                    if (_appSettingsService.Settings.AlwaysUseImmerseMode && !IsEnergySaverModeOn) 
-                    {
-                        //始终启用沉浸模式
-                        immerse = true;
-                        CurrentAppBarBgStyle = AppBarBgStyleType.ImmerseMode;
-                        ImmerseMode_UpdateBackground();
-                        UpdateAppBarForeground();
-                    }
-                    else
-                    {
-                        UpdateEnergySaverMode();
-                    }
+            // 节能模式优先
+            if (IsEnergySaverModeOn)
+            {
+                UpdateEnergySaverMode();
+                return;
+            }
 
-                    if(CurrentAppBarBgStyle==AppBarBgStyleType.ImmerseMode && !immerse)
+            var immerseMode = _appSettingsService.Settings.CurrentImmerseMode;
+
+            switch (immerseMode)
+            {
+                case AppSettings.ImmerseMode.Off:
+                    // 关闭沉浸模式：始终使用所选背景（透明/模糊）
+                    if (CurrentAppBarBgStyle == AppBarBgStyleType.ImmerseMode)
                     {
                         DisableImmerseMode();
                     }
-                }
-            }).Find();
+                    break;
 
+                case AppSettings.ImmerseMode.Auto:
+                    // 自动模式：有最大化窗口时启用沉浸，否则使用所选背景
+                    new MaxedWindowAPI((found) => {
+                        if (found)
+                        {
+                            // 存在最大化窗口 → 沉浸模式
+                            ImmerseMode_UpdateBackground();
+                            CurrentAppBarBgStyle = AppBarBgStyleType.ImmerseMode;
+                            UpdateAppBarForeground();
+                        }
+                        else if (CurrentAppBarBgStyle == AppBarBgStyleType.ImmerseMode)
+                        {
+                            // 最大化窗口消失 → 恢复用户选择的背景
+                            DisableImmerseMode();
+                        }
+                    }).Find();
+                    break;
+
+                case AppSettings.ImmerseMode.Always:
+                    // 始终开启沉浸模式
+                    ImmerseMode_UpdateBackground();
+                    CurrentAppBarBgStyle = AppBarBgStyleType.ImmerseMode;
+                    UpdateAppBarForeground();
+                    break;
+            }
         }
 
         private Color? _lastEvaColor = null;
