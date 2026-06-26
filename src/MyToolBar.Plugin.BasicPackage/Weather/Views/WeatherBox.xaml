@@ -1,0 +1,393 @@
+<base:PopupWindowBase x:Class="MyToolBar.Plugin.BasicPackage.Weather.Views.WeatherBox"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:base="clr-namespace:MyToolBar.Common.UIBases;assembly=MyToolBar.Common"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:local="clr-namespace:MyToolBar.Plugin.BasicPackage.Weather.Views"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:models="clr-namespace:MyToolBar.Plugin.BasicPackage.Weather.Models"
+                      xmlns:vm="clr-namespace:MyToolBar.Plugin.BasicPackage.Weather.ViewModels"
+                      xmlns:ws="https://schemas.elecho.dev/wpfsuite"
+                      Title="{DynamicResource WindowTitle}"
+                      Width="350"
+                      Height="520"
+                      d:Background="Transparent"
+                      d:DataContext="{d:DesignInstance vm:WeatherBoxViewModel}"
+                      d:Foreground="{DynamicResource ForeColor}"
+                      mc:Ignorable="d">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MyToolBar.Plugin.BasicPackage;component/Assets/IconData.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MyToolBar.Plugin.BasicPackage;component/Weather/Resources/LangEn_US.xaml" />
+                <!--  ThemeColor资源字典仅为设计时提供，实际运行时会通过PopupWindowBase移除  -->
+                <ResourceDictionary Source="pack://application:,,,/MyToolBar.Common;component/Styles/ThemeColor.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MyToolBar.Common;component/Styles/UITemplate.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <!--  Font family for qweather icons  -->
+            <FontFamily x:Key="QWeatherIcons">pack://application:,,,/MyToolBar.Plugin.BasicPackage;component/Assets/Fonts/#qweather-icons</FontFamily>
+
+            <!--  Page transition animations  -->
+            <Storyboard x:Key="PageBack">
+                <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="AddFavor" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                    <EasingThicknessKeyFrame KeyTime="00:00:00.2000000" Value="-300,0,300,0">
+                        <EasingThicknessKeyFrame.EasingFunction>
+                            <CubicEase EasingMode="EaseOut" />
+                        </EasingThicknessKeyFrame.EasingFunction>
+                    </EasingThicknessKeyFrame>
+                </ThicknessAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AddFavor" Storyboard.TargetProperty="(UIElement.Visibility)">
+                    <DiscreteObjectKeyFrame KeyTime="00:00:00.2000000" Value="{x:Static Visibility.Collapsed}" />
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MainPage" Storyboard.TargetProperty="(UIElement.Visibility)">
+                    <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}" />
+                </ObjectAnimationUsingKeyFrames>
+                <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="MainPage" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                    <EasingThicknessKeyFrame KeyTime="00:00:00" Value="330,0,-330,0">
+                        <EasingThicknessKeyFrame.EasingFunction>
+                            <CubicEase EasingMode="EaseOut" />
+                        </EasingThicknessKeyFrame.EasingFunction>
+                    </EasingThicknessKeyFrame>
+                    <EasingThicknessKeyFrame KeyTime="00:00:00.3000000" Value="0,0,0,0">
+                        <EasingThicknessKeyFrame.EasingFunction>
+                            <CubicEase EasingMode="EaseOut" />
+                        </EasingThicknessKeyFrame.EasingFunction>
+                    </EasingThicknessKeyFrame>
+                </ThicknessAnimationUsingKeyFrames>
+            </Storyboard>
+            <Storyboard x:Key="PageToSearch">
+                <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="MainPage" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                    <EasingThicknessKeyFrame KeyTime="00:00:00.2000000" Value="330,0,-330,0">
+                        <EasingThicknessKeyFrame.EasingFunction>
+                            <CubicEase EasingMode="EaseOut" />
+                        </EasingThicknessKeyFrame.EasingFunction>
+                    </EasingThicknessKeyFrame>
+                </ThicknessAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MainPage" Storyboard.TargetProperty="(UIElement.Visibility)">
+                    <DiscreteObjectKeyFrame KeyTime="00:00:00.2000000" Value="{x:Static Visibility.Collapsed}" />
+                </ObjectAnimationUsingKeyFrames>
+                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AddFavor" Storyboard.TargetProperty="(UIElement.Visibility)">
+                    <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}" />
+                </ObjectAnimationUsingKeyFrames>
+                <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="AddFavor" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                    <EasingThicknessKeyFrame KeyTime="00:00:00" Value="-300,0,300,0">
+                        <EasingThicknessKeyFrame.EasingFunction>
+                            <CubicEase EasingMode="EaseOut" />
+                        </EasingThicknessKeyFrame.EasingFunction>
+                    </EasingThicknessKeyFrame>
+                    <EasingThicknessKeyFrame KeyTime="00:00:00.3000000" Value="0,0,0,0">
+                        <EasingThicknessKeyFrame.EasingFunction>
+                            <CubicEase EasingMode="EaseOut" />
+                        </EasingThicknessKeyFrame.EasingFunction>
+                    </EasingThicknessKeyFrame>
+                </ThicknessAnimationUsingKeyFrames>
+            </Storyboard>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid Margin="10,0,10,0">
+        <!--  ===== Main Weather Page =====  -->
+        <ws:ScrollViewer x:Name="MainPage" Style="{StaticResource SimpleVerticalScrollViewerStyle}">
+            <WrapPanel ItemWidth="330" Orientation="Vertical">
+                <!--  Header: Location, Menu button, Update time  -->
+                <Grid Margin="0,12,0,0">
+                    <ws:Button Width="32"
+                               Height="32"
+                               Margin="8,0,0,0"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Command="{Binding ShowSearchPageCommand}"
+                               CornerRadius="8"
+                               Style="{DynamicResource IconButtonStyleForWs}">
+                        <Path Width="14"
+                              Height="14"
+                              Data="{StaticResource Icon_Menu}"
+                              Fill="{DynamicResource ForeColor}"
+                              Stretch="Uniform" />
+                    </ws:Button>
+                    <TextBlock Margin="46,0,0,0"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Cursor="Hand"
+                               FontSize="16"
+                               FontWeight="Bold"
+                               MouseLeftButtonUp="Now_Location_MouseLeftButtonUp"
+                               Tag="{Binding WeatherLink}"
+                               Text="{Binding CityName}"
+                               TextWrapping="Wrap" />
+                    <TextBlock Margin="0,0,20,0"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               FontSize="12"
+                               Opacity="0.8">
+                        <Run Text="{DynamicResource Tip_UpdatedAt}" /> <Run Text="{Binding UpdateTime}" />
+                    </TextBlock>
+                </Grid>
+
+                <!--  Warnings  -->
+                <Border Margin="0,10,0,0"
+                        Background="{DynamicResource MaskColor}"
+                        CornerRadius="15"
+                        Visibility="{Binding HasWarnings, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <ItemsControl ItemsSource="{Binding Warnings}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type models:Warning}">
+                                <local:WeatherWarningItem Width="330" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Border>
+
+                <!--  Current Weather Card  -->
+                <Grid Height="220"
+                      Margin="0,10,0,0"
+                      VerticalAlignment="Top">
+                    <Border Background="{DynamicResource MaskColor}" CornerRadius="15" />
+
+                    <!--  Detail cards row  -->
+                    <WrapPanel Height="75"
+                               Margin="0,130,0,0"
+                               VerticalAlignment="Top">
+                        <Border Width="70"
+                                Height="70"
+                                Margin="10,0,0,0"
+                                Background="{DynamicResource MaskColor}"
+                                CornerRadius="15">
+                            <Grid>
+                                <TextBlock Margin="0,15,0,0"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Top"
+                                           FontSize="14"
+                                           FontWeight="Bold"
+                                           Text="{Binding FeelsLikeTemp}" />
+                                <TextBlock Margin="0,40,0,0"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Top"
+                                           Text="{DynamicResource Main_FeelsLike}" />
+                            </Grid>
+                        </Border>
+                        <Border Width="70"
+                                Height="70"
+                                Margin="10,0,0,0"
+                                Background="{DynamicResource MaskColor}"
+                                CornerRadius="15">
+                            <Grid>
+                                <TextBlock Margin="0,15,0,0"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Top"
+                                           FontSize="14"
+                                           FontWeight="Bold">
+                                    <Run Text="{DynamicResource Main_WindLevel}" /> <Run Text="{Binding WindScale}" />
+                                </TextBlock>
+                                <TextBlock Margin="0,40,0,0"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Top"
+                                           Text="{Binding WindDir}" />
+                            </Grid>
+                        </Border>
+                        <Border Width="70"
+                                Height="70"
+                                Margin="10,0,0,0"
+                                Background="{DynamicResource MaskColor}"
+                                CornerRadius="15">
+                            <Grid>
+                                <TextBlock Margin="0,15,0,0"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Top"
+                                           FontSize="14"
+                                           FontWeight="Bold"
+                                           Text="{Binding Humidity}" />
+                                <TextBlock Margin="0,40,0,0"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Top"
+                                           Text="{DynamicResource Main_Humidity}" />
+                            </Grid>
+                        </Border>
+                        <Border Width="70"
+                                Height="70"
+                                Margin="10,0,0,0"
+                                Background="{DynamicResource MaskColor}"
+                                CornerRadius="15">
+                            <Grid>
+                                <TextBlock Margin="0,15,0,0"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Top"
+                                           FontSize="14"
+                                           FontWeight="Bold"
+                                           Text="{Binding Visibility}" />
+                                <TextBlock Margin="0,40,0,0"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Top"
+                                           Text="{DynamicResource Main_Visibility}" />
+                            </Grid>
+                        </Border>
+                    </WrapPanel>
+
+                    <!--  Weather Icon (font-based)  -->
+                    <TextBlock Width="75"
+                               Height="75"
+                               Margin="77,35,0,0"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               FontFamily="{StaticResource QWeatherIcons}"
+                               FontSize="56"
+                               Text="{Binding WeatherIconChar}"
+                               TextAlignment="Center" />
+
+                    <!--  Temperature  -->
+                    <TextBlock Margin="166,27,0,0"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               FontSize="36"
+                               Text="{Binding CurrentTemp}" />
+
+                    <!--  Weather status text  -->
+                    <TextBlock Height="36"
+                               Margin="165,76,0,0"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               FontSize="18"
+                               Text="{Binding WeatherStatus}" />
+
+                    <!--  AQI Badge  -->
+                    <Border Height="20"
+                            Margin="0,10,20,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            CornerRadius="10"
+                            Visibility="{Binding HasAirData, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <Border.Background>
+                            <SolidColorBrush Color="{Binding AqiColor}" />
+                        </Border.Background>
+                        <TextBlock Margin="8,0,8,0"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="12"
+                                   FontWeight="Bold"
+                                   Foreground="#0C0C0C"
+                                   Text="{Binding AqiText}" />
+                    </Border>
+                </Grid>
+
+                <!--  7-Day Forecast  -->
+                <Border Width="330"
+                        Margin="0,10,0,0"
+                        Background="{DynamicResource MaskColor}"
+                        CornerRadius="15">
+                    <ItemsControl Margin="0,10,0,10" ItemsSource="{Binding DailyForecast}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:ForecastDayViewModel}">
+                                <local:WeatherDayItem Width="330" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Border>
+
+                <!--  Copyright  -->
+                <TextBlock Margin="0,10,0,8"
+                           FontSize="10"
+                           Opacity="0.5"
+                           Text="{DynamicResource Copyright}"
+                           TextAlignment="Center" />
+            </WrapPanel>
+        </ws:ScrollViewer>
+
+        <!--  ===== Search / Favorites Page =====  -->
+        <ws:ScrollViewer x:Name="AddFavor"
+                         Style="{StaticResource SimpleVerticalScrollViewerStyle}"
+                         Visibility="Collapsed">
+            <WrapPanel Margin="0,0,0,0"
+                       ItemWidth="330"
+                       Orientation="Vertical">
+                <!--  Search bar  -->
+                <Grid Margin="0,20,0,0">
+                    <ws:TextBox Height="30"
+                                Margin="46,0,46,0"
+                                Padding="6,6,0,0"
+                                Background="{DynamicResource MaskColor}"
+                                BorderThickness="0"
+                                CaretBrush="{DynamicResource ForeColor}"
+                                CornerRadius="12"
+                                Foreground="{DynamicResource ForeColor}"
+                                Placeholder="{DynamicResource Tip_Search}"
+                                PreviewKeyDown="SearchCityBox_PreviewKeyDown"
+                                Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
+                    <ws:Button Width="32"
+                               Height="32"
+                               Margin="8,0,0,0"
+                               HorizontalAlignment="Left"
+                               Command="{Binding ShowMainPageCommand}"
+                               CornerRadius="8"
+                               Style="{DynamicResource IconButtonStyleForWs}">
+                        <Path Width="14"
+                              Height="14"
+                              Data="{StaticResource Icon_back}"
+                              Fill="{DynamicResource ForeColor}"
+                              Stretch="Uniform" />
+                    </ws:Button>
+                    <ws:Button Width="32"
+                               Height="32"
+                               Margin="0,0,8,0"
+                               HorizontalAlignment="Right"
+                               Command="{Binding LocateCityCommand}"
+                               CornerRadius="8"
+                               Style="{DynamicResource IconButtonStyleForWs}">
+                        <Path Width="14"
+                              Height="14"
+                              Data="{StaticResource Icon_locate}"
+                              Fill="{DynamicResource ForeColor}"
+                              Stretch="Uniform" />
+                    </ws:Button>
+                </Grid>
+
+                <!--  Search Results  -->
+                <Border Background="{DynamicResource MaskColor}" CornerRadius="15">
+                    <ItemsControl ItemsSource="{Binding SearchResults}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:CityItemViewModel}">
+                                <local:WeatherCityItem Width="330" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Border>
+
+                <!--  Default Position  -->
+                <TextBlock Margin="12,10,0,6"
+                           FontSize="16"
+                           FontWeight="Bold"
+                           Text="{DynamicResource List_DefaultPosition}" />
+                <Border Background="{DynamicResource MaskColor}" CornerRadius="15">
+                    <ContentPresenter Content="{Binding DefaultCityItem}">
+                        <ContentPresenter.ContentTemplate>
+                            <DataTemplate DataType="{x:Type vm:CityItemViewModel}">
+                                <local:WeatherCityItem Width="330" />
+                            </DataTemplate>
+                        </ContentPresenter.ContentTemplate>
+                    </ContentPresenter>
+                </Border>
+
+                <!--  Favorite Cities  -->
+                <TextBlock Margin="12,10,0,6"
+                           FontSize="16"
+                           FontWeight="Bold"
+                           Text="{DynamicResource List_Favorite}" />
+                <Border Background="{DynamicResource MaskColor}" CornerRadius="15">
+                    <ItemsControl ItemsSource="{Binding FavorCities}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:CityItemViewModel}">
+                                <local:WeatherCityPreview Width="330" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Border>
+
+                <!--  Tip  -->
+                <TextBlock FontSize="10"
+                           Opacity="0.5"
+                           Text="{DynamicResource List_Tip_SetAsDefault}"
+                           TextAlignment="Center" />
+            </WrapPanel>
+        </ws:ScrollViewer>
+    </Grid>
+</base:PopupWindowBase>

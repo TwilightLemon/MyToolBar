@@ -1,5 +1,8 @@
-using MyToolBar.Plugin.BasicPackage.Capsules;
-using MyToolBar.Plugin.BasicPackage.OuterControls;
+using MyToolBar.Plugin.BasicPackage.Clock.Capsules;
+using MyToolBar.Plugin.BasicPackage.Weather.Views;
+using MyToolBar.Plugin.BasicPackage.Clock.OuterControls;
+using MyToolBar.Plugin.BasicPackage.Music.OuterControls;
+using MyToolBar.Plugin.BasicPackage.SystemMonitor.Views;
 using static MyToolBar.Plugin.BasicPackage.Package;
 using System.Globalization;
 using System.Reflection;

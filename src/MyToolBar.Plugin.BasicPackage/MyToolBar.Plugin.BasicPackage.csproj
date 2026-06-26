@@ -18,6 +18,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Resource Include="Assets\Fonts\qweather-icons.ttf" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<EmbeddedResource Update="LanguageRes\PluginLang.En-US.resx">
 			<Generator>PublicResXFileCodeGenerator</Generator>
 		</EmbeddedResource>

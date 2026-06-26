@@ -48,15 +48,16 @@
         <Style x:Key="TileRadioButtonStyle" TargetType="{x:Type RadioButton}">
             <Setter Property="Foreground" Value="{DynamicResource ForeColor}" />
             <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="MinHeight" Value="72" />
-            <Setter Property="Padding" Value="10,12" />
+            <Setter Property="Width" Value="140" />
+            <Setter Property="Height" Value="68" />
+            <Setter Property="Padding" Value="8,8" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type RadioButton}">
                         <Border x:Name="tileBorder"
                                 Padding="{TemplateBinding Padding}"
                                 Background="{DynamicResource MaskColor}"
-                                CornerRadius="12">
+                                CornerRadius="10">
                             <ContentPresenter HorizontalAlignment="Center"
                                               VerticalAlignment="Center"
                                               RecognizesAccessKey="True" />
@@ -100,10 +101,10 @@
                                        FontSize="13"
                                        FontWeight="SemiBold"
                                        Text="{DynamicResource AppSettings_Item_WindowMode}" />
-                            <Grid Grid.Row="1" Margin="4,4,4,8">
+                            <Grid Grid.Row="1" Margin="4,4,4,8" HorizontalAlignment="Center">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <RadioButton Grid.Column="0"
                                              Margin="4,0"
@@ -174,10 +175,10 @@
                                        FontSize="13"
                                        FontWeight="SemiBold"
                                        Text="{DynamicResource AppSettings_Item_BackgroundMode}" />
-                            <Grid Grid.Row="1" Margin="4,4,4,8">
+                            <Grid Grid.Row="1" Margin="4,4,4,8" HorizontalAlignment="Center">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <RadioButton Grid.Column="0"
                                              Margin="4,0"
@@ -243,11 +244,11 @@
                                        FontSize="13"
                                        FontWeight="SemiBold"
                                        Text="{DynamicResource AppSettings_Item_ImmerseMode}" />
-                            <Grid Grid.Row="1" Margin="4,4,4,8">
+                            <Grid Grid.Row="1" Margin="4,4,4,8" HorizontalAlignment="Center">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <RadioButton Grid.Column="0"
                                              Margin="4,0"
