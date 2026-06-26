@@ -18,6 +18,7 @@
       mc:Ignorable="d">
     <Page.Resources>
         <converter:EnumToTextConverter x:Key="EnumToTextConverter" />
+        <converter:EnumEqualsConverter x:Key="EnumEqualsConverter" />
         <ObjectDataProvider x:Key="LanguageEnumData"
                             MethodName="GetValues"
                             ObjectType="{x:Type sys:Enum}">
@@ -32,27 +33,6 @@
                 <x:Type TypeName="service:AppSettings+ProxyMode" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
-        <ObjectDataProvider x:Key="WindowModeEnumData"
-                            MethodName="GetValues"
-                            ObjectType="{x:Type sys:Enum}">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="service:AppSettings+WindowMode" />
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
-        <ObjectDataProvider x:Key="BackgroundModeEnumData"
-                            MethodName="GetValues"
-                            ObjectType="{x:Type sys:Enum}">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="service:AppSettings+BackgroundMode" />
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
-        <ObjectDataProvider x:Key="ImmerseModeEnumData"
-                            MethodName="GetValues"
-                            ObjectType="{x:Type sys:Enum}">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="service:AppSettings+ImmerseMode" />
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
         <ObjectDataProvider x:Key="MainMenuIconEnumData"
                             MethodName="GetValues"
                             ObjectType="{x:Type sys:Enum}">
@@ -63,6 +43,41 @@
         <DataTemplate x:Key="ComboBoxItemTemplate">
             <TextBlock Text="{Binding Converter={StaticResource EnumToTextConverter}}" />
         </DataTemplate>
+
+        <!--  Tile RadioButton Style: card-style selectable tiles with icon + text  -->
+        <Style x:Key="TileRadioButtonStyle" TargetType="{x:Type RadioButton}">
+            <Setter Property="Foreground" Value="{DynamicResource ForeColor}" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="MinHeight" Value="72" />
+            <Setter Property="Padding" Value="10,12" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RadioButton}">
+                        <Border x:Name="tileBorder"
+                                Padding="{TemplateBinding Padding}"
+                                Background="{DynamicResource MaskColor}"
+                                CornerRadius="12">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              RecognizesAccessKey="True" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="tileBorder" Property="Background" Value="{DynamicResource SystemThemeColor}" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsChecked" Value="False" />
+                                    <Condition Property="IsMouseOver" Value="True" />
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="tileBorder" Property="Background" Value="{DynamicResource FocusMaskColor}" />
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Page.Resources>
     <Grid>
         <ws:ScrollViewer Margin="28,12,28,28" Style="{DynamicResource SimpleVerticalScrollViewerStyle}">
@@ -71,60 +86,272 @@
                 <ws:StackPanel Spacing="8">
                     <TextBlock FontSize="22" Text="{DynamicResource AppSettings_Group_Appearence}" />
 
-                    <Border Height="48"
+                    <!--  Window Mode  -->
+                    <Border Padding="4"
                             Background="{DynamicResource MaskColor}"
                             CornerRadius="12">
                         <Grid>
-                            <TextBlock Margin="12"
-                                       HorizontalAlignment="Left"
-                                       VerticalAlignment="Center"
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0"
+                                       Margin="12,8,0,4"
+                                       FontSize="13"
+                                       FontWeight="SemiBold"
                                        Text="{DynamicResource AppSettings_Item_WindowMode}" />
-                            <ws:ComboBox x:Name="WindowModeComboBox"
-                                         Height="24"
-                                         Margin="0,0,48,0"
-                                         HorizontalAlignment="Right"
-                                         ItemTemplate="{DynamicResource ComboBoxItemTemplate}"
-                                         ItemsSource="{Binding Source={StaticResource WindowModeEnumData}}"
-                                         SelectedItem="{Binding WindowMode}"
-                                         Style="{StaticResource SimpleComboBoxStyleForWs}" />
+                            <Grid Grid.Row="1" Margin="4,4,4,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <RadioButton Grid.Column="0"
+                                             Margin="4,0"
+                                             Content="{DynamicResource AS_WindowMode_Embedded}"
+                                             IsChecked="{Binding WindowMode, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static service:AppSettings+WindowMode.Embedded}}"
+                                             Style="{StaticResource TileRadioButtonStyle}">
+                                    <RadioButton.ContentTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+                                                <Path Width="24"
+                                                      Height="24"
+                                                      Margin="0,0,0,6"
+                                                      HorizontalAlignment="Center"
+                                                      Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"
+                                                      Stretch="Uniform">
+                                                    <Path.Data>
+                                                        <RectangleGeometry RadiusX="2.5"
+                                                                           RadiusY="2.5"
+                                                                           Rect="4,4 16,16" />
+                                                    </Path.Data>
+                                                </Path>
+                                                <TextBlock HorizontalAlignment="Center"
+                                                           FontSize="13"
+                                                           Text="{Binding}"
+                                                           TextAlignment="Center" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </RadioButton.ContentTemplate>
+                                </RadioButton>
+                                <RadioButton Grid.Column="1"
+                                             Margin="4,0"
+                                             Content="{DynamicResource AS_WindowMode_Floating}"
+                                             IsChecked="{Binding WindowMode, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static service:AppSettings+WindowMode.Floating}}"
+                                             Style="{StaticResource TileRadioButtonStyle}">
+                                    <RadioButton.ContentTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+                                                <Path Width="24"
+                                                      Height="24"
+                                                      Margin="0,0,0,6"
+                                                      HorizontalAlignment="Center"
+                                                      Data="{StaticResource Icon_Float}"
+                                                      Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"
+                                                      Stretch="Uniform" />
+                                                <TextBlock HorizontalAlignment="Center"
+                                                           FontSize="13"
+                                                           Text="{Binding}"
+                                                           TextAlignment="Center" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </RadioButton.ContentTemplate>
+                                </RadioButton>
+                            </Grid>
                         </Grid>
                     </Border>
 
-                    <Border Height="48"
+                    <!--  Background Mode  -->
+                    <Border Padding="4"
                             Background="{DynamicResource MaskColor}"
                             CornerRadius="12">
                         <Grid>
-                            <TextBlock Margin="12"
-                                       HorizontalAlignment="Left"
-                                       VerticalAlignment="Center"
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0"
+                                       Margin="12,8,0,4"
+                                       FontSize="13"
+                                       FontWeight="SemiBold"
                                        Text="{DynamicResource AppSettings_Item_BackgroundMode}" />
-                            <ws:ComboBox x:Name="BackgroundModeComboBox"
-                                         Height="24"
-                                         Margin="0,0,48,0"
-                                         HorizontalAlignment="Right"
-                                         ItemTemplate="{DynamicResource ComboBoxItemTemplate}"
-                                         ItemsSource="{Binding Source={StaticResource BackgroundModeEnumData}}"
-                                         SelectedItem="{Binding BackgroundMode}"
-                                         Style="{StaticResource SimpleComboBoxStyleForWs}" />
+                            <Grid Grid.Row="1" Margin="4,4,4,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <RadioButton Grid.Column="0"
+                                             Margin="4,0"
+                                             Content="{DynamicResource AS_BackgroundMode_Transparent}"
+                                             IsChecked="{Binding BackgroundMode, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static service:AppSettings+BackgroundMode.Transparent}}"
+                                             Style="{StaticResource TileRadioButtonStyle}">
+                                    <RadioButton.ContentTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+                                                <Path Width="24"
+                                                      Height="24"
+                                                      Margin="0,0,0,6"
+                                                      HorizontalAlignment="Center"
+                                                      Data="{StaticResource Icon_Transparent}"
+                                                      Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"
+                                                      Stretch="Uniform" />
+                                                <TextBlock HorizontalAlignment="Center"
+                                                           FontSize="13"
+                                                           Text="{Binding}"
+                                                           TextAlignment="Center" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </RadioButton.ContentTemplate>
+                                </RadioButton>
+                                <RadioButton Grid.Column="1"
+                                             Margin="4,0"
+                                             Content="{DynamicResource AS_BackgroundMode_Acrylic}"
+                                             IsChecked="{Binding BackgroundMode, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static service:AppSettings+BackgroundMode.Acrylic}}"
+                                             Style="{StaticResource TileRadioButtonStyle}">
+                                    <RadioButton.ContentTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+                                                <Path Width="24"
+                                                      Height="24"
+                                                      Margin="0,0,0,6"
+                                                      HorizontalAlignment="Center"
+                                                      Data="{StaticResource Icon_Blur}"
+                                                      Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"
+                                                      Stretch="Uniform" />
+                                                <TextBlock HorizontalAlignment="Center"
+                                                           FontSize="13"
+                                                           Text="{Binding}"
+                                                           TextAlignment="Center" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </RadioButton.ContentTemplate>
+                                </RadioButton>
+                            </Grid>
                         </Grid>
                     </Border>
 
-                    <Border Height="48"
+                    <!--  Immerse Mode  -->
+                    <Border Padding="4"
                             Background="{DynamicResource MaskColor}"
                             CornerRadius="12">
                         <Grid>
-                            <TextBlock Margin="12"
-                                       HorizontalAlignment="Left"
-                                       VerticalAlignment="Center"
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0"
+                                       Margin="12,8,0,4"
+                                       FontSize="13"
+                                       FontWeight="SemiBold"
                                        Text="{DynamicResource AppSettings_Item_ImmerseMode}" />
-                            <ws:ComboBox x:Name="ImmerseModeComboBox"
-                                         Height="24"
-                                         Margin="0,0,48,0"
-                                         HorizontalAlignment="Right"
-                                         ItemTemplate="{DynamicResource ComboBoxItemTemplate}"
-                                         ItemsSource="{Binding Source={StaticResource ImmerseModeEnumData}}"
-                                         SelectedItem="{Binding ImmerseMode}"
-                                         Style="{StaticResource SimpleComboBoxStyleForWs}" />
+                            <Grid Grid.Row="1" Margin="4,4,4,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <RadioButton Grid.Column="0"
+                                             Margin="4,0"
+                                             Content="{DynamicResource AS_ImmerseMode_Off}"
+                                             IsChecked="{Binding ImmerseMode, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static service:AppSettings+ImmerseMode.Off}}"
+                                             Style="{StaticResource TileRadioButtonStyle}">
+                                    <RadioButton.ContentTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+                                                <Path Width="24"
+                                                      Height="24"
+                                                      Margin="0,0,0,6"
+                                                      HorizontalAlignment="Center"
+                                                      Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"
+                                                      Stretch="Uniform">
+                                                    <Path.Data>
+                                                        <CombinedGeometry GeometryCombineMode="Exclude">
+                                                            <CombinedGeometry.Geometry1>
+                                                                <EllipseGeometry Center="12,12"
+                                                                                 RadiusX="9"
+                                                                                 RadiusY="9" />
+                                                            </CombinedGeometry.Geometry1>
+                                                            <CombinedGeometry.Geometry2>
+                                                                <RectangleGeometry Rect="5,10 14,4">
+                                                                    <RectangleGeometry.Transform>
+                                                                        <RotateTransform Angle="45" CenterX="12" CenterY="12" />
+                                                                    </RectangleGeometry.Transform>
+                                                                </RectangleGeometry>
+                                                            </CombinedGeometry.Geometry2>
+                                                        </CombinedGeometry>
+                                                    </Path.Data>
+                                                </Path>
+                                                <TextBlock HorizontalAlignment="Center"
+                                                           FontSize="13"
+                                                           Text="{Binding}"
+                                                           TextAlignment="Center" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </RadioButton.ContentTemplate>
+                                </RadioButton>
+                                <RadioButton Grid.Column="1"
+                                             Margin="4,0"
+                                             Content="{DynamicResource AS_ImmerseMode_Auto}"
+                                             IsChecked="{Binding ImmerseMode, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static service:AppSettings+ImmerseMode.Auto}}"
+                                             Style="{StaticResource TileRadioButtonStyle}">
+                                    <RadioButton.ContentTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+                                                <Path Width="24"
+                                                      Height="24"
+                                                      Margin="0,0,0,6"
+                                                      HorizontalAlignment="Center"
+                                                      Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"
+                                                      Stretch="Uniform">
+                                                    <Path.Data>
+                                                        <CombinedGeometry GeometryCombineMode="Exclude">
+                                                            <CombinedGeometry.Geometry1>
+                                                                <EllipseGeometry Center="12,12"
+                                                                                 RadiusX="9"
+                                                                                 RadiusY="9" />
+                                                            </CombinedGeometry.Geometry1>
+                                                            <CombinedGeometry.Geometry2>
+                                                                <RectangleGeometry Rect="2,2 10,20" />
+                                                            </CombinedGeometry.Geometry2>
+                                                        </CombinedGeometry>
+                                                    </Path.Data>
+                                                </Path>
+                                                <TextBlock HorizontalAlignment="Center"
+                                                           FontSize="13"
+                                                           Text="{Binding}"
+                                                           TextAlignment="Center" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </RadioButton.ContentTemplate>
+                                </RadioButton>
+                                <RadioButton Grid.Column="2"
+                                             Margin="4,0"
+                                             Content="{DynamicResource AS_ImmerseMode_Always}"
+                                             IsChecked="{Binding ImmerseMode, Converter={StaticResource EnumEqualsConverter}, ConverterParameter={x:Static service:AppSettings+ImmerseMode.Always}}"
+                                             Style="{StaticResource TileRadioButtonStyle}">
+                                    <RadioButton.ContentTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+                                                <Path Width="24"
+                                                      Height="24"
+                                                      Margin="0,0,0,6"
+                                                      HorizontalAlignment="Center"
+                                                      Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"
+                                                      Stretch="Uniform">
+                                                    <Path.Data>
+                                                        <EllipseGeometry Center="12,12"
+                                                                         RadiusX="9"
+                                                                         RadiusY="9" />
+                                                    </Path.Data>
+                                                </Path>
+                                                <TextBlock HorizontalAlignment="Center"
+                                                           FontSize="13"
+                                                           Text="{Binding}"
+                                                           TextAlignment="Center" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </RadioButton.ContentTemplate>
+                                </RadioButton>
+                            </Grid>
                         </Grid>
                     </Border>
 

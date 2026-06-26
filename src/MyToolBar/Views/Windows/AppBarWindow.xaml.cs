@@ -511,10 +511,29 @@ namespace MyToolBar.Views.Windows
         private AppBarBgStyleType CurrentAppBarBgStyle { get; set; }
         private void DisableImmerseMode()
         {
-            //退出沉浸模式，恢复用户选择的背景
+            //退出沉浸模式，通过渐变动画恢复用户选择的背景
+            var currentBg = MainBarGrid.Background;
             MainBarGrid.Background = null;
             _lastEvaColor = null;
+
+            // 先恢复 BlurWindowBehavior 模式，使透明/模糊效果在动画下方就绪
             UpdateBackgroundMode();
+
+            if (currentBg != null)
+            {
+                // 用 BgImgEffector 做淡出动画，平滑过渡
+                BgImgEffector.BeginAnimation(OpacityProperty, null);
+                BgImgEffector.Background = currentBg;
+                BgImgEffector.Opacity = 1;
+                BgImgEffector.Visibility = Visibility.Visible;
+
+                var ani = new DoubleAnimation(1, 0, TimeSpan.FromSeconds(0.25));
+                ani.Completed += delegate
+                {
+                    BgImgEffector.Visibility = Visibility.Collapsed;
+                };
+                BgImgEffector.BeginAnimation(OpacityProperty, ani);
+            }
         }
 
         /// <summary>
@@ -530,7 +549,6 @@ namespace MyToolBar.Views.Windows
             }
 
             var immerseMode = _appSettingsService.Settings.CurrentImmerseMode;
-
             switch (immerseMode)
             {
                 case AppSettings.ImmerseMode.Off:
@@ -549,7 +567,6 @@ namespace MyToolBar.Views.Windows
                             // 存在最大化窗口 → 沉浸模式
                             ImmerseMode_UpdateBackground();
                             CurrentAppBarBgStyle = AppBarBgStyleType.ImmerseMode;
-                            UpdateAppBarForeground();
                         }
                         else if (CurrentAppBarBgStyle == AppBarBgStyleType.ImmerseMode)
                         {
@@ -563,9 +580,10 @@ namespace MyToolBar.Views.Windows
                     // 始终开启沉浸模式
                     ImmerseMode_UpdateBackground();
                     CurrentAppBarBgStyle = AppBarBgStyleType.ImmerseMode;
-                    UpdateAppBarForeground();
                     break;
             }
+            //无论什么时候都要更新字体颜色
+            UpdateAppBarForeground();
         }
 
         private Color? _lastEvaColor = null;

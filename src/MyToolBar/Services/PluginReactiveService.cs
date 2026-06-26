@@ -108,12 +108,12 @@ namespace MyToolBar.Services
             }
         }
 
-        public void Unload()
+        public async Task Unload()
         {
             OuterControl=null;
             Capsules.Clear();
             foreach(var service in UserServices.Values) {
-                service.Stop();
+                await service.Stop();
             }
         }
 
