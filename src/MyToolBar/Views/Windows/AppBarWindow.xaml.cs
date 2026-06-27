@@ -141,6 +141,19 @@ namespace MyToolBar.Views.Windows
             _blurWindowBehavior = Microsoft.Xaml.Behaviors.Interaction.GetBehaviors(this)
                 .OfType<BlurWindowBehavior>().FirstOrDefault();
             Width = SystemParameters.WorkArea.Width;
+
+            // 初始化防抖更新调度器（200ms 延迟，窗口事件停歇后触发刷新）
+            _debounceUpdate = new DebounceDispatcher(() => UpdateBackground(), delayMs: 200);
+
+            // 注册窗口事件 Hook：实时响应下方窗口变化
+            _windowEventHook = WindowEventHook.Register((_, eventType, hwnd, _, _, _, _) =>
+            {
+                // 过滤掉 AppBar 自身的窗口事件
+                if (hwnd == _hwnd) return;
+
+                _debounceUpdate.Trigger();
+            });
+
             //初始化AppBar样式
             UpdateBackgroundMode();
             UpdateBackground();
@@ -156,7 +169,14 @@ namespace MyToolBar.Views.Windows
         /// </summary>
         private IntPtr _hwnd;
         private IntPtr _activeWindowHook;
+        private IntPtr _windowEventHook;
         private volatile IntPtr _activeObjHandle;
+
+        // 防抖更新调度器：窗口事件触发后延迟 200ms 执行，避免高频重复刷新
+        private DebounceDispatcher? _debounceUpdate;
+
+        // 字体颜色缓存：避免相同颜色结果重复触发渐变动画
+        private bool? _lastForegroundLeft, _lastForegroundCenter, _lastForegroundRight;
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             #region GlobalTimer Init&Start
@@ -173,13 +193,17 @@ namespace MyToolBar.Views.Windows
             SystemThemeAPI.RegesterOnThemeChanged(this, OnSystemThemeChanged, OnSystemColorChanged);
             //响应节能模式变化
             _powerOptimizeService.OnEnergySaverStatusChanged += _powerOptimizeService_OnEnergySaverStatusChanged;
-            //注册ActiveWindowHook
+            //注册ActiveWindowHook（窗口标题变化 → 更新标题 & 触发背景刷新）
             _activeWindowHook = ActiveWindow.RegisterActiveWindowHook((hWinEventHook, eventType, hwnd, idObject, idChild, dwEventThread, dwmsEventTime) =>
             {
                 if (hwnd != 0&& _activeObjHandle!=hwnd)
                 {
                     Debug.WriteLine("Active Hwnd: " + hwnd+"\t Title: "+hwnd.GetWindowTitle());
-                    Dispatcher.Invoke(OnActiveWindowUpdated);
+                    Dispatcher.Invoke(() =>
+                    {
+                        OnActiveWindowUpdated();
+                        _debounceUpdate?.Trigger();
+                    });
                     _activeObjHandle = hwnd;
                 }
             });
@@ -215,6 +239,8 @@ namespace MyToolBar.Views.Windows
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             ActiveWindow.UnregisterActiveWindowHook(_activeWindowHook);
+            WindowEventHook.Unregister(_windowEventHook);
+            _debounceUpdate?.Cancel();
         }
 
         /// <summary>
@@ -498,13 +524,12 @@ namespace MyToolBar.Views.Windows
             TitleView.Text = ActiveWindow.GetActiveWindowTitle();
         }
         /// <summary>
-        /// AppBar样式的周期刷新任务
+        /// AppBar样式的周期刷新任务（作为事件驱动更新的兜底，处理滚动/内容变化等无 WinEvent 的场景）。
+        /// 统一走防抖通道，避免与窗口事件触发的 UpdateBackground 产生竞争抖动。
         /// </summary>
         private void TimerTask()
         {
-            UpdateBackground();
-            Width = ScreenAPI.GetScreenArea(_hwnd).Width - Left * 2;
-            Height = 32;
+            _debounceUpdate?.Trigger();
         }
        
         enum AppBarBgStyleType { EnergySaving, ImmerseMode, Acrylic, Transparent };
@@ -584,6 +609,7 @@ namespace MyToolBar.Views.Windows
             }
             //无论什么时候都要更新字体颜色
             UpdateAppBarForeground();
+            Debug.WriteLine("Background Update Triggered");
         }
 
         private Color? _lastEvaColor = null;
@@ -670,6 +696,14 @@ namespace MyToolBar.Views.Windows
             bool left= checkColor(0, (int)edgeWidth);
             bool center=checkColor((int)edgeWidth, (int)(edgeWidth + outerWidth));
             bool right=checkColor((int)(edgeWidth + outerWidth), (int)(ActualWidth * dpiX));
+
+            // 颜色结果与上次相同则跳过，避免重复触发渐变动画
+            if (_lastForegroundLeft == left && _lastForegroundCenter == center && _lastForegroundRight == right)
+                return;
+            _lastForegroundLeft = left;
+            _lastForegroundCenter = center;
+            _lastForegroundRight = right;
+
             _themeResourceService.SetAppBarFontColor(left, center, right);
         }
 

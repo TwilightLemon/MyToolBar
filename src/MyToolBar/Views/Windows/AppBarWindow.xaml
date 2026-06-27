@@ -87,7 +87,7 @@
                 Grid.Column="1"
                 Margin="0,0,0,0"
                 d:Visibility="Visible"
-                Background="{DynamicResource MaskColor}"
+                Background="{DynamicResource FocusMaskColor}"
                 CornerRadius="16"
                 Visibility="Hidden">
             <Grid x:Name="OuterFunc" Background="Transparent" />

@@ -80,7 +80,7 @@ namespace MyToolBar.Services
         public async Task StopAsync(CancellationToken cancellationToken)
         {
             GlobalService.GlobalTimer.Stop();
-            serviceProvider.GetRequiredService<PluginReactiveService>().Unload();
+            await serviceProvider.GetRequiredService<PluginReactiveService>().Unload();
             await serviceProvider.GetRequiredService<ManagedPackageService>().SaveManagedPkgConf();
         }
 

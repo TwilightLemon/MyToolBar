@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using MyToolBar.Common;
 using MyToolBar.Common.WinAPI;
 
@@ -43,13 +44,11 @@ namespace MyToolBar.Services
         /// <summary>
         /// 单独为AppBar配置前景色
         /// </summary>
-        public void SetAppBarFontColor(bool left,bool center,bool right)
+        public void SetAppBarFontColor(bool left, bool center, bool right)
         {
-            void set(string pos,bool isDark)
+            void set(string pos, bool isDark)
             {
-                App.Current.Resources["AppBarForeground"+pos] = new SolidColorBrush(
-                    isDark ? Color.FromRgb(0x0E, 0x0E, 0x0E) : Color.FromRgb(0xFE, 0xFE, 0xFE)
-                    );
+                AnimateAppBarForeground(pos, isDark);
             }
             set("Left", left);
             set("Center", center);
@@ -59,13 +58,38 @@ namespace MyToolBar.Services
         {
             void set(string pos)
             {
-                App.Current.Resources["AppBarForeground" + pos] = new SolidColorBrush(
-                    isDark ? Color.FromRgb(0x0E, 0x0E, 0x0E) : Color.FromRgb(0xFE, 0xFE, 0xFE)
-                    );
+                AnimateAppBarForeground(pos, isDark);
             }
             set("Left");
             set("Center");
             set("Right");
+        }
+
+        /// <summary>
+        /// 以渐变动画过渡AppBar前景色
+        /// </summary>
+        private static void AnimateAppBarForeground(string pos, bool isDark)
+        {
+            Color targetColor = isDark ? Color.FromRgb(0x0E, 0x0E, 0x0E) : Color.FromRgb(0xFE, 0xFE, 0xFE);
+            string key = "AppBarForeground" + pos;
+
+            if (App.Current.Resources[key] is SolidColorBrush brush)
+            {
+                brush = brush.Clone();
+                var lastColor = brush.Color;
+                brush.Color = targetColor;
+                // 从当前颜色动画过渡到目标颜色
+                var animation = new ColorAnimation(lastColor, targetColor, new Duration(TimeSpan.FromSeconds(0.3)))
+                {
+                    EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+                };
+                brush.BeginAnimation(SolidColorBrush.ColorProperty, animation);
+                App.Current.Resources[key] = brush;
+            }
+            else
+            {
+                App.Current.Resources[key] = new SolidColorBrush(targetColor);
+            }
         }
 
         /// <summary>
