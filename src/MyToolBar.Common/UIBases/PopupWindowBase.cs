@@ -24,7 +24,11 @@ namespace MyToolBar.Common.UIBases
             ResizeMode = ResizeMode.NoResize;
             WindowOption.SetCorner(this, WindowCorner.Round);
             BehaviorCollection behaviors = Interaction.GetBehaviors(this);
-            behaviors.Add(new BlurWindowBehavior());
+            behaviors.Add(new BlurWindowBehavior()
+            {
+                IsToolWindow=true,
+                Mode=MaterialType.Acrylic
+            });
             ShowInTaskbar = false;
             Topmost = true;
             Activate();

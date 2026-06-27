@@ -3,10 +3,13 @@
                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                xmlns:base="clr-namespace:MyToolBar.Common.UIBases;assembly=MyToolBar.Common"
                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+               xmlns:local="clr-namespace:MyToolBar.Plugin.BasicPackage.Weather.Views"
                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                xmlns:ws="https://schemas.elecho.dev/wpfsuite"
                Width="330"
                Height="120"
+               Command="{Binding DataContext.SelectCityCommand, RelativeSource={RelativeSource AncestorType=local:WeatherBox}}"
+               CommandParameter="{Binding}"
                mc:Ignorable="d">
     <base:ItemBase.Resources>
         <ResourceDictionary>
@@ -17,6 +20,7 @@
         </ResourceDictionary>
     </base:ItemBase.Resources>
     <Grid>
+        <!--  城市信息  -->
         <TextBlock Width="185"
                    Margin="20,20,0,0"
                    HorizontalAlignment="Left"
@@ -34,15 +38,19 @@
             <Run FontSize="14"
                  Text="{Binding City.Province, StringFormat='  {0}'}" />
         </TextBlock>
+
+        <!--  收藏按钮: 标准 ws:Button  -->
         <ws:Button x:Name="AddFavorBtn"
                    Width="25"
                    Height="24"
                    Margin="0,18,20,0"
                    HorizontalAlignment="Right"
                    VerticalAlignment="Top"
-                   Click="AddFavorBtn_Click"
+                   Command="{Binding DataContext.ToggleFavorCityCommand, RelativeSource={RelativeSource AncestorType=local:WeatherBox}}"
+                   CommandParameter="{Binding}"
+                   CornerRadius="10"
                    Style="{StaticResource SimpleButtonStyleForWs}">
-            <Path x:Name="Favor_icon"
+            <Path x:Name="FavorIcon"
                   Width="15"
                   ClipToBounds="True"
                   Data="{StaticResource Icon_favor}"
@@ -50,6 +58,8 @@
                   Stroke="{DynamicResource ForeColor}"
                   StrokeThickness="2" />
         </ws:Button>
+
+        <!--  天气图标 (字体)  -->
         <TextBlock Width="64"
                    Height="64"
                    Margin="0,0,72,0"
@@ -57,8 +67,9 @@
                    FontFamily="pack://application:,,,/MyToolBar.Plugin.BasicPackage;component/Assets/Fonts/#qweather-icons"
                    FontSize="56"
                    Text="{Binding IconChar}" />
-        <TextBlock x:Name="InfoTb"
-                   Margin="20,72,0,0"
+
+        <!--  温度 / 天气描述  -->
+        <TextBlock Margin="20,72,0,0"
                    HorizontalAlignment="Left"
                    VerticalAlignment="Top"
                    d:Text="26℃  晴"

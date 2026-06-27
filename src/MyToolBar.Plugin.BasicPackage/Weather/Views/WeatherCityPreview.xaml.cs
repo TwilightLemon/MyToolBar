@@ -3,55 +3,57 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using MyToolBar.Common.UIBases;
-using MyToolBar.Plugin.BasicPackage.Weather.Models;
 using MyToolBar.Plugin.BasicPackage.Weather.ViewModels;
 
 namespace MyToolBar.Plugin.BasicPackage.Weather.Views;
 
+/// <summary>
+/// 城市预览卡片 — 通过 ItemBase.Command / ItemBase.CommandParameter 与父级 WeatherBoxViewModel 交互
+/// </summary>
 public partial class WeatherCityPreview : ItemBase
 {
-    public event EventHandler<City>? AddFavorCity;
-    public event EventHandler<City>? CitySelected;
-    public event EventHandler<City>? SetAsDefaultCity;
+    private CityItemViewModel? _vm;
 
     public WeatherCityPreview()
     {
         InitializeComponent();
-        Click += (_, _) =>
+
+        DataContextChanged += (_, _) =>
         {
-            if (DataContext is CityItemViewModel vm)
-                CitySelected?.Invoke(this, vm.City);
+            if (_vm != null)
+                _vm.PropertyChanged -= OnVmPropertyChanged;
+
+            if (DataContext is CityItemViewModel newVm)
+            {
+                _vm = newVm;
+                _vm.PropertyChanged += OnVmPropertyChanged;
+                UpdateFavorIcon(_vm.IsFavor);
+            }
         };
+
+        // 右键 → 设为默认城市
         MouseRightButtonUp += (_, e) =>
         {
             if (DataContext is CityItemViewModel vm)
             {
-                SetAsDefaultCity?.Invoke(this, vm.City);
-                e.Handled = true;
+                var wb = Window.GetWindow(this) as WeatherBox;
+                wb?.ViewModel.SetDefaultCityCommand.Execute(vm);
             }
+            e.Handled = true;
         };
-        DataContextChanged += (_, _) =>
-        {
-            if (DataContext is CityItemViewModel vm)
-                UpdateFavorIcon(vm.IsFavor);
-        };
+    }
+
+    private void OnVmPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(CityItemViewModel.IsFavor) && _vm != null)
+            UpdateFavorIcon(_vm.IsFavor);
     }
 
     private void UpdateFavorIcon(bool isFavor)
     {
         if (isFavor)
-            Favor_icon.SetResourceReference(Shape.FillProperty, "ForeColor");
+            FavorIcon.SetResourceReference(Shape.FillProperty, "ForeColor");
         else
-            Favor_icon.Fill = null;
-    }
-
-    private void AddFavorBtn_Click(object sender, RoutedEventArgs e)
-    {
-        if (DataContext is CityItemViewModel vm)
-        {
-            AddFavorCity?.Invoke(this, vm.City);
-            vm.IsFavor = !vm.IsFavor;
-            UpdateFavorIcon(vm.IsFavor);
-        }
+            FavorIcon.Fill = null;
     }
 }

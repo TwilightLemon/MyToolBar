@@ -30,8 +30,7 @@ public class WeatherService : IWeatherService
     /// </summary>
     public string GetWeatherIconChar(int code)
     {
-        int codepoint = Convert.ToInt32($"F{code}", 16);
-        return char.ConvertFromUtf32(codepoint);
+        return QiCodeMapper.GetQiFillChar(code).ToString();
     }
 
     public Color GetAirLevelColor(int level) => WeatherApi.GetAirLevelColor(level);

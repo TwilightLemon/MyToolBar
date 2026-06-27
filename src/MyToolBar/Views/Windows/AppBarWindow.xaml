@@ -17,7 +17,6 @@
         Closing="Window_Closing"
         Deactivated="Window_Deactivated"
         FontFamily="{DynamicResource AppDefaultFontFamilly}"
-        FontWeight="SemiBold"
         Foreground="{DynamicResource AppBarForegroundRight}"
         Left="8"
         Loaded="Window_Loaded"
