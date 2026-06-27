@@ -500,6 +500,14 @@
                                       IsChecked="{Binding HideWhenFullScreen}"
                                       Style="{DynamicResource RoundToggleButtonStyle}" />
                     </Border>
+                    <Border Height="48"
+                            Background="{DynamicResource MaskColor}"
+                            CornerRadius="12">
+                        <ToggleButton Margin="12,0,12,0"
+                                      Content="{DynamicResource AppSettings_Item_EnableWindowControl}"
+                                      IsChecked="{Binding EnableWindowControl}"
+                                      Style="{DynamicResource RoundToggleButtonStyle}" />
+                    </Border>
                 </ws:StackPanel>
             </ws:StackPanel>
         </ws:ScrollViewer>

@@ -16,6 +16,7 @@ public static class WindowLongAPI
     {
         // ...
         WS_EX_TOOLWINDOW = 0x00000080,
+        WS_EX_NOACTIVATE = 0x08000000
         // ...
     }
 
@@ -112,7 +113,13 @@ public static class WindowLongAPI
         SetWindowLong(wndHelper.Handle, (int)GetWindowLongFields.GWL_EXSTYLE, (IntPtr)exStyle);
     }
 
-
+    public static void SetNoActivate(Window win)
+    {
+        WindowInteropHelper wndHelper = new(win);
+        int exStyle = (int)GetWindowLong(wndHelper.Handle, (int)GetWindowLongFields.GWL_EXSTYLE);
+        exStyle |= (int)ExtendedWindowStyles.WS_EX_NOACTIVATE;
+        SetWindowLong(wndHelper.Handle, (int)GetWindowLongFields.GWL_EXSTYLE, (IntPtr)exStyle);
+    }
 
 
     public static bool GetDwmAnimation(DependencyObject obj)

@@ -48,6 +48,7 @@ namespace MyToolBar.Views.Windows
             _appSettingsService.Settings.OnWindowModeChanged += Settings_OnWindowModeChanged;
             _appSettingsService.Settings.OnBackgroundModeChanged += Settings_OnBackgroundModeChanged;
             _appSettingsService.Settings.OnImmerseModeChanged += Settings_OnImmerseModeChanged;
+            _appSettingsService.Settings.OnEnableWindowControlChanged += Settings_OnEnableWindowControlChanged;
 
             InitializeComponent();
         }
@@ -80,6 +81,11 @@ namespace MyToolBar.Views.Windows
         private void Settings_OnMainMenuIconChanged()
         {
             UpdateMainMenuIcon();
+        }
+        private void Settings_OnEnableWindowControlChanged()
+        {
+            // 设置变更后立即刷新窗口控制面板状态
+            UpdateWindowControlPanel();
         }
         private void UpdateEnableIsland()
         {
@@ -137,13 +143,18 @@ namespace MyToolBar.Views.Windows
             _hwnd = new WindowInteropHelper(this).Handle;
             //标记WS_EX_TOOLWINDOW 窗口不在任务视图中显示
             WindowLongAPI.SetToolWindow(this);
+            WindowLongAPI.SetNoActivate(this);
             // 获取 BlurWindowBehavior 引用
             _blurWindowBehavior = Microsoft.Xaml.Behaviors.Interaction.GetBehaviors(this)
                 .OfType<BlurWindowBehavior>().FirstOrDefault();
             Width = SystemParameters.WorkArea.Width;
 
             // 初始化防抖更新调度器（200ms 延迟，窗口事件停歇后触发刷新）
-            _debounceUpdate = new DebounceDispatcher(() => UpdateBackground(), delayMs: 200);
+            _debounceUpdate = new DebounceDispatcher(() =>
+            {
+                UpdateBackground();
+                UpdateWindowControlPanel();
+            }, delayMs: 200);
 
             // 注册窗口事件 Hook：实时响应下方窗口变化
             _windowEventHook = WindowEventHook.Register((_, eventType, hwnd, _, _, _, _) =>
@@ -216,6 +227,8 @@ namespace MyToolBar.Views.Windows
             _pluginReactiveService.OuterControlRemoved += _pluginReactiveService_OuterControlRemoved;
             _pluginReactiveService.CapsuleRemoved += _pluginReactiveService_CapsuleRemoved;
             _pluginReactiveService.CapsuleAdded += _pluginReactiveService_CapsuleAdded;
+            // 初始检查窗口状态
+            UpdateWindowControlPanel();
             await _pluginReactiveService.Load();
             #endregion
         }
@@ -454,6 +467,11 @@ namespace MyToolBar.Views.Windows
         static bool isOuterShow = false;
 
         /// <summary>
+        /// WindowControlPanel是否已显示
+        /// </summary>
+        private bool _isWindowControlShown = false;
+
+        /// <summary>
         /// 打开或关闭OuterFunc (Animation)
         /// </summary>
         /// <param name="show">open or close</param>
@@ -499,6 +517,100 @@ namespace MyToolBar.Views.Windows
             //OuterControl不显示时不再占用空间
             OuterControlCol.Width = new GridLength(0, GridUnitType.Star);
         }
+        #endregion
+
+        #region WindowControlPanel
+
+        /// <summary>
+        /// 根据前台窗口最大化状态与用户设置，显示或隐藏窗口控制面板
+        /// </summary>
+        private void UpdateWindowControlPanel()
+        {
+            bool enabled = _appSettingsService.Settings.EnableWindowControl;
+            if (!enabled)
+            {
+                if (_isWindowControlShown)
+                {
+                    WindowControlPanel.ClearTarget();
+                    ShowWindowControlPanel(false);
+                }
+                return;
+            }
+
+            var fg = ActiveWindow.GetForegroundWindow();
+            bool isMaximized = fg != IntPtr.Zero && fg.IsZoomedWindow();
+
+            if (isMaximized && !_isWindowControlShown)
+            {
+                WindowControlPanel.SetTarget(fg, isMaximized);
+                ShowWindowControlPanel(true);
+            }
+            else if (!isMaximized && _isWindowControlShown)
+            {
+                WindowControlPanel.ClearTarget();
+                ShowWindowControlPanel(false);
+            }
+            else if (isMaximized && _isWindowControlShown)
+            {
+                // 已显示时刷新按钮图标（可能在最大化/还原之间切换）
+                WindowControlPanel.SetTarget(fg, isMaximized);
+            }
+        }
+
+        /// <summary>
+        /// 窗口控制面板滑入/滑出动画
+        /// </summary>
+        /// <param name="show">true 显示，false 隐藏</param>
+        private void ShowWindowControlPanel(bool show)
+        {
+            WindowControlPanel.BeginAnimation(System.Windows.Controls.UserControl.MarginProperty, null);
+
+            Storyboard sb = new();
+            ThicknessAnimation ta;
+
+            if (show && !_isWindowControlShown)
+            {
+                WindowControlPanel.Visibility = Visibility.Visible;
+                double panelWidth = WindowControlPanel.ActualWidth;
+                if (panelWidth < 1) panelWidth = 96; // fallback if layout not yet done
+
+                ta = new ThicknessAnimation(
+                    new Thickness(0, 0, -panelWidth, 0),
+                    new Thickness(0),
+                    TimeSpan.FromSeconds(0.35))
+                {
+                    EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+                };
+                _isWindowControlShown = true;
+            }
+            else if (!show && _isWindowControlShown)
+            {
+                double panelWidth = WindowControlPanel.ActualWidth;
+                if (panelWidth < 1) panelWidth = 96;
+
+                ta = new ThicknessAnimation(
+                    new Thickness(0),
+                    new Thickness(0, 0, -panelWidth, 0),
+                    TimeSpan.FromSeconds(0.3))
+                {
+                    EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
+                };
+                _isWindowControlShown = false;
+                sb.Completed += delegate
+                {
+                    WindowControlPanel.Visibility = Visibility.Collapsed;
+                    WindowControlPanel.BeginAnimation(System.Windows.Controls.UserControl.MarginProperty, null);
+                };
+            }
+            else
+                return;
+
+            sb.Children.Add(ta);
+            Storyboard.SetTarget(ta, WindowControlPanel);
+            Storyboard.SetTargetProperty(ta, new PropertyPath("Margin"));
+            sb.Begin();
+        }
+
         #endregion
 
         #region Window Style

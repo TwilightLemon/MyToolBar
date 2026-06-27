@@ -1,0 +1,63 @@
+<UserControl x:Class="MyToolBar.Views.Items.WindowControlPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             Height="32"
+             d:Width="108"
+             mc:Ignorable="d">
+    <StackPanel Orientation="Horizontal">
+        <!--  Minimize Button  -->
+        <Border x:Name="MinimizeButton"
+                Width="32"
+                Height="32"
+                Background="#01000000"
+                Cursor="Hand"
+                MouseDown="MinimizeButton_MouseDown"
+                MouseEnter="Button_MouseEnter"
+                MouseLeave="Button_MouseLeave"
+                ToolTip="{DynamicResource WindowControl_Minimize}">
+            <TextBlock HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontFamily="{StaticResource SegoeFluentIcon}"
+                       FontSize="10"
+                       Foreground="{DynamicResource AppBarForegroundRight}"
+                       Text="&#xE921;" />
+        </Border>
+        <!--  Maximize / Restore Button  -->
+        <Border x:Name="MaxRestoreButton"
+                Width="32"
+                Height="32"
+                Background="#01000000"
+                Cursor="Hand"
+                MouseDown="MaxRestoreButton_MouseDown"
+                MouseEnter="Button_MouseEnter"
+                MouseLeave="Button_MouseLeave"
+                ToolTip="{DynamicResource WindowControl_Maximize}">
+            <TextBlock x:Name="MaxRestoreIcon"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontFamily="{StaticResource SegoeFluentIcon}"
+                       FontSize="10"
+                       Foreground="{DynamicResource AppBarForegroundRight}"
+                       Text="&#xE922;" />
+        </Border>
+        <!--  Close Button  -->
+        <Border x:Name="CloseButton"
+                Width="32"
+                Height="32"
+                Background="#01000000"
+                Cursor="Hand"
+                MouseDown="CloseButton_MouseDown"
+                MouseEnter="Button_MouseEnter"
+                MouseLeave="Button_MouseLeave"
+                ToolTip="{DynamicResource WindowControl_Close}">
+            <TextBlock HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontFamily="{StaticResource SegoeFluentIcon}"
+                       FontSize="10"
+                       Foreground="{DynamicResource AppBarForegroundRight}"
+                       Text="&#xE8BB;" />
+        </Border>
+    </StackPanel>
+</UserControl>

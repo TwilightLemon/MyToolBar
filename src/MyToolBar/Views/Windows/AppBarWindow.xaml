@@ -4,6 +4,7 @@
         xmlns:api="clr-namespace:MyToolBar.Common.WinAPI;assembly=MyToolBar.Common"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:items="clr-namespace:MyToolBar.Views.Items"
         xmlns:local="clr-namespace:MyToolBar.Views.Windows"
         xmlns:mb="clr-namespace:MyToolBar.Common.Behaviors;assembly=MyToolBar.Common"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -114,11 +115,16 @@
                            TextAlignment="Center" />
             </Grid>
         </Border>
-        <WrapPanel x:Name="CapsulePanel"
-                   Grid.Column="2"
-                   Margin="10,0,10,0"
-                   HorizontalAlignment="Right"
-                   Orientation="Vertical" />
+        <DockPanel Grid.Column="2" Margin="10,0,0,0">
+            <items:WindowControlPanel x:Name="WindowControlPanel"
+                                      Margin="0,0,0,0"
+                                      DockPanel.Dock="Right"
+                                      Visibility="Collapsed" />
+            <WrapPanel x:Name="CapsulePanel"
+                       Margin="0,0,10,0"
+                       HorizontalAlignment="Right"
+                       Orientation="Vertical" />
+        </DockPanel>
 
     </Grid>
 </Window>

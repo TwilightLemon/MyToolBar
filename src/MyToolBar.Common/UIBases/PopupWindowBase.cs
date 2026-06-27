@@ -31,8 +31,6 @@ namespace MyToolBar.Common.UIBases
             });
             ShowInTaskbar = false;
             Topmost = true;
-            Activate();
-            Deactivated += PopWindowBase_Deactivated;
             this.SourceInitialized += PopupWindowBase_SourceInitialized;
             this.Initialized += PopWindowBase_Initialized;
             this.ContentRendered += PopWindowBase_ContentRendered;
@@ -41,6 +39,9 @@ namespace MyToolBar.Common.UIBases
         private void PopupWindowBase_SourceInitialized(object? sender, EventArgs e)
         {
             WindowLongAPI.SetToolWindow(this);
+            Activate();
+            Focus();
+            Deactivated += PopWindowBase_Deactivated;
         }
 
         /// <summary>

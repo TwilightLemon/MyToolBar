@@ -23,6 +23,7 @@
     <sys:String x:Key="AppSettings_Group_Behavior">行为</sys:String>
 
     <sys:String x:Key="AppSettings_Item_EnableHideWhenFullScreen">全屏时隐藏</sys:String>
+    <sys:String x:Key="AppSettings_Item_EnableWindowControl">最大化时显示窗口控制</sys:String>
     <sys:String x:Key="AppSettings_Item_WindowMode">窗口模式</sys:String>
     <sys:String x:Key="AppSettings_Item_BackgroundMode">背景</sys:String>
     <sys:String x:Key="AppSettings_Item_ImmerseMode">沉浸模式</sys:String>
@@ -64,4 +65,10 @@
     <sys:String x:Key="AS_ImmerseMode_Off">关闭</sys:String>
     <sys:String x:Key="AS_ImmerseMode_Auto">自动</sys:String>
     <sys:String x:Key="AS_ImmerseMode_Always">始终开启</sys:String>
+
+    <!--  Window Control Panel  -->
+    <sys:String x:Key="WindowControl_Minimize">最小化</sys:String>
+    <sys:String x:Key="WindowControl_Maximize">最大化</sys:String>
+    <sys:String x:Key="WindowControl_Restore">还原</sys:String>
+    <sys:String x:Key="WindowControl_Close">关闭</sys:String>
 </ResourceDictionary>

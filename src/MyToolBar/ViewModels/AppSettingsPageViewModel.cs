@@ -23,6 +23,8 @@ namespace MyToolBar.ViewModels
         [ObservableProperty]
         private bool _hideWhenFullScreen;
         [ObservableProperty]
+        private bool _enableWindowControl;
+        [ObservableProperty]
         private LocalCulture.Language _appLanguage = (LocalCulture.Language)appSettingsService.Settings.Language;
         [ObservableProperty]
         private AppSettings.ProxyMode _proxyMode = appSettingsService.Settings.UserProxyMode;
@@ -41,10 +43,15 @@ namespace MyToolBar.ViewModels
             EnableIsland = appSettingsService.Settings.EnableIsland;
             AutoRunAtStartup = appSettingsService.Settings.AutoRunAtStartup;
             HideWhenFullScreen = GlobalService.EnableHideWhenFullScreen;
+            EnableWindowControl = appSettingsService.Settings.EnableWindowControl;
         }
         partial void OnHideWhenFullScreenChanged(bool value)
         {
             GlobalService.EnableHideWhenFullScreen = value;
+        }
+        partial void OnEnableWindowControlChanged(bool value)
+        {
+            appSettingsService.Settings.SetEnableWindowControl(value);
         }
         partial void OnWindowModeChanged(AppSettings.WindowMode value)
         {

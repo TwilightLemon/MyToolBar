@@ -24,6 +24,7 @@
     <sys:String x:Key="AppSettings_Group_Behavior">Behaviors</sys:String>
 
     <sys:String x:Key="AppSettings_Item_EnableHideWhenFullScreen">Hide when full screen</sys:String>
+    <sys:String x:Key="AppSettings_Item_EnableWindowControl">Show window controls when maximized</sys:String>
     <sys:String x:Key="AppSettings_Item_WindowMode">Window Mode</sys:String>
     <sys:String x:Key="AppSettings_Item_BackgroundMode">Background</sys:String>
     <sys:String x:Key="AppSettings_Item_ImmerseMode">Immerse Mode</sys:String>
@@ -65,4 +66,10 @@
     <sys:String x:Key="AS_ImmerseMode_Off">Off</sys:String>
     <sys:String x:Key="AS_ImmerseMode_Auto">Auto</sys:String>
     <sys:String x:Key="AS_ImmerseMode_Always">Always</sys:String>
+
+    <!--  Window Control Panel  -->
+    <sys:String x:Key="WindowControl_Minimize">Minimize</sys:String>
+    <sys:String x:Key="WindowControl_Maximize">Maximize</sys:String>
+    <sys:String x:Key="WindowControl_Restore">Restore</sys:String>
+    <sys:String x:Key="WindowControl_Close">Close</sys:String>
 </ResourceDictionary>

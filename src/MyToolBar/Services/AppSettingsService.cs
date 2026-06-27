@@ -140,6 +140,17 @@ namespace MyToolBar.Services
         /// </summary>
         public int Language { get; set; } = 1;
 
+        /// <summary>
+        /// 窗口最大化时显示窗口控制按钮（最小化/最大化/关闭）
+        /// </summary>
+        public bool EnableWindowControl { get; set; } = false;
+        public event Action? OnEnableWindowControlChanged;
+        public void SetEnableWindowControl(bool enable)
+        {
+            EnableWindowControl = enable;
+            OnEnableWindowControlChanged?.Invoke();
+        }
+
         public record ProxyConf(string Address, string Port, string UserName, string Pwd);
         public enum ProxyMode
         {
