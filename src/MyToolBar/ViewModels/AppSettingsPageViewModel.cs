@@ -14,7 +14,10 @@ namespace MyToolBar.ViewModels
         ): ObservableObject
     {
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(IsFloatingMode))]
         private AppSettings.WindowMode _windowMode;
+
+        public bool IsFloatingMode => WindowMode == AppSettings.WindowMode.Floating;
         [ObservableProperty]
         private AppSettings.BackgroundMode _backgroundMode;
         [ObservableProperty]
@@ -35,6 +38,13 @@ namespace MyToolBar.ViewModels
         private AppSettings.ProxyConf? _proxyConf = appSettingsService.Settings.Proxy;
         [ObservableProperty]
         private AppSettings.MenuIcon _mainMenuIcon= appSettingsService.Settings.MainMenuIcon;
+
+        [ObservableProperty]
+        private double _floatingMarginHorizontal = appSettingsService.Settings.FloatingMarginHorizontal;
+        [ObservableProperty]
+        private double _floatingMarginVertical = appSettingsService.Settings.FloatingMarginVertical;
+        [ObservableProperty]
+        private double _appBarHeight = appSettingsService.Settings.AppBarHeight;
         [ObservableProperty]
         private string? _appFont = App.Current.FindResource("AppDefaultFontFamilly").ToString();
 
@@ -56,6 +66,9 @@ namespace MyToolBar.ViewModels
             AutoRunAtStartup = appSettingsService.Settings.AutoRunAtStartup;
             HideWhenFullScreen = GlobalService.EnableHideWhenFullScreen;
             EnableWindowControl = appSettingsService.Settings.EnableWindowControl;
+            FloatingMarginHorizontal = appSettingsService.Settings.FloatingMarginHorizontal;
+            FloatingMarginVertical = appSettingsService.Settings.FloatingMarginVertical;
+            AppBarHeight = appSettingsService.Settings.AppBarHeight;
 
             // 加载显示器列表
             var monitors = MonitorAPI.EnumerateMonitors();
@@ -126,6 +139,19 @@ namespace MyToolBar.ViewModels
         partial void OnMainMenuIconChanged(AppSettings.MenuIcon value)
         {
             appSettingsService.Settings.SetMainMenuIcon(value);
+        }
+
+        partial void OnFloatingMarginHorizontalChanged(double value)
+        {
+            appSettingsService.Settings.SetFloatingMargin(value, FloatingMarginVertical);
+        }
+        partial void OnFloatingMarginVerticalChanged(double value)
+        {
+            appSettingsService.Settings.SetFloatingMargin(FloatingMarginHorizontal, value);
+        }
+        partial void OnAppBarHeightChanged(double value)
+        {
+            appSettingsService.Settings.SetAppBarHeight(value);
         }
 
         public async Task SaveProxyConfAsync(AppSettings.ProxyConf conf)

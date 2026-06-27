@@ -197,14 +197,14 @@ public class AppBar : DependencyObject
 
 
 
-    public double ForcedHeight
+    public double ReservedHeight
     {
         get { return (double)GetValue(ForcedHeightProperty); }
         set { SetValue(ForcedHeightProperty, value); }
     }
 
     public static readonly DependencyProperty ForcedHeightProperty =
-        DependencyProperty.Register("ForcedHeight", 
+        DependencyProperty.Register("ReservedHeight", 
             typeof(double), typeof(AppBar), 
             new PropertyMetadata(double.NaN));
 
@@ -328,8 +328,8 @@ public class AppBar : DependencyObject
         (double dpix,double dpiy)=ScreenAPI.GetDPI(hmonitor);
         Debug.WriteLine($"DPIX:{dpix}  DPIY:{dpiy}");
         //窗口在屏幕的实际大小
-        if (WindowSize == Size.Empty)
-            WindowSize = new Size(_window.ActualWidth, double.IsNaN(ForcedHeight) ? _window.ActualHeight:ForcedHeight);
+        if (WindowSize == Size.Empty || !double.IsNaN(ReservedHeight))
+            WindowSize = new Size(_window.ActualWidth, double.IsNaN(ReservedHeight) ? _window.ActualHeight:ReservedHeight);
         var actualSize =(X: WindowSize.Width*dpix, Y: WindowSize.Height*dpiy);
 
         //获取显示器在虚拟屏幕中的偏移量和尺寸（适配多显示器）
@@ -397,7 +397,6 @@ public class AppBar : DependencyObject
         var dimension = new Size((double)(data.rc.right  - data.rc.left )/ dpix, (double)(data.rc.bottom - data.rc.top) / dpiy);
         var rect = new Rect(location, dimension);
         DockedSize = rect;
-
         _window.Dispatcher.Invoke(DispatcherPriority.ApplicationIdle, () => {
             //_window.Left = rect.Left;         //在OnWindowLocationApplied中接管Left和Top，这里设置会导致闪烁....
             //_window.Top = rect.Top;

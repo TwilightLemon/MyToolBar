@@ -68,6 +68,10 @@
     <sys:String x:Key="AS_ImmerseMode_Auto">Auto</sys:String>
     <sys:String x:Key="AS_ImmerseMode_Always">Always</sys:String>
 
+    <sys:String x:Key="AppSettings_Item_FloatingMarginH">Horizontal Margin</sys:String>
+    <sys:String x:Key="AppSettings_Item_FloatingMarginV">Vertical Margin</sys:String>
+    <sys:String x:Key="AppSettings_Item_AppBarHeight">Reserved AppBar Height</sys:String>
+
     <sys:String x:Key="AS_Monitor_Default">Default (Primary)</sys:String>
 
     <!--  Window Control Panel  -->

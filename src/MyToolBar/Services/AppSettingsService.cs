@@ -181,5 +181,35 @@ namespace MyToolBar.Services
             OnTargetMonitorChanged?.Invoke();
         }
 
+        /// <summary>
+        /// 悬浮模式下水平方向距离屏幕边缘的边距（单位：WPF 逻辑像素）
+        /// </summary>
+        public double FloatingMarginHorizontal { get; set; } = 8;
+
+        /// <summary>
+        /// 悬浮模式下垂直方向距离屏幕边缘的边距（单位：WPF 逻辑像素）
+        /// </summary>
+        public double FloatingMarginVertical { get; set; } = 4;
+
+        /// <summary>
+        /// AppBar 预留高度，控制 AppBarCreator.ReservedHeight（单位：WPF 逻辑像素，默认 32）
+        /// </summary>
+        public double AppBarHeight { get; set; } = 32;
+
+        public event Action? OnFloatingMarginChanged;
+        public void SetFloatingMargin(double horizontal, double vertical)
+        {
+            FloatingMarginHorizontal = horizontal;
+            FloatingMarginVertical = vertical;
+            OnFloatingMarginChanged?.Invoke();
+        }
+
+        public event Action? OnAppBarHeightChanged;
+        public void SetAppBarHeight(double height)
+        {
+            AppBarHeight = height;
+            OnAppBarHeightChanged?.Invoke();
+        }
+
     }
 }

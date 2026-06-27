@@ -32,8 +32,7 @@
                       ResizeBorderThickness="0" />
     </Window.Resources>
     <api:AppBarCreator.AppBar>
-        <api:AppBar ForcedHeight="32"
-                    Location="Top"
+        <api:AppBar Location="Top"
                     OnFullScreenStateChanged="AppBar_OnFullScreenStateChanged"
                     OnWindowLocationApplied="AppBar_OnWindowLocationApplied" />
     </api:AppBarCreator.AppBar>

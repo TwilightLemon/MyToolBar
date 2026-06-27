@@ -19,7 +19,6 @@ using MyToolBar.Common;
 using Microsoft.Extensions.DependencyInjection;
 using EleCho.WpfSuite;
 using System.Linq;
-using MyToolBar.Common.WinAPI;
 
 namespace MyToolBar.Views.Windows
 {
@@ -28,6 +27,7 @@ namespace MyToolBar.Views.Windows
     /// </summary>
     public partial class AppBarWindow : Window,INotificationReceiver
     {
+        private const int DEFAULT_APPBAR_WINDOW_HEIGHT = 32;
         private readonly UIResourceService _themeResourceService;
         private readonly PluginReactiveService _pluginReactiveService;
         private readonly PowerOptimizeService _powerOptimizeService;
@@ -51,8 +51,17 @@ namespace MyToolBar.Views.Windows
             _appSettingsService.Settings.OnImmerseModeChanged += Settings_OnImmerseModeChanged;
             _appSettingsService.Settings.OnEnableWindowControlChanged += Settings_OnEnableWindowControlChanged;
             _appSettingsService.Settings.OnTargetMonitorChanged += Settings_OnTargetMonitorChanged;
+            _appSettingsService.Settings.OnAppBarHeightChanged += Settings_OnAppBarHeightChanged;
+            _appSettingsService.Settings.OnFloatingMarginChanged += Settings_OnFloatingMarginChanged;
 
             InitializeComponent();
+
+            // 从设置中读取初始 ReservedHeight（替代 XAML 中的静态值）
+            var appBar = AppBarCreator.GetAppBar(this);
+            if (appBar != null)
+            {
+                appBar.ReservedHeight = _appSettingsService.Settings.AppBarHeight;
+            }
 
             //应用目标显示器设置（必须在AppBar定位之前执行，InitializeComponent 会覆盖 Left/Top）
             ApplyTargetMonitor();
@@ -91,6 +100,23 @@ namespace MyToolBar.Views.Windows
         {
             // 设置变更后立即刷新窗口控制面板状态
             UpdateWindowControlPanel();
+        }
+
+        private void Settings_OnFloatingMarginChanged()
+        {
+            // 边距变更时重新应用窗口位置
+            AppBar_OnWindowLocationApplied();
+        }
+
+        private void Settings_OnAppBarHeightChanged()
+        {
+            // 运行时更新 ReservedHeight 并通过 SetAppBarPosition 重新注册
+            var appBar = AppBarCreator.GetAppBar(this);
+            if (appBar != null)
+            {
+                appBar.ReservedHeight = _appSettingsService.Settings.AppBarHeight;
+                appBar.SetAppBarPosition(Size.Empty);
+            }
         }
 
         private void Settings_OnTargetMonitorChanged()
@@ -693,9 +719,10 @@ namespace MyToolBar.Views.Windows
         private void AppBar_OnWindowLocationApplied()
         {
             var isFloating = _appSettingsService.Settings.CurrentWindowMode == AppSettings.WindowMode.Floating;
-            // 相对于显示器的偏移量（嵌入=0，悬浮=8/4）
-            double leftOffset = isFloating ? 8 : 0;
-            double topOffset = isFloating ? 4 : 0;
+            // 相对于显示器的偏移量（嵌入=0，悬浮使用用户设置的边距）
+            double horizontalMargin = isFloating ? _appSettingsService.Settings.FloatingMarginHorizontal : 0;
+            double verticalMargin = isFloating ? _appSettingsService.Settings.FloatingMarginVertical : 0;
+            //double appBarHeight = _appSettingsService.Settings.AppBarHeight;
 
             // 使用 AppBar 已计算好的停靠位置（DockedSize 由 SetAppBarPosition 以正确的 DPI 计算）
             var appBar = AppBarCreator.GetAppBar(this);
@@ -705,13 +732,13 @@ namespace MyToolBar.Views.Windows
             // 设置绝对 WPF 位置（AppBar 停靠原点 + 偏移）
             if (appBar?.DockedSize != null)
             {
-                Left = baseLeft + leftOffset;
-                Top = baseTop + topOffset;
+                Left = baseLeft + horizontalMargin;
+                Top = baseTop + verticalMargin;
             }
 
-            // Width 公式使用显示器相对偏移量（小值：0 或 8），而非绝对坐标
-            Width = ScreenAPI.GetScreenArea(_hwnd).Width - leftOffset * 2;
-            Height = 32;
+            // Width 公式使用显示器相对偏移量（小值：0 或 horizontalMargin），而非绝对坐标
+            Width = ScreenAPI.GetScreenArea(_hwnd).Width - horizontalMargin * 2;
+            Height = DEFAULT_APPBAR_WINDOW_HEIGHT;
         }
 
         /// <summary>

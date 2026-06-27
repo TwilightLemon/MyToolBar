@@ -216,6 +216,75 @@
                         </Grid>
                     </Border>
 
+                    <!--  Floating Mode Settings (only visible when WindowMode == Floating)  -->
+                    <Border Padding="4"
+                            Background="{DynamicResource MaskColor}"
+                            CornerRadius="12"
+                            Visibility="{Binding IsFloatingMode, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <ws:StackPanel Spacing="8">
+                            <!--  Horizontal Margin  -->
+                            <Border Height="48"
+                                    Background="{DynamicResource MaskColor}"
+                                    CornerRadius="8">
+                                <Grid>
+                                    <TextBlock Margin="12"
+                                               HorizontalAlignment="Left"
+                                               VerticalAlignment="Center"
+                                               Text="{DynamicResource AppSettings_Item_FloatingMarginH}" />
+                                    <ws:TextBox x:Name="FloatingMarginHTb"
+                                                Width="80"
+                                                Height="30"
+                                                Margin="0,0,48,0"
+                                                Padding="8,0"
+                                                HorizontalAlignment="Right"
+                                                VerticalContentAlignment="Center"
+                                                Style="{StaticResource SimpleTextBoxStyleForWs}"
+                                                Text="{Binding FloatingMarginHorizontal}" />
+                                </Grid>
+                            </Border>
+                            <!--  Vertical Margin  -->
+                            <Border Height="48"
+                                    Background="{DynamicResource MaskColor}"
+                                    CornerRadius="8">
+                                <Grid>
+                                    <TextBlock Margin="12"
+                                               HorizontalAlignment="Left"
+                                               VerticalAlignment="Center"
+                                               Text="{DynamicResource AppSettings_Item_FloatingMarginV}" />
+                                    <ws:TextBox x:Name="FloatingMarginVTb"
+                                                Width="80"
+                                                Height="30"
+                                                Margin="0,0,48,0"
+                                                Padding="8,0"
+                                                HorizontalAlignment="Right"
+                                                VerticalContentAlignment="Center"
+                                                Style="{StaticResource SimpleTextBoxStyleForWs}"
+                                                Text="{Binding FloatingMarginVertical}" />
+                                </Grid>
+                            </Border>
+                            <!--  AppBar Height  -->
+                            <Border Height="48"
+                                    Background="{DynamicResource MaskColor}"
+                                    CornerRadius="8">
+                                <Grid>
+                                    <TextBlock Margin="12"
+                                               HorizontalAlignment="Left"
+                                               VerticalAlignment="Center"
+                                               Text="{DynamicResource AppSettings_Item_AppBarHeight}" />
+                                    <ws:TextBox x:Name="AppBarHeightTb"
+                                                Width="80"
+                                                Height="30"
+                                                Margin="0,0,48,0"
+                                                Padding="8,0"
+                                                HorizontalAlignment="Right"
+                                                VerticalContentAlignment="Center"
+                                                Style="{StaticResource SimpleTextBoxStyleForWs}"
+                                                Text="{Binding AppBarHeight}" />
+                                </Grid>
+                            </Border>
+                        </ws:StackPanel>
+                    </Border>
+
                     <!--  Background Mode  -->
                     <Border Padding="4"
                             Background="{DynamicResource MaskColor}"

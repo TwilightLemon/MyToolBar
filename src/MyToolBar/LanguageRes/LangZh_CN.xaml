@@ -67,6 +67,10 @@
     <sys:String x:Key="AS_ImmerseMode_Auto">自动</sys:String>
     <sys:String x:Key="AS_ImmerseMode_Always">始终开启</sys:String>
 
+    <sys:String x:Key="AppSettings_Item_FloatingMarginH">水平边距</sys:String>
+    <sys:String x:Key="AppSettings_Item_FloatingMarginV">垂直边距</sys:String>
+    <sys:String x:Key="AppSettings_Item_AppBarHeight">AppBar 预留高度</sys:String>
+
     <sys:String x:Key="AS_Monitor_Default">默认（主显示器）</sys:String>
 
     <!--  Window Control Panel  -->
