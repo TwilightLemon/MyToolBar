@@ -99,6 +99,49 @@ namespace MyToolBar.Common.WinAPI
             return new Size(0, 0);
         }
 
+        /// <summary>
+        /// 使用 SetWindowPos 将窗口居中到指定显示器的 work area（直接物理像素，避免 PerMonitorV2 DPI 问题）
+        /// </summary>
+        /// <param name="windowHwnd">目标窗口句柄</param>
+        /// <param name="monitorHwnd">显示器句柄</param>
+        /// <param name="logicalWidth">窗口 WPF 逻辑宽度</param>
+        /// <param name="logicalHeight">窗口 WPF 逻辑高度</param>
+        public static void CenterWindowOnMonitor(IntPtr windowHwnd, IntPtr monitorHwnd,
+            double logicalWidth, double logicalHeight)
+        {
+            var monitorInfo = GetMonitorInfoEx(monitorHwnd);
+            if (monitorInfo == null) return;
+
+            // 用目标显示器的 DPI 将逻辑尺寸转为物理像素尺寸
+            var (dpiX, dpiY) = GetDPI(monitorHwnd);
+            int winWidth, winHeight;
+            if (!double.IsNaN(logicalWidth) && !double.IsNaN(logicalHeight))
+            {
+                winWidth = (int)(logicalWidth * dpiX);
+                winHeight = (int)(logicalHeight * dpiY);
+            }
+            else
+            {
+                // 回退：窗口未指定显式 Width/Height，使用当前物理尺寸
+                GetWindowRect(windowHwnd, out RECT windowRect);
+                winWidth = windowRect.right - windowRect.left;
+                winHeight = windowRect.bottom - windowRect.top;
+            }
+
+            int x = monitorInfo.rcWork.left + (monitorInfo.rcWork.right - monitorInfo.rcWork.left - winWidth) / 2;
+            int y = monitorInfo.rcWork.top + (monitorInfo.rcWork.bottom - monitorInfo.rcWork.top - winHeight) / 2;
+
+            SetWindowPos(windowHwnd, IntPtr.Zero, x, y, 0, 0,
+                SWP_NOZORDER | SWP_NOSIZE | SWP_NOACTIVATE);
+        }
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+
+        private const uint SWP_NOZORDER = 0x0004;
+        private const uint SWP_NOSIZE = 0x0001;
+        private const uint SWP_NOACTIVATE = 0x0010;
+
         [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         internal static extern IntPtr MonitorFromWindow(IntPtr hwnd, MonitorDefaultTo dwFlags);
         [DllImport("Shcore.dll")]

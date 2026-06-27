@@ -24,7 +24,6 @@
         ResizeMode="NoResize"
         ShowInTaskbar="False"
         SourceInitialized="Window_SourceInitialized"
-        Topmost="True"
         WindowStyle="None"
         mc:Ignorable="d">
     <Window.Resources>

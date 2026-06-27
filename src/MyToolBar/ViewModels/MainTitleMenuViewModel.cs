@@ -56,7 +56,7 @@ namespace MyToolBar.ViewModels
         {
             if (_settingsWindow != null)
             {
-                // 窗口已存在：激活并移动到 AppBarWindow 所在显示器中央
+                // 窗口已存在（HWND 已就绪）：直接激活并定位
                 PositionWindowOnAppBarMonitor(_settingsWindow);
                 if (_settingsWindow.WindowState == WindowState.Minimized)
                     _settingsWindow.WindowState = WindowState.Normal;
@@ -65,38 +65,35 @@ namespace MyToolBar.ViewModels
             }
 
             _settingsWindow = App.Host.Services.GetRequiredService<SettingsWindow>();
-            _settingsWindow.Owner = App.Current.MainWindow;
             _settingsWindow.Closing += delegate {
                 _settingsWindow = null;
             };
 
-            // 定位到 AppBarWindow 所在显示器中央
-            PositionWindowOnAppBarMonitor(_settingsWindow);
+            // 新窗口：在 SourceInitialized 后定位，确保 HWND 已创建
+            _settingsWindow.SourceInitialized += OnSettingsWindowSourceInitialized;
             _settingsWindow.Show();
         }
 
+        private static void OnSettingsWindowSourceInitialized(object? sender, EventArgs e)
+        {
+            if (sender is not Window window) return;
+            window.SourceInitialized -= OnSettingsWindowSourceInitialized;
+            PositionWindowOnAppBarMonitor(window);
+        }
+
         /// <summary>
-        /// 将窗口定位到 AppBarWindow 所在显示器的工作区域中央
+        /// 使用 SetWindowPos 将窗口直接定位到 AppBarWindow 所在显示器的 work area 中央（物理像素，无 DPI 问题）
         /// </summary>
         private static void PositionWindowOnAppBarMonitor(Window window)
         {
             var mainWindow = Application.Current.MainWindow;
             if (mainWindow == null) return;
 
-            var hwnd = new WindowInteropHelper(mainWindow).Handle;
-            var hmonitor = ScreenAPI.GetHmonitorForHwnd(hwnd);
-            var monitorInfo = ScreenAPI.GetMonitorInfoEx(hmonitor);
-            if (monitorInfo == null) return;
+            var mainHwnd = new WindowInteropHelper(mainWindow).Handle;
+            var targetMonitor = ScreenAPI.GetHmonitorForHwnd(mainHwnd);
 
-            var (dpiX, dpiY) = ScreenAPI.GetDPI(hmonitor);
-
-            double monitorLeft = monitorInfo.rcWork.left / dpiX;
-            double monitorTop = monitorInfo.rcWork.top / dpiY;
-            double monitorWidth = (monitorInfo.rcWork.right - monitorInfo.rcWork.left) / dpiX;
-            double monitorHeight = (monitorInfo.rcWork.bottom - monitorInfo.rcWork.top) / dpiY;
-
-            window.Left = monitorLeft + (monitorWidth - window.Width) / 2;
-            window.Top = monitorTop + (monitorHeight - window.Height) / 2;
+            var windowHwnd = new WindowInteropHelper(window).Handle;
+            ScreenAPI.CenterWindowOnMonitor(windowHwnd, targetMonitor, window.Width, window.Height);
         }
         private void MenuItem_Exit()
         {
