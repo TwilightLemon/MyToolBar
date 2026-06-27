@@ -1,23 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.InteropServices;
 
 namespace MyToolBar.Common.WinAPI
 {
     /// <summary>
-    /// 遍历窗口查找是否存在最大化窗口
+    /// 遍历窗口查找是否存在最大化窗口（仅限与参考窗口在同一显示器的窗口）
     /// </summary>
-    /// <param name="OnWindowFound"></param>
-    public class MaxedWindowAPI(Action<bool> OnWindowFound)
+    public class MaxedWindowAPI
     {
+        private Action<bool>? _onWindowFound;
+        private readonly IntPtr _referenceHwnd;
+
+        /// <param name="onWindowFound">找到最大化窗口时的回调</param>
+        /// <param name="referenceHwnd">参考窗口句柄，仅检测与该窗口在同一显示器的最大化窗口</param>
+        public MaxedWindowAPI(Action<bool> onWindowFound, IntPtr referenceHwnd)
+        {
+            _onWindowFound = onWindowFound;
+            _referenceHwnd = referenceHwnd;
+        }
+
         public void Find()
         {
             EnumWindows(EnumWindowsCallback, IntPtr.Zero);
-            OnWindowFound?.Invoke(false);
+            _onWindowFound?.Invoke(false);
         }
 
         [DllImport("user32.dll")]
@@ -30,6 +34,7 @@ namespace MyToolBar.Common.WinAPI
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool IsWindowVisible(IntPtr hWnd);
+
         private struct WINDOWPLACEMENT
         {
             public int length;
@@ -53,6 +58,7 @@ namespace MyToolBar.Common.WinAPI
             public int Right;
             public int Bottom;
         }
+
         static bool IsWindowMaximized(IntPtr hWnd)
         {
             WINDOWPLACEMENT wp = new();
@@ -60,17 +66,21 @@ namespace MyToolBar.Common.WinAPI
             GetWindowPlacement(hWnd, ref wp);
             return wp.showCmd == 3; // 3 表示最大化
         }
+
         private bool EnumWindowsCallback(IntPtr hWnd, IntPtr lParam)
         {
-            bool maxed= IsWindowMaximized(hWnd)&&IsWindowVisible(hWnd)&&hWnd.IsZoomedWindow();
-            var title = hWnd.GetWindowTitle();
-            var className = hWnd.GetWindowClass();
-           // Debug.WriteLineIf(maxed,title+" \\ "+className);
+            bool maxed = IsWindowMaximized(hWnd) && IsWindowVisible(hWnd) && hWnd.IsZoomedWindow();
             if (maxed)
             {
-                OnWindowFound(true);
-                OnWindowFound = null;
-                return false; // 如果找到了最大化窗口，可以停止遍历
+                // 检查该窗口是否与参考窗口在同一显示器上
+                IntPtr windowMonitor = ScreenAPI.GetHmonitorForHwnd(hWnd);
+                IntPtr refMonitor = ScreenAPI.GetHmonitorForHwnd(_referenceHwnd);
+                if (windowMonitor == refMonitor)
+                {
+                    _onWindowFound?.Invoke(true);
+                    _onWindowFound = null;
+                    return false; // 找到了，停止遍历
+                }
             }
             return true;
         }

@@ -57,14 +57,15 @@ namespace MyToolBar.Common
         {
             //获取相对于MainWindow的坐标
             double rel=capsule.TransformToAncestor(Application.Current.MainWindow).Transform(new Point(0, 0)).X;
-            //计算PopupWindow的左边界
+            //计算PopupWindow的左边界（相对于MainWindow的偏移）
             double left=rel+capsule.ActualWidth/2 - popupWindow.Width/2;
-            //防止超出屏幕
-            IntPtr hwnd = new WindowInteropHelper(popupWindow).Handle;
-            double max=ScreenAPI.GetScreenArea(hwnd).Width- popupWindow.Width;
+            //使用MainWindow所在的显示器来约束边界
+            IntPtr mainHwnd = new WindowInteropHelper(Application.Current.MainWindow).Handle;
+            double max=ScreenAPI.GetScreenArea(mainHwnd).Width- popupWindow.Width;
             if(left < 0) left = 0;
             else if(left > max) left = max;
-            return left;
+            //加上MainWindow的Left，转换为绝对虚拟屏幕坐标
+            return left + Application.Current.MainWindow.Left;
         }
     }
 }

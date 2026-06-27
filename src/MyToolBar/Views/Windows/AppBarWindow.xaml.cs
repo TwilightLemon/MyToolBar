@@ -19,6 +19,7 @@ using MyToolBar.Common;
 using Microsoft.Extensions.DependencyInjection;
 using EleCho.WpfSuite;
 using System.Linq;
+using MyToolBar.Common.WinAPI;
 
 namespace MyToolBar.Views.Windows
 {
@@ -49,8 +50,12 @@ namespace MyToolBar.Views.Windows
             _appSettingsService.Settings.OnBackgroundModeChanged += Settings_OnBackgroundModeChanged;
             _appSettingsService.Settings.OnImmerseModeChanged += Settings_OnImmerseModeChanged;
             _appSettingsService.Settings.OnEnableWindowControlChanged += Settings_OnEnableWindowControlChanged;
+            _appSettingsService.Settings.OnTargetMonitorChanged += Settings_OnTargetMonitorChanged;
 
             InitializeComponent();
+
+            //应用目标显示器设置（必须在AppBar定位之前执行，InitializeComponent 会覆盖 Left/Top）
+            ApplyTargetMonitor();
         }
 
         private BlurWindowBehavior? _blurWindowBehavior;
@@ -87,6 +92,26 @@ namespace MyToolBar.Views.Windows
             // 设置变更后立即刷新窗口控制面板状态
             UpdateWindowControlPanel();
         }
+
+        private void Settings_OnTargetMonitorChanged()
+        {
+            // 运行时切换目标显示器
+            // 先注销 AppBar，移动窗口，再重新注册
+            var appBar = AppBarCreator.GetAppBar(this);
+            var loc = appBar?.Location ?? AppBarLocation.None;
+            if (appBar != null && loc != AppBarLocation.None && loc != AppBarLocation.RegisterOnly)
+            {
+                appBar.Location = AppBarLocation.None; // 触发 DisableAppBar + RestoreWindowInfo
+            }
+
+            ApplyTargetMonitor();
+
+            if (appBar != null && loc != AppBarLocation.None && loc != AppBarLocation.RegisterOnly)
+            {
+                appBar.Location = loc; // 重新注册到新显示器（SetAppBarPosition → AppBar_OnWindowLocationApplied 会设置正确的 Width/Left）
+            }
+        }
+
         private void UpdateEnableIsland()
         {
             Island.Visibility = _appSettingsService.Settings.EnableIsland ? Visibility.Visible : Visibility.Collapsed;
@@ -141,13 +166,15 @@ namespace MyToolBar.Views.Windows
         private void Window_SourceInitialized(object sender, EventArgs e)
         {
             _hwnd = new WindowInteropHelper(this).Handle;
+            //应用目标显示器设置（现在 _hwnd 有效，使用当前窗口 DPI 精确计算）
+            ApplyTargetMonitor();
             //标记WS_EX_TOOLWINDOW 窗口不在任务视图中显示
             WindowLongAPI.SetToolWindow(this);
             WindowLongAPI.SetNoActivate(this);
             // 获取 BlurWindowBehavior 引用
             _blurWindowBehavior = Microsoft.Xaml.Behaviors.Interaction.GetBehaviors(this)
                 .OfType<BlurWindowBehavior>().FirstOrDefault();
-            Width = SystemParameters.WorkArea.Width;
+            Width = ScreenAPI.GetScreenArea(_hwnd).Width;
 
             // 初始化防抖更新调度器（200ms 延迟，窗口事件停歇后触发刷新）
             _debounceUpdate = new DebounceDispatcher(() =>
@@ -538,6 +565,24 @@ namespace MyToolBar.Views.Windows
             }
 
             var fg = ActiveWindow.GetForegroundWindow();
+
+            // 检查前台窗口是否与 AppBarWindow 在同一个显示器上
+            if (fg != IntPtr.Zero)
+            {
+                IntPtr fgMonitor = ScreenAPI.GetHmonitorForHwnd(fg);
+                IntPtr appBarMonitor = ScreenAPI.GetHmonitorForHwnd(_hwnd);
+                if (fgMonitor != appBarMonitor)
+                {
+                    // 前台窗口在其他显示器上，隐藏面板
+                    if (_isWindowControlShown)
+                    {
+                        WindowControlPanel.ClearTarget();
+                        ShowWindowControlPanel(false);
+                    }
+                    return;
+                }
+            }
+
             bool isMaximized = fg != IntPtr.Zero && fg.IsZoomedWindow();
 
             if (isMaximized && !_isWindowControlShown)
@@ -614,17 +659,58 @@ namespace MyToolBar.Views.Windows
         #endregion
 
         #region Window Style
+
+        /// <summary>
+        /// 根据设置将窗口移动到目标显示器
+        /// </summary>
+        private void ApplyTargetMonitor()
+        {
+            var targetDevice = _appSettingsService.Settings.TargetMonitorDeviceName;
+            if (string.IsNullOrEmpty(targetDevice))
+                return; // 使用默认行为（最近的显示器）
+
+            var monitors = MonitorAPI.EnumerateMonitors();
+            var target = monitors.FirstOrDefault(m => m.DeviceName == targetDevice);
+            if (target == null)
+                return; // 目标显示器未找到，使用默认行为
+
+            // 获取用于坐标转换的 DPI：
+            // - 窗口已有 HWND：使用窗口当前所在显示器的 DPI
+            // - 窗口尚未创建（构造阶段）：使用主显示器 DPI（WPF 新窗口以此 DPI 解释坐标）
+            IntPtr currentHmonitor;
+            if (_hwnd != IntPtr.Zero)
+                currentHmonitor = ScreenAPI.GetHmonitorForHwnd(_hwnd);
+            else
+                currentHmonitor = ScreenAPI.GetPrimaryMonitor();
+            (double currentDpiX, double currentDpiY) = ScreenAPI.GetDPI(currentHmonitor);
+
+            // 将目标显示器的物理像素坐标转换为当前 DPI 环境下的 WPF 逻辑坐标
+            // 这样 HWND 会移动到正确的物理位置，随后 WPF 检测到显示器切换并调整 DPI
+            Left = target.WorkAreaBounds.left / currentDpiX;
+            Top = target.WorkAreaBounds.top / currentDpiY;
+        }
+
         private void AppBar_OnWindowLocationApplied()
         {
-            if (_appSettingsService.Settings.CurrentWindowMode == AppSettings.WindowMode.Floating)
+            var isFloating = _appSettingsService.Settings.CurrentWindowMode == AppSettings.WindowMode.Floating;
+            // 相对于显示器的偏移量（嵌入=0，悬浮=8/4）
+            double leftOffset = isFloating ? 8 : 0;
+            double topOffset = isFloating ? 4 : 0;
+
+            // 使用 AppBar 已计算好的停靠位置（DockedSize 由 SetAppBarPosition 以正确的 DPI 计算）
+            var appBar = AppBarCreator.GetAppBar(this);
+            double baseLeft = appBar?.DockedSize?.Left ?? 0;
+            double baseTop = appBar?.DockedSize?.Top ?? 0;
+
+            // 设置绝对 WPF 位置（AppBar 停靠原点 + 偏移）
+            if (appBar?.DockedSize != null)
             {
-                Top = 4; Left = 8;
+                Left = baseLeft + leftOffset;
+                Top = baseTop + topOffset;
             }
-            else
-            {
-                Top = Left = 0;
-            }
-            Width = ScreenAPI.GetScreenArea(_hwnd).Width - Left * 2;
+
+            // Width 公式使用显示器相对偏移量（小值：0 或 8），而非绝对坐标
+            Width = ScreenAPI.GetScreenArea(_hwnd).Width - leftOffset * 2;
             Height = 32;
         }
 
@@ -701,7 +787,7 @@ namespace MyToolBar.Views.Windows
                     new MaxedWindowAPI((found) => {
                         if (found)
                         {
-                            // 存在最大化窗口 → 沉浸模式
+                            // 存在最大化窗口（同一显示器） → 沉浸模式
                             ImmerseMode_UpdateBackground();
                             CurrentAppBarBgStyle = AppBarBgStyleType.ImmerseMode;
                         }
@@ -710,7 +796,7 @@ namespace MyToolBar.Views.Windows
                             // 最大化窗口消失 → 恢复用户选择的背景
                             DisableImmerseMode();
                         }
-                    }).Find();
+                    }, _hwnd).Find();
                     break;
 
                 case AppSettings.ImmerseMode.Always:
@@ -857,7 +943,8 @@ namespace MyToolBar.Views.Windows
                 _isMainMenuOpen = true;
                 var t=App.Host.Services.GetRequiredService<MainTitleMenu>();
                 t.Closing += delegate { _isMainMenuOpen = false; };
-                t.Left = 0;
+                t.Owner = this;
+                t.Left = GlobalService.GetPopupWindowLeft(MainMenuButton, t);
                 t.Show();
             }
         }

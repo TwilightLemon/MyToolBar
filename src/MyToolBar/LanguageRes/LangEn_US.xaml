@@ -20,6 +20,7 @@
     <sys:String x:Key="SettingsWindow_PluginSettings">Plugin Settings</sys:String>
 
     <!--  App Settings  -->
+    <sys:String x:Key="AppSettings_Group_Monitor">Display</sys:String>
     <sys:String x:Key="AppSettings_Group_Appearence">Appearence</sys:String>
     <sys:String x:Key="AppSettings_Group_Behavior">Behaviors</sys:String>
 
@@ -66,6 +67,8 @@
     <sys:String x:Key="AS_ImmerseMode_Off">Off</sys:String>
     <sys:String x:Key="AS_ImmerseMode_Auto">Auto</sys:String>
     <sys:String x:Key="AS_ImmerseMode_Always">Always</sys:String>
+
+    <sys:String x:Key="AS_Monitor_Default">Default (Primary)</sys:String>
 
     <!--  Window Control Panel  -->
     <sys:String x:Key="WindowControl_Minimize">Minimize</sys:String>

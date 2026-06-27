@@ -168,5 +168,18 @@ namespace MyToolBar.Services
         /// </summary>
         public ProxyConf? Proxy { get; set; } = null;
 
+        /// <summary>
+        /// 目标显示器的设备名称（如 \\.\DISPLAY1）。
+        /// 为 null 或空字符串时使用默认行为（主显示器/最近显示器）。
+        /// </summary>
+        public string? TargetMonitorDeviceName { get; set; }
+
+        public event Action? OnTargetMonitorChanged;
+        public void SetTargetMonitor(string? deviceName)
+        {
+            TargetMonitorDeviceName = deviceName;
+            OnTargetMonitorChanged?.Invoke();
+        }
+
     }
 }

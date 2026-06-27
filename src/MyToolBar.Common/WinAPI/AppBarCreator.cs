@@ -112,7 +112,7 @@ public class AppBar : DependencyObject
     /// <param name="e"></param>
     private void LoadAppBar(AppBarLocation e, AppBarLocation? previous = null)
     {
-
+        if (_hWnd == 0) return;
         if (e != AppBarLocation.None)
         {
             if (e == AppBarLocation.RegisterOnly)
@@ -287,6 +287,7 @@ public class AppBar : DependencyObject
 
     public void RegisterAppBarMsg()
     {
+        if (_hWnd == 0) return;
         var data = new Interop.APPBARDATA();
         data.cbSize = Marshal.SizeOf(data);
         data.hWnd = _hWnd;
@@ -323,44 +324,50 @@ public class AppBar : DependencyObject
         data.uCallbackMessage = _callbackId;
         Debug.WriteLine("\r\nWindow: " + _window.Title);
 
-        (double dpix,double dpiy)=ScreenAPI.GetDPI(ScreenAPI.GetHmonitorForHwnd(_hWnd));
+        IntPtr hmonitor = ScreenAPI.GetHmonitorForHwnd(_hWnd);
+        (double dpix,double dpiy)=ScreenAPI.GetDPI(hmonitor);
         Debug.WriteLine($"DPIX:{dpix}  DPIY:{dpiy}");
         //窗口在屏幕的实际大小
         if (WindowSize == Size.Empty)
             WindowSize = new Size(_window.ActualWidth, double.IsNaN(ForcedHeight) ? _window.ActualHeight:ForcedHeight);
         var actualSize =(X: WindowSize.Width*dpix, Y: WindowSize.Height*dpiy);
-        var size= ScreenAPI.GetMonitorSize(ScreenAPI.GetHmonitorForHwnd(_hWnd));
-        var workArea = (X: size.Width, Y: size.Height);
-        Debug.WriteLine("WorkArea Width: {0}, Height: {1}", workArea.X, workArea.Y);
+
+        //获取显示器在虚拟屏幕中的偏移量和尺寸（适配多显示器）
+        var monitorInfo = ScreenAPI.GetMonitorInfoEx(hmonitor);
+        int monitorLeft = monitorInfo?.rcMonitor.left ?? 0;
+        int monitorTop = monitorInfo?.rcMonitor.top ?? 0;
+        int monitorWidth = monitorInfo != null ? monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left : 0;
+        int monitorHeight = monitorInfo != null ? monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top : 0;
+        Debug.WriteLine("Monitor Offset Left: {0}, Top: {1}, Width: {2}, Height: {3}", monitorLeft, monitorTop, monitorWidth, monitorHeight);
 
         if (Location is AppBarLocation.Left or AppBarLocation.Right)
         {
-            data.rc.top = 0;
-            data.rc.bottom = (int)workArea.Y;
+            data.rc.top = monitorTop;
+            data.rc.bottom = monitorTop + monitorHeight;
             if (Location == AppBarLocation.Left)
             {
-                data.rc.left = 0;
-                data.rc.right = (int)Math.Round(actualSize.X);
+                data.rc.left = monitorLeft;
+                data.rc.right = monitorLeft + (int)Math.Round(actualSize.X);
             }
             else
             {
-                data.rc.right = (int)workArea.X;
-                data.rc.left = (int)workArea.X - (int)Math.Round(actualSize.X);
+                data.rc.right = monitorLeft + monitorWidth;
+                data.rc.left = monitorLeft + monitorWidth - (int)Math.Round(actualSize.X);
             }
         }
         else
         {
-            data.rc.left = 0;
-            data.rc.right = (int)workArea.X;
+            data.rc.left = monitorLeft;
+            data.rc.right = monitorLeft + monitorWidth;
             if (Location == AppBarLocation.Top)
             {
-                data.rc.top = 0;
-                data.rc.bottom = (int)Math.Round(actualSize.Y);
+                data.rc.top = monitorTop;
+                data.rc.bottom = monitorTop + (int)Math.Round(actualSize.Y);
             }
             else
             {
-                data.rc.bottom = (int)workArea.Y;
-                data.rc.top = (int)workArea.Y - (int)Math.Round(actualSize.Y);
+                data.rc.bottom = monitorTop + monitorHeight;
+                data.rc.top = monitorTop + monitorHeight - (int)Math.Round(actualSize.Y);
             }
         }
         //以上生成的是四周都没有其他AppBar时的理想位置

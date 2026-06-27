@@ -19,6 +19,7 @@
     <Page.Resources>
         <converter:EnumToTextConverter x:Key="EnumToTextConverter" />
         <converter:EnumEqualsConverter x:Key="EnumEqualsConverter" />
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <ObjectDataProvider x:Key="LanguageEnumData"
                             MethodName="GetValues"
                             ObjectType="{x:Type sys:Enum}">
@@ -43,46 +44,98 @@
         <DataTemplate x:Key="ComboBoxItemTemplate">
             <TextBlock Text="{Binding Converter={StaticResource EnumToTextConverter}}" />
         </DataTemplate>
-
-        <!--  Tile RadioButton Style: card-style selectable tiles with icon + text  -->
-        <Style x:Key="TileRadioButtonStyle" TargetType="{x:Type RadioButton}">
-            <Setter Property="Foreground" Value="{DynamicResource ForeColor}" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Width" Value="140" />
-            <Setter Property="Height" Value="68" />
-            <Setter Property="Padding" Value="8,8" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type RadioButton}">
-                        <Border x:Name="tileBorder"
-                                Padding="{TemplateBinding Padding}"
-                                Background="{DynamicResource MaskColor}"
-                                CornerRadius="10">
-                            <ContentPresenter HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"
-                                              RecognizesAccessKey="True" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="tileBorder" Property="Background" Value="{DynamicResource SystemThemeColor}" />
-                                <Setter Property="Foreground" Value="White" />
-                            </Trigger>
-                            <MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="IsChecked" Value="False" />
-                                    <Condition Property="IsMouseOver" Value="True" />
-                                </MultiTrigger.Conditions>
-                                <Setter TargetName="tileBorder" Property="Background" Value="{DynamicResource FocusMaskColor}" />
-                            </MultiTrigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
     </Page.Resources>
     <Grid>
         <ws:ScrollViewer Margin="28,12,28,28" Style="{DynamicResource SimpleVerticalScrollViewerStyle}">
             <ws:StackPanel x:Name="SettingsList" Spacing="8">
+                <!--  Monitor settings  -->
+                <ws:StackPanel Spacing="8">
+                    <TextBlock FontSize="22" Text="{DynamicResource AppSettings_Group_Monitor}" />
+
+                    <!--  Monitor Tile Grid  -->
+                    <Border Padding="4"
+                            Background="{DynamicResource MaskColor}"
+                            CornerRadius="12">
+                        <Grid>
+                            <ListBox Margin="4,4,4,8"
+                                     HorizontalAlignment="Center"
+                                     d:ItemsSource="{d:SampleData ItemCount=7}"
+                                     Background="Transparent"
+                                     BorderThickness="0"
+                                     Foreground="{DynamicResource ForeColor}"
+                                     ItemsSource="{Binding AvailableMonitors}"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                     ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                     SelectedItem="{Binding SelectedMonitor}"
+                                     SelectionMode="Single">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel />
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="ListBoxItem">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="ListBoxItem">
+                                                    <Border x:Name="ItemBorder"
+                                                            Margin="3"
+                                                            Background="Transparent"
+                                                            BorderBrush="Transparent"
+                                                            BorderThickness="2"
+                                                            CornerRadius="12">
+                                                        <ContentPresenter />
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsSelected" Value="True">
+                                                            <Setter TargetName="ItemBorder" Property="BorderBrush" Value="{DynamicResource SystemThemeColor}" />
+                                                        </Trigger>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="ItemBorder" Property="Background" Value="{DynamicResource FocusMaskColor}" />
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Width="148"
+                                                Height="80"
+                                                Padding="10,8"
+                                                Background="{DynamicResource MaskColor}"
+                                                CornerRadius="8"
+                                                Cursor="Hand">
+                                            <Grid>
+                                                <!--  Name & Resolution  -->
+                                                <TextBlock HorizontalAlignment="Center"
+                                                           FontSize="16"
+                                                           Foreground="{DynamicResource SystemThemeColor}"
+                                                           Text="Primary"
+                                                           TextAlignment="Center"
+                                                           Visibility="{Binding IsPrimary, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                                <TextBlock Margin="0,24,0,0"
+                                                           HorizontalAlignment="Center"
+                                                           FontSize="11"
+                                                           Foreground="{DynamicResource FocusMaskColor}"
+                                                           Text="{Binding ResolutionText}"
+                                                           TextAlignment="Center" />
+                                                <TextBlock Margin="0,0,0,4"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Bottom"
+                                                           FontSize="12"
+                                                           Text="{Binding DeviceName}"
+                                                           TextAlignment="Center" />
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Grid>
+                    </Border>
+                </ws:StackPanel>
+
                 <!--  Appearence settings  -->
                 <ws:StackPanel Spacing="8">
                     <TextBlock FontSize="22" Text="{DynamicResource AppSettings_Group_Appearence}" />
@@ -101,7 +154,9 @@
                                        FontSize="13"
                                        FontWeight="SemiBold"
                                        Text="{DynamicResource AppSettings_Item_WindowMode}" />
-                            <Grid Grid.Row="1" Margin="4,4,4,8" HorizontalAlignment="Center">
+                            <Grid Grid.Row="1"
+                                  Margin="4,4,4,8"
+                                  HorizontalAlignment="Center">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
@@ -175,7 +230,9 @@
                                        FontSize="13"
                                        FontWeight="SemiBold"
                                        Text="{DynamicResource AppSettings_Item_BackgroundMode}" />
-                            <Grid Grid.Row="1" Margin="4,4,4,8" HorizontalAlignment="Center">
+                            <Grid Grid.Row="1"
+                                  Margin="4,4,4,8"
+                                  HorizontalAlignment="Center">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
@@ -244,7 +301,9 @@
                                        FontSize="13"
                                        FontWeight="SemiBold"
                                        Text="{DynamicResource AppSettings_Item_ImmerseMode}" />
-                            <Grid Grid.Row="1" Margin="4,4,4,8" HorizontalAlignment="Center">
+                            <Grid Grid.Row="1"
+                                  Margin="4,4,4,8"
+                                  HorizontalAlignment="Center">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
