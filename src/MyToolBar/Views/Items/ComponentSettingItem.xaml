@@ -4,10 +4,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:MyToolBar.Views.Items"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:ws="https://github.com/OrgEleCho/EleCho.WpfSuite"
+             xmlns:ws="https://schemas.elecho.dev/wpfsuite"
              d:DesignWidth="800"
              mc:Ignorable="d">
-    <Grid Margin="20">
+    <Grid Margin="20,10">
         <Border x:Name="ViewMask"
                 Background="{DynamicResource MaskColor}"
                 CornerRadius="15" />
@@ -22,17 +22,24 @@
                 <Run Text="{DynamicResource SettingsWindow_Version}" />
                 :<Run d:Text="1.0.0.0" Text="{Binding Version, Mode=OneWay}" />
             </TextBlock>
-            <CheckBox x:Name="EnableCheckBox"
-                      Margin="20,10,0,10"
-                      Click="CheckBox_Click"
-                      Content="{DynamicResource SettingsWindow_Enable}"
-                      Foreground="{DynamicResource ForeColor}"
-                      Style="{DynamicResource SimpleCheckBoxStyle}" />
-            <TextBlock x:Name="PluginTb"
-                       Margin="20,0,0,0"
-                       FontSize="18"
-                       Text="{DynamicResource SettingsWindow_PluginSettings}" />
-            <StackPanel x:Name="SettingsPanel" />
+            <Grid Margin="12,0,12,12">
+                <ws:ToggleButton x:Name="EnableToggle"
+                                 Width="120"
+                                 Margin="8,0,0,0"
+                                 HorizontalAlignment="Left"
+                                 Click="EnableToggle_Changed"
+                                 Content="{DynamicResource SettingsWindow_Enable}"
+                                 Foreground="{DynamicResource ForeColor}" />
+                <!--  日后再修..  -->
+                <ws:Button Height="32"
+                           Padding="12,0"
+                           HorizontalAlignment="Right"
+                           Click="ConfigureBtn_Click"
+                           Content="{DynamicResource SettingsWindow_Configure}"
+                           CornerRadius="8"
+                           FontSize="14"
+                           Style="{StaticResource AccentButtonStyleForWs}" />
+            </Grid>
         </StackPanel>
     </Grid>
 </UserControl>

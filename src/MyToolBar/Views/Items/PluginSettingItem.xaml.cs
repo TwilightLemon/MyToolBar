@@ -48,12 +48,24 @@ namespace MyToolBar.Views.Items
 
         // ==================== Unload / Save ====================
 
-        private async void PluginSettingItem_Unloaded(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// 显式保存所有已修改的设置卡片（供 Apply 按钮调用）。
+        /// </summary>
+        public async System.Threading.Tasks.Task SaveAsync()
         {
+            // 新方式：保存所有脏卡片
             foreach (var card in _cards.Where(c => c.Dirty))
             {
                 await SaveCardToJson(card);
             }
+            // 旧方式兼容：保存旧版 JSON 变更
+            SaveLegacyChanges();
+        }
+
+        private async void PluginSettingItem_Unloaded(object sender, RoutedEventArgs e)
+        {
+            // Unload 时作为安全兜底保存
+            await SaveAsync();
         }
 
         // ==================== Main Entry ====================
@@ -731,6 +743,15 @@ namespace MyToolBar.Views.Items
                 refObj.jsonObj["Data"]![item.dataKey] = tb.Text;
                 refObj.changed = item.dataValue != tb.Text;
                 _legacyDic[item.sign] = refObj;
+            }
+        }
+
+        private void SaveLegacyChanges()
+        {
+            var changedItems = _legacyDic.Values.Where(x => x.changed).ToList();
+            foreach (var item in changedItems)
+            {
+                System.IO.File.WriteAllText(item.filePath, item.jsonObj.ToString());
             }
         }
 
