@@ -19,13 +19,19 @@ namespace MyToolBar.Common.UIBases
         protected WeakReference<PopupWindowBase>? PopupWindowInstance { get; set; }
 
         /// <summary>
-        /// 创建PopupWindow实例后，设置其必要属性
+        /// 创建PopupWindow实例后，设置其必要属性。
+        /// PopupWindow 打开期间遮罩保持常亮。
         /// </summary>
         protected virtual void SetPopupProperty()
         {
             if(PopupWindowInstance?.TryGetTarget(out var window) is true)
             {
-                window.Closed += delegate { IsPopupWindowOpen = false; };
+                IsPinned = true;
+                window.Closed += delegate
+                {
+                    IsPopupWindowOpen = false;
+                    IsPinned = false;
+                };
                 window.Left = GlobalService.GetPopupWindowLeft(this, window);
             }
         }
@@ -50,6 +56,8 @@ namespace MyToolBar.Common.UIBases
         protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
+            MaskCornerRadius = new CornerRadius(16);
+            MaskBackgroundKey = "FocusMaskColor";
             PreviewStylusDown += CapsuleBase_PreviewStylusDown;
             StylusMove += CapsuleBase_StylusMove;
             Click += delegate { RequestPopup(); };

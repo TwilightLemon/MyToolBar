@@ -15,14 +15,12 @@ namespace MyToolBar.Plugin.BasicPackage.SystemMonitor.Views
         public ProcessItem()
         {
             InitializeComponent();
-            Grid.SetColumnSpan(_ViewMask, 2);
         }
         public Process? _pro = null;
         public ProcessItem(Process p)
         {
             InitializeComponent();
             UpdateData(p);
-            Grid.SetColumnSpan(_ViewMask, 2);
         }
         public void UpdateData(Process? p)
         {

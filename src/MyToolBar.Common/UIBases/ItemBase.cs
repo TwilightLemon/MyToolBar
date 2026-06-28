@@ -2,47 +2,154 @@
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Media;
+using ws = EleCho.WpfSuite;
 
 namespace MyToolBar.Common.UIBases;
 
 /// <summary>
-/// 为可交互Item提供基类 ViewMask 基本视觉样式 Click事件与Command绑定
-/// 要求Content为Grid
+/// 为可交互Item提供基类：鼠标悬停遮罩、Click事件与Command绑定。
+/// 遮罩 Border 作为视觉树底层元素，在鼠标悬停时显示。
 /// </summary>
 public class ItemBase:UserControl
 {
     public ItemBase()
     {
         Initialized += ItemBase_Initialized;
+        Background = Brushes.Transparent;
     }
-    protected Grid? _Container;
-    protected bool  EnableClickEvent=true;
-    protected Border? _ViewMask;
+
+    protected bool EnableClickEvent = true;
+
+    private Border? _maskBorder;
+
+    /// <summary>
+    /// 获取或设置鼠标悬停遮罩的圆角半径。
+    /// </summary>
+    public CornerRadius MaskCornerRadius
+    {
+        get => (CornerRadius)GetValue(MaskCornerRadiusProperty);
+        set => SetValue(MaskCornerRadiusProperty, value);
+    }
+
+    public static readonly DependencyProperty MaskCornerRadiusProperty =
+        DependencyProperty.Register(
+            nameof(MaskCornerRadius),
+            typeof(CornerRadius),
+            typeof(ItemBase),
+            new PropertyMetadata(new CornerRadius(12), OnMaskCornerRadiusChanged));
+
+    private static void OnMaskCornerRadiusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is ItemBase item && item._maskBorder != null)
+        {
+            item._maskBorder.CornerRadius = (CornerRadius)e.NewValue;
+        }
+    }
+
+    #region MaskBackgroundKey
+
+    /// <summary>
+    /// 获取或设置遮罩的背景资源键。
+    /// CapsuleBase 覆盖为 "SystemThemeColor"，普通 Item 使用 "MaskColor"。
+    /// </summary>
+    public string MaskBackgroundKey
+    {
+        get => (string)GetValue(MaskBackgroundKeyProperty);
+        set => SetValue(MaskBackgroundKeyProperty, value);
+    }
+
+    public static readonly DependencyProperty MaskBackgroundKeyProperty =
+        DependencyProperty.Register(
+            nameof(MaskBackgroundKey),
+            typeof(string),
+            typeof(ItemBase),
+            new PropertyMetadata("MaskColor", OnMaskBackgroundKeyChanged));
+
+    private static void OnMaskBackgroundKeyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is ItemBase item && item._maskBorder != null)
+        {
+            item._maskBorder.SetResourceReference(Border.BackgroundProperty, (string)e.NewValue);
+        }
+    }
+
+    #endregion
+
+    #region IsPinned
+
+    /// <summary>
+    /// 当为 true 时，遮罩保持常亮，鼠标进入/离开不切换可见性。
+    /// 由 CapsuleBase 在 PopupWindow 打开/关闭时控制。
+    /// </summary>
+    public bool IsPinned
+    {
+        get => (bool)GetValue(IsPinnedProperty);
+        set => SetValue(IsPinnedProperty, value);
+    }
+
+    public static readonly DependencyProperty IsPinnedProperty =
+        DependencyProperty.Register(
+            nameof(IsPinned),
+            typeof(bool),
+            typeof(ItemBase),
+            new PropertyMetadata(false, OnIsPinnedChanged));
+
+    private static void OnIsPinnedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is ItemBase item && item._maskBorder != null)
+        {
+            bool pinned = (bool)e.NewValue;
+            item._maskBorder.Opacity = pinned ? 1 : 0;
+        }
+    }
+
+    #endregion
+
+    #region IgnoreTouch
+
+    /// <summary>
+    /// 是否忽略触摸笔输入。默认 true，触摸笔悬停不触发遮罩。
+    /// </summary>
+    public bool IgnoreTouch
+    {
+        get => (bool)GetValue(IgnoreTouchProperty);
+        set => SetValue(IgnoreTouchProperty, value);
+    }
+
+    public static readonly DependencyProperty IgnoreTouchProperty =
+        DependencyProperty.Register(
+            nameof(IgnoreTouch),
+            typeof(bool),
+            typeof(ItemBase),
+            new PropertyMetadata(true));
+
+    #endregion
+
     private void ItemBase_Initialized(object? sender, EventArgs e)
     {
-        //写得这么烂等着被优化吧！
-        if (Content is Grid g)
+        this.Cursor = Cursors.Hand;
+
+        // 将原有Content包裹在一个Grid中，底层放mask Border
+        var originalContent = this.Content;
+        // 先断开原有Content与UserControl的逻辑树关系，否则无法将其加入wrapper
+        this.Content = null;
+
+        _maskBorder = new Border
         {
-            this.Cursor = Cursors.Hand;
-            _Container = g;
-            _ViewMask = new Border()
-            {
-                CornerRadius=new CornerRadius(12),
-                Opacity=0
-            };
-            _ViewMask.SetResourceReference(BackgroundProperty, "MaskColor");
-            MouseEnter += (s,e)=>{
-                if (e.StylusDevice != null && e.StylusDevice.TabletDevice.Type == TabletDeviceType.Touch) return;
-                _ViewMask.Opacity = 1;
-            };
-            MouseLeave += delegate
-            {
-                _ViewMask.Opacity = 0;
-                //_ViewMask.BeginAnimation(OpacityProperty, new DoubleAnimation(0.5, 0, TimeSpan.FromMilliseconds(300)));
-            };
-            //插入到最底层
-            _Container.Children.Insert(0, _ViewMask);
+            CornerRadius = MaskCornerRadius,
+            Opacity = IsPinned ? 1 : 0,
+            IsHitTestVisible = false,
+        };
+        _maskBorder.SetResourceReference(Border.BackgroundProperty, MaskBackgroundKey);
+
+        var wrapper = new ws.BoxPanel();
+        wrapper.Children.Add(_maskBorder);
+        if (originalContent is UIElement uiElement)
+        {
+            wrapper.Children.Add(uiElement);
         }
+        this.Content = wrapper;
     }
 
     public bool IsPressed
@@ -118,6 +225,34 @@ public class ItemBase:UserControl
                 command.Execute(commandParameter);
             }
         }
+    }
+
+    protected override void OnMouseEnter(MouseEventArgs e)
+    {
+        base.OnMouseEnter(e);
+
+        if (IsPinned)
+            return;
+
+        // 触摸笔输入时忽略
+        if (IgnoreTouch
+            && e.StylusDevice is not null
+            && e.StylusDevice.TabletDevice?.Type == TabletDeviceType.Touch)
+            return;
+
+        if (_maskBorder != null)
+            _maskBorder.Opacity = 1;
+    }
+
+    protected override void OnMouseLeave(MouseEventArgs e)
+    {
+        base.OnMouseLeave(e);
+
+        if (IsPinned)
+            return;
+
+        if (_maskBorder != null)
+            _maskBorder.Opacity = 0;
     }
 
     protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
