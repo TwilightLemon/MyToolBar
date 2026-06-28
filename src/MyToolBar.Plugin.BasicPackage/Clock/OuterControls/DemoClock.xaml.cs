@@ -2,6 +2,7 @@
 using System.Windows.Media;
 using MyToolBar.Common;
 using MyToolBar.Common.UIBases;
+using MyToolBar.Plugin.BasicPackage.Clock.Models;
 
 namespace MyToolBar.Plugin.BasicPackage.Clock.OuterControls
 {
@@ -10,17 +11,11 @@ namespace MyToolBar.Plugin.BasicPackage.Clock.OuterControls
     /// </summary>
     public partial class DemoClock : OuterControlBase
     {
-        private class DemoClockSetting
-        {
-            public string FormatStr { get; set; } = "MM-dd tt h:mm dddd";
-            public string Sign { get; set; } = "  ❤  Have a nice day.";
-        }
-        public static readonly string SettingSign = "MyToolBar.Plugin.BasicPackage.DemoClock";
-        private SettingsMgr<DemoClockSetting> settingsMgr;
+        private SettingsMgr<DemoClockSettings> settingsMgr;
         public DemoClock()
         {
             InitializeComponent();
-            settingsMgr = new(SettingSign, DemoClockOutControlPlugin._name);
+            settingsMgr = new(DemoClockOutControlPlugin._name);
             settingsMgr.OnDataChanged += SettingsMgr_OnDataChanged;
             Loaded += DemoClock_Loaded;
         }

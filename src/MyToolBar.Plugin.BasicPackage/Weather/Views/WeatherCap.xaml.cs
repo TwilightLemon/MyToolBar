@@ -13,8 +13,6 @@ namespace MyToolBar.Plugin.BasicPackage.Weather.Views;
 /// </summary>
 public partial class WeatherCap : CapsuleBase
 {
-    internal static readonly string _settingsAPIKey = "MyToolBar.Plugin.BasicPackage.WeatherAPIKey";
-
     private readonly IWeatherService _weatherService = new WeatherService();
     private WeatherCache _cache = null!;
     private SettingsMgr<WeatherApiProperty>? _keyMgr;
@@ -92,7 +90,7 @@ public partial class WeatherCap : CapsuleBase
     {
         if (_keyMgr == null)
         {
-            _keyMgr = new(_settingsAPIKey, WeatherCapPlugin._name);
+            _keyMgr = new(WeatherCapPlugin._name);
             await _keyMgr.LoadAsync();
             _keyMgr.OnDataChanged += async delegate
             {

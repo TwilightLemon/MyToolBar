@@ -153,4 +153,16 @@
   <data name="WeatherCapPluginDesc" xml:space="preserve">
     <value>Weather widget.</value>
   </data>
+  <data name="FormatStr" xml:space="preserve">
+    <value>Format String</value>
+  </data>
+  <data name="FormatStrDesc" xml:space="preserve">
+    <value>Datetime string formatter</value>
+  </data>
+  <data name="Sign" xml:space="preserve">
+    <value>Signiture</value>
+  </data>
+  <data name="SignDesc" xml:space="preserve">
+    <value>Any text</value>
+  </data>
 </root>

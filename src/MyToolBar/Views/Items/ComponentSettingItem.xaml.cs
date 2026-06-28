@@ -25,9 +25,9 @@ namespace MyToolBar.Views.Items
         private void Init() {
             foreach(IPlugin plugin in Package.Plugins)
             {
-                if(plugin.SettingsSignKeys!=null)
+                if(plugin.SettingsTypes != null || plugin.SettingsSignKeys != null)
                 {
-                    SettingsPanel.Children.Add(new PluginSettingItem(plugin));
+                    SettingsPanel.Children.Add(new PluginSettingItem(plugin, Package.PackageName));
                 }
             }
             if (SettingsPanel.Children.Count == 0)

@@ -23,8 +23,7 @@ namespace MyToolBar.Plugin.TabletUtils.DeepSeek;
 public partial class DeepSeekChatWindow : Window
 {
     #region Deepseek config
-    internal static string DeepSeekConfigKey = "MyToolBar.Plugin.TabletUtils.DeepSeek";
-    private SettingsMgr<DeepSeekConfig> config = new(DeepSeekConfigKey, SideBarPlugin._name);
+    private SettingsMgr<DeepSeekConfig> config = new(SideBarPlugin._name);
     private DeepSeekClient? client = null;
     private void Mgr_OnDataChanged()
     {

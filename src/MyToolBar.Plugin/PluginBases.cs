@@ -58,8 +58,16 @@ public interface IPlugin
     /// </summary>
     string Description { get; }
     /// <summary>
-    /// 托管设置的SignKeys
+    /// 设置类型数组。每个类型需标记 [SettingsConfig] 并具备无参构造函数。
+    /// 默认返回 null（表示无设置，回退到 SettingsSignKeys）。
     /// </summary>
+    Type[]? SettingsTypes { get => null; }
+
+    /// <summary>
+    /// [已弃用] 托管设置的SignKeys。使用 SettingsTypes 替代。
+    /// 共存时优先使用 SettingsTypes。
+    /// </summary>
+    [Obsolete("使用 SettingsTypes 替代")]
     List<string>? SettingsSignKeys { get; }
     /// <summary>
     /// 插件类型

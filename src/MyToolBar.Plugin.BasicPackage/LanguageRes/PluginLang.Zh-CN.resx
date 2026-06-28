@@ -153,4 +153,16 @@
   <data name="WeatherCapPluginDesc" xml:space="preserve">
     <value>天气小组件</value>
   </data>
+  <data name="FormatStr" xml:space="preserve">
+    <value>格式</value>
+  </data>
+  <data name="FormatStrDesc" xml:space="preserve">
+    <value>格式化时间字符串</value>
+  </data>
+  <data name="Sign" xml:space="preserve">
+    <value>签名</value>
+  </data>
+  <data name="SignDesc" xml:space="preserve">
+    <value>自定义文本</value>
+  </data>
 </root>

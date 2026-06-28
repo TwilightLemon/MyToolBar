@@ -1,4 +1,6 @@
 using MyToolBar.Plugin.BasicPackage.Clock.Capsules;
+using MyToolBar.Plugin.BasicPackage.Clock.Models;
+using MyToolBar.Plugin.BasicPackage.Weather.Models;
 using MyToolBar.Plugin.BasicPackage.Weather.Views;
 using MyToolBar.Plugin.BasicPackage.Clock.OuterControls;
 using MyToolBar.Plugin.BasicPackage.Music.OuterControls;
@@ -36,7 +38,8 @@ namespace MyToolBar.Plugin.BasicPackage
         public string Name { get; } = _name;
         public string DisplayName => _rm.GetString("WeatherCapDisplayName", _cultureInfo) ?? "";
         public string Description => _rm.GetString("WeatherCapPluginDesc", _cultureInfo)??"";
-        public List<string> SettingsSignKeys { get; } = [WeatherCap._settingsAPIKey];
+        public Type[]? SettingsTypes => [typeof(WeatherApiProperty)];
+        public List<string> SettingsSignKeys { get; } = []; // 已迁移，保留空列表兼容旧逻辑
         public PluginType Type { get; } = PluginType.Capsule;
         public UIElement GetMainElement()
         {
@@ -76,7 +79,8 @@ namespace MyToolBar.Plugin.BasicPackage
         public string DisplayName => _rm.GetString("ClockCapDisplayName", _cultureInfo) ?? "";
         public string Description=> _rm.GetString("ClockCapDesc", _cultureInfo)??"";
 
-        public List<string>? SettingsSignKeys => [ClockCap.SettingSign];
+        public Type[]? SettingsTypes => [typeof(ClockCapSettings)];
+        public List<string>? SettingsSignKeys => null;
 
         public PluginType Type => PluginType.Capsule;
         public UIElement GetMainElement() => new ClockCap();
@@ -87,9 +91,8 @@ namespace MyToolBar.Plugin.BasicPackage
         public string Name { get; } = _name;
         public string DisplayName => _rm.GetString("DemoClockOutControlDisplayName", _cultureInfo) ?? "";
         public string Description =>_rm.GetString("DemoClockOutControlPluginDesc", _cultureInfo)??"";
-        public List<string>? SettingsSignKeys { get; } = [
-            DemoClock.SettingSign
-            ];
+        public Type[]? SettingsTypes => [typeof(DemoClockSettings)];
+        public List<string>? SettingsSignKeys => null;
         public PluginType Type { get; } = PluginType.OuterControl;
         public UIElement GetMainElement()
         {

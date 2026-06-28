@@ -45,6 +45,24 @@ public class SettingsMgr<T> : ISettingsMgr where T : class
         };
         _watcher.Changed += _watcher_Changed;
     }
+    /// <summary>
+    /// 通过配置类型自动推导 Sign（格式：程序集名.类型名），无需手动指定字符串 key。
+    /// 例如：MyToolBar.Plugin.BasicPackage.WeatherApiProperty
+    /// </summary>
+    /// <param name="packageName">包名称</param>
+    public SettingsMgr(string packageName)
+    {
+        string asmName = typeof(T).Assembly.GetName().Name!;
+        this.Sign = $"{asmName}.{typeof(T).Name}";
+        this.PackageName = packageName;
+        _watcher = new FileSystemWatcher(Settings.SettingsPath)
+        {
+            Filter = Sign + ".json",
+            NotifyFilter = NotifyFilters.LastWrite,
+            EnableRaisingEvents = true
+        };
+        _watcher.Changed += _watcher_Changed;
+    }
     ~SettingsMgr()
     {
         _watcher?.Dispose();

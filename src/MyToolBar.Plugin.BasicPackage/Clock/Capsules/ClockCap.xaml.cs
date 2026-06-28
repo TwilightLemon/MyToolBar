@@ -1,5 +1,6 @@
 ﻿using MyToolBar.Common;
 using MyToolBar.Common.UIBases;
+using MyToolBar.Plugin.BasicPackage.Clock.Models;
 using System.Windows;
 
 namespace MyToolBar.Plugin.BasicPackage.Clock.Capsules
@@ -9,16 +10,11 @@ namespace MyToolBar.Plugin.BasicPackage.Clock.Capsules
     /// </summary>
     public partial class ClockCap : CapsuleBase
     {
-        public class ClockCapSettings
-        {
-            public string FormatStr { get; set; } = "MM-dd tt h:mm dddd";
-        }
-        public static readonly string SettingSign= "MyToolBar.Plugin.BasicPackage.ClockCap";
         private readonly SettingsMgr<ClockCapSettings> settingsMgr;
         public ClockCap()
         {
             InitializeComponent();
-            settingsMgr = new(SettingSign, ClockCapPlugin._name);
+            settingsMgr = new(ClockCapPlugin._name);
             settingsMgr.OnDataChanged += SettingsMgr_OnDataChanged;
             Loaded += ClockCap_Loaded;
         }

@@ -1,21 +1,31 @@
 using System.Text.Json.Serialization;
+using MyToolBar.Plugin;
 
 namespace MyToolBar.Plugin.BasicPackage.Weather.Models;
 
 /// <summary>
 /// Settings Data for Api config
 /// </summary>
+[SettingsConfig(DisplayName = "$WeatherApiSettings", ResourceManagerType = typeof(Package))]
 public class WeatherApiProperty
 {
+    [SettingsField(DisplayName = "$ApiKey", 
+                   HelpUrl = "https://dev.qweather.com/", IsRequired = true, Order = 0)]
     public string? key { get; set; }
-    [JsonIgnore]
+
+    [JsonIgnore]//this property is not set by user.
     public string? lang { get; set; } = "en";
+
     /// <summary>
     /// The default host will be expired at 2026-1-1
     /// see as: https://blog.qweather.com/announce/public-api-domain-change-to-api-host/
     /// </summary>
+    [SettingsField(DisplayName = "$Host", Description = "$HostDesc",
+                   Placeholder = "devapi.qweather.com", Order = 1)]
     public string? host { get; set; } = "devapi.qweather.com";
-    public string? personalHost { get; set; } = null;
+
+    //[SettingsField(DisplayName = "$PersonalHost", Order = 2)]
+    //public string? personalHost { get; set; } = null;
 }
 
 public record City(string Province, string CityName, string Area, string Id);
