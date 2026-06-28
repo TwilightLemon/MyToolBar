@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="MyToolBar.Views.Items.ComponentSettingItem"
+<UserControl x:Class="MyToolBar.Views.Items.ComponentSettingItem"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,7 +7,7 @@
              xmlns:ws="https://schemas.elecho.dev/wpfsuite"
              d:DesignWidth="800"
              mc:Ignorable="d">
-    <Grid Margin="20,10">
+    <Grid Margin="20">
         <Border x:Name="ViewMask"
                 Background="{DynamicResource MaskColor}"
                 CornerRadius="15" />
@@ -16,22 +16,29 @@
                        d:Text="DisplayName"
                        FontSize="22"
                        Text="{Binding DisplayName, Mode=OneWay}" />
-            <TextBlock Margin="20,4,20,0">
+            <TextBlock Margin="20,4,20,0" Opacity="0.6">
                 <Run d:Text="Description" Text="{Binding Description, Mode=OneWay}" />
                 <LineBreak />
                 <Run Text="{DynamicResource SettingsWindow_Version}" />
                 :<Run d:Text="1.0.0.0" Text="{Binding Version, Mode=OneWay}" />
             </TextBlock>
-            <Grid Margin="12,0,12,12">
+
+            <Grid Margin="12">
                 <ws:ToggleButton x:Name="EnableToggle"
+                                 Grid.Column="0"
                                  Width="120"
                                  Margin="8,0,0,0"
                                  HorizontalAlignment="Left"
-                                 Click="EnableToggle_Changed"
-                                 Content="{DynamicResource SettingsWindow_Enable}"
-                                 Foreground="{DynamicResource ForeColor}" />
-                <!--  日后再修..  -->
-                <ws:Button Height="32"
+                                 VerticalAlignment="Center"
+                                 Checked="EnableToggle_Changed"
+                                 Cursor="Hand"
+                                 Style="{DynamicResource RoundToggleButtonStyle}"
+                                 Unchecked="EnableToggle_Changed">
+                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource SettingsWindow_Enable}" />
+                </ws:ToggleButton>
+
+                <ws:Button x:Name="ConfigureBtn"
+                           Height="32"
                            Padding="12,0"
                            HorizontalAlignment="Right"
                            Click="ConfigureBtn_Click"

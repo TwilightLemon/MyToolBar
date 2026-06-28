@@ -8,6 +8,7 @@
         xmlns:local="clr-namespace:MyToolBar.Views.Windows"
         xmlns:mb="clr-namespace:MyToolBar.Common.Behaviors;assembly=MyToolBar.Common"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sha="clr-namespace:MyToolBar.Shaders.Impl"
         xmlns:ws="https://schemas.elecho.dev/wpfsuite"
         Title="MyToolBar"
         Height="32"

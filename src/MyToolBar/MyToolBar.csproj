@@ -48,6 +48,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Resource Include="Shaders\Highlighter.ps" />
 		<None Update="nlog.config">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>

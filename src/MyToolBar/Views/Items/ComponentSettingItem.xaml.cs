@@ -25,10 +25,13 @@ namespace MyToolBar.Views.Items
             _managedPackageService = managedPackageService;
             _package = package;
 
-            // 同步当前启用状态到 ToggleButton
-            bool isEnabled = managedPackageService.ManagedPkg
-                .Any(p => p.Key == package.PackageName && p.Value.IsEnabled);
-            EnableToggle.IsChecked = isEnabled;
+            this.Loaded += delegate
+            {
+                // 同步当前启用状态到 ToggleButton
+                bool isEnabled = managedPackageService.ManagedPkg
+                    .Any(p => p.Key == package.PackageName && p.Value.IsEnabled);
+                EnableToggle.IsChecked = isEnabled;
+            };
         }
 
         private void EnableToggle_Changed(object sender, RoutedEventArgs e)
