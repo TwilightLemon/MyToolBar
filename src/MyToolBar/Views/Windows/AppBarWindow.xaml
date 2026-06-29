@@ -41,87 +41,91 @@
     <i:Interaction.Behaviors>
         <mb:BlurWindowBehavior IsToolWindow="True" WindowChromeEx="{StaticResource windowChrome}" />
     </i:Interaction.Behaviors>
-
-    <Grid x:Name="MainBarGrid">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1.2*" />
-            <!--  Initial width is 0 , for no plugin is loaded.  -->
-            <ColumnDefinition x:Name="OuterControlCol"
-                              Width="0*"
-                              MaxWidth="680"
-                              d:Width="1.2*" />
-            <ColumnDefinition Width="1.2*" />
-        </Grid.ColumnDefinitions>
-        <Border x:Name="BgImgEffector"
-                Grid.ColumnSpan="3"
-                Opacity="0" />
-        <Border x:Name="MainMenuButton"
-                Width="32"
-                Height="32"
-                Margin="6,0,0,0"
-                HorizontalAlignment="Left"
-                Background="#01000000"
-                Cursor="Hand"
-                MouseDown="MainMenuButton_MouseDown">
-            <Path x:Name="MainMenuIcon"
-                  Width="15"
-                  Height="15"
-                  Data="{StaticResource MenuIcon_Apple}"
-                  Fill="{DynamicResource AppBarForegroundLeft}"
-                  Stretch="Uniform" />
-        </Border>
-        <Grid x:Name="TittleViewer"
-              Margin="40,0,0,0"
-              Background="#01000000"
-              ClipToBounds="True">
-            <TextBlock x:Name="TitleView"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Center"
-                       d:Text="Microsoft Visual Studio 2022"
-                       Foreground="{DynamicResource AppBarForegroundLeft}"
-                       TextWrapping="NoWrap" />
-        </Grid>
-        <Border x:Name="OuterFuncStatus"
-                Grid.Column="1"
-                Margin="0,0,0,0"
-                d:Visibility="Visible"
-                Background="{DynamicResource FocusMaskColor}"
-                CornerRadius="16"
-                Visibility="Hidden">
-            <Grid x:Name="OuterFunc" Background="Transparent" />
+    <ws:BoxPanel>
+        <Border x:Name="AppBarBackground" />
+        <Border x:Name="BgImgEffector" Opacity="0" />
+        <Border OpacityMask="#64000000">
+            <Border.Effect>
+                <sha:HighlightEffect HighlightIntensity="2" />
+            </Border.Effect>
+            <Grid x:Name="MainBarGrid">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.2*" />
+                    <!--  Initial width is 0 , for no plugin is loaded.  -->
+                    <ColumnDefinition x:Name="OuterControlCol"
+                                      Width="0*"
+                                      MaxWidth="680"
+                                      d:Width="1.2*" />
+                    <ColumnDefinition Width="1.2*" />
+                </Grid.ColumnDefinitions>
+                <Border x:Name="MainMenuButton"
+                        Width="32"
+                        Height="32"
+                        Margin="6,0,0,0"
+                        HorizontalAlignment="Left"
+                        Background="Transparent"
+                        Cursor="Hand"
+                        MouseDown="MainMenuButton_MouseDown">
+                    <Path x:Name="MainMenuIcon"
+                          Width="15"
+                          Height="15"
+                          Data="{StaticResource MenuIcon_Apple}"
+                          Fill="{DynamicResource AppBarForegroundLeft}"
+                          Stretch="Uniform" />
+                </Border>
+                <Grid x:Name="TittleViewer"
+                      Margin="40,0,0,0"
+                      Background="#01000000"
+                      ClipToBounds="True">
+                    <TextBlock x:Name="TitleView"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               d:Text="Microsoft Visual Studio 2022"
+                               FontWeight="Bold"
+                               Foreground="{DynamicResource AppBarForegroundLeft}"
+                               TextWrapping="NoWrap" />
+                </Grid>
+                <Border x:Name="OuterFuncStatus"
+                        Grid.Column="1"
+                        Margin="0,0,0,0"
+                        d:Visibility="Visible"
+                        Background="{DynamicResource FocusMaskColor}"
+                        CornerRadius="16"
+                        Visibility="Hidden">
+                    <Grid x:Name="OuterFunc" Background="Transparent" />
+                </Border>
+                <Border x:Name="NotificationBox"
+                        Grid.ColumnSpan="3"
+                        HorizontalAlignment="Center"
+                        Background="Black"
+                        CornerRadius="16"
+                        MouseDown="NotificationBox_MouseDown"
+                        Visibility="Collapsed">
+                    <Grid>
+                        <TextBlock x:Name="NotificationContent"
+                                   Margin="10,0,10,0"
+                                   VerticalAlignment="Center"
+                                   d:Text="Notification"
+                                   Foreground="White"
+                                   TextAlignment="Center" />
+                    </Grid>
+                </Border>
+                <DockPanel Grid.Column="2" Margin="10,0,0,0">
+                    <items:WindowControlPanel x:Name="WindowControlPanel"
+                                              Margin="0,0,0,0"
+                                              DockPanel.Dock="Right"
+                                              Visibility="Collapsed" />
+                    <WrapPanel x:Name="CapsulePanel"
+                               Margin="0,0,10,0"
+                               HorizontalAlignment="Right"
+                               Orientation="Vertical" />
+                </DockPanel>
+            </Grid>
         </Border>
         <Border x:Name="Island"
-                Grid.ColumnSpan="3"
                 Width="240"
                 Margin="0,0,0,2"
                 Background="Black"
                 CornerRadius="0 0 12 12" />
-        <Border x:Name="NotificationBox"
-                Grid.ColumnSpan="3"
-                HorizontalAlignment="Center"
-                Background="Black"
-                CornerRadius="16"
-                MouseDown="NotificationBox_MouseDown"
-                Visibility="Collapsed">
-            <Grid>
-                <TextBlock x:Name="NotificationContent"
-                           Margin="10,0,10,0"
-                           VerticalAlignment="Center"
-                           d:Text="Notification"
-                           Foreground="White"
-                           TextAlignment="Center" />
-            </Grid>
-        </Border>
-        <DockPanel Grid.Column="2" Margin="10,0,0,0">
-            <items:WindowControlPanel x:Name="WindowControlPanel"
-                                      Margin="0,0,0,0"
-                                      DockPanel.Dock="Right"
-                                      Visibility="Collapsed" />
-            <WrapPanel x:Name="CapsulePanel"
-                       Margin="0,0,10,0"
-                       HorizontalAlignment="Right"
-                       Orientation="Vertical" />
-        </DockPanel>
-
-    </Grid>
+    </ws:BoxPanel>
 </Window>

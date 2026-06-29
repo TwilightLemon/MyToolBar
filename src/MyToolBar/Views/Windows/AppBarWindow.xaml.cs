@@ -170,7 +170,7 @@ namespace MyToolBar.Views.Windows
             if (_blurWindowBehavior == null) return;
 
             // 清除可能残留的沉浸模式背景
-            MainBarGrid.Background = null;
+            AppBarBackground.Background = null;
             _lastEvaColor = null;
 
             switch (_appSettingsService.Settings.CurrentBackgroundMode)
@@ -327,13 +327,13 @@ namespace MyToolBar.Views.Windows
             {
                 if (CurrentAppBarBgStyle != AppBarBgStyleType.EnergySaving)
                 {
-                    MainBarGrid.SetResourceReference(BackgroundProperty, "BackgroundColor");
+                    AppBarBackground.SetResourceReference(BackgroundProperty, "BackgroundColor");
                     _themeResourceService.SetAppBarFontColor(!IsDarkMode);
                     CurrentAppBarBgStyle = AppBarBgStyleType.EnergySaving;
                 }
             }
             else if (CurrentAppBarBgStyle == AppBarBgStyleType.EnergySaving){
-                MainBarGrid.Background = null;
+                AppBarBackground.Background = null;
                 // 恢复用户选择的背景模式
                 UpdateBackgroundMode();
             }
@@ -762,8 +762,8 @@ namespace MyToolBar.Views.Windows
         private void DisableImmerseMode()
         {
             //退出沉浸模式，通过渐变动画恢复用户选择的背景
-            var currentBg = MainBarGrid.Background;
-            MainBarGrid.Background = null;
+            var currentBg = AppBarBackground.Background;
+            AppBarBackground.Background = null;
             _lastEvaColor = null;
 
             // 先恢复 BlurWindowBehavior 模式，使透明/模糊效果在动画下方就绪
@@ -878,7 +878,7 @@ namespace MyToolBar.Views.Windows
             var ani = new DoubleAnimation(0, 1, TimeSpan.FromSeconds(0.2));
             ani.Completed += delegate
             {
-                MainBarGrid.Background = imgBrush;
+                AppBarBackground.Background = imgBrush;
                 BgImgEffector.Visibility = Visibility.Collapsed;
             };
             BgImgEffector.BeginAnimation(OpacityProperty, ani);
