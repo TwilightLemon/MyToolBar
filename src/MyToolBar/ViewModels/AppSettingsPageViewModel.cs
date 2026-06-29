@@ -31,6 +31,8 @@ namespace MyToolBar.ViewModels
         [ObservableProperty]
         private bool _enableWindowControl;
         [ObservableProperty]
+        private bool _enableHighlight;
+        [ObservableProperty]
         private LocalCulture.Language _appLanguage = (LocalCulture.Language)appSettingsService.Settings.Language;
         [ObservableProperty]
         private AppSettings.ProxyMode _proxyMode = appSettingsService.Settings.UserProxyMode;
@@ -66,6 +68,7 @@ namespace MyToolBar.ViewModels
             AutoRunAtStartup = appSettingsService.Settings.AutoRunAtStartup;
             HideWhenFullScreen = GlobalService.EnableHideWhenFullScreen;
             EnableWindowControl = appSettingsService.Settings.EnableWindowControl;
+            EnableHighlight = appSettingsService.Settings.EnableHighlight;
             FloatingMarginHorizontal = appSettingsService.Settings.FloatingMarginHorizontal;
             FloatingMarginVertical = appSettingsService.Settings.FloatingMarginVertical;
             AppBarHeight = appSettingsService.Settings.AppBarHeight;
@@ -99,6 +102,10 @@ namespace MyToolBar.ViewModels
         partial void OnEnableWindowControlChanged(bool value)
         {
             appSettingsService.Settings.SetEnableWindowControl(value);
+        }
+        partial void OnEnableHighlightChanged(bool value)
+        {
+            appSettingsService.Settings.SetEnableHighlight(value);
         }
         partial void OnWindowModeChanged(AppSettings.WindowMode value)
         {

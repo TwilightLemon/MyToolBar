@@ -53,6 +53,7 @@ namespace MyToolBar.Views.Windows
             _appSettingsService.Settings.OnTargetMonitorChanged += Settings_OnTargetMonitorChanged;
             _appSettingsService.Settings.OnAppBarHeightChanged += Settings_OnAppBarHeightChanged;
             _appSettingsService.Settings.OnFloatingMarginChanged += Settings_OnFloatingMarginChanged;
+            _appSettingsService.Settings.OnEnableHighlightChanged += Settings_OnEnableHighlightChanged;
 
             InitializeComponent();
 
@@ -117,6 +118,11 @@ namespace MyToolBar.Views.Windows
                 appBar.ReservedHeight = _appSettingsService.Settings.AppBarHeight;
                 appBar.SetAppBarPosition(Size.Empty);
             }
+        }
+
+        private void Settings_OnEnableHighlightChanged()
+        {
+            UpdateHighlightEffect();
         }
 
         private void Settings_OnTargetMonitorChanged()
@@ -331,6 +337,8 @@ namespace MyToolBar.Views.Windows
                     _themeResourceService.SetAppBarFontColor(!IsDarkMode);
                     CurrentAppBarBgStyle = AppBarBgStyleType.EnergySaving;
                 }
+                // 省电模式下强制关闭高光渲染
+                UpdateHighlightEffect();
             }
             else if (CurrentAppBarBgStyle == AppBarBgStyleType.EnergySaving){
                 AppBarBackground.Background = null;
@@ -930,6 +938,45 @@ namespace MyToolBar.Views.Windows
             _lastForegroundRight = right;
 
             _themeResourceService.SetAppBarFontColor(left, center, right);
+            UpdateHighlightEffect();
+        }
+
+        private static readonly Brush _highlightOpacityMask = new SolidColorBrush(Color.FromArgb(0x64, 0x00, 0x00, 0x00));
+
+        /// <summary>
+        /// 根据字体颜色、用户设置和省电模式更新三个区域的高光渲染
+        /// 只有字体为亮色（即背景暗）的区域才启用高光
+        /// </summary>
+        private void UpdateHighlightEffect()
+        {
+            bool settingEnabled = _appSettingsService.Settings.EnableHighlight;
+            bool energySaver = IsEnergySaverModeOn;
+
+            // left: checkColor返回true表示深色文字（亮背景），false表示亮色文字（暗背景）
+            // 高光只在亮色文字时启用
+            bool enableLeft = settingEnabled && !energySaver && _lastForegroundLeft == false;
+            bool enableCenter = settingEnabled && !energySaver && _lastForegroundCenter == false;
+            bool enableRight = settingEnabled && !energySaver && _lastForegroundRight == false;
+
+            SetHighlightState(HighlightBorderLeft, enableLeft);
+            SetHighlightState(HighlightBorderCenter, enableCenter);
+            SetHighlightState(HighlightBorderRight, enableRight);
+        }
+
+        private static void SetHighlightState(System.Windows.Controls.Border border, bool enable)
+        {
+            if (enable)
+            {
+                if (border.Effect == null)
+                    border.Effect = new Shaders.Impl.HighlightEffect { HighlightIntensity = 2 };
+                if (border.OpacityMask == null)
+                    border.OpacityMask = _highlightOpacityMask;
+            }
+            else
+            {
+                border.Effect = null;
+                border.OpacityMask = null;
+            }
         }
 
         /// <summary>

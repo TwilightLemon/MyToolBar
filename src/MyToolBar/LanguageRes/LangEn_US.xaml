@@ -34,6 +34,7 @@
     <sys:String x:Key="AppSettings_Item_BackgroundMode">Background</sys:String>
     <sys:String x:Key="AppSettings_Item_ImmerseMode">Immerse Mode</sys:String>
     <sys:String x:Key="AppSettings_Item_EnableIsland">Display a fake island</sys:String>
+    <sys:String x:Key="AppSettings_Item_EnableHighlight">Enable highlight effect (when available)</sys:String>
     <sys:String x:Key="AppSettings_Item_AutoRunAtStartup">Auto run at startup</sys:String>
     <sys:String x:Key="AppSettings_Item_Language">Language</sys:String>
     <sys:String x:Key="AppSettings_Item_MainMenuIcon">Main Menu Icon</sys:String>

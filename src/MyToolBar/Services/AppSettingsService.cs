@@ -211,5 +211,16 @@ namespace MyToolBar.Services
             OnAppBarHeightChanged?.Invoke();
         }
 
+        /// <summary>
+        /// 是否启用高光渲染效果（仅在字体为亮色区域可用，省电模式下强制关闭）
+        /// </summary>
+        public bool EnableHighlight { get; set; } = false;
+        public event Action? OnEnableHighlightChanged;
+        public void SetEnableHighlight(bool enable)
+        {
+            EnableHighlight = enable;
+            OnEnableHighlightChanged?.Invoke();
+        }
+
     }
 }
