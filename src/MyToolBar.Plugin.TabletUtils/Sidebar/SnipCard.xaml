@@ -1,0 +1,140 @@
+<UserControl x:Class="MyToolBar.Plugin.TabletUtils.Sidebar.SnipCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:MyToolBar.Plugin.TabletUtils.Converters"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:MyToolBar.Plugin.TabletUtils.Sidebar"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ws="https://schemas.elecho.dev/wpfsuite"
+             d:DataContext="{d:DesignInstance local:SnipCard}"
+             d:DesignHeight="120"
+             d:DesignWidth="440"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <converters:HexToBrushConverter x:Key="HexToBrushConverter" />
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </UserControl.Resources>
+
+    <Border x:Name="CardRoot"
+            MaxHeight="240"
+            Background="{DynamicResource MaskColor}"
+            CornerRadius="8"
+            Cursor="Hand"
+            MouseEnter="CardRoot_MouseEnter"
+            MouseLeave="CardRoot_MouseLeave">
+        <Grid>
+            <!--  左侧标签色带 (4px)  -->
+            <Border x:Name="TagStrip"
+                    Width="4"
+                    HorizontalAlignment="Left"
+                    Background="{Binding Tag.Color, Converter={StaticResource HexToBrushConverter}}"
+                    CornerRadius="2,0,0,2"
+                    Visibility="Collapsed" />
+
+            <Grid Margin="12,8,12,8">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!--  正文内容区域  -->
+                <Grid Grid.Row="0">
+                    <!--  文本卡片内容  -->
+                    <Grid x:Name="TextContent" Visibility="Collapsed">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <!--  折叠状态：预览文本  -->
+                        <TextBlock x:Name="PreviewText"
+                                   Grid.Row="0"
+                                   FontSize="13"
+                                   Foreground="{DynamicResource ForeColor}"
+                                   LineHeight="20"
+                                   TextWrapping="Wrap" />
+
+                        <!--  展开状态：完整文本（默认隐藏）  -->
+                        <TextBlock x:Name="FullText"
+                                   Grid.Row="0"
+                                   FontSize="13"
+                                   Foreground="{DynamicResource ForeColor}"
+                                   LineHeight="20"
+                                   TextWrapping="Wrap"
+                                   Visibility="Collapsed" />
+
+                        <!--  展开提示 / 收起按钮  -->
+                        <TextBlock x:Name="ExpandHint"
+                                   Grid.Row="1"
+                                   Margin="0,4,0,0"
+                                   FontSize="11"
+                                   Foreground="{DynamicResource SystemThemeColor}"
+                                   Text="点击查看全文"
+                                   Visibility="Visible" />
+                    </Grid>
+
+                    <!--  图片卡片内容  -->
+                    <Grid x:Name="ImageContent" Visibility="Collapsed">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Row="0"
+                                MaxHeight="200"
+                                ClipToBounds="True"
+                                CornerRadius="6">
+                            <Image x:Name="ThumbnailImage"
+                                   MaxHeight="200"
+                                   Stretch="Uniform" />
+                        </Border>
+                    </Grid>
+                </Grid>
+
+                <!--  底部信息栏：时间 + 标签名  -->
+                <StackPanel Grid.Row="1"
+                            Margin="0,6,0,0"
+                            Orientation="Horizontal">
+                    <TextBlock x:Name="TimeLabel"
+                               FontSize="11"
+                               Foreground="{DynamicResource FocusMaskColor}" />
+                    <Ellipse x:Name="TagDot"
+                             Width="8"
+                             Height="8"
+                             Margin="8,0,4,0"
+                             VerticalAlignment="Center"
+                             Visibility="Collapsed" />
+                    <TextBlock x:Name="TagNameLabel"
+                               FontSize="11"
+                               Foreground="{DynamicResource FocusMaskColor}"
+                               Visibility="Collapsed" />
+                </StackPanel>
+            </Grid>
+
+            <!--  右上角删除按钮（hover 时显示）  -->
+            <ws:Button x:Name="DeleteBtn"
+                       Width="28"
+                       Height="28"
+                       Margin="0,4,4,0"
+                       Padding="0"
+                       HorizontalAlignment="Right"
+                       VerticalAlignment="Top"
+                       Background="Transparent"
+                       BorderThickness="0"
+                       CornerRadius="14"
+                       Cursor="Hand"
+                       Foreground="{DynamicResource ForeColor}"
+                       Opacity="0"
+                       Style="{StaticResource SimpleButtonStyleForWs}"
+                       ToolTip="删除">
+                <Path x:Name="DeleteIcon"
+                      Width="12"
+                      Height="12"
+                      Data="M6,6 L18,18 M18,6 L6,18"
+                      Stretch="Uniform"
+                      Stroke="{DynamicResource ForeColor}"
+                      StrokeThickness="1.5" />
+            </ws:Button>
+        </Grid>
+    </Border>
+</UserControl>

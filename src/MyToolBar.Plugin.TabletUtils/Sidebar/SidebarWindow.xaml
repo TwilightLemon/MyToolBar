@@ -1,12 +1,13 @@
-﻿<Window x:Class="MyToolBar.Plugin.TabletUtils.Sidebar.SidebarWindow"
+<Window x:Class="MyToolBar.Plugin.TabletUtils.Sidebar.SidebarWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:local="clr-namespace:MyToolBar.Plugin.TabletUtils.Sidebar"
         xmlns:mb="clr-namespace:MyToolBar.Common.Behaviors;assembly=MyToolBar.Common"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ws="https://schemas.elecho.dev/wpfsuite"
-        Title="Sidebar"
+        Title="速记抽屉"
         Width="500"
         Height="600"
         d:Background="Transparent"
@@ -31,65 +32,293 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="48" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" MinHeight="160" />
         </Grid.RowDefinitions>
-        <Grid Background="Transparent">
-            <TextBlock HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       FontSize="12">
-                XXX
-            </TextBlock>
-            <ws:ToggleButton x:Name="FixTb"
-                             Margin="0,0,12,0"
-                             Padding="12,4"
-                             HorizontalAlignment="Right"
-                             VerticalAlignment="Center"
-                             Background="{DynamicResource MaskColor}"
-                             BorderThickness="0"
-                             CheckedBackground="{DynamicResource SystemThemeColor}"
-                             CheckedForeground="{DynamicResource ForeColor}"
-                             CornerRadius="12"
-                             Foreground="{DynamicResource ForeColor}"
-                             HoverBackground="{DynamicResource SystemThemeColor}"
-                             HoverForeground="{DynamicResource ForeColor}"
-                             PressedBackground="{DynamicResource SystemThemeColor}">
-                Fix
-            </ws:ToggleButton>
-            <ws:Button x:Name="ClearBtn"
-                       Margin="12,0,0,0"
-                       Padding="12,4"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Center"
-                       Background="{DynamicResource MaskColor}"
-                       BorderThickness="0"
-                       CornerRadius="12"
-                       Foreground="{DynamicResource ForeColor}"
-                       HoverBackground="{DynamicResource SystemThemeColor}"
-                       HoverForeground="{DynamicResource ForeColor}"
-                       PressedBackground="{DynamicResource SystemThemeColor}"
-                       PressedForeground="{DynamicResource ForeColor}">
-                Clear
-            </ws:Button>
-        </Grid>
+
+        <!--  ===== Row 0: 顶部工具栏 =====  -->
+        <Border Grid.Row="0"
+                Padding="8,6"
+                Background="Transparent">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="36" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!--  第一行：搜索框 + 标签筛选 + 日期 + 回收站 + 返回今天  -->
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--  搜索框  -->
+                    <ws:TextBox x:Name="SearchBox"
+                                Grid.Column="1"
+                                Height="32"
+                                Padding="8"
+                                Background="{DynamicResource MaskColor}"
+                                CornerRadius="16"
+                                Foreground="{DynamicResource ForeColor}"
+                                Placeholder="搜索速记..."
+                                Style="{StaticResource SimpleTextBoxStyleForWs}" />
+
+                    <!--  日期选择按钮  -->
+                    <ws:Button Grid.Column="0"
+                               Width="32"
+                               Height="32"
+                               Margin="2,0"
+                               Padding="6"
+                               Background="Transparent"
+                               BorderThickness="0"
+                               Click="DatePickerBtn_Click"
+                               CornerRadius="8"
+                               Cursor="Hand"
+                               Foreground="{DynamicResource ForeColor}"
+                               HoverBackground="{DynamicResource MaskColor}"
+                               ToolTip="选择日期">
+                        <Path Width="16"
+                              Height="16"
+                              Data="M19,4 L5,4 C3.9,4 3,4.9 3,6 L3,20 C3,21.1 3.9,22 5,22 L19,22 C20.1,22 21,21.1 21,20 L21,6 C21,4.9 20.1,4 19,4 Z M16,2 L16,6 M8,2 L8,6 M3,10 L21,10 M8,14 L8,16 M12,14 L12,16 M16,14 L16,16"
+                              Stretch="Uniform"
+                              Stroke="{DynamicResource ForeColor}"
+                              StrokeLineJoin="Round"
+                              StrokeThickness="1.5" />
+                    </ws:Button>
+
+                    <!--  回收站按钮  -->
+                    <ws:Button x:Name="TrashBtn"
+                               Grid.Column="2"
+                               Width="32"
+                               Height="32"
+                               Margin="2,0"
+                               Padding="6"
+                               Background="Transparent"
+                               BorderThickness="0"
+                               Click="TrashBtn_Click"
+                               CornerRadius="8"
+                               Cursor="Hand"
+                               Foreground="{DynamicResource ForeColor}"
+                               HoverBackground="{DynamicResource MaskColor}"
+                               ToolTip="回收站">
+                        <Path Width="16"
+                              Height="16"
+                              Data="M4,7 L20,7 L18.5,21.5 L5.5,21.5 Z M9,7 L9,4 C9,3.4 9.4,3 10,3 L14,3 C14.6,3 15,3.4 15,4 L15,7 M10,11 L10,17.5 M14,11 L14,17.5"
+                              Stretch="Uniform"
+                              Stroke="{DynamicResource ForeColor}"
+                              StrokeLineJoin="Round"
+                              StrokeThickness="1.5" />
+                    </ws:Button>
+                </Grid>
+
+                <!--  第二行：Fix / 返回今天 / Clear  -->
+                <Grid Grid.Row="1"
+                      Margin="4,4,4,12"
+                      Height="24"
+                      HorizontalAlignment="Stretch">
+                    <!--  标签筛选  -->
+                    <Border x:Name="TagFilterPanel"
+                            Padding="0"
+                            HorizontalAlignment="Left"
+                            Background="{DynamicResource MaskColor}"
+                            CornerRadius="10">
+                        <ws:StackPanel x:Name="TagFilterContainer"
+                                       Orientation="Horizontal"
+                                       Spacing="4" />
+                    </Border>
+                    <ws:StackPanel HorizontalAlignment="Right"
+                                   Orientation="Horizontal"
+                                   Spacing="8">
+                        <!--  返回今天（仅非今日时显示）  -->
+                        <ws:Button x:Name="BackToTodayBtn"
+                                   Margin="0,0,4,0"
+                                   Padding="8,3"
+                                   Background="{DynamicResource MaskColor}"
+                                   BorderThickness="0"
+                                   Click="BackToTodayBtn_Click"
+                                   CornerRadius="10"
+                                   Cursor="Hand"
+                                   Foreground="{DynamicResource ForeColor}"
+                                   HoverBackground="{DynamicResource SystemThemeColor}"
+                                   Visibility="Collapsed">
+                            返回今天
+                        </ws:Button>
+                        <ws:ToggleButton x:Name="FixTb"
+                                         Margin="0,0,4,0"
+                                         Padding="12,4"
+                                         Background="{DynamicResource MaskColor}"
+                                         BorderThickness="0"
+                                         CheckedBackground="{DynamicResource SystemThemeColor}"
+                                         CheckedForeground="{DynamicResource ThemedForeColor}"
+                                         CornerRadius="12"
+                                         Foreground="{DynamicResource ForeColor}"
+                                         HoverBackground="{DynamicResource SystemThemeColor}"
+                                         HoverForeground="{DynamicResource ThemedForeColor}"
+                                         PressedBackground="{DynamicResource SystemThemeColor}">
+                            Fix
+                        </ws:ToggleButton>
+                        <ws:Button x:Name="ClearBtn"
+                                   Padding="12,4"
+                                   Background="{DynamicResource MaskColor}"
+                                   BorderThickness="0"
+                                   Click="ClearBtn_Click"
+                                   CornerRadius="12"
+                                   Foreground="{DynamicResource ForeColor}"
+                                   HoverBackground="{DynamicResource SystemThemeColor}"
+                                   HoverForeground="{DynamicResource ThemedForeColor}"
+                                   PressedBackground="{DynamicResource SystemThemeColor}"
+                                   PressedForeground="{DynamicResource ThemedForeColor}">
+                            Clear
+                        </ws:Button>
+                    </ws:StackPanel>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!--  ===== Row 1: 内容区域 =====  -->
         <Grid Grid.Row="1">
-            <ws:ScrollViewer Style="{StaticResource SimpleVerticalScrollViewerStyle}">
-                <ws:StackPanel x:Name="MsgContainer"
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!--  回收站工具栏（回收站模式下显示）  -->
+            <Border x:Name="TrashToolbar"
+                    Grid.Row="0"
+                    Padding="12,8"
+                    Background="{DynamicResource WindowBackgroundColor}"
+                    Visibility="Collapsed">
+                <Grid>
+                    <TextBlock VerticalAlignment="Center"
+                               FontSize="12"
+                               Foreground="{DynamicResource FocusMaskColor}">
+                        回收站 · 条目将在30天后自动清除
+                    </TextBlock>
+                    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                        <ws:Button x:Name="EmptyTrashBtn"
+                                   Margin="0,0,6,0"
+                                   Padding="10,3"
+                                   Background="{DynamicResource MaskColor}"
+                                   BorderThickness="0"
+                                   Click="EmptyTrashBtn_Click"
+                                   CornerRadius="8"
+                                   Cursor="Hand"
+                                   Foreground="{DynamicResource ForeColor}"
+                                   HoverBackground="#CC4444">
+                            清空回收站
+                        </ws:Button>
+                        <ws:Button x:Name="ExitTrashBtn"
+                                   Padding="10,3"
+                                   Background="{DynamicResource MaskColor}"
+                                   BorderThickness="0"
+                                   Click="ExitTrashBtn_Click"
+                                   CornerRadius="8"
+                                   Cursor="Hand"
+                                   Foreground="{DynamicResource ForeColor}"
+                                   HoverBackground="{DynamicResource SystemThemeColor}"
+                                   HoverForeground="{DynamicResource ThemedForeColor}">
+                            返回
+                        </ws:Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!--  正常内容列表  -->
+            <ws:ScrollViewer x:Name="ContentScroller"
+                             Grid.Row="1"
+                             Style="{StaticResource SimpleVerticalScrollViewerStyle}">
+                <ws:StackPanel x:Name="CardContainer"
                                Margin="12,0"
-                               Spacing="12" />
+                               Spacing="8" />
             </ws:ScrollViewer>
+
+            <!--  空状态提示  -->
+            <TextBlock x:Name="EmptyHint"
+                       Grid.Row="1"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontSize="14"
+                       Foreground="{DynamicResource FocusMaskColor}"
+                       Text="📝 今天还没有记录，输入内容开始吧~"
+                       Visibility="Collapsed" />
         </Grid>
+
+        <!--  ===== Row 2: 底部输入区域 =====  -->
         <Border Grid.Row="2"
                 Margin="12"
                 Background="{DynamicResource MaskColor}"
                 CornerRadius="12">
             <Grid>
-                <ws:TextBox x:Name="tb"
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!--  操作栏：标签选择 + 发送  -->
+                <Grid Grid.Row="1" Margin="0,0,12,12">
+                    <!--  当前新条目标签  -->
+                    <Border x:Name="NewItemTagBadge"
+                            Height="28"
+                            MinWidth="12"
+                            Margin="12,0,0,0"
+                            Padding="12,4"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Background="{DynamicResource MaskColor}"
+                            CornerRadius="14"
+                            Cursor="Hand"
+                            MouseLeftButtonDown="NewItemTagBadge_MouseLeftButtonDown"
+                            Visibility="Visible">
+                        <StackPanel Orientation="Horizontal">
+                            <Ellipse x:Name="NewItemTagDot"
+                                     Width="8"
+                                     Height="8"
+                                     Margin="0,0,6,0"
+                                     VerticalAlignment="Center"
+                                     Fill="{DynamicResource FocusMaskColor}" />
+                            <TextBlock x:Name="NewItemTagLabel"
+                                       VerticalAlignment="Center"
+                                       FontSize="11"
+                                       FontWeight="Bold"
+                                       Foreground="{DynamicResource ForeColor}"
+                                       Opacity="0.8"
+                                       Text="Tag" />
+                        </StackPanel>
+                    </Border>
+                    <!--  发送按钮  -->
+                    <ws:Button x:Name="SendBtn"
+                               Width="32"
+                               Height="32"
+                               Margin="8,0,0,0"
+                               Padding="10,4"
+                               HorizontalAlignment="Right"
+                               Background="{DynamicResource SystemThemeColor}"
+                               BorderThickness="0"
+                               Click="SendBtn_Click"
+                               CornerRadius="21"
+                               Cursor="Hand"
+                               Foreground="{DynamicResource ThemedForeColor}"
+                               HoverBackground="{DynamicResource SystemThemeColor}"
+                               HoverForeground="{DynamicResource ThemedForeColor}"
+                               PressedBackground="{DynamicResource SystemThemeColor}"
+                               PressedForeground="{DynamicResource ThemedForeColor}">
+                        <Path Data="{StaticResource SendIcon}"
+                              Fill="{DynamicResource ThemedForeColor}"
+                              Stretch="Uniform" />
+                    </ws:Button>
+                </Grid>
+
+                <!--  输入框  -->
+                <ws:TextBox x:Name="InputBox"
+                            Grid.Row="0"
                             MaxHeight="400"
-                            Margin="4,4,4,48"
+                            Margin="10"
                             Padding="8"
                             AcceptsReturn="True"
                             AcceptsTab="True"
@@ -97,49 +326,9 @@
                             CornerRadius="0"
                             FocusedBackground="Transparent"
                             HoverBackground="Transparent"
-                            Placeholder="Message"
+                            Placeholder="输入速记内容..."
                             Style="{StaticResource SimpleTextBoxStyleForWs}"
                             TextWrapping="Wrap" />
-                <ws:ToggleButton Height="28"
-                                 Margin="18"
-                                 Padding="12,4"
-                                 HorizontalAlignment="Left"
-                                 VerticalAlignment="Bottom"
-                                 Background="{DynamicResource MaskColor}"
-                                 BorderThickness="0"
-                                 CheckedBackground="{DynamicResource SystemThemeColor}"
-                                 CheckedForeground="{DynamicResource ThemedForeColor}"
-                                 CornerRadius="14"
-                                 Cursor="Hand"
-                                 Foreground="{DynamicResource ThemedForeColor}"
-                                 HoverBackground="{DynamicResource SystemThemeColor}"
-                                 HoverForeground="{DynamicResource ThemedForeColor}"
-                                 PressedBackground="{DynamicResource SystemThemeColor}">
-                    XXXXX
-                </ws:ToggleButton>
-                <ws:Button x:Name="SendBtn"
-                           Width="42"
-                           Height="42"
-                           Margin="0,0,12,12"
-                           Padding="12,4"
-                           HorizontalAlignment="Right"
-                           VerticalAlignment="Bottom"
-                           Background="{DynamicResource SystemThemeColor}"
-                           BorderThickness="0"
-                           Click="SendBtn_Click"
-                           CornerRadius="21"
-                           Cursor="Hand"
-                           Foreground="{DynamicResource ThemedForeColor}"
-                           HoverBackground="{DynamicResource SystemThemeColor}"
-                           HoverForeground="{DynamicResource ThemedForeColor}"
-                           PressedBackground="{DynamicResource SystemThemeColor}"
-                           PressedForeground="{DynamicResource ThemedForeColor}">
-                    <Path x:Name="SendingStatus"
-                          Margin="2"
-                          Data="{StaticResource SendIcon}"
-                          Fill="{DynamicResource ThemedForeColor}"
-                          Stretch="Uniform" />
-                </ws:Button>
             </Grid>
         </Border>
     </Grid>

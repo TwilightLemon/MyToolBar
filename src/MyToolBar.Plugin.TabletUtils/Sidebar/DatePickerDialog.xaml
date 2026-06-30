@@ -1,0 +1,61 @@
+<Window x:Class="MyToolBar.Plugin.TabletUtils.Sidebar.DatePickerDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ws="https://schemas.elecho.dev/wpfsuite"
+        Title="选择日期"
+        Width="280"
+        Height="320"
+        Background="{DynamicResource WindowBackgroundColor}"
+        Foreground="{DynamicResource ForeColor}"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="None"
+        ws:WindowOption.Corner="Round">
+    <Border Background="{DynamicResource WindowBackgroundColor}" CornerRadius="10">
+        <Grid Margin="16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0"
+                       Margin="0,8,0,12"
+                       FontSize="14"
+                       FontWeight="SemiBold"
+                       Text="选择日期" />
+
+            <Calendar x:Name="DateCal"
+                      Grid.Row="1"
+                      DisplayMode="Month"
+                      SelectionMode="SingleDate" />
+
+            <StackPanel Grid.Row="2"
+                        Margin="0,12,0,0"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal">
+                <ws:Button Click="CancelBtn_Click"
+                           Padding="12,6"
+                           Background="{DynamicResource MaskColor}"
+                           BorderThickness="0"
+                           CornerRadius="8"
+                           Cursor="Hand"
+                           Foreground="{DynamicResource ForeColor}"
+                           HoverBackground="{DynamicResource FocusMaskColor}">
+                    取消
+                </ws:Button>
+                <ws:Button Click="ConfirmBtn_Click"
+                           Margin="8,0,0,0"
+                           Padding="12,6"
+                           Background="{DynamicResource SystemThemeColor}"
+                           BorderThickness="0"
+                           CornerRadius="8"
+                           Cursor="Hand"
+                           Foreground="{DynamicResource ThemedForeColor}">
+                    确定
+                </ws:Button>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>
