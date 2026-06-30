@@ -1,4 +1,5 @@
 ﻿using MyToolBar.Plugin.TabletUtils.PenPackages;
+using MyToolBar.Plugin.TabletUtils.Sidebar;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;

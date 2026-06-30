@@ -66,7 +66,6 @@
                        VerticalAlignment="Center"
                        Background="{DynamicResource MaskColor}"
                        BorderThickness="0"
-                       Click="ClearBtn_Click"
                        CornerRadius="12"
                        Foreground="{DynamicResource ForeColor}"
                        HoverBackground="{DynamicResource SystemThemeColor}"
@@ -99,7 +98,6 @@
                             FocusedBackground="Transparent"
                             HoverBackground="Transparent"
                             Placeholder="Message"
-                            PreviewKeyDown="tb_PreviewKeyDown"
                             Style="{StaticResource SimpleTextBoxStyleForWs}"
                             TextWrapping="Wrap" />
                 <ws:ToggleButton Height="28"

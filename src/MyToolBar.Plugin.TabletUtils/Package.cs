@@ -1,5 +1,3 @@
-using MyToolBar.Plugin.TabletUtils.Configs;
-using MyToolBar.Plugin.TabletUtils.DeepSeek;
 using MyToolBar.Plugin.TabletUtils.Services;
 using System.Globalization;
 using System.Reflection;
