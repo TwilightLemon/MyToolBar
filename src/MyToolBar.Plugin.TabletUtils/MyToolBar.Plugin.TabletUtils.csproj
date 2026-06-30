@@ -10,22 +10,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="ColorCode.Core" Version="2.0.15" />
-		<PackageReference Include="Markdig" Version="0.40.0" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<ProjectReference Include="..\MyToolBar.Common\MyToolBar.Common.csproj" />
 		<ProjectReference Include="..\MyToolBar.Plugin\MyToolBar.Plugin.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Reference Include="DeepSeek.Core">
-			<HintPath>Lib\DeepSeek.Core.dll</HintPath>
-		</Reference>
-		<Reference Include="EleCho.MdViewer">
-			<HintPath>Lib\EleCho.MdViewer.dll</HintPath>
-		</Reference>
 	</ItemGroup>
 
 	<ItemGroup>

@@ -52,7 +52,7 @@ public class SideBarPlugin : IPlugin
 
     public string Description => _rm.GetString("SideBarDesc", _cultureInfo) ?? "";
 
-    public Type[]? SettingsTypes => [typeof(DeepSeekConfig)];
+    public Type[]? SettingsTypes => null;
     public List<string>? SettingsSignKeys => null;
 
     public PluginType Type => PluginType.UserService;

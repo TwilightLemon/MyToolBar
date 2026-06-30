@@ -5,7 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 
-namespace MyToolBar.Plugin.TabletUtils.PenPackages
+namespace MyToolBar.Plugin.TabletUtils.Sidebar
 {
     /// <summary>
     /// SideLauncherWindow.xaml 的交互逻辑

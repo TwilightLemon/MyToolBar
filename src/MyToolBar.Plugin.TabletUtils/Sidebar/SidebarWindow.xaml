@@ -1,4 +1,4 @@
-﻿<Window x:Class="MyToolBar.Plugin.TabletUtils.DeepSeek.DeepSeekChatWindow"
+﻿<Window x:Class="MyToolBar.Plugin.TabletUtils.Sidebar.SidebarWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,9 +6,10 @@
         xmlns:mb="clr-namespace:MyToolBar.Common.Behaviors;assembly=MyToolBar.Common"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ws="https://schemas.elecho.dev/wpfsuite"
-        Title="DeepSeek Assistant"
+        Title="Sidebar"
         Width="500"
         Height="600"
+        d:Background="Transparent"
         ws:WindowOption.Corner="Round"
         Background="{DynamicResource WindowBackgroundColor}"
         Foreground="{DynamicResource ForeColor}"
@@ -40,7 +41,7 @@
             <TextBlock HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        FontSize="12">
-                DeepSeek
+                XXX
             </TextBlock>
             <ws:ToggleButton x:Name="FixTb"
                              Margin="0,0,12,0"
@@ -97,12 +98,11 @@
                             CornerRadius="0"
                             FocusedBackground="Transparent"
                             HoverBackground="Transparent"
-                            Placeholder="Message DeepSeek"
+                            Placeholder="Message"
                             PreviewKeyDown="tb_PreviewKeyDown"
                             Style="{StaticResource SimpleTextBoxStyleForWs}"
                             TextWrapping="Wrap" />
-                <ws:ToggleButton x:Name="SwitchModelTb"
-                                 Height="28"
+                <ws:ToggleButton Height="28"
                                  Margin="18"
                                  Padding="12,4"
                                  HorizontalAlignment="Left"
@@ -111,14 +111,13 @@
                                  BorderThickness="0"
                                  CheckedBackground="{DynamicResource SystemThemeColor}"
                                  CheckedForeground="{DynamicResource ThemedForeColor}"
-                                 Click="SwitchModelTb_Click"
                                  CornerRadius="14"
                                  Cursor="Hand"
                                  Foreground="{DynamicResource ThemedForeColor}"
                                  HoverBackground="{DynamicResource SystemThemeColor}"
                                  HoverForeground="{DynamicResource ThemedForeColor}"
                                  PressedBackground="{DynamicResource SystemThemeColor}">
-                    DeepSeek R1
+                    XXXXX
                 </ws:ToggleButton>
                 <ws:Button x:Name="SendBtn"
                            Width="42"
