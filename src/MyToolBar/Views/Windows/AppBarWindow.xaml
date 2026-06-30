@@ -28,6 +28,7 @@
         WindowStyle="None"
         mc:Ignorable="d">
     <Window.Resources>
+        <SolidColorBrush x:Key="HighlightOpacityMaskBrush" Color="#64000000" />
         <WindowChrome x:Key="windowChrome"
                       CaptionHeight="0"
                       ResizeBorderThickness="0" />
@@ -54,7 +55,7 @@
                                   d:Width="1.2*" />
                 <ColumnDefinition Width="1.2*" />
             </Grid.ColumnDefinitions>
-            <Border x:Name="HighlightBorderLeft" OpacityMask="#64000000">
+            <Border x:Name="HighlightBorderLeft" OpacityMask="{StaticResource HighlightOpacityMaskBrush}">
                 <Border.Effect>
                     <sha:HighlightEffect HighlightIntensity="2" />
                 </Border.Effect>
@@ -90,7 +91,7 @@
             </Border>
             <Border x:Name="HighlightBorderCenter"
                     Grid.Column="1"
-                    OpacityMask="#64000000">
+                    OpacityMask="{StaticResource HighlightOpacityMaskBrush}">
                 <Border.Effect>
                     <sha:HighlightEffect HighlightIntensity="2" />
                 </Border.Effect>
@@ -105,7 +106,7 @@
             </Border>
             <Border x:Name="HighlightBorderRight"
                     Grid.Column="2"
-                    OpacityMask="#64000000">
+                    OpacityMask="{StaticResource HighlightOpacityMaskBrush}">
                 <Border.Effect>
                     <sha:HighlightEffect HighlightIntensity="2" />
                 </Border.Effect>

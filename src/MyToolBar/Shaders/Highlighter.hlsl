@@ -12,7 +12,7 @@ float4 main(float2 uv : TEXCOORD) : COLOR
     float intensity = color.a * HighlightIntensity;
 
     // 提高对比度（以 0.5 为中心）
-    color.rgb = ((color.rgb - 0.5) * 0.2 + 0.5)*color.a;
+    color.rgb = ((color.rgb - 0.5) * 1.15 + 0.5)*color.a;
 
     // 加高光
     color.rgb += HighlightColor.rgb * intensity;

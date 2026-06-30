@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using MyToolBar.Common;
+using MyToolBar.Common.Func;
 using MyToolBar.Common.WinAPI;
 
 namespace MyToolBar.Services
@@ -35,8 +36,13 @@ namespace MyToolBar.Services
 
         public void UpdateDwmColor()
         {
-            App.Current.Resources["SystemThemeColor"] = new SolidColorBrush(SystemThemeAPI.GetSystemAccentColor(GlobalService.IsDarkMode));
-            App.Current.Resources["FocusAccentColor"] = new SolidColorBrush(SystemThemeAPI.GetSystemAccentColor(GlobalService.IsDarkMode,true));
+            var sysColor = SystemThemeAPI.GetSystemAccentColor(GlobalService.IsDarkMode);
+            App.Current.Resources["SystemThemeColor"] = new SolidColorBrush(sysColor);
+            App.Current.Resources["FocusAccentColor"] = new SolidColorBrush(SystemThemeAPI.GetSystemAccentColor(GlobalService.IsDarkMode, true));
+
+            // 根据系统主题色的亮度计算合适的文字颜色（黑色或白色）
+            bool useBlackText = ImageHelper.WSAGColorCheck(sysColor.R, sysColor.G, sysColor.B);
+            App.Current.Resources["ThemedForeColor"] = new SolidColorBrush(useBlackText ? Color.FromRgb(0x0E, 0x0E, 0x0E) : Color.FromRgb(0xFE, 0xFE, 0xFE));
 
             GlobalService.NotifyThemeColorChanged();
         }

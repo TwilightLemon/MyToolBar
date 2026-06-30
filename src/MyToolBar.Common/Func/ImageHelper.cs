@@ -11,7 +11,7 @@ using System.Windows.Media.Imaging;
 namespace MyToolBar.Common.Func;
 public static class ImageHelper
 {
-    #region Image�໥ת����չ����
+    #region 图像相互转换扩展方法
 
     [DllImport("gdi32.dll", SetLastError = true)]
     private static extern bool DeleteObject(IntPtr hObject);
@@ -33,7 +33,7 @@ public static class ImageHelper
     {
         BitmapSource m = (BitmapSource)imageSource;
 
-        Bitmap bmp = new Bitmap(m.PixelWidth, m.PixelHeight, System.Drawing.Imaging.PixelFormat.Format32bppPArgb); // �ӵ㣺ѡFormat32bppRgb������͸����
+        Bitmap bmp = new Bitmap(m.PixelWidth, m.PixelHeight, System.Drawing.Imaging.PixelFormat.Format32bppPArgb); // 注意：选择Format32bppPArgb而非Format32bppRgb以保留透明通道
 
         BitmapData data = bmp.LockBits(
         new Rectangle(System.Drawing.Point.Empty, bmp.Size), ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
@@ -72,18 +72,18 @@ public static class ImageHelper
         }
     }
     #endregion
-    #region ����ģ��ͼ��
+    #region 高斯模糊图像
     [DllImport("gdiplus.dll", SetLastError = true, ExactSpelling = true, CharSet = CharSet.Unicode)]
     private static extern int GdipBitmapApplyEffect(IntPtr bitmap, IntPtr effect, ref Rectangle rectOfInterest, bool useAuxData, IntPtr auxData, int auxDataSize);
     /// <summary>
-    /// ��ȡ�����˽���ֶε�ֵ����лAaron Lee Murgatroyd
+    /// 获取对象的私有字段的值，感谢Aaron Lee Murgatroyd
     /// </summary>
-    /// <typeparam name="TResult">�ֶε�����</typeparam>
-    /// <param name="obj">Ҫ�����л�ȡ�ֶ�ֵ�Ķ���</param>
-    /// <param name="fieldName">�ֶε�����.</param>
-    /// <returns>�ֶε�ֵ</returns>
-    /// <exception cref="System.InvalidOperationException">�޷��ҵ����ֶ�.</exception>
-    /// 
+    /// <typeparam name="TResult">字段的类型</typeparam>
+    /// <param name="obj">要从中获取字段值的对象</param>
+    /// <param name="fieldName">字段的名称</param>
+    /// <returns>字段的值</returns>
+    /// <exception cref="System.InvalidOperationException">无法找到该字段</exception>
+    ///
     internal static TResult GetPrivateField<TResult>(this object obj, string fieldName)
     {
         if (obj == null) return default(TResult);
@@ -108,8 +108,8 @@ public static class ImageHelper
     private static extern int GdipSetEffectParameters(IntPtr effect, IntPtr parameters, uint size);
     public static IntPtr NativeHandle(this Bitmap Bmp)
     {
-        // ͨ�������ȡBitmap��˽���ֶ�nativeImage��ֵ����ֵΪGDI+���ڲ�ͼ����
-        //�°�Drawing��Nuget�����ֶ��� nativeImage���Ϊ_nativeImage
+        // 通过反射获取Bitmap的私有字段nativeImage的值，该值为GDI+的内部图像句柄
+        // 新版Drawing的Nuget包中字段名 nativeImage 已改为_nativeImage
         return Bmp.GetPrivateField<IntPtr>("_nativeImage");
     }
     [DllImport("gdiplus.dll", SetLastError = true, ExactSpelling = true, CharSet = CharSet.Unicode)]
@@ -121,7 +121,7 @@ public static class ImageHelper
         BlurParameters BlurPara;
         if ((Radius < 0) || (Radius > 255))
         {
-            throw new ArgumentOutOfRangeException("�뾶������[0,255]��Χ��");
+            throw new ArgumentOutOfRangeException(nameof(Radius), "半径必须在[0,255]范围内");
         }
         BlurPara.Radius = Radius;
         BlurPara.ExpandEdges = ExpandEdge;
@@ -132,13 +132,13 @@ public static class ImageHelper
             Marshal.StructureToPtr(BlurPara, Handle, true);
             GdipSetEffectParameters(BlurEffect, Handle, (uint)Marshal.SizeOf(BlurPara));
             GdipBitmapApplyEffect(Bmp.NativeHandle(), BlurEffect, ref Rect, false, IntPtr.Zero, 0);
-            // ʹ��GdipBitmapCreateApplyEffect�������Բ��ı�ԭʼ��ͼ�񣬶���ģ���Ľ��д�뵽һ���µ�ͼ����
+            // 使用GdipBitmapCreateApplyEffect函数可以不改变原始图像，而是将模糊的结果写入到一张新的图像中
             GdipDeleteEffect(BlurEffect);
             Marshal.FreeHGlobal(Handle);
         }
         else
         {
-            throw new ExternalException("��֧�ֵ�GDI+�汾������ΪGDI+1.1�����ϰ汾���Ҳ���ϵͳҪ��ΪWin Vista��֮��汾.");
+            throw new ExternalException("不支持的GDI+版本，需要为GDI+1.1或以上版本，且操作系统要求为Win Vista或之后版本。");
         }
     }
 

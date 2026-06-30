@@ -32,7 +32,7 @@
                 <Path Width="14"
                       Height="14"
                       Data="{StaticResource Icon_add}"
-                      Fill="{DynamicResource ForeColor}"
+                      Fill="{DynamicResource ThemedForeColor}"
                       Stretch="Uniform" />
             </ws:Button>
         </Grid>

@@ -7,7 +7,7 @@
              xmlns:ws="https://schemas.elecho.dev/wpfsuite"
              d:DesignWidth="800"
              mc:Ignorable="d">
-    <Grid Margin="20">
+    <Grid Margin="20,8">
         <Border x:Name="ViewMask"
                 Background="{DynamicResource MaskColor}"
                 CornerRadius="15" />

@@ -11,6 +11,7 @@
     <SolidColorBrush x:Key="TabMaskColor" Color="#4C000000" />
     <!--  For Others  -->
     <SolidColorBrush x:Key="ForeColor" Color="#FEFEFE" />
+    <SolidColorBrush x:Key="ThemedForeColor" Color="#FEFEFE" />
     <SolidColorBrush x:Key="MaskColor" Color="#19ffffff" />
     <SolidColorBrush x:Key="FocusMaskColor" Color="#33FFFFFF" />
     <SolidColorBrush x:Key="BackgroundColor" Color="#000" />
