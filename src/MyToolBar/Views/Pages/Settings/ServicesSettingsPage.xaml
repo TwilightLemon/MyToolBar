@@ -6,6 +6,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:ws="https://schemas.elecho.dev/wpfsuite"
       Title="ServicesSettingsPage"
+      d:DataContext="{d:DesignInstance Type=local:ServicesSettingsPage}"
       d:DesignHeight="450"
       d:DesignWidth="800"
       Foreground="{DynamicResource ForeColor}"
@@ -18,9 +19,50 @@
                    FontSize="20"
                    FontWeight="Bold"
                    Text="{DynamicResource SettingsWindow_Tab_Services}" />
-
-        <ws:ScrollViewer Style="{StaticResource SimpleVerticalScrollViewerStyle}">
-            <StackPanel x:Name="ServiceList" Margin="0,60,0,0" />
+        <ws:ScrollViewer Margin="0,60,0,0" Style="{DynamicResource SimpleVerticalScrollViewerStyle}">
+            <Border Margin="20,0"
+                    VerticalAlignment="Top"
+                    Style="{StaticResource BorderCardStyle}">
+                <ItemsControl ItemsSource="{Binding Plugins}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Height="76">
+                                <Separator Height="1"
+                                           VerticalAlignment="Top"
+                                           Background="{DynamicResource TabBorderColor}"
+                                           SnapsToDevicePixels="True">
+                                    <Separator.Style>
+                                        <Style TargetType="Separator">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource PreviousData}}" Value="{x:Null}">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Separator.Style>
+                                </Separator>
+                                <ws:StackPanel Margin="16,0,0,0"
+                                               HorizontalAlignment="Left"
+                                               VerticalAlignment="Center">
+                                    <TextBlock FontSize="18" Text="{Binding Plugin.DisplayName, Mode=OneWay}" />
+                                    <TextBlock FontSize="12"
+                                               Opacity="0.6"
+                                               Text="{Binding Plugin.Description, Mode=OneWay}" />
+                                </ws:StackPanel>
+                                <ws:ToggleButton x:Name="EnableToggle"
+                                                 Height="28"
+                                                 Margin="0,0,18,0"
+                                                 HorizontalAlignment="Right"
+                                                 VerticalAlignment="Center"
+                                                 Command="{Binding DataContext.SwitchPluginCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                 CommandParameter="{Binding}"
+                                                 IsChecked="{Binding IsEnabled}"
+                                                 Style="{DynamicResource RoundToggleButtonStyle}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Border>
         </ws:ScrollViewer>
 
     </Grid>

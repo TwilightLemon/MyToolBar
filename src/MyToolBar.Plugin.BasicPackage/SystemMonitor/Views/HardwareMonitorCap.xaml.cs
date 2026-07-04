@@ -81,7 +81,11 @@ namespace MyToolBar.Plugin.BasicPackage.SystemMonitor.Views
         {
             if(ni == null || ci == null)
                 return;
-            Meo_text.Text = (int)MemoryInfo.GetUsedPercent() + "%";
+            double memPercent = MemoryInfo.GetUsedPercent();
+            Meo_text.Text = (int)memPercent + "%";
+            double offset =1.0- memPercent / 100.0;
+            MemoryMaskStop1.Offset = offset;
+            MemoryMaskStop2.Offset = offset;
             Cpu_text.Text = ci.GetCPUUsedPercent();
             //Cpu_temp.Text = ci.GetCPUTemperature() + "℃";
             var data = ni.GetNetworkSpeed();

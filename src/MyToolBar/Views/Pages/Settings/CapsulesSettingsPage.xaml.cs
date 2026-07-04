@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using MyToolBar.Plugin;
 using MyToolBar.Services;
 using MyToolBar.Views.Items;
@@ -21,6 +13,7 @@ namespace MyToolBar.Views.Pages.Settings
     /// <summary>
     /// CapsulesSettingsPage.xaml 的交互逻辑
     /// </summary>
+    [ObservableObject]
     public partial class CapsulesSettingsPage : Page
     {
         private readonly ManagedPackageService _managedPackageService;
@@ -29,32 +22,25 @@ namespace MyToolBar.Views.Pages.Settings
             ManagedPackageService managedPackageService,
             PluginReactiveService pluginReactiveService)
         {
-            InitializeComponent();
             _managedPackageService = managedPackageService;
             _pluginReactiveService = pluginReactiveService;
-            Init();
+            Plugins = [.. _managedPackageService.GetTypePlugins(PluginType.Capsule).Select(x => new PluginStateData(x, _pluginReactiveService.Capsules.Keys.Contains(x)))];
+            DataContext = this;
+            InitializeComponent();
         }
-        private void Init()
-        {
-            var caps=_managedPackageService.GetTypePlugins(PluginType.Capsule);
-            foreach(var cap in caps)
-            {
-                var IsEnable=_pluginReactiveService.Capsules.ContainsKey(cap);
-                var item=new SelectiveSettingItem(cap, IsEnable) {Margin=new Thickness(5,2,5,2)};
-                item.OnIsEnableChanged += Item_OnIsEnableChanged;
-                CapsuleList.Children.Add(item);
-            }
-        }
+        [ObservableProperty]
+        private List<PluginStateData> _plugins;
 
-        private async void Item_OnIsEnableChanged(IPlugin plugin, bool isEnable) 
+        [RelayCommand]
+        public async Task SwitchPlugin(PluginStateData data)
         {
-            if (isEnable)
+            if (data.IsEnabled)
             {
-                await _pluginReactiveService.AddCapsule(plugin);
+                await _pluginReactiveService.AddCapsule(data.Plugin);
             }
             else
             {
-               await _pluginReactiveService.RemoveCapsule(plugin);
+                await _pluginReactiveService.RemoveCapsule(data.Plugin);
             }
         }
     }

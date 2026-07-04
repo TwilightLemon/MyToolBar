@@ -28,11 +28,11 @@
               d:Visibility="Visible"
               Visibility="Collapsed">
             <TextBlock x:Name="DetalTb"
-                       Margin="36,40,36,16"
+                       Margin="36,40,36,20"
                        d:Text="xxxx"
                        TextWrapping="Wrap" />
             <TextBlock x:Name="PublisherTb"
-                       Margin="3"
+                       Margin="6"
                        VerticalAlignment="Bottom"
                        d:Text="publisher"
                        FontSize="10"

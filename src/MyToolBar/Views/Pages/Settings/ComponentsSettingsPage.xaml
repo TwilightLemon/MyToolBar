@@ -10,31 +10,28 @@
       d:DesignWidth="800"
       Foreground="{DynamicResource ForeColor}"
       mc:Ignorable="d">
-    <ws:BoxPanel>
-        <ws:ScrollViewer Style="{StaticResource SimpleVerticalScrollViewerStyle}">
-            <StackPanel x:Name="PackagesPanel">
-                <TextBlock Margin="20,20,0,0"
-                           FontSize="22"
-                           FontWeight="Bold"
-                           Text="{DynamicResource SettingsWindow_Tab_Components}" />
-            </StackPanel>
+    <Grid>
+        <TextBlock Margin="20,20,0,0"
+                   FontSize="20"
+                   FontWeight="Bold"
+                   Text="{DynamicResource SettingsWindow_Tab_Components}" />
+        <ws:ScrollViewer Margin="0,60,0,0" Style="{StaticResource SimpleVerticalScrollViewerStyle}">
+            <StackPanel x:Name="PackagesPanel" />
         </ws:ScrollViewer>
-        <Grid>
-            <ws:Button x:Name="AddPluginBtn"
-                       Width="48"
-                       Height="48"
-                       Margin="22"
-                       HorizontalAlignment="Right"
-                       VerticalAlignment="Bottom"
-                       Click="AddPluginBtn_Click"
-                       CornerRadius="24"
-                       Style="{StaticResource AccentButtonStyleForWs}">
-                <Path Width="14"
-                      Height="14"
-                      Data="{StaticResource Icon_add}"
-                      Fill="{DynamicResource ThemedForeColor}"
-                      Stretch="Uniform" />
-            </ws:Button>
-        </Grid>
-    </ws:BoxPanel>
+        <ws:Button x:Name="AddPluginBtn"
+                   Width="48"
+                   Height="48"
+                   Margin="22"
+                   HorizontalAlignment="Right"
+                   VerticalAlignment="Bottom"
+                   Click="AddPluginBtn_Click"
+                   CornerRadius="24"
+                   Style="{StaticResource AccentButtonStyleForWs}">
+            <Path Width="14"
+                  Height="14"
+                  Data="{StaticResource Icon_add}"
+                  Fill="{DynamicResource ThemedForeColor}"
+                  Stretch="Uniform" />
+        </ws:Button>
+    </Grid>
 </Page>

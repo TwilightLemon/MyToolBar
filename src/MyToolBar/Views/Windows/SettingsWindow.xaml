@@ -12,7 +12,7 @@
                        Width="850"
                        Height="550"
                        Icon="/Resources/icon.ico"
-                       ResizeMode="CanMinimize"
+                       ResizeMode="CanResize"
                        WindowStyle="None"
                        mc:Ignorable="d">
     <DockPanel>
@@ -89,7 +89,7 @@
             </ws:ListBox>
         </DockPanel>
         <ws:Frame Name="WindowFrame"
-                  Background="{DynamicResource TabMaskColor}"
+                  Background="Transparent"
                   NavigationUIVisibility="Hidden">
             <ws:Frame.Transition>
                 <ws:SlideFadeTransition Distance="50"

@@ -169,8 +169,7 @@
                 Height="0"
                 Margin="10,60,10,10"
                 VerticalAlignment="Top"
-                Background="{DynamicResource MaskColor}"
-                CornerRadius="15">
+                Style="{StaticResource BorderCardStyle}">
             <Grid>
                 <ws:ListBox x:Name="NotRespondingList"
                             Height="220"
@@ -213,8 +212,7 @@
         </Border>
         <Border x:Name="ProcListPage"
                 Margin="10,70,10,10"
-                Background="{DynamicResource MaskColor}"
-                CornerRadius="15">
+                Style="{StaticResource BorderCardStyle}">
             <ws:ScrollViewer Style="{StaticResource SimpleVerticalScrollViewerStyle}">
                 <WrapPanel x:Name="ProcessList" ItemWidth="330" />
             </ws:ScrollViewer>
@@ -222,7 +220,7 @@
         <Grid x:Name="ProcessInfoPage"
               Margin="10,60,10,10"
               Visibility="Collapsed">
-            <Border Background="{DynamicResource MaskColor}" CornerRadius="15" />
+            <Border Style="{StaticResource BorderCardStyle}" />
             <Border Width="90"
                     Height="90"
                     Margin="0,40,0,0"

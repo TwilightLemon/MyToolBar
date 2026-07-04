@@ -14,6 +14,7 @@ namespace MyToolBar.Plugin.BasicPackage.SystemMonitor.Views
     {
         public ProcessItem()
         {
+            MaskCornerRadius = new CornerRadius(8);
             InitializeComponent();
         }
         public Process? _pro = null;

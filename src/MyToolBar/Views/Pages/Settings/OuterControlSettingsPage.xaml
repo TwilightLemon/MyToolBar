@@ -11,47 +11,50 @@
       Foreground="{DynamicResource ForeColor}"
       mc:Ignorable="d">
 
-    <ws:ScrollViewer Style="{StaticResource SimpleVerticalScrollViewerStyle}">
-        <StackPanel>
-            <TextBlock Margin="20,20,20,8"
-                       FontSize="22"
+    <DockPanel>
+        <ws:StackPanel Height="64"
+                       DockPanel.Dock="Top"
+                       Orientation="Horizontal"
+                       Spacing="20">
+            <TextBlock Margin="20,0,0,0"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       FontSize="20"
                        FontWeight="Bold"
                        Text="{DynamicResource SettingsWindow_Tab_OuterControl}" />
-            <ws:Button x:Name="testBtn"
-                       Height="48"
-                       Margin="5,0,5,10"
-                       Click="testBtn_Click"
-                       Content="test notification"
-                       Style="{StaticResource SimpleButtonStyleForWs}" />
-            <ws:Button x:Name="RemoveOuterControlBtn"
-                       Height="48"
-                       Margin="5,0,5,10"
+            <ws:Button Height="32"
+                       Padding="12,4"
                        Click="RemoveOuterControlBtn_Click"
                        Content="{DynamicResource OuterControlSettings_Remove}"
-                       Style="{StaticResource SimpleButtonStyleForWs}" />
-            <ws:ListBox x:Name="OCPluginList"
-                        d:ItemsSource="{d:SampleData ItemCount=5}"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        ItemContainerStyle="{DynamicResource SimpleListBoxItemStyle}"
-                        ItemsSource="{Binding}"
-                        SelectionChanged="OCPluginList_SelectionChanged">
-                <ws:ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Border Height="Auto"
-                                Padding="18"
-                                Background="Transparent">
-                            <TextBlock>
-                                <Run FontSize="22"
-                                     FontWeight="Bold"
-                                     Text="{Binding DisplayName, Mode=OneWay}" />
-                                <LineBreak />
-                                <Run Text="{Binding Description, Mode=OneWay}" />
-                            </TextBlock>
-                        </Border>
-                    </DataTemplate>
-                </ws:ListBox.ItemTemplate>
-            </ws:ListBox>
-        </StackPanel>
-    </ws:ScrollViewer>
+                       Style="{StaticResource SimpleButtonStyleForWs}"
+                       WindowChrome.IsHitTestVisibleInChrome="True" />
+        </ws:StackPanel>
+        <ws:ListBox x:Name="OCPluginList"
+                    Margin="20,0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Top"
+                    d:ItemsSource="{d:SampleData ItemCount=5}"
+                    Background="{DynamicResource TabMaskColor}"
+                    BorderBrush="{DynamicResource TabBorderColor}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    ItemContainerStyle="{DynamicResource SimpleListBoxItemStyle}"
+                    ItemsSource="{Binding}"
+                    SelectionChanged="OCPluginList_SelectionChanged">
+            <ws:ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border Height="Auto"
+                            Padding="18"
+                            Background="Transparent">
+                        <ws:StackPanel>
+                            <TextBlock FontSize="18" Text="{Binding DisplayName, Mode=OneWay}" />
+                            <TextBlock FontSize="12"
+                                       Opacity="0.6"
+                                       Text="{Binding Description, Mode=OneWay}" />
+                        </ws:StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ws:ListBox.ItemTemplate>
+        </ws:ListBox>
+    </DockPanel>
 </Page>

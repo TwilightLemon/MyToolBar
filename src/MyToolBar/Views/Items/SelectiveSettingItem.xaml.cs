@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Windows;
 using MyToolBar.Common.UIBases;
@@ -31,15 +31,15 @@ namespace MyToolBar.Views.Items
         public SelectiveSettingItem(IPlugin plugin,bool isEnable)
         {
             InitializeComponent();
-            Click += CapsuleSettingItem_Click;
+            EnableClickEvent = false;
+            MaskCornerRadius = new CornerRadius(8);
             PluginIsEnabled = isEnable;
             Plugin = plugin;
             DataContext = this;
         }
 
-        private void CapsuleSettingItem_Click(object sender, RoutedEventArgs e) 
+        private void EnableToggle_Changed(object sender, RoutedEventArgs e)
         {
-            PluginIsEnabled = !PluginIsEnabled;
             OnIsEnableChanged?.Invoke(Plugin, PluginIsEnabled);
         }
     }

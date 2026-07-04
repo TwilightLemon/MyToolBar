@@ -24,7 +24,7 @@ namespace MyToolBar.Views.Pages.Settings
 
         private void AppSettingsPage_Loaded(object sender, RoutedEventArgs e)
         {
-            vm.LoadData();
+            vm.LoadMonitorData();
         }
 
         private readonly AppSettingsPageViewModel vm;

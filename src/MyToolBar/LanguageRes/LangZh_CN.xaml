@@ -47,7 +47,7 @@
     <sys:String x:Key="AppSettings_Item_WebProxy_ProxyPassword">密码</sys:String>
 
     <!--  OuterControl Settings Page  -->
-    <sys:String x:Key="OuterControlSettings_Remove">移除外部控制（部分会自动隐藏）</sys:String>
+    <sys:String x:Key="OuterControlSettings_Remove">移除</sys:String>
 
     <!--  Converter Texts  -->
     <sys:String x:Key="AS_Proxy_None">不使用代理</sys:String>

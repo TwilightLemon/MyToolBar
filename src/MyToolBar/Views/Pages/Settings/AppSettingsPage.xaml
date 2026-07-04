@@ -53,9 +53,7 @@
                     <TextBlock FontSize="22" Text="{DynamicResource AppSettings_Group_Monitor}" />
 
                     <!--  Monitor Tile Grid  -->
-                    <Border Padding="4"
-                            Background="{DynamicResource MaskColor}"
-                            CornerRadius="12">
+                    <Border Padding="4" Style="{StaticResource BorderCardStyle}">
                         <Grid>
                             <ListBox Margin="4,4,4,8"
                                      HorizontalAlignment="Center"
@@ -104,8 +102,8 @@
                                         <Border Width="148"
                                                 Height="80"
                                                 Padding="10,8"
-                                                Background="{DynamicResource MaskColor}"
-                                                CornerRadius="8"
+                                                Background="{DynamicResource TabMaskColor}"
+                                                CornerRadius="12"
                                                 Cursor="Hand">
                                             <Grid>
                                                 <!--  Name & Resolution  -->
@@ -118,7 +116,7 @@
                                                 <TextBlock Margin="0,24,0,0"
                                                            HorizontalAlignment="Center"
                                                            FontSize="11"
-                                                           Foreground="{DynamicResource FocusMaskColor}"
+                                                           Foreground="{DynamicResource ForeColor}"
                                                            Text="{Binding ResolutionText}"
                                                            TextAlignment="Center" />
                                                 <TextBlock Margin="0,0,0,4"
@@ -141,9 +139,7 @@
                     <TextBlock FontSize="22" Text="{DynamicResource AppSettings_Group_Appearence}" />
 
                     <!--  Window Mode  -->
-                    <Border Padding="4"
-                            Background="{DynamicResource MaskColor}"
-                            CornerRadius="12">
+                    <Border Padding="4" Style="{StaticResource BorderCardStyle}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -152,7 +148,6 @@
                             <TextBlock Grid.Row="0"
                                        Margin="12,8,0,4"
                                        FontSize="13"
-                                       FontWeight="SemiBold"
                                        Text="{DynamicResource AppSettings_Item_WindowMode}" />
                             <Grid Grid.Row="1"
                                   Margin="4,4,4,8"
@@ -218,77 +213,62 @@
 
                     <!--  Floating Mode Settings (only visible when WindowMode == Floating)  -->
                     <Border Padding="4"
-                            Background="{DynamicResource MaskColor}"
-                            CornerRadius="12"
+                            Style="{StaticResource BorderCardStyle}"
                             Visibility="{Binding IsFloatingMode, Converter={StaticResource BoolToVisibilityConverter}}">
-                        <ws:StackPanel Spacing="8">
+                        <ws:StackPanel>
                             <!--  Horizontal Margin  -->
-                            <Border Height="48"
-                                    Background="{DynamicResource MaskColor}"
-                                    CornerRadius="8">
-                                <Grid>
-                                    <TextBlock Margin="12"
-                                               HorizontalAlignment="Left"
-                                               VerticalAlignment="Center"
-                                               Text="{DynamicResource AppSettings_Item_FloatingMarginH}" />
-                                    <ws:TextBox x:Name="FloatingMarginHTb"
-                                                Width="80"
-                                                Height="30"
-                                                Margin="0,0,48,0"
-                                                Padding="8,0"
-                                                HorizontalAlignment="Right"
-                                                VerticalContentAlignment="Center"
-                                                Style="{StaticResource SimpleTextBoxStyleForWs}"
-                                                Text="{Binding FloatingMarginHorizontal}" />
-                                </Grid>
-                            </Border>
+                            <Grid>
+                                <TextBlock Margin="12"
+                                           HorizontalAlignment="Left"
+                                           VerticalAlignment="Center"
+                                           Text="{DynamicResource AppSettings_Item_FloatingMarginH}" />
+                                <ws:TextBox x:Name="FloatingMarginHTb"
+                                            Width="80"
+                                            Height="30"
+                                            Margin="0,0,48,0"
+                                            Padding="8,0"
+                                            HorizontalAlignment="Right"
+                                            VerticalContentAlignment="Center"
+                                            Style="{StaticResource SimpleTextBoxStyleForWs}"
+                                            Text="{Binding FloatingMarginHorizontal}" />
+                            </Grid>
                             <!--  Vertical Margin  -->
-                            <Border Height="48"
-                                    Background="{DynamicResource MaskColor}"
-                                    CornerRadius="8">
-                                <Grid>
-                                    <TextBlock Margin="12"
-                                               HorizontalAlignment="Left"
-                                               VerticalAlignment="Center"
-                                               Text="{DynamicResource AppSettings_Item_FloatingMarginV}" />
-                                    <ws:TextBox x:Name="FloatingMarginVTb"
-                                                Width="80"
-                                                Height="30"
-                                                Margin="0,0,48,0"
-                                                Padding="8,0"
-                                                HorizontalAlignment="Right"
-                                                VerticalContentAlignment="Center"
-                                                Style="{StaticResource SimpleTextBoxStyleForWs}"
-                                                Text="{Binding FloatingMarginVertical}" />
-                                </Grid>
-                            </Border>
+                            <Grid>
+                                <TextBlock Margin="12"
+                                           HorizontalAlignment="Left"
+                                           VerticalAlignment="Center"
+                                           Text="{DynamicResource AppSettings_Item_FloatingMarginV}" />
+                                <ws:TextBox x:Name="FloatingMarginVTb"
+                                            Width="80"
+                                            Height="30"
+                                            Margin="0,0,48,0"
+                                            Padding="8,0"
+                                            HorizontalAlignment="Right"
+                                            VerticalContentAlignment="Center"
+                                            Style="{StaticResource SimpleTextBoxStyleForWs}"
+                                            Text="{Binding FloatingMarginVertical}" />
+                            </Grid>
                             <!--  AppBar Height  -->
-                            <Border Height="48"
-                                    Background="{DynamicResource MaskColor}"
-                                    CornerRadius="8">
-                                <Grid>
-                                    <TextBlock Margin="12"
-                                               HorizontalAlignment="Left"
-                                               VerticalAlignment="Center"
-                                               Text="{DynamicResource AppSettings_Item_AppBarHeight}" />
-                                    <ws:TextBox x:Name="AppBarHeightTb"
-                                                Width="80"
-                                                Height="30"
-                                                Margin="0,0,48,0"
-                                                Padding="8,0"
-                                                HorizontalAlignment="Right"
-                                                VerticalContentAlignment="Center"
-                                                Style="{StaticResource SimpleTextBoxStyleForWs}"
-                                                Text="{Binding AppBarHeight}" />
-                                </Grid>
-                            </Border>
+                            <Grid>
+                                <TextBlock Margin="12"
+                                           HorizontalAlignment="Left"
+                                           VerticalAlignment="Center"
+                                           Text="{DynamicResource AppSettings_Item_AppBarHeight}" />
+                                <ws:TextBox x:Name="AppBarHeightTb"
+                                            Width="80"
+                                            Height="30"
+                                            Margin="0,0,48,0"
+                                            Padding="8,0"
+                                            HorizontalAlignment="Right"
+                                            VerticalContentAlignment="Center"
+                                            Style="{StaticResource SimpleTextBoxStyleForWs}"
+                                            Text="{Binding AppBarHeight}" />
+                            </Grid>
                         </ws:StackPanel>
                     </Border>
 
                     <!--  Background Mode  -->
-                    <Border Padding="4"
-                            Background="{DynamicResource MaskColor}"
-                            CornerRadius="12">
+                    <Border Padding="4" Style="{StaticResource BorderCardStyle}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -297,7 +277,6 @@
                             <TextBlock Grid.Row="0"
                                        Margin="12,8,0,4"
                                        FontSize="13"
-                                       FontWeight="SemiBold"
                                        Text="{DynamicResource AppSettings_Item_BackgroundMode}" />
                             <Grid Grid.Row="1"
                                   Margin="4,4,4,8"
@@ -357,9 +336,7 @@
                     </Border>
 
                     <!--  Immerse Mode  -->
-                    <Border Padding="4"
-                            Background="{DynamicResource MaskColor}"
-                            CornerRadius="12">
+                    <Border Padding="4" Style="{StaticResource BorderCardStyle}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -484,25 +461,19 @@
                         </Grid>
                     </Border>
 
-                    <Border Height="48"
-                            Background="{DynamicResource MaskColor}"
-                            CornerRadius="12">
+                    <Border Height="48" Style="{StaticResource BorderCardStyle}">
                         <ToggleButton Margin="12,0,12,0"
                                       Content="{DynamicResource AppSettings_Item_EnableIsland}"
                                       IsChecked="{Binding EnableIsland}"
                                       Style="{DynamicResource RoundToggleButtonStyle}" />
                     </Border>
-                    <Border Height="48"
-                            Background="{DynamicResource MaskColor}"
-                            CornerRadius="12">
+                    <Border Height="48" Style="{StaticResource BorderCardStyle}">
                         <ToggleButton Margin="12,0,12,0"
                                       Content="{DynamicResource AppSettings_Item_EnableHighlight}"
                                       IsChecked="{Binding EnableHighlight}"
                                       Style="{DynamicResource RoundToggleButtonStyle}" />
                     </Border>
-                    <Border Height="48"
-                            Background="{DynamicResource MaskColor}"
-                            CornerRadius="12">
+                    <Border Height="48" Style="{StaticResource BorderCardStyle}">
                         <Grid>
                             <TextBlock Margin="12"
                                        HorizontalAlignment="Left"
@@ -518,9 +489,7 @@
                                          Style="{StaticResource SimpleComboBoxStyleForWs}" />
                         </Grid>
                     </Border>
-                    <Border Height="48"
-                            Background="{DynamicResource MaskColor}"
-                            CornerRadius="12">
+                    <Border Height="48" Style="{StaticResource BorderCardStyle}">
                         <Grid>
                             <TextBlock Margin="12"
                                        HorizontalAlignment="Left"
@@ -536,9 +505,7 @@
                                          Style="{StaticResource SimpleComboBoxStyleForWs}" />
                         </Grid>
                     </Border>
-                    <Border Height="48"
-                            Background="{DynamicResource MaskColor}"
-                            CornerRadius="12">
+                    <Border Height="48" Style="{StaticResource BorderCardStyle}">
                         <Grid>
                             <TextBlock Margin="12"
                                        HorizontalAlignment="Left"
@@ -561,11 +528,12 @@
                 <!--  Behaviors settings  -->
                 <ws:StackPanel Margin="0,10,0,0" Spacing="8">
                     <TextBlock FontSize="22" Text="{DynamicResource AppSettings_Group_Behavior}" />
-                    <Border Background="{DynamicResource MaskColor}" CornerRadius="12">
+                    <Border Style="{StaticResource BorderCardStyle}">
                         <Grid>
-                            <TextBlock Margin="12,18,0,0"
+                            <TextBlock Margin="16,12,0,0"
                                        HorizontalAlignment="Left"
                                        VerticalAlignment="top"
+                                       FontSize="13"
                                        Text="{DynamicResource AppSettings_Item_WebProxy_ProxyMode}" />
                             <ws:ComboBox x:Name="ProxyModeComboBox"
                                          Width="98"
@@ -619,26 +587,20 @@
                                             Style="{StaticResource SimplePasswordBoxStyleForWs}" />
                         </Grid>
                     </Border>
-                    <Border Height="48"
-                            Background="{DynamicResource MaskColor}"
-                            CornerRadius="12">
+                    <Border Height="48" Style="{StaticResource BorderCardStyle}">
                         <ToggleButton x:Name="AutoRunCb"
                                       Margin="12,0,12,0"
                                       Content="{DynamicResource AppSettings_Item_AutoRunAtStartup}"
                                       IsChecked="{Binding AutoRunAtStartup}"
                                       Style="{DynamicResource RoundToggleButtonStyle}" />
                     </Border>
-                    <Border Height="48"
-                            Background="{DynamicResource MaskColor}"
-                            CornerRadius="12">
+                    <Border Height="48" Style="{StaticResource BorderCardStyle}">
                         <ToggleButton Margin="12,0,12,0"
                                       Content="{DynamicResource AppSettings_Item_EnableHideWhenFullScreen}"
                                       IsChecked="{Binding HideWhenFullScreen}"
                                       Style="{DynamicResource RoundToggleButtonStyle}" />
                     </Border>
-                    <Border Height="48"
-                            Background="{DynamicResource MaskColor}"
-                            CornerRadius="12">
+                    <Border Height="48" Style="{StaticResource BorderCardStyle}">
                         <ToggleButton Margin="12,0,12,0"
                                       Content="{DynamicResource AppSettings_Item_EnableWindowControl}"
                                       IsChecked="{Binding EnableWindowControl}"

@@ -28,7 +28,7 @@
         WindowStyle="None"
         mc:Ignorable="d">
     <Window.Resources>
-        <SolidColorBrush x:Key="HighlightOpacityMaskBrush" Color="#64000000" />
+        <SolidColorBrush x:Key="HighlightOpacityMaskBrush" Color="#54000000" />
         <WindowChrome x:Key="windowChrome"
                       CaptionHeight="0"
                       ResizeBorderThickness="0" />
@@ -115,10 +115,11 @@
                                               Margin="0,0,0,0"
                                               DockPanel.Dock="Right"
                                               Visibility="Collapsed" />
-                    <WrapPanel x:Name="CapsulePanel"
-                               Margin="0,0,10,0"
-                               HorizontalAlignment="Right"
-                               Orientation="Vertical" />
+                    <ws:StackPanel x:Name="CapsulePanel"
+                                   Margin="0,0,10,0"
+                                   HorizontalAlignment="Right"
+                                   Orientation="Horizontal"
+                                   Spacing="8" />
                 </DockPanel>
             </Border>
         </Grid>

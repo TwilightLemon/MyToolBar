@@ -48,7 +48,7 @@
     <sys:String x:Key="AppSettings_Item_WebProxy_ProxyPassword">Proxy Password</sys:String>
 
     <!--  OuterControl Settings Page  -->
-    <sys:String x:Key="OuterControlSettings_Remove">Remove Outer Control (some of them hide automatically)</sys:String>
+    <sys:String x:Key="OuterControlSettings_Remove">Remove</sys:String>
 
     <!--  Converter Texts  -->
     <sys:String x:Key="AS_Proxy_None">None</sys:String>

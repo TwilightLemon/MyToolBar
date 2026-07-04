@@ -7,7 +7,8 @@
     <SolidColorBrush x:Key="AppBarForegroundCenter" Color="#0E0E0E" />
     <SolidColorBrush x:Key="AppBarForegroundRight" Color="#0E0E0E" />
     <SolidColorBrush x:Key="WindowBackgroundColor" Color="#CCFFFFFF" />
-    <SolidColorBrush x:Key="TabMaskColor" Color="#4CFFFFFF" />
+    <SolidColorBrush x:Key="TabMaskColor" Color="#CCFFFFFF" />
+    <SolidColorBrush x:Key="TabBorderColor" Color="#1C000000" />
     <!--  For Others  -->
     <SolidColorBrush x:Key="ForeColor" Color="#0E0E0E" />
     <SolidColorBrush x:Key="ThemedForeColor" Color="#0E0E0E" />

@@ -96,7 +96,15 @@
                       Data="{StaticResource Icon_memory}"
                       Fill="{Binding Foreground, ElementName=uc}"
                       SnapsToDevicePixels="True"
-                      Stretch="Uniform" />
+                      Stretch="Uniform">
+                    <Path.OpacityMask>
+                        <LinearGradientBrush StartPoint="1,0">
+                            <GradientStop Color="#78000000" />
+                            <GradientStop x:Name="MemoryMaskStop1" Offset="0.5" Color="#78000000" />
+                            <GradientStop x:Name="MemoryMaskStop2" Offset="0.5" Color="Black" />
+                        </LinearGradientBrush>
+                    </Path.OpacityMask>
+                </Path>
                 <TextBlock x:Name="Meo_text"
                            Margin="16,0,0,0"
                            VerticalAlignment="Center"
@@ -129,18 +137,17 @@
                       Stretch="Uniform" />
             </Grid>
             <Grid x:Name="NetworkViewer"
-                  Width="95"
+                  Width="70"
                   Height="30"
                   Margin="8,0,0,0">
                 <TextBlock x:Name="Network_text"
                            Margin="16,0,0,0"
                            VerticalAlignment="Center"
-                           FontSize="10"
-                           LineHeight="1"
+                           FontSize="8"
                            TextTrimming="None">
-                    <Run d:Text="↑90.00kb/s" />
+                    <Run d:Text="↑900.00kb/s" />
                     <LineBreak />
-                    <Run d:Text="↓1.00mb/s" />
+                    <Run d:Text="↓100.00mb/s" />
                 </TextBlock>
                 <Path Width="13"
                       Height="13"

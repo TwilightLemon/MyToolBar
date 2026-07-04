@@ -49,11 +49,11 @@ namespace MyToolBar.Views.Pages.Settings
             await _pluginReactiveService.RemoveOuterControl();
             OCPluginList.SelectedItem = null;
         }
-        uint i = 1;
-        private void testBtn_Click(object sender, RoutedEventArgs e)
-        {
-            NotificationManager.Send(new("TEST HELLO TWLMGATITO! x"+i, NotificationType.Warning, null, NotificationTimeSpan.Short));
-            i++;
-        }
+        //uint i = 1;
+        //private void testBtn_Click(object sender, RoutedEventArgs e)
+        //{
+        //    NotificationManager.Send(new("TEST HELLO TWLMGATITO! x"+i, NotificationType.Warning, null, NotificationTimeSpan.Short));
+        //    i++;
+        //}
     }
 }

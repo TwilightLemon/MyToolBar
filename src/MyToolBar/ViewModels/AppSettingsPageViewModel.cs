@@ -15,23 +15,23 @@ namespace MyToolBar.ViewModels
     {
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsFloatingMode))]
-        private AppSettings.WindowMode _windowMode;
+        private AppSettings.WindowMode _windowMode = appSettingsService.Settings.CurrentWindowMode;
 
         public bool IsFloatingMode => WindowMode == AppSettings.WindowMode.Floating;
         [ObservableProperty]
-        private AppSettings.BackgroundMode _backgroundMode;
+        private AppSettings.BackgroundMode _backgroundMode = appSettingsService.Settings.CurrentBackgroundMode;
         [ObservableProperty]
-        private AppSettings.ImmerseMode _immerseMode;
+        private AppSettings.ImmerseMode _immerseMode = appSettingsService.Settings.CurrentImmerseMode;
         [ObservableProperty]
-        private bool _enableIsland;
+        private bool _enableIsland = appSettingsService.Settings.EnableIsland;
         [ObservableProperty]
-        private bool _autoRunAtStartup;
+        private bool _autoRunAtStartup = appSettingsService.Settings.AutoRunAtStartup;
         [ObservableProperty]
-        private bool _hideWhenFullScreen;
+        private bool _hideWhenFullScreen = GlobalService.EnableHideWhenFullScreen;
         [ObservableProperty]
-        private bool _enableWindowControl;
+        private bool _enableWindowControl = appSettingsService.Settings.EnableWindowControl;
         [ObservableProperty]
-        private bool _enableHighlight;
+        private bool _enableHighlight= appSettingsService.Settings.EnableHighlight;
         [ObservableProperty]
         private LocalCulture.Language _appLanguage = (LocalCulture.Language)appSettingsService.Settings.Language;
         [ObservableProperty]
@@ -59,20 +59,8 @@ namespace MyToolBar.ViewModels
         [ObservableProperty]
         private MonitorDisplayItem? _selectedMonitor;
 
-        public void LoadData()
+        public void LoadMonitorData()
         {
-            WindowMode = appSettingsService.Settings.CurrentWindowMode;
-            BackgroundMode = appSettingsService.Settings.CurrentBackgroundMode;
-            ImmerseMode = appSettingsService.Settings.CurrentImmerseMode;
-            EnableIsland = appSettingsService.Settings.EnableIsland;
-            AutoRunAtStartup = appSettingsService.Settings.AutoRunAtStartup;
-            HideWhenFullScreen = GlobalService.EnableHideWhenFullScreen;
-            EnableWindowControl = appSettingsService.Settings.EnableWindowControl;
-            EnableHighlight = appSettingsService.Settings.EnableHighlight;
-            FloatingMarginHorizontal = appSettingsService.Settings.FloatingMarginHorizontal;
-            FloatingMarginVertical = appSettingsService.Settings.FloatingMarginVertical;
-            AppBarHeight = appSettingsService.Settings.AppBarHeight;
-
             // 加载显示器列表
             var monitors = MonitorAPI.EnumerateMonitors();
             var defaultText = (string)App.Current.FindResource("AS_Monitor_Default");

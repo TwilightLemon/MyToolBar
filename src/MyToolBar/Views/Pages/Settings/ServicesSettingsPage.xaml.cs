@@ -1,6 +1,11 @@
-﻿using MyToolBar.Plugin;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using MyToolBar.Plugin;
 using MyToolBar.Services;
 using MyToolBar.Views.Items;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace MyToolBar.Views.Pages.Settings
@@ -8,6 +13,7 @@ namespace MyToolBar.Views.Pages.Settings
     /// <summary>
     /// ServicesSettingsPage.xaml 的交互逻辑
     /// </summary>
+    [ObservableObject]
     public partial class ServicesSettingsPage : Page
     {
         private readonly ManagedPackageService _managedPackageService;
@@ -16,32 +22,26 @@ namespace MyToolBar.Views.Pages.Settings
             ManagedPackageService managedPackageService,
             PluginReactiveService pluginReactiveService)
         {
-            InitializeComponent();
             _managedPackageService = managedPackageService;
             _pluginReactiveService = pluginReactiveService;
-            Init();
-        }
-        private void Init()
-        {
-            var services = _managedPackageService.GetTypePlugins(PluginType.UserService);
-            foreach (var service in services)
-            {
-                var IsEnable = _pluginReactiveService.UserServices.ContainsKey(service);
-                var item = new SelectiveSettingItem(service, IsEnable) { Margin = new System.Windows.Thickness(5, 2, 5, 2) };
-                item.OnIsEnableChanged += Item_OnIsEnableChanged;
-                ServiceList.Children.Add(item);
-            }
+            Plugins = [.. _managedPackageService.GetTypePlugins(PluginType.UserService).Select(x => new PluginStateData(x, _pluginReactiveService.UserServices.Keys.Contains(x)))];
+            DataContext = this;
+            InitializeComponent();
         }
 
-        private async void Item_OnIsEnableChanged(IPlugin plugin, bool enable)
+        [ObservableProperty]
+        private List<PluginStateData> _plugins;
+
+        [RelayCommand]
+        public async Task SwitchPlugin(PluginStateData data)
         {
-            if (enable)
+            if (data.IsEnabled)
             {
-                await _pluginReactiveService.AddUserService(plugin);
+                await _pluginReactiveService.AddUserService(data.Plugin);
             }
             else
             {
-                await _pluginReactiveService.RemoveUserService(plugin);
+                await _pluginReactiveService.RemoveUserService(data.Plugin);
             }
         }
     }

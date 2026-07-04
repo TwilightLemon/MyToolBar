@@ -137,10 +137,9 @@ namespace MyToolBar.Views.Items
             // 卡片边框
             var border = new Border
             {
-                CornerRadius = new CornerRadius(15),
-                Margin = new Thickness(20)
+                Style=FindResource("BorderCardStyle") as Style,
+                Margin = new Thickness(20,10,20,10)
             };
-            border.SetResourceReference(BackgroundProperty, "MaskColor");
 
             var grid = new Grid();
             border.Child = grid;
