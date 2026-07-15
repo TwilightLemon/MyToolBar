@@ -28,7 +28,7 @@
         WindowStyle="None"
         mc:Ignorable="d">
     <Window.Resources>
-        <SolidColorBrush x:Key="HighlightOpacityMaskBrush" Color="#54000000" />
+        <SolidColorBrush x:Key="HighlightOpacityMaskBrush" Color="#66000000" />
         <WindowChrome x:Key="windowChrome"
                       CaptionHeight="0"
                       ResizeBorderThickness="0" />

@@ -83,4 +83,13 @@
     <sys:String x:Key="WindowControl_Maximize">最大化</sys:String>
     <sys:String x:Key="WindowControl_Restore">还原</sys:String>
     <sys:String x:Key="WindowControl_Close">关闭</sys:String>
+
+    <!--  About Page  -->
+    <sys:String x:Key="AboutPage_AppDescription">一款为 Surface 等 Windows 平板设备设计的顶部工具栏，支持触控和笔快捷操作。</sys:String>
+    <sys:String x:Key="AboutPage_Author">作者</sys:String>
+    <sys:String x:Key="AboutPage_AuthorValue">由 TwilightLemon 开发</sys:String>
+    <sys:String x:Key="AboutPage_License">开源协议</sys:String>
+    <sys:String x:Key="AboutPage_OpenSourceNote">本项目基于 GNU General Public License v3.0 协议开源。</sys:String>
+    <sys:String x:Key="AboutPage_ProjectLink">访问 GitHub 仓库</sys:String>
+    <sys:String x:Key="AboutPage_ThirdPartyTitle">第三方库致谢</sys:String>
 </ResourceDictionary>

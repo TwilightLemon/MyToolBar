@@ -1,9 +1,8 @@
-﻿using System.Windows;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reflection;
+using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Markup;
-using MyToolBar.Common;
-using MyToolBar.Common.Func;
-using MyToolBar.Common.UIBases;
 
 namespace MyToolBar.Views.Pages.Settings
 {
@@ -12,25 +11,30 @@ namespace MyToolBar.Views.Pages.Settings
     /// </summary>
     public partial class AboutPage : Page
     {
+        public string AppVersion { get; }
+
+        public List<string> ThirdPartyLibraries { get; } =
+        [
+            "EleCho.WpfSuite",
+            "CommunityToolkit.Mvvm",
+            "Microsoft.Extensions.Hosting",
+            "NLog / NLog.Extensions.Hosting",
+        ];
+
         public AboutPage()
         {
+            AppVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "1.0.0.0";
+            DataContext = this;
             InitializeComponent();
-            Loaded += AboutPage_Loaded;
         }
 
-        private async void AboutPage_Loaded(object sender, RoutedEventArgs e)
+        private void GitHubLink_Click(object sender, RoutedEventArgs e)
         {
-            var loading = new LoadingIcon();
-            ContentGrid.Children.Add(loading);
-            string data = await HttpHelper.Get($"https://gitee.com/TwilightLemon/MyToolBarDynamics/raw/master/AboutPage{
-                LocalCulture.Current switch {
-                    LocalCulture.Language.zh_cn=>".Zh-CN",
-                    LocalCulture.Language.en_us=>".En-US",
-                    _ => ""
-                }
-                }.xaml");
-            ContentGrid.Children.Add((Grid)XamlReader.Parse(data));
-            ContentGrid.Children.Remove(loading);
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "https://github.com/TwilightLemon/MyToolBar",
+                UseShellExecute = true
+            });
         }
     }
 }

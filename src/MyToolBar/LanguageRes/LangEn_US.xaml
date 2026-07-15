@@ -84,4 +84,13 @@
     <sys:String x:Key="WindowControl_Maximize">Maximize</sys:String>
     <sys:String x:Key="WindowControl_Restore">Restore</sys:String>
     <sys:String x:Key="WindowControl_Close">Close</sys:String>
+
+    <!--  About Page  -->
+    <sys:String x:Key="AboutPage_AppDescription">A top toolbar designed for Surface Pro, supporting touch and pen shortcuts.</sys:String>
+    <sys:String x:Key="AboutPage_Author">Author</sys:String>
+    <sys:String x:Key="AboutPage_AuthorValue">Created by TwilightLemon</sys:String>
+    <sys:String x:Key="AboutPage_License">License</sys:String>
+    <sys:String x:Key="AboutPage_OpenSourceNote">This project is open source under the GNU General Public License v3.0.</sys:String>
+    <sys:String x:Key="AboutPage_ProjectLink">Visit GitHub Repository</sys:String>
+    <sys:String x:Key="AboutPage_ThirdPartyTitle">Third-Party Libraries</sys:String>
 </ResourceDictionary>

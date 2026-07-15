@@ -941,7 +941,7 @@ namespace MyToolBar.Views.Windows
             UpdateHighlightEffect();
         }
 
-        private static readonly Brush _highlightOpacityMask = new SolidColorBrush(Color.FromArgb(0x54, 0x00, 0x00, 0x00));
+        private static readonly Brush _highlightOpacityMask = new SolidColorBrush(Color.FromArgb(0x66, 0x00, 0x00, 0x00));
 
         /// <summary>
         /// 根据字体颜色、用户设置和省电模式更新三个区域的高光渲染
