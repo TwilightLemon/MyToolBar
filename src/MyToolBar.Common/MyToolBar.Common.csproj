@@ -9,6 +9,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="FluentWpfCore" Version="1.0.7" />
 		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.122" />
 		<PackageReference Include="EleCho.WpfSuite" Version="0.8.1" />
 		<PackageReference Include="System.Drawing.Common" Version="8.0.7" />

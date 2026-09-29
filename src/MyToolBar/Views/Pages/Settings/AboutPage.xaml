@@ -1,6 +1,7 @@
 <Page x:Class="MyToolBar.Views.Pages.Settings.AboutPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:commonControls="clr-namespace:MyToolBar.Common.Controls;assembly=MyToolBar.Common"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:MyToolBar.Views.Pages.Settings"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -13,7 +14,7 @@
       Foreground="{DynamicResource ForeColor}"
       mc:Ignorable="d">
 
-    <ws:ScrollViewer Margin="28,12,28,28" Style="{DynamicResource SimpleVerticalScrollViewerStyle}">
+    <commonControls:ScrollViewer Margin="28,12,28,28" Style="{DynamicResource SimpleVerticalScrollViewerStyle}">
         <ws:StackPanel Spacing="12">
             <!--  Title  -->
             <TextBlock Margin="0,0,0,8"
@@ -113,5 +114,5 @@
                 </ws:StackPanel>
             </Border>
         </ws:StackPanel>
-    </ws:ScrollViewer>
+    </commonControls:ScrollViewer>
 </Page>

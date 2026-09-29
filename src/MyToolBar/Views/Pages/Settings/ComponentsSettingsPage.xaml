@@ -1,6 +1,7 @@
 ﻿<Page x:Class="MyToolBar.Views.Pages.Settings.ComponentsSettingsPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:commonControls="clr-namespace:MyToolBar.Common.Controls;assembly=MyToolBar.Common"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:MyToolBar.Views.Pages.Settings"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -15,9 +16,9 @@
                    FontSize="20"
                    FontWeight="Bold"
                    Text="{DynamicResource SettingsWindow_Tab_Components}" />
-        <ws:ScrollViewer Margin="0,60,0,0" Style="{StaticResource SimpleVerticalScrollViewerStyle}">
+        <commonControls:ScrollViewer Margin="0,60,0,0" Style="{StaticResource SimpleVerticalScrollViewerStyle}">
             <StackPanel x:Name="PackagesPanel" />
-        </ws:ScrollViewer>
+        </commonControls:ScrollViewer>
         <ws:Button x:Name="AddPluginBtn"
                    Width="48"
                    Height="48"

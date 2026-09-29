@@ -1,5 +1,6 @@
 ﻿using MyToolBar.Common.WinAPI;
 using System.Diagnostics;
+using FluentWpfCore.Interop;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;

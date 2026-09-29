@@ -1,6 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shell;
+using FluentWpfCore.AttachedProperties;
+using FluentWpfCore.Interop;
 using Microsoft.Win32;
 using MyToolBar;
 using Microsoft.Xaml.Behaviors;
@@ -69,7 +71,7 @@ public class BlurWindowBehavior : Behavior<Window>
             _windowMaterial.WindowChromeEx = WindowChromeEx;
     }
 
-    private static void UpdateWindowBlurMode(WindowMaterial wac, bool isDarkMode, float opacity = 0.2f)
+    private static void UpdateWindowBlurMode(WindowMaterial wac, bool isDarkMode, float opacity = 0.1f)
     {
         wac.IsDarkMode = isDarkMode;
         wac.CompositonColor = isDarkMode ?
@@ -81,17 +83,17 @@ public class BlurWindowBehavior : Behavior<Window>
     {
         base.OnAttached();
         AssociatedObject.Closing += AssociatedObject_Closing;
-        if (AssociatedObject.IsInitialized)
+        if (AssociatedObject.IsLoaded)
         {
             InitializeBehavior();
         }
         else
         {
-            AssociatedObject.Initialized += AssociatedObject_Initialized;
+            AssociatedObject.Loaded += AssociatedObject_Loaded;
         }
     }
 
-    private void AssociatedObject_Initialized(object? sender, EventArgs e)
+    private void AssociatedObject_Loaded(object? sender, EventArgs e)
     {
         InitializeBehavior();
     }
@@ -107,7 +109,7 @@ public class BlurWindowBehavior : Behavior<Window>
         base.OnDetaching();
 
         // unregister event
-        AssociatedObject.Initialized -= AssociatedObject_Initialized;
+        AssociatedObject.Loaded -= AssociatedObject_Loaded;
 
         // remove and disable wac
         if (_allWindowMaterialManager.TryGetValue(AssociatedObject, out var acc))

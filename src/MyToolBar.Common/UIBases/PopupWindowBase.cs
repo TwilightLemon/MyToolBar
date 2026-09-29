@@ -2,6 +2,7 @@
 using System.Windows.Media.Animation;
 using System.Windows.Shell;
 using System.Windows.Controls;
+using FluentWpfCore.Interop;
 using Microsoft.Xaml.Behaviors;
 using MyToolBar.Common.WinAPI;
 using MyToolBar.Common.Behaviors;

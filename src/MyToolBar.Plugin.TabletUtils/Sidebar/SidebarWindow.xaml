@@ -1,6 +1,7 @@
 <Window x:Class="MyToolBar.Plugin.TabletUtils.Sidebar.SidebarWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:commonControls="clr-namespace:MyToolBar.Common.Controls;assembly=MyToolBar.Common"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:MyToolBar.Plugin.TabletUtils.Sidebar"
@@ -230,13 +231,13 @@
             </Border>
 
             <!--  正常内容列表  -->
-            <ws:ScrollViewer x:Name="ContentScroller"
+            <commonControls:ScrollViewer x:Name="ContentScroller"
                              Grid.Row="1"
                              Style="{StaticResource SimpleVerticalScrollViewerStyle}">
                 <ws:StackPanel x:Name="CardContainer"
                                Margin="12,0"
                                Spacing="8" />
-            </ws:ScrollViewer>
+            </commonControls:ScrollViewer>
 
             <!--  空状态提示  -->
             <TextBlock x:Name="EmptyHint"

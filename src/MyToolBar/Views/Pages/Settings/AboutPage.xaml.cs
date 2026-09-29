@@ -15,6 +15,7 @@ namespace MyToolBar.Views.Pages.Settings
 
         public List<string> ThirdPartyLibraries { get; } =
         [
+            "FluentWpfCore",
             "EleCho.WpfSuite",
             "CommunityToolkit.Mvvm",
             "Microsoft.Extensions.Hosting",

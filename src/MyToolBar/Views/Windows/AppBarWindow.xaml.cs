@@ -15,6 +15,7 @@ using System.Diagnostics;
 using MyToolBar.Common.Behaviors;
 using System.Windows.Threading;
 using System.Threading.Tasks;
+using FluentWpfCore.Interop;
 using MyToolBar.Common;
 using Microsoft.Extensions.DependencyInjection;
 using EleCho.WpfSuite;

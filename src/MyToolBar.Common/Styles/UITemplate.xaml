@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:commonControls="clr-namespace:MyToolBar.Common.Controls"
                     xmlns:ws="https://schemas.elecho.dev/wpfsuite">
     <Style x:Key="BorderCardStyle" TargetType="Border">
         <Setter Property="Background" Value="{DynamicResource TabMaskColor}" />
@@ -43,7 +44,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="SimpleVerticalScrollViewerStyle" TargetType="{x:Type ws:ScrollViewer}">
+    <Style x:Key="SimpleVerticalScrollViewerStyle" TargetType="{x:Type commonControls:ScrollViewer}">
         <Setter Property="ws:StylusTouchDevice.Simulate" Value="True" />
         <Setter Property="PanningMode" Value="VerticalOnly" />
         <Setter Property="VerticalScrollBarVisibility" Value="Hidden" />
@@ -215,12 +216,12 @@
                             Background="{TemplateBinding Background}"
                             CornerRadius="10,10,10,10"
                             SnapsToDevicePixels="True">
-                        <ScrollViewer x:Name="PART_ContentHost"
-                                      Margin="8,0,0,0"
-                                      VerticalAlignment="Center"
-                                      Focusable="false"
-                                      HorizontalScrollBarVisibility="Hidden"
-                                      VerticalScrollBarVisibility="Hidden" />
+                        <commonControls:ScrollViewer x:Name="PART_ContentHost"
+                                                     Margin="8,0,0,0"
+                                                     VerticalAlignment="Center"
+                                                     Focusable="false"
+                                                     HorizontalScrollBarVisibility="Hidden"
+                                                     VerticalScrollBarVisibility="Hidden" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsEnabled" Value="false">
