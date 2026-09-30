@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using MyToolBar.Common;
@@ -72,11 +73,30 @@ namespace MyToolBar.Services
         }
 
         /// <summary>
+        /// 为单个控件设置独立的前景色，并使用与 AppBar 相同的过渡动画。
+        /// </summary>
+        public void SetControlForeground(Control control, bool isDark)
+        {
+            Color targetColor = GetAppBarForegroundColor(isDark);
+            Color currentColor = control.Foreground is SolidColorBrush currentBrush
+                ? currentBrush.Color
+                : targetColor;
+
+            var brush = new SolidColorBrush(targetColor);
+            var animation = new ColorAnimation(currentColor, targetColor, new Duration(TimeSpan.FromSeconds(0.3)))
+            {
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            };
+            brush.BeginAnimation(SolidColorBrush.ColorProperty, animation);
+            control.Foreground = brush;
+        }
+
+        /// <summary>
         /// 以渐变动画过渡AppBar前景色
         /// </summary>
         private static void AnimateAppBarForeground(string pos, bool isDark)
         {
-            Color targetColor = isDark ? Color.FromRgb(0x0E, 0x0E, 0x0E) : Color.FromRgb(0xFE, 0xFE, 0xFE);
+            Color targetColor = GetAppBarForegroundColor(isDark);
             string key = "AppBarForeground" + pos;
 
             if (App.Current.Resources[key] is SolidColorBrush brush)
@@ -96,6 +116,13 @@ namespace MyToolBar.Services
             {
                 App.Current.Resources[key] = new SolidColorBrush(targetColor);
             }
+        }
+
+        private static Color GetAppBarForegroundColor(bool isDark)
+        {
+            return isDark
+                ? Color.FromRgb(0x0E, 0x0E, 0x0E)
+                : Color.FromRgb(0xFE, 0xFE, 0xFE);
         }
 
         /// <summary>

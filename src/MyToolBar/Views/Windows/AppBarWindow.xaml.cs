@@ -20,6 +20,7 @@ using MyToolBar.Common;
 using Microsoft.Extensions.DependencyInjection;
 using EleCho.WpfSuite;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace MyToolBar.Views.Windows
 {
@@ -248,6 +249,7 @@ namespace MyToolBar.Views.Windows
 
         // 字体颜色缓存：避免相同颜色结果重复触发渐变动画
         private bool? _lastForegroundLeft, _lastForegroundCenter, _lastForegroundRight;
+        private readonly Dictionary<CapsuleBase, bool> _lastCapsuleForeground = [];
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             #region GlobalTimer Init&Start
@@ -335,7 +337,16 @@ namespace MyToolBar.Views.Windows
                 if (CurrentAppBarBgStyle != AppBarBgStyleType.EnergySaving)
                 {
                     AppBarBackground.SetResourceReference(BackgroundProperty, "BackgroundColor");
-                    _themeResourceService.SetAppBarFontColor(!IsDarkMode);
+                    bool useBlackText = !IsDarkMode;
+                    _themeResourceService.SetAppBarFontColor(useBlackText);
+                    _lastForegroundLeft = useBlackText;
+                    _lastForegroundCenter = useBlackText;
+                    _lastForegroundRight = useBlackText;
+                    foreach (CapsuleBase capsule in CapsulePanel.Children.OfType<CapsuleBase>())
+                    {
+                        _themeResourceService.SetControlForeground(capsule, useBlackText);
+                        _lastCapsuleForeground[capsule] = useBlackText;
+                    }
                     CurrentAppBarBgStyle = AppBarBgStyleType.EnergySaving;
                 }
                 // 省电模式下强制关闭高光渲染
@@ -378,6 +389,7 @@ namespace MyToolBar.Views.Windows
         {
             if (_pluginReactiveService.Capsules[obj] is var cap){
                 cap.Uninstall();
+                _lastCapsuleForeground.Remove(cap);
                 CapsulePanel.Children.Remove(cap);
                 cap = null;
             }
@@ -389,6 +401,7 @@ namespace MyToolBar.Views.Windows
         private void _pluginReactiveService_CapsuleAdded(CapsuleBase cap)
         {
             CapsulePanel.Children.Add(cap);
+            _ = Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new Action(UpdateAppBarForeground));
         }
         /// <summary>
         /// 响应OuterControl组件更换
@@ -408,6 +421,7 @@ namespace MyToolBar.Views.Windows
             _oc = obj;
             _oc.IsShownChanged += Oc_IsShownChanged;
             OuterFunc.Children.Add(_oc);
+            _ = Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new Action(UpdateAppBarForeground));
         }
         /// <summary>
         /// OuterControl组件移除
@@ -894,52 +908,169 @@ namespace MyToolBar.Views.Windows
         }
 
         /// <summary>
-        /// 分块更新AppBar字体颜色
+        /// 按控件在 AppBar 中的实际横向位置更新字体颜色
         /// </summary>
         private void UpdateAppBarForeground()
         {
-            //截取AppBar所在位置的真实图像
+            if (_hwnd == IntPtr.Zero || ActualWidth <= 0)
+                return;
+
+            // 截取 AppBar 的实际显示区域。只使用上下边缘带，避开位于中央的文字和图标。
             (double dpiX, double dpiY) = ScreenAPI.GetDPI(ScreenAPI.GetHmonitorForHwnd(_hwnd));
-            var capHeight = 6;
-            using System.Drawing.Bitmap bmp = ScreenAPI.CaptureScreenArea((int)(Left*dpiX), (int)(Top*dpiY), (int)(ActualWidth * dpiX), capHeight);
-            if (bmp == null) return;
-            //由OuterControlCol划分为三个部分，单独计算颜色值
-            double outerWidth = OuterControlCol.ActualWidth * dpiX;
-            double edgeWidth = (ActualWidth * dpiX - outerWidth) / 2.0d;
-            
-            bool checkColor(int begin,int end) // true: black text
+            int captureHeight = Math.Max(1, (int)Math.Ceiling(ActualHeight * dpiY));
+            using System.Drawing.Bitmap bmp = ScreenAPI.CaptureScreenArea(
+                (int)(Left * dpiX),
+                (int)(Top * dpiY),
+                (int)(ActualWidth * dpiX),
+                captureHeight);
+            if (bmp == null || bmp.Width == 0 || bmp.Height == 0) return;
+
+            (int Begin, int End)? getRange(FrameworkElement element, bool useDesiredWidth = false)
             {
-                if (begin >= end) return false;
-                int r=0, g = 0, b = 0;
-                int count = 0;
-                for(int x=begin; x < end; x+=10)
+                if (!element.IsVisible || element.ActualWidth <= 0)
+                    return null;
+
+                Rect bounds;
+                try
                 {
-                    for(int y=0; y < capHeight; y+=2)
+                    bounds = element.TransformToVisual(this).TransformBounds(new Rect(element.RenderSize));
+                }
+                catch (InvalidOperationException)
+                {
+                    return null;
+                }
+
+                // OuterControl 通常会被拉伸到整列；其 DesiredSize 更接近内部内容的真实宽度。
+                if (useDesiredWidth && element.DesiredSize.Width > 0 && element.DesiredSize.Width < bounds.Width)
+                {
+                    double desiredWidth = element.DesiredSize.Width;
+                    bounds = new Rect(
+                        bounds.Left + (bounds.Width - desiredWidth) / 2.0,
+                        bounds.Top,
+                        desiredWidth,
+                        bounds.Height);
+                }
+
+                int begin = Math.Clamp((int)Math.Floor(bounds.Left * dpiX), 0, bmp.Width - 1);
+                int end = Math.Clamp((int)Math.Ceiling(bounds.Right * dpiX), begin + 1, bmp.Width);
+                return (begin, end);
+            }
+
+            bool? checkColor(IEnumerable<(int Begin, int End)?> ranges, bool? currentForeground) // true: black text
+            {
+                static double srgbToLinear(double value) =>
+                    value <= 0.03928
+                        ? value / 12.92
+                        : Math.Pow((value + 0.055) / 1.055, 2.4);
+
+                var luminances = new List<double>();
+                int horizontalStep = Math.Max(2, (int)Math.Round(6 * dpiX));
+                int edgeBandHeight = Math.Min(
+                    Math.Max(2, (int)Math.Ceiling(6 * dpiY)),
+                    Math.Max(1, bmp.Height / 2));
+                int firstSampleY = bmp.Height > 2 ? 1 : 0;
+                int lastSampleY = bmp.Height > 2 ? bmp.Height - 1 : bmp.Height;
+
+                foreach (var range in ranges)
+                {
+                    if (range is not { } value)
+                        continue;
+
+                    for (int x = value.Begin; x < value.End; x += horizontalStep)
                     {
-                        var  c = bmp.GetPixel(x, y);
-                        r += c.R;
-                        g += c.G;
-                        b += c.B;
-                        count++;
+                        for (int y = firstSampleY; y < lastSampleY; y += 2)
+                        {
+                            bool isEdgeSample = y < edgeBandHeight || y >= bmp.Height - edgeBandHeight;
+                            if (!isEdgeSample)
+                                continue;
+
+                            var c = bmp.GetPixel(x, y);
+                            double luminance =
+                                0.2126 * srgbToLinear(c.R / 255.0) +
+                                0.7152 * srgbToLinear(c.G / 255.0) +
+                                0.0722 * srgbToLinear(c.B / 255.0);
+                            luminances.Add(luminance);
+                        }
                     }
                 }
-                r/= count;g/= count;b /= count;
-                //判断颜色深浅
-                return ImageHelper.WSAGColorCheck(r, g, b);
+
+                if (luminances.Count == 0)
+                    return null;
+
+                // 平均 RGB 会让少量高亮区域过度影响结果。采用偏暗侧的 40% 分位亮度，
+                // 当元素横跨明暗边界时优先保证暗部上的可读性。
+                luminances.Sort();
+                const double representativePercentile = 0.40;
+                int percentileIndex = (int)Math.Floor((luminances.Count - 1) * representativePercentile);
+                double representativeLuminance = luminances[percentileIndex];
+                const double contrastCrossoverLuminance = 0.179;
+                const double luminanceHysteresis = 0.03;
+
+                if (currentForeground == null)
+                    return representativeLuminance >= contrastCrossoverLuminance;
+
+                // 在黑白文字的对比度交界点两侧保留滞回区，抑制临界亮度噪声导致的来回切换。
+                return currentForeground.Value
+                    ? representativeLuminance > contrastCrossoverLuminance - luminanceHysteresis
+                    : representativeLuminance >= contrastCrossoverLuminance + luminanceHysteresis;
             }
-            bool left= checkColor(0, (int)edgeWidth);
-            bool center=checkColor((int)edgeWidth, (int)(edgeWidth + outerWidth));
-            bool right=checkColor((int)(edgeWidth + outerWidth), (int)(ActualWidth * dpiX));
+
+            bool? checkColorRange((int Begin, int End)? range, bool? currentForeground)
+            {
+                return checkColor([range], currentForeground);
+            }
+
+            // 左侧只采样菜单按钮和实际标题宽度，不再把整列空白计入平均色。
+            bool left = checkColor([getRange(MainMenuButton), getRange(TitleView)], _lastForegroundLeft)
+                ?? _lastForegroundLeft
+                ?? !IsDarkMode;
+
+            // 中央插件使用自身位置和内容期望宽度，而不是 OuterControlCol 的最大分配宽度。
+            bool center = (_oc == null ? null : checkColorRange(getRange(_oc, useDesiredWidth: true), _lastForegroundCenter))
+                ?? _lastForegroundCenter
+                ?? !IsDarkMode;
+
+            var capsules = CapsulePanel.Children.OfType<CapsuleBase>().ToList();
+
+            // WindowControlPanel 仍使用右侧共享资源；未显示时用实际 Capsule 范围作为后备值。
+            bool right = checkColorRange(getRange(WindowControlPanel), _lastForegroundRight)
+                ?? checkColor(capsules.Select(capsule => getRange(capsule)), _lastForegroundRight)
+                ?? _lastForegroundRight
+                ?? !IsDarkMode;
 
             // 颜色结果与上次相同则跳过，避免重复触发渐变动画
-            if (_lastForegroundLeft == left && _lastForegroundCenter == center && _lastForegroundRight == right)
-                return;
-            _lastForegroundLeft = left;
-            _lastForegroundCenter = center;
-            _lastForegroundRight = right;
+            bool sharedForegroundChanged =
+                _lastForegroundLeft != left ||
+                _lastForegroundCenter != center ||
+                _lastForegroundRight != right;
 
-            _themeResourceService.SetAppBarFontColor(left, center, right);
-            UpdateHighlightEffect();
+            if (sharedForegroundChanged)
+            {
+                _lastForegroundLeft = left;
+                _lastForegroundCenter = center;
+                _lastForegroundRight = right;
+                _themeResourceService.SetAppBarFontColor(left, center, right);
+            }
+
+            // Capsule 不再共用 AppBarForegroundRight，逐个按自身实际横向范围计算。
+            foreach (CapsuleBase capsule in capsules)
+            {
+                bool hasLastForeground = _lastCapsuleForeground.TryGetValue(capsule, out bool lastValue);
+                bool? capsuleForeground = checkColorRange(
+                    getRange(capsule),
+                    hasLastForeground ? lastValue : null);
+                if (capsuleForeground is not { } useBlackText)
+                    continue;
+
+                if (!hasLastForeground || lastValue != useBlackText)
+                {
+                    _themeResourceService.SetControlForeground(capsule, useBlackText);
+                    _lastCapsuleForeground[capsule] = useBlackText;
+                }
+            }
+
+            if (sharedForegroundChanged)
+                UpdateHighlightEffect();
         }
 
         private static readonly Brush _highlightOpacityMask = new SolidColorBrush(Color.FromArgb(0x66, 0x00, 0x00, 0x00));
