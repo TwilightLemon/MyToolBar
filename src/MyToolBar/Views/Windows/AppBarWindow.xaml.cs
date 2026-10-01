@@ -31,6 +31,7 @@ namespace MyToolBar.Views.Windows
     {
         private const int DEFAULT_APPBAR_WINDOW_HEIGHT = 32;
         private readonly UIResourceService _themeResourceService;
+        private readonly AppBarForegroundService _appBarForegroundService;
         private readonly PluginReactiveService _pluginReactiveService;
         private readonly PowerOptimizeService _powerOptimizeService;
         private readonly AppSettingsService _appSettingsService;
@@ -38,11 +39,13 @@ namespace MyToolBar.Views.Windows
         public AppBarWindow(
             PluginReactiveService pluginReactiveService,
             UIResourceService themeResourceService,
+            AppBarForegroundService appBarForegroundService,
             PowerOptimizeService powerOptimizeService,
             AppSettingsService appSettingsService)
         {
             _pluginReactiveService = pluginReactiveService;
             _themeResourceService = themeResourceService;
+            _appBarForegroundService = appBarForegroundService;
             _powerOptimizeService = powerOptimizeService;
             _appSettingsService = appSettingsService;
 
@@ -912,129 +915,25 @@ namespace MyToolBar.Views.Windows
         /// </summary>
         private void UpdateAppBarForeground()
         {
-            if (_hwnd == IntPtr.Zero || ActualWidth <= 0)
+            using var frame = _appBarForegroundService.Capture(this, _hwnd);
+            if (frame == null)
                 return;
 
-            // 截取 AppBar 的实际显示区域。只使用上下边缘带，避开位于中央的文字和图标。
-            (double dpiX, double dpiY) = ScreenAPI.GetDPI(ScreenAPI.GetHmonitorForHwnd(_hwnd));
-            int captureHeight = Math.Max(1, (int)Math.Ceiling(ActualHeight * dpiY));
-            using System.Drawing.Bitmap bmp = ScreenAPI.CaptureScreenArea(
-                (int)(Left * dpiX),
-                (int)(Top * dpiY),
-                (int)(ActualWidth * dpiX),
-                captureHeight);
-            if (bmp == null || bmp.Width == 0 || bmp.Height == 0) return;
-
-            (int Begin, int End)? getRange(FrameworkElement element, bool useDesiredWidth = false)
-            {
-                if (!element.IsVisible || element.ActualWidth <= 0)
-                    return null;
-
-                Rect bounds;
-                try
-                {
-                    bounds = element.TransformToVisual(this).TransformBounds(new Rect(element.RenderSize));
-                }
-                catch (InvalidOperationException)
-                {
-                    return null;
-                }
-
-                // OuterControl 通常会被拉伸到整列；其 DesiredSize 更接近内部内容的真实宽度。
-                if (useDesiredWidth && element.DesiredSize.Width > 0 && element.DesiredSize.Width < bounds.Width)
-                {
-                    double desiredWidth = element.DesiredSize.Width;
-                    bounds = new Rect(
-                        bounds.Left + (bounds.Width - desiredWidth) / 2.0,
-                        bounds.Top,
-                        desiredWidth,
-                        bounds.Height);
-                }
-
-                int begin = Math.Clamp((int)Math.Floor(bounds.Left * dpiX), 0, bmp.Width - 1);
-                int end = Math.Clamp((int)Math.Ceiling(bounds.Right * dpiX), begin + 1, bmp.Width);
-                return (begin, end);
-            }
-
-            bool? checkColor(IEnumerable<(int Begin, int End)?> ranges, bool? currentForeground) // true: black text
-            {
-                static double srgbToLinear(double value) =>
-                    value <= 0.03928
-                        ? value / 12.92
-                        : Math.Pow((value + 0.055) / 1.055, 2.4);
-
-                var luminances = new List<double>();
-                int horizontalStep = Math.Max(2, (int)Math.Round(6 * dpiX));
-                int edgeBandHeight = Math.Min(
-                    Math.Max(2, (int)Math.Ceiling(6 * dpiY)),
-                    Math.Max(1, bmp.Height / 2));
-                int firstSampleY = bmp.Height > 2 ? 1 : 0;
-                int lastSampleY = bmp.Height > 2 ? bmp.Height - 1 : bmp.Height;
-
-                foreach (var range in ranges)
-                {
-                    if (range is not { } value)
-                        continue;
-
-                    for (int x = value.Begin; x < value.End; x += horizontalStep)
-                    {
-                        for (int y = firstSampleY; y < lastSampleY; y += 2)
-                        {
-                            bool isEdgeSample = y < edgeBandHeight || y >= bmp.Height - edgeBandHeight;
-                            if (!isEdgeSample)
-                                continue;
-
-                            var c = bmp.GetPixel(x, y);
-                            double luminance =
-                                0.2126 * srgbToLinear(c.R / 255.0) +
-                                0.7152 * srgbToLinear(c.G / 255.0) +
-                                0.0722 * srgbToLinear(c.B / 255.0);
-                            luminances.Add(luminance);
-                        }
-                    }
-                }
-
-                if (luminances.Count == 0)
-                    return null;
-
-                // 平均 RGB 会让少量高亮区域过度影响结果。采用偏暗侧的 40% 分位亮度，
-                // 当元素横跨明暗边界时优先保证暗部上的可读性。
-                luminances.Sort();
-                const double representativePercentile = 0.40;
-                int percentileIndex = (int)Math.Floor((luminances.Count - 1) * representativePercentile);
-                double representativeLuminance = luminances[percentileIndex];
-                const double contrastCrossoverLuminance = 0.179;
-                const double luminanceHysteresis = 0.03;
-
-                if (currentForeground == null)
-                    return representativeLuminance >= contrastCrossoverLuminance;
-
-                // 在黑白文字的对比度交界点两侧保留滞回区，抑制临界亮度噪声导致的来回切换。
-                return currentForeground.Value
-                    ? representativeLuminance > contrastCrossoverLuminance - luminanceHysteresis
-                    : representativeLuminance >= contrastCrossoverLuminance + luminanceHysteresis;
-            }
-
-            bool? checkColorRange((int Begin, int End)? range, bool? currentForeground)
-            {
-                return checkColor([range], currentForeground);
-            }
-
             // 左侧只采样菜单按钮和实际标题宽度，不再把整列空白计入平均色。
-            bool left = checkColor([getRange(MainMenuButton), getRange(TitleView)], _lastForegroundLeft)
+            bool left = frame.Evaluate([MainMenuButton, TitleView], _lastForegroundLeft)
                 ?? _lastForegroundLeft
                 ?? !IsDarkMode;
 
             // 中央插件使用自身位置和内容期望宽度，而不是 OuterControlCol 的最大分配宽度。
-            bool center = (_oc == null ? null : checkColorRange(getRange(_oc, useDesiredWidth: true), _lastForegroundCenter))
+            bool center = (_oc == null ? null : frame.Evaluate(_oc, _lastForegroundCenter, useDesiredWidth: true))
                 ?? _lastForegroundCenter
                 ?? !IsDarkMode;
 
             var capsules = CapsulePanel.Children.OfType<CapsuleBase>().ToList();
 
             // WindowControlPanel 仍使用右侧共享资源；未显示时用实际 Capsule 范围作为后备值。
-            bool right = checkColorRange(getRange(WindowControlPanel), _lastForegroundRight)
-                ?? checkColor(capsules.Select(capsule => getRange(capsule)), _lastForegroundRight)
+            bool right = frame.Evaluate(WindowControlPanel, _lastForegroundRight)
+                ?? frame.Evaluate(capsules, _lastForegroundRight)
                 ?? _lastForegroundRight
                 ?? !IsDarkMode;
 
@@ -1056,8 +955,8 @@ namespace MyToolBar.Views.Windows
             foreach (CapsuleBase capsule in capsules)
             {
                 bool hasLastForeground = _lastCapsuleForeground.TryGetValue(capsule, out bool lastValue);
-                bool? capsuleForeground = checkColorRange(
-                    getRange(capsule),
+                bool? capsuleForeground = frame.Evaluate(
+                    capsule,
                     hasLastForeground ? lastValue : null);
                 if (capsuleForeground is not { } useBlackText)
                     continue;

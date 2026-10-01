@@ -49,6 +49,7 @@ namespace MyToolBar
                 services.AddSingleton<ManagedPackageService>();
                 services.AddSingleton<PluginReactiveService>();
                 services.AddSingleton<UIResourceService>();
+                services.AddSingleton<AppBarForegroundService>();
                 services.AddSingleton<PowerOptimizeService>();
                 services.AddHostedService(provider => provider.GetRequiredService<PowerOptimizeService>());
                 services.AddSingleton<AppSettingsService>();
